@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sixto Service</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --bg:#171412; --bg2:#1f1b18; --card:#242019; --card2:#2c2620;
+  --wood:#b9793f; --wood-d:#8a5a2c; --gold:#d9a15b;
+  --text:#f1e9df; --text-dim:#b8ab9c; --line:#3a332b;
+  --ok:#5f9e6f; --warn:#c98b3a; --danger:#c05a4d; --info:#5b8fc9;
+  --radius:14px;
+  font-size:16px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  min-height:100vh; padding-bottom:env(safe-area-inset-bottom);}
+#app{max-width:640px;margin:0 auto;padding:0 0 90px 0;min-height:100vh;}
+
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,var(--bg2),rgba(23,20,18,.96));
+  backdrop-filter:blur(6px); padding:14px 16px calc(10px + env(safe-area-inset-top)) 16px;
+  border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
+header.top .brand{display:flex;align-items:center;gap:10px;}
+header.top .brand .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--wood),var(--wood-d));
+  display:flex;align-items:center;justify-content:center;font-size:18px;}
+header.top h1{font-size:17px;margin:0;letter-spacing:.3px;}
+header.top .sub{font-size:11px;color:var(--text-dim);margin-top:1px;}
+header.top button.icon{background:var(--card2);border:1px solid var(--line);color:var(--text);
+  width:38px;height:38px;border-radius:10px;font-size:16px;display:flex;align-items:center;justify-content:center;}
+
+main{padding:16px;}
+h2.section{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);
+  margin:22px 0 10px 0;}
+h2.section:first-child{margin-top:4px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  background:var(--wood);color:#1a1310;border:none;border-radius:12px;
+  padding:12px 16px;font-size:15px;font-weight:600;cursor:pointer;}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:var(--card2);color:var(--text);border:1px solid var(--line);}
+.btn.danger{background:var(--danger);color:#fff;}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--wood-d);}
+.btn.block{width:100%;}
+.btn.small{padding:8px 12px;font-size:13px;border-radius:10px;}
+
+.fab{position:fixed;right:18px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:30;
+  width:58px;height:58px;border-radius:50%;background:var(--wood);color:#1a1310;font-size:28px;
+  border:none;box-shadow:0 6px 20px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;margin-bottom:12px;}
+.job-card{display:flex;gap:12px;cursor:pointer;}
+.job-card .thumb{width:50px;height:50px;border-radius:10px;background:var(--card2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-dim);}
+.job-card .info{flex:1;min-width:0;}
+.job-card .name{font-weight:600;font-size:15.5px;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.job-card .meta{font-size:12.5px;color:var(--text-dim);margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.job-card .bottom-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+
+.badge{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  padding:3px 8px;border-radius:20px;flex-shrink:0;}
+.badge.st-ontvangen{background:rgba(91,143,201,.18);color:var(--info);}
+.badge.st-bezig{background:rgba(201,139,58,.18);color:var(--warn);}
+.badge.st-klaar{background:rgba(95,158,111,.18);color:var(--ok);}
+.badge.st-opgehaald{background:rgba(184,171,156,.15);color:var(--text-dim);}
+
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;-webkit-overflow-scrolling:touch;}
+.filters::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;background:var(--card2);border:1px solid var(--line);color:var(--text-dim);
+  padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;}
+.chip.active{background:var(--wood);color:#1a1310;border-color:var(--wood);}
+
+.empty{text-align:center;padding:50px 20px;color:var(--text-dim);}
+.empty .icon{font-size:40px;margin-bottom:10px;}
+
+label{display:block;font-size:12.5px;color:var(--text-dim);margin:12px 0 5px 0;}
+label:first-child{margin-top:0;}
+input[type=text],input[type=date],input[type=number],input[type=url],textarea,select{
+  width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);
+  border-radius:10px;padding:11px 12px;font-size:15px;font-family:inherit;}
+textarea{resize:vertical;min-height:60px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.step{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;margin-bottom:7px;}
+.step.checked{opacity:.55;}
+.step .box{width:23px;height:23px;border-radius:7px;border:2px solid var(--wood-d);flex-shrink:0;
+  margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#1a1310;}
+.step.checked .box{background:var(--wood);border-color:var(--wood);}
+.step .stext{flex:1;font-size:14.5px;line-height:1.35;}
+.step.checked .stext{text-decoration:line-through;text-decoration-color:var(--text-dim);}
+.step .del{color:var(--text-dim);font-size:16px;padding:2px 4px;}
+.step-note{width:100%;background:transparent;border:none;border-top:1px dashed var(--line);
+  color:var(--text-dim);font-size:12.5px;margin-top:6px;padding-top:6px;font-family:inherit;}
+
+.addstep{display:flex;gap:8px;margin-top:4px;}
+.addstep input{flex:1;}
+
+.progress-bar{height:6px;background:var(--card2);border-radius:4px;overflow:hidden;}
+.progress-bar>div{height:100%;background:linear-gradient(90deg,var(--wood-d),var(--gold));}
+.progress-label{font-size:11px;color:var(--text-dim);margin-top:4px;}
+
+.status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0 4px 0;}
+.status-row button{background:var(--card2);border:1px solid var(--line);color:var(--text-dim);
+  border-radius:10px;padding:9px 4px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.status-row button.active{background:var(--wood);color:#1a1310;border-color:var(--wood);}
+
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:2px;}
+.spec-grid .sk{font-size:11.5px;color:var(--text-dim);}
+.spec-grid .sv{font-size:14px;font-weight:600;}
+.spec-grid .full{grid-column:1/3;}
+
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--bg2);
+  border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;padding:18px 16px calc(24px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line);}
+.sheet-handle{width:36px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 14px auto;}
+.sheet h3{margin:0 0 14px 0;font-size:18px;}
+
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--bg2);
+  border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);}
+.tabbar button{flex:1;background:none;border:none;color:var(--text-dim);padding:10px 4px 8px 4px;
+  font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tabbar button.active{color:var(--gold);}
+.tabbar button .ic{font-size:19px;}
+
+.detail-header{margin-bottom:6px;}
+.detail-header .type{font-size:12px;color:var(--wood);text-transform:uppercase;letter-spacing:.6px;font-weight:700;}
+.detail-header h2.name{font-size:22px;margin:4px 0 6px 0;}
+.detail-header .meta-row{font-size:13px;color:var(--text-dim);}
+
+.actionbar{display:flex;gap:8px;margin:14px 0 4px 0;}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--card2);
+  border:1px solid var(--line);padding:10px 18px;border-radius:20px;font-size:13.5px;z-index:200;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);}
+
+.hidden{display:none !important;}
+.small-note{font-size:11.5px;color:var(--text-dim);margin-top:8px;line-height:1.4;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="mark">🔧</div>
+      <div>
+        <h1>Sixto Service</h1>
+        <div class="sub" id="headerSub">Klussen</div>
+      </div>
+    </div>
+    <button class="icon" onclick="openMenu()">⋯</button>
+  </header>
+  <main id="main"></main>
+</div>
+
+<div class="tabbar">
+  <button id="tab-jobs" class="active" onclick="goto('jobs')"><span class="ic">🧰</span>Klussen</button>
+  <button id="tab-templates" onclick="goto('templates')"><span class="ic">✅</span>Templates</button>
+</div>
+
+<button class="fab" onclick="openNewJobSheet()">+</button>
+
+<div id="overlayRoot"></div>
+
+<script>
+/* ---------- Storage ---------- */
+const LS_JOBS = 'sixto_service_jobs_v1';
+const LS_TEMPLATES = 'sixto_service_templates_v1';
+
+function loadJobs(){ try{ return JSON.parse(localStorage.getItem(LS_JOBS)) || []; }catch(e){ return []; } }
+function saveJobs(jobs){ localStorage.setItem(LS_JOBS, JSON.stringify(jobs)); }
+
+const DEFAULT_TEMPLATES = [
+  { name: "Basic setup", steps: [
+    "Snaren beoordeeld / vervangen",
+    "Halskromming gecontroleerd en afgesteld (truss rod)",
+    "Action ingesteld",
+    "Intonatie ingesteld",
+    "Pickup-hoogte gecontroleerd",
+    "Frets gecontroleerd op slijtage",
+    "Zaagsnede (nut) gecontroleerd/gesmeerd",
+    "Elektronica getest (potmeters, schakelaar, jack)",
+    "Eindtest speelbaarheid"
+  ]},
+  { name: "Fret dressing", steps: [
+    "Frets beoordeeld (slijtage, hoogteverschillen)",
+    "Snaren verwijderd",
+    "Fretboard afgeplakt/beschermd",
+    "Frets afgevlakt (level)",
+    "Frets herprofiel (crown)",
+    "Frets gepolijst",
+    "Fretboard gehydrateerd/geolied",
+    "Nieuwe snaren + volledige setup"
+  ]},
+  { name: "Elektronica-probleem", steps: [
+    "Probleem gereproduceerd en omschreven",
+    "Elektronica visueel geïnspecteerd (soldeer, bedrading)",
+    "Potmeters getest",
+    "Schakelaar getest",
+    "Jack getest",
+    "Pickup(s) getest (weerstand/signaal)",
+    "Defect onderdeel vervangen",
+    "Volledige test na herstel"
+  ]}
+];
+
+function loadTemplates(){
+  try{
+    const t = JSON.parse(localStorage.getItem(LS_TEMPLATES));
+    if(t && Array.isArray(t) && t.length) return t;
+  }catch(e){}
+  const fresh = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
+  saveTemplates(fresh);
+  return fresh;
+}
+function saveTemplates(t){ localStorage.setItem(LS_TEMPLATES, JSON.stringify(t)); }
+
+function templateToChecklist(steps){
+  return steps.map(s => ({ id: uid(), text: s, checked: false, note: '' }));
+}
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+
+/* ---------- State ---------- */
+let state = { tab: 'jobs', jobs: loadJobs(), currentJobId: null, filter: 'alle' };
+function persist(){ saveJobs(state.jobs); }
+function getJob(id){ return state.jobs.find(j=>j.id===id); }
+
+function jobProgress(j){
+  const total = j.checklist.length;
+  const done = j.checklist.filter(s=>s.checked).length;
+  return { total, done, pct: total ? Math.round(done/total*100) : 0 };
+}
+
+const STATUS_LABELS = { ontvangen:'Ontvangen', bezig:'Bezig', klaar:'Klaar', opgehaald:'Opgehaald' };
+const STATUS_ORDER = ['ontvangen','bezig','klaar','opgehaald'];
+
+/* ---------- Rendering ---------- */
+function goto(tab){
+  state.tab = tab; state.currentJobId = null;
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  render();
+}
+
+function render(){
+  const main = document.getElementById('main');
+  const sub = document.getElementById('headerSub');
+  if(state.currentJobId){
+    sub.textContent = 'Klus detail';
+    main.innerHTML = renderJobDetail(getJob(state.currentJobId));
+    return;
+  }
+  if(state.tab==='jobs'){ sub.textContent='Klussen'; main.innerHTML = renderJobs(); }
+  else if(state.tab==='templates'){ sub.textContent='Templates'; main.innerHTML = renderTemplates(); }
+}
+
+function renderJobs(){
+  const filters = ['alle','ontvangen','bezig','klaar','opgehaald'];
+  let html = `<div class="filters">${filters.map(f=>{
+    const label = f==='alle' ? 'Alle' : STATUS_LABELS[f];
+    return `<div class="chip ${state.filter===f?'active':''}" onclick="setFilter('${f}')">${label}</div>`;
+  }).join('')}</div>`;
+
+  let list = state.jobs.slice();
+  if(state.filter!=='alle') list = list.filter(j=>j.status===state.filter);
+  list.sort((a,b)=> (b.dateIn||'').localeCompare(a.dateIn||''));
+
+  if(list.length===0){
+    html += `<div class="empty"><div class="icon">🧰</div><div>Geen klussen${state.filter!=='alle' ? ' met status "'+STATUS_LABELS[state.filter]+'"' : ''}.<br>Tik op + om een nieuwe klus te starten.</div></div>`;
+    return html;
+  }
+  html += list.map(renderJobCard).join('');
+  return html;
+}
+
+function renderJobCard(j){
+  const p = jobProgress(j);
+  return `<div class="card job-card" onclick="openJob('${j.id}')">
+    <div class="thumb">🎸</div>
+    <div class="info">
+      <div class="name">${esc(j.clientName||'Naamloze klant')}</div>
+      <div class="meta">${esc(j.guitarInfo||'')}${j.problem ? ' · '+esc(j.problem) : ''}</div>
+      <div class="bottom-row">
+        <div style="flex:1;min-width:0;">
+          <div class="progress-bar"><div style="width:${p.pct}%"></div></div>
+          <div class="progress-label">${p.done}/${p.total} stappen · ${fmtDate(j.dateIn)}</div>
+        </div>
+        <span class="badge st-${j.status}">${STATUS_LABELS[j.status]}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setFilter(f){ state.filter = f; render(); }
+
+function renderTemplates(){
+  const t = loadTemplates();
+  let html = `<div class="small-note">Templates worden gekozen bij het aanmaken van een nieuwe klus. Aanpassingen hier hebben geen invloed op klussen die al lopen.</div>`;
+  html += `<h2 class="section">Templates (${t.length})</h2>`;
+  t.forEach((tpl, ti)=>{
+    html += `<div class="card">
+      <input type="text" value="${escAttr(tpl.name)}" onchange="templateRename(${ti}, this.value)" style="font-weight:600;margin-bottom:10px;">
+      ${tpl.steps.map((s,si)=>`<div class="step" style="align-items:center;">
+        <div class="stext" style="flex:1;">
+          <input type="text" value="${escAttr(s)}" onchange="templateEditStep(${ti},${si}, this.value)" style="background:transparent;border:none;color:var(--text);width:100%;padding:0;font-size:14px;">
+        </div>
+        <div class="del" onclick="templateDeleteStep(${ti},${si})">✕</div>
+      </div>`).join('')}
+      <div class="addstep">
+        <input type="text" id="newstep-${ti}" placeholder="Nieuwe stap toevoegen...">
+        <button class="btn small secondary" onclick="templateAddStep(${ti})">+</button>
+      </div>
+      <div style="text-align:right;margin-top:8px;">
+        <button class="btn small ghost" onclick="templateDelete(${ti})">Template verwijderen</button>
+      </div>
+    </div>`;
+  });
+  html += `<button class="btn secondary block" onclick="templateAddNew()">+ Nieuwe template</button>
+    <button class="btn ghost block" style="margin-top:16px;" onclick="resetTemplates()">Herstel originele standaard templates</button>`;
+  return html;
+}
+
+/* ---------- Job detail ---------- */
+function renderJobDetail(j){
+  if(!j) return `<div class="empty">Klus niet gevonden.</div>`;
+  const p = jobProgress(j);
+  let html = `<button class="btn secondary small" onclick="backToList()">← Terug</button>`;
+  html += `<div class="detail-header" style="margin-top:14px;">
+    <div class="type">${esc(j.templateName||'Klus')}</div>
+    <h2 class="name">${esc(j.clientName||'Naamloze klant')}</h2>
+    <div class="meta-row">${esc(j.guitarInfo||'')}</div>
+  </div>`;
+
+  html += `<div class="status-row">${STATUS_ORDER.map(s=>
+    `<button class="${j.status===s?'active':''}" onclick="setJobStatus('${j.id}','${s}')">${STATUS_LABELS[s]}</button>`
+  ).join('')}</div>`;
+
+  html += `<div class="progress-bar" style="margin-top:12px;"><div style="width:${p.pct}%"></div></div>
+    <div class="progress-label">${p.done}/${p.total} stappen afgevinkt (${p.pct}%)</div>`;
+
+  html += `<div class="actionbar">
+    <button class="btn secondary small" onclick="openEditJobSheet('${j.id}')">✎ Bewerk info</button>
+    <button class="btn danger small" onclick="deleteJob('${j.id}')">🗑</button>
+  </div>`;
+
+  html += `<h2 class="section">Info</h2><div class="card"><div class="spec-grid">
+    <div><div class="sk">Probleem/klacht</div><div class="sv">${esc(j.problem||'-')}</div></div>
+    <div><div class="sk">Prijs</div><div class="sv">${j.price ? '€'+esc(j.price) : '-'}</div></div>
+    <div><div class="sk">Datum in</div><div class="sv">${fmtDate(j.dateIn)}</div></div>
+    <div><div class="sk">Datum uit</div><div class="sv">${j.dateOut ? fmtDate(j.dateOut) : '-'}</div></div>
+  </div></div>`;
+
+  html += `<h2 class="section">Checklist</h2>`;
+  html += j.checklist.map((s,si)=>renderStep(j,si,s)).join('');
+  html += `<div class="addstep">
+    <input type="text" id="addstep-${j.id}" placeholder="Extra stap toevoegen...">
+    <button class="btn small secondary" onclick="addJobStep('${j.id}')">+</button>
+  </div>`;
+
+  html += `<h2 class="section">Notities</h2><div class="card">
+    <textarea onchange="updateJobNotes('${j.id}', this.value)" placeholder="Algemene notities...">${esc(j.notes||'')}</textarea>
+  </div>`;
+
+  return html;
+}
+
+function renderStep(j,si,s){
+  return `<div class="step ${s.checked?'checked':''}">
+    <div class="box" onclick="toggleStep('${j.id}',${si})">${s.checked?'✓':''}</div>
+    <div class="stext">
+      ${esc(s.text)}
+      <textarea class="step-note" placeholder="Notitie (optioneel)" onchange="updateStepNote('${j.id}',${si},this.value)">${esc(s.note||'')}</textarea>
+    </div>
+    <div class="del" onclick="deleteJobStep('${j.id}',${si})">✕</div>
+  </div>`;
+}
+
+/* ---------- Job actions ---------- */
+function openJob(id){ state.currentJobId = id; render(); }
+function backToList(){ state.currentJobId = null; render(); }
+
+function toggleStep(jobId,si){
+  const j = getJob(jobId);
+  const s = j.checklist[si];
+  s.checked = !s.checked;
+  persist(); render();
+}
+function updateStepNote(jobId,si,val){
+  const j = getJob(jobId); j.checklist[si].note = val; persist();
+}
+function addJobStep(jobId){
+  const input = document.getElementById('addstep-'+jobId);
+  const text = input.value.trim();
+  if(!text) return;
+  const j = getJob(jobId);
+  j.checklist.push({id:uid(), text, checked:false, note:''});
+  persist(); render();
+}
+function deleteJobStep(jobId,si){
+  const j = getJob(jobId);
+  j.checklist.splice(si,1);
+  persist(); render();
+}
+function updateJobNotes(jobId, val){ const j = getJob(jobId); j.notes = val; persist(); }
+
+function setJobStatus(jobId, status){
+  const j = getJob(jobId);
+  j.status = status;
+  if((status==='klaar' || status==='opgehaald') && !j.dateOut) j.dateOut = todayStr();
+  persist(); render();
+}
+
+function deleteJob(jobId){
+  if(!confirm('Deze klus volledig verwijderen? Dit kan niet ongedaan gemaakt worden.')) return;
+  state.jobs = state.jobs.filter(x=>x.id!==jobId);
+  persist(); backToList();
+}
+
+/* ---------- New job sheet ---------- */
+function openNewJobSheet(){
+  const templates = loadTemplates();
+  const options = templates.map((t,i)=>`<option value="${i}">${esc(t.name)}</option>`).join('');
+  const html = `
+    <label>Klantnaam *</label>
+    <input type="text" id="nj-client" placeholder="bv. Jan Peeters">
+    <label>Gitaar (merk/type)</label>
+    <input type="text" id="nj-guitar" placeholder="bv. Fender Stratocaster MIM">
+    <label>Probleem / klacht</label>
+    <textarea id="nj-problem" placeholder="Wat moet er gebeuren?"></textarea>
+    <div class="row2">
+      <div><label>Datum in</label><input type="date" id="nj-date" value="${todayStr()}"></div>
+      <div><label>Prijs (€, optioneel)</label><input type="number" id="nj-price" placeholder="0" min="0" step="1"></div>
+    </div>
+    <label>Template</label>
+    <select id="nj-template">${options}</select>
+    <button class="btn block" style="margin-top:16px;" onclick="createJob()">Klus starten</button>
+  `;
+  openSheet('Nieuwe klus', html);
+}
+
+function createJob(){
+  const clientName = document.getElementById('nj-client').value.trim();
+  if(!clientName){ alert('Geef een klantnaam op.'); return; }
+  const guitarInfo = document.getElementById('nj-guitar').value.trim();
+  const problem = document.getElementById('nj-problem').value.trim();
+  const dateIn = document.getElementById('nj-date').value || todayStr();
+  const price = document.getElementById('nj-price').value.trim();
+  const templates = loadTemplates();
+  const tIdx = parseInt(document.getElementById('nj-template').value, 10);
+  const tpl = templates[tIdx] || templates[0];
+  const j = {
+    id: uid(), clientName, guitarInfo, problem, dateIn, dateOut:null, price,
+    status: 'ontvangen', templateName: tpl.name,
+    checklist: templateToChecklist(tpl.steps), notes: ''
+  };
+  state.jobs.push(j);
+  persist(); closeSheet();
+  goto('jobs');
+  openJob(j.id);
+}
+
+function openEditJobSheet(jobId){
+  const j = getJob(jobId);
+  const html = `
+    <label>Klantnaam</label><input type="text" id="ej-client" value="${escAttr(j.clientName)}">
+    <label>Gitaar (merk/type)</label><input type="text" id="ej-guitar" value="${escAttr(j.guitarInfo||'')}">
+    <label>Probleem / klacht</label><textarea id="ej-problem">${esc(j.problem||'')}</textarea>
+    <div class="row2">
+      <div><label>Datum in</label><input type="date" id="ej-datein" value="${j.dateIn||''}"></div>
+      <div><label>Datum uit</label><input type="date" id="ej-dateout" value="${j.dateOut||''}"></div>
+    </div>
+    <label>Prijs (€)</label><input type="number" id="ej-price" value="${escAttr(j.price||'')}" min="0" step="1">
+    <button class="btn block" style="margin-top:16px;" onclick="saveEditJob('${jobId}')">Opslaan</button>
+  `;
+  openSheet('Klus bewerken', html);
+}
+
+function saveEditJob(jobId){
+  const j = getJob(jobId);
+  j.clientName = document.getElementById('ej-client').value.trim() || j.clientName;
+  j.guitarInfo = document.getElementById('ej-guitar').value.trim();
+  j.problem = document.getElementById('ej-problem').value.trim();
+  j.dateIn = document.getElementById('ej-datein').value || j.dateIn;
+  j.dateOut = document.getElementById('ej-dateout').value || null;
+  j.price = document.getElementById('ej-price').value.trim();
+  persist(); closeSheet(); render();
+}
+
+/* ---------- Template actions ---------- */
+function templateRename(ti, val){ const t=loadTemplates(); t[ti].name=val; saveTemplates(t); }
+function templateEditStep(ti,si,val){ const t=loadTemplates(); t[ti].steps[si]=val; saveTemplates(t); }
+function templateDeleteStep(ti,si){ const t=loadTemplates(); t[ti].steps.splice(si,1); saveTemplates(t); render(); }
+function templateAddStep(ti){
+  const input = document.getElementById('newstep-'+ti);
+  const val = input.value.trim(); if(!val) return;
+  const t=loadTemplates(); t[ti].steps.push(val); saveTemplates(t); render();
+}
+function templateDelete(ti){
+  const t=loadTemplates();
+  if(t.length<=1){ alert('Er moet minstens één template overblijven.'); return; }
+  if(!confirm('Deze template verwijderen?')) return;
+  t.splice(ti,1); saveTemplates(t); render();
+}
+function templateAddNew(){
+  const t=loadTemplates(); t.push({name:'Nieuwe template', steps:[]}); saveTemplates(t); render();
+}
+function resetTemplates(){
+  if(confirm('Standaard templates herstellen naar origineel? Eigen templates gaan verloren.')){
+    saveTemplates(JSON.parse(JSON.stringify(DEFAULT_TEMPLATES))); render();
+  }
+}
+
+/* ---------- Sheets / menu ---------- */
+function openSheet(title, bodyHtml){
+  const root = document.getElementById('overlayRoot');
+  root.innerHTML = `<div class="sheet-overlay" onclick="closeSheet()"></div>
+    <div class="sheet"><div class="sheet-handle"></div><h3>${esc(title)}</h3>${bodyHtml}</div>`;
+}
+function closeSheet(){ document.getElementById('overlayRoot').innerHTML=''; }
+
+function openMenu(){
+  const html = `
+    <button class="btn secondary block" onclick="exportData()">⬇ Exporteer back-up (JSON)</button>
+    <label style="margin-top:14px;">Importeer back-up</label>
+    <input type="file" id="importFile" accept="application/json">
+    <button class="btn secondary block" style="margin-top:10px;" onclick="importData()">⬆ Importeer</button>
+    <div class="small-note">Exporteer regelmatig een back-up. Deze tool draait op een vaste link — open dezelfde link op laptop en telefoon voor dezelfde app, maar de data zelf blijft lokaal per toestel/browser opgeslagen. Gebruik export/import om data over te zetten (bv. via iCloud Drive).</div>
+    <div class="small-note" style="margin-top:14px;">Sixto Service · lokale opslag in deze browser.</div>
+  `;
+  openSheet('Instellingen', html);
+}
+
+function exportData(){
+  const payload = { exportedAt: new Date().toISOString(), templates: loadTemplates(), jobs: state.jobs };
+  const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `sixto-service-backup-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('Back-up gedownload ✓');
+}
+
+function importData(){
+  const input = document.getElementById('importFile');
+  const file = input.files[0];
+  if(!file){ alert('Kies eerst een back-up bestand.'); return; }
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const payload = JSON.parse(e.target.result);
+      if(!confirm('Importeren voegt klussen toe aan je huidige lijst (bestaande klussen blijven staan). Doorgaan?')) return;
+      if(payload.templates) saveTemplates(payload.templates);
+      for(const j of (payload.jobs||[])){
+        j.id = j.id || uid();
+        if(state.jobs.find(x=>x.id===j.id)) j.id = uid();
+        state.jobs.push(j);
+      }
+      persist();
+      closeSheet(); render();
+      toast('Import voltooid ✓');
+    }catch(err){
+      alert('Kon bestand niet lezen: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- Utils ---------- */
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escAttr(s){ return esc(s).replace(/`/g,'&#96;'); }
+function todayStr(){ const d=new Date(); return d.toISOString().slice(0,10); }
+function fmtDate(s){ if(!s) return '-'; const d=new Date(s+'T00:00:00'); if(isNaN(d)) return s; return d.toLocaleDateString('nl-BE',{day:'numeric',month:'short',year:'numeric'}); }
+function toast(msg){
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2200);
+}
+
+/* ---------- Init ---------- */
+render();
+</script>
+</body>
+</html>

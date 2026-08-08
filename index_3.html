@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sixto Tools</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --bg:#171412; --card:#242019; --wood:#b9793f; --wood-d:#8a5a2c;
+    --text:#f1e9df; --text-dim:#b8ab9c; --line:#3a332b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .wrap{max-width:420px;width:100%;}
+  h1{font-size:22px;margin:0 0 4px 0;}
+  p.sub{color:var(--text-dim);font-size:13.5px;margin:0 0 24px 0;}
+  a.tool{
+    display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:12px;text-decoration:none;color:var(--text);
+  }
+  a.tool .name{font-weight:700;font-size:16px;margin-bottom:3px;}
+  a.tool .desc{font-size:13px;color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎸 Sixto Tools</h1>
+  <p class="sub">Persoonlijke werktools — Sixto Custom Guitars</p>
+  <a class="tool" href="builds.html">
+    <div class="name">🔨 Sixto Builds</div>
+    <div class="desc">Bouwtracker per gitaar — checklist, foto's, specs</div>
+  </a>
+  <a class="tool" href="service.html">
+    <div class="name">🔧 Sixto Service</div>
+    <div class="desc">Reparatie/setup-klussen — checklist per klus</div>
+  </a>
+</div>
+</body>
+</html>
