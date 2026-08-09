@@ -447,29 +447,24 @@ function renderBuildDetail(b){
     <button class="btn danger small" onclick="deleteBuild('${b.id}')">🗑</button>
   </div>`;
 
-  // Specs
   html += `<h2 class="section">Specs</h2><div class="card"><div class="spec-grid">${renderSpecGrid(b.specs)}</div></div>`;
 
-  // Photos
   html += `<h2 class="section">Foto's</h2><div class="card">
     <div class="photo-grid" id="photoGrid-${b.id}">Laden...</div>
   </div>`;
 
-  // Sound demo
   html += `<h2 class="section">Geluidsdemo</h2><div class="card">
     ${b.soundDemoLink
       ? `<a class="link" href="${escAttr(b.soundDemoLink)}" target="_blank" rel="noopener">${esc(b.soundDemoLink)}</a><br><button class="btn small secondary" style="margin-top:10px;" onclick="editSoundLink('${b.id}')">Wijzig link</button>`
       : `<button class="btn small secondary" onclick="editSoundLink('${b.id}')">+ Link toevoegen</button>`}
   </div>`;
 
-  // Final notes (if completed or has notes)
   if(b.status==='completed' || b.finalNotes){
     html += `<h2 class="section">Eindnotities</h2><div class="card">
       <textarea onchange="updateFinalNotes('${b.id}', this.value)" placeholder="Eindnotities...">${esc(b.finalNotes||'')}</textarea>
     </div>`;
   }
 
-  // Checklist
   html += `<h2 class="section">Checklist</h2>`;
   b.checklist.forEach((ph, pi)=>{
     const total = ph.steps.length;
@@ -512,7 +507,7 @@ function renderSpecGrid(sp){
   const fields = [
     ['bodyModel','Model / body vorm'],['topWood','Top hout'],['backSidesWood','Back/sides hout'],
     ['neckWood','Hals hout'],['fretboardWood','Toets hout'],['scaleLength','Mensuur'],
-    ['nutWidth','Nutbreedte'],['frets','Aantal frets'],['tuners','Mechanieken'],
+    ['nutWidth','Nutbreedte'],['fretboardRadius','Fretboard radius'],['frets','Aantal frets'],['tuners','Mechanieken'],
     ['bridge','Brug/zadel'],['electronics','Elektronica'],['finishType','Finish type'],
     ['weight','Gewicht'],['targetDate','Streefdatum']
   ];
@@ -742,17 +737,20 @@ function openEditInfoSheet(buildId){
     </div>
     <div class="row2">
       <div><label>Nutbreedte</label><input type="text" id="ei-nut" value="${escAttr(sp.nutWidth||'')}"></div>
+      <div><label>Fretboard radius</label><input type="text" id="ei-radius" placeholder="bv. 12&quot; of 305mm" value="${escAttr(sp.fretboardRadius||'')}"></div>
+    </div>
+    <div class="row2">
       <div><label>Aantal frets</label><input type="text" id="ei-frets" value="${escAttr(sp.frets||'')}"></div>
-    </div>
-    <div class="row2">
       <div><label>Mechanieken</label><input type="text" id="ei-tuners" value="${escAttr(sp.tuners||'')}"></div>
-      <div><label>Brug/zadel</label><input type="text" id="ei-bridge" value="${escAttr(sp.bridge||'')}"></div>
     </div>
     <div class="row2">
+      <div><label>Brug/zadel</label><input type="text" id="ei-bridge" value="${escAttr(sp.bridge||'')}"></div>
       <div><label>Elektronica</label><input type="text" id="ei-electronics" value="${escAttr(sp.electronics||'')}"></div>
-      <div><label>Finish type</label><input type="text" id="ei-finish" value="${escAttr(sp.finishType||'')}"></div>
     </div>
-    <label>Gewicht</label><input type="text" id="ei-weight" value="${escAttr(sp.weight||'')}">
+    <div class="row2">
+      <div><label>Finish type</label><input type="text" id="ei-finish" value="${escAttr(sp.finishType||'')}"></div>
+      <div><label>Gewicht</label><input type="text" id="ei-weight" value="${escAttr(sp.weight||'')}"></div>
+    </div>
     <label>Notities</label><textarea id="ei-notes">${esc(sp.notes||'')}</textarea>
     <button class="btn block" style="margin-top:16px;" onclick="saveEditInfo('${buildId}')">Opslaan</button>
   `;
@@ -774,6 +772,7 @@ function saveEditInfo(buildId){
   b.specs.fretboardWood = document.getElementById('ei-fb').value.trim();
   b.specs.scaleLength = document.getElementById('ei-scale').value.trim();
   b.specs.nutWidth = document.getElementById('ei-nut').value.trim();
+  b.specs.fretboardRadius = document.getElementById('ei-radius').value.trim();
   b.specs.frets = document.getElementById('ei-frets').value.trim();
   b.specs.tuners = document.getElementById('ei-tuners').value.trim();
   b.specs.bridge = document.getElementById('ei-bridge').value.trim();
