@@ -31,6 +31,7 @@
   button:hover, .file-btn:hover{ border-color:var(--accent); color:var(--accent); }
   input[type=file]{ display:none; }
 
+  /* Song info / meta bar */
   .meta-bar{
     display:flex; align-items:center; gap:18px; flex-wrap:wrap;
     padding:10px 20px; border-bottom:1px solid var(--line); background:var(--panel);
@@ -51,6 +52,7 @@
     padding:8px 20px; border-bottom:1px solid var(--line);
   }
 
+  /* Toggle switch */
   .toggle-wrap{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
   .toggle-wrap input{ display:none; }
   .toggle-slider{
@@ -67,6 +69,7 @@
 
   .layout{ flex:1; display:flex; min-height:0; }
 
+  /* Sidebar / library */
   .sidebar{
     width:0; overflow:hidden; background:var(--panel); border-right:1px solid var(--line);
     display:flex; flex-direction:column; transition:width .2s ease;
@@ -164,6 +167,7 @@
   }
   .help code{ background:var(--panel2); padding:1px 5px; border-radius:4px; color:var(--accent2); }
 
+  /* Right-click chord popup */
   .chord-popup{
     position:fixed; z-index:50; background:var(--panel2); border:1px solid var(--accent);
     border-radius:6px; padding:6px; box-shadow:0 4px 14px rgba(0,0,0,.4); display:none;
@@ -174,6 +178,7 @@
   }
   .chord-popup .hint{ font-size:10px; color:var(--ink-dim); margin-top:4px; }
 
+  /* Muse panel */
   .muse-panel{
     border-top:1px solid var(--muse); background:#241f2c; padding:16px 24px;
     max-height:0; overflow:hidden; transition:max-height .25s ease;
@@ -183,11 +188,54 @@
   .muse-text{ font-size:12.5px; color:var(--ink-dim); line-height:1.6; max-width:700px; margin:0 0 10px 0; }
   .muse-status{ margin-left:10px; font-size:12px; color:var(--accent2); }
 
+  /* Album print (hidden unless printing) */
   .album-print-container{ display:none; }
   .album-song-page + .album-song-page{ margin-top:40px; }
 
+  /* Fragments panel (right side) */
+  .fragments-panel{
+    width:0; overflow:hidden; background:var(--panel); border-left:1px solid var(--line);
+    display:flex; flex-direction:column; transition:width .2s ease;
+  }
+  .fragments-panel.open{ width:340px; }
+  .fragment-form{ padding:12px 14px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:6px; }
+  .fragment-form textarea{
+    background:var(--panel2); color:var(--ink); border:1px solid var(--line); border-radius:5px;
+    padding:8px; font-family:inherit; font-size:13px; resize:vertical; min-height:0; flex:none;
+  }
+  .tag-row{ display:flex; align-items:center; gap:6px; }
+  .tag-row label{ width:52px; flex:none; font-size:11.5px; color:var(--ink-dim); }
+  .tag-row input{
+    flex:1; background:var(--panel2); color:var(--ink); border:1px solid var(--line);
+    border-radius:5px; padding:5px 8px; font-family:inherit; font-size:12.5px;
+  }
+  .fragment-filters{
+    display:flex; flex-wrap:wrap; gap:5px; padding:10px 14px; border-bottom:1px solid var(--line);
+  }
+  .filter-chip{
+    background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
+    border-radius:12px; padding:3px 9px; font-size:11px; cursor:pointer;
+  }
+  .filter-chip.active{ background:var(--accent); border-color:var(--accent); color:#241f2c; }
+  .fragment-list{ flex:1; overflow-y:auto; padding:10px 14px; display:flex; flex-direction:column; gap:10px; }
+  .fragment-card{
+    background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+  }
+  .fragment-text{
+    white-space:pre-wrap; font-size:13px; color:var(--ink); line-height:1.5; margin-bottom:6px;
+  }
+  .fragment-tags{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+  .tag-pill{
+    font-size:10.5px; padding:2px 7px; border-radius:10px; color:#241f2c;
+  }
+  .tag-pill.type{ background:var(--accent); }
+  .tag-pill.sfeer{ background:var(--accent2); }
+  .tag-pill.stanza{ background:var(--muse); color:#fff; }
+  .fragment-actions{ display:flex; gap:6px; flex-wrap:wrap; }
+  .fragment-actions button{ font-size:11px; padding:5px 8px; }
+
   @media print{
-    header, .meta-bar, .storage-warning, .sidebar, .pane:first-child, .help, .muse-panel{ display:none; }
+    header, .meta-bar, .storage-warning, .sidebar, .fragments-panel, .pane:first-child, .help, .muse-panel{ display:none; }
     .layout{ display:block; }
     .preview{ background:#fff; color:#000; padding:0; }
     .chord-row{ color:#000; }
@@ -207,7 +255,7 @@
   </div>
   <div class="toolbar">
     <button id="libraryToggleBtn">📚 Bibliotheek</button>
-    <button id="syncSettingsBtn" onclick="openSyncSettings()">🔗 Sync</button>
+    <button id="fragmentsToggleBtn">💭 Fragmenten</button>
     <label class="toggle-wrap">
       <input type="checkbox" id="museToggle">
       <span class="toggle-slider"></span>
@@ -261,7 +309,7 @@
       <strong>Akkoord typen:</strong> zet het akkoord vlak vóór de lettergreep: <code>[G]Wake me up when [D]september ends</code>.<br>
       <strong>Akkoord met de muis:</strong> rechterklik op de plek in de tekst waar het akkoord moet komen, typ de naam en bevestig met Enter (Esc annuleert). Dit vervangt het normale rechtermuisklik-menu in het tekstvak — gebruik Ctrl+C/V om te kopiëren/plakken.<br>
       <strong>Notatie/aanwijzing:</strong> <code>{c: zacht, fingerpicked}</code> op een eigen regel → verschijnt cursief boven de volgende regel.<br>
-      <strong>Muze-toggle:</strong> zet 'm aan om je tekst met één klik te kopiëren, netjes geformatteerd, om te plakken in een gesprek met Claude voor een echte analyse — de tool blijft zelf volledig offline.<br>
+      <strong>Muze-toggle:</strong> zet 'm aan om je tekst met één klik te kopiëren, netjes geformatteerd, om te plakken in een gesprek met Claude (je Songwriting partner-project) voor een echte analyse — de tool blijft zelf volledig offline.<br>
       <strong>Afdrukken/PDF per album:</strong> klik op 🖨 naast een albumnaam om alle nummers in tracklist-volgorde samen af te drukken of als PDF te bewaren.<br>
       <strong>Back-up:</strong> je bibliotheek wordt lokaal in deze browser onthouden. Gebruik "Exporteer bibliotheek" af en toe om een .json-back-up te bewaren, zeker voor je browsergegevens wist of van computer wisselt.<br>
       <strong>Lege regel</strong> = witruimte in de output.
@@ -271,11 +319,26 @@
     <div class="pane-head">Weergave</div>
     <div class="preview" id="preview"></div>
   </div>
+
+  <aside class="fragments-panel" id="fragmentsPanel">
+    <div class="sidebar-head">
+      <span>Fragmenten</span>
+    </div>
+    <div class="fragment-form">
+      <textarea id="fragmentText" rows="3" placeholder="Nieuw tekstflard, regel, beeld, titelidee..."></textarea>
+      <div class="tag-row"><label>Type</label><input type="text" id="fragTypeInput" placeholder="bv. titel, beeld, refreinregel"></div>
+      <div class="tag-row"><label>Sfeer</label><input type="text" id="fragSfeerInput" placeholder="bv. melancholisch, speels"></div>
+      <div class="tag-row"><label>Stanza</label><input type="text" id="fragStanzaInput" placeholder="bv. couplet, brug, titel-idee"></div>
+      <button id="addFragmentBtn">+ Fragment toevoegen</button>
+    </div>
+    <div class="fragment-filters" id="fragmentFilters"></div>
+    <div class="fragment-list" id="fragmentList"></div>
+  </aside>
 </div>
 
 <div class="muse-panel" id="musePanel">
-  <div class="muse-head">🕯️ Muze</div>
-  <p class="muse-text">Deze tool blijft volledig offline en privé. Voor een echte, doorleefde analyse — rijm, beeldspraak, spanning, structuur — kopieer je je tekst hieronder en plak je ze in een gesprek met Claude.</p>
+  <div class="muse-head">🕯️ Muze — Dylan &amp; Cohen influisteren</div>
+  <p class="muse-text">Deze tool blijft volledig offline en privé. Voor een echte, doorleefde analyse — rijm, beeldspraak, spanning, structuur — kopieer je je tekst hieronder en plak je ze in een gesprek met Claude, bij voorkeur in je "Songwriting partner"-project waar de geest van Dylan en Cohen al rondwaart.</p>
   <button id="museCopyBtn">Kopieer songtekst voor muze-analyse</button>
   <span class="muse-status" id="museStatus"></span>
 </div>
@@ -304,39 +367,245 @@ const newAlbumBtn = document.getElementById('newAlbumBtn');
 const exportLibBtn = document.getElementById('exportLibBtn');
 const importLibInput = document.getElementById('importLibInput');
 const albumPrintContainer = document.getElementById('albumPrintContainer');
+const fragmentsToggleBtn = document.getElementById('fragmentsToggleBtn');
+const fragmentsPanel = document.getElementById('fragmentsPanel');
+const fragmentText = document.getElementById('fragmentText');
+const fragTypeInput = document.getElementById('fragTypeInput');
+const fragSfeerInput = document.getElementById('fragSfeerInput');
+const fragStanzaInput = document.getElementById('fragStanzaInput');
+const addFragmentBtn = document.getElementById('addFragmentBtn');
+const fragmentFilters = document.getElementById('fragmentFilters');
+const fragmentList = document.getElementById('fragmentList');
 
 helpBtn.addEventListener('click', () => {
   helpBox.style.display = helpBox.style.display === 'none' ? 'block' : 'none';
 });
 
-const SAMPLE_TITLE = 'Werktitel';
-const SAMPLE_KEY = 'G';
-const SAMPLE_BPM = '96';
-const SAMPLE = `{c: rustig, fingerpicked}
+const DEFAULT_LIBRARY = {
+  albums: [
+    { id: `album-msixv4yh-agjzlk`, name: `Pieces of Mind`, songIds: [`song-msixv4yh-s62ew1`, `song-msiyjkia-icztp7`, `song-msiyopm7-3lqw7w`, `song-msiytb7n-1s4xq2`, `song-msiyuixc-01h651`, `song-msja7f5k-hunglg`] },
+  ],
+  songs: {
+    [`song-msixv4yh-s62ew1`]: { id: `song-msixv4yh-s62ew1`, title: `Love Overflow`, key: `D`, bpm: `110`, lyrics: `
+{Intro}
+[Bm A x2]
+
 {Vers 1}
-[G]Sunlight falls through [D]the trees
-[Em]Nothing left but [C]memories
-[G]I keep singing to the [D]empty room
-[C]Waiting for the [G]tune
+[Bm]Money and time
+Acts like [A]lemon and lime
+When you [C#m]see the future
+With a [D]different [A]mind
+
+{Vers 2}
+[Bm]Learn how to lose
+And [A]how to restart
+[C#m]Adapt and reform
+It might be the [D]hardest [A]part
 
 {Refrein}
-[C]Hold on, [G]hold on
-[D]We're not [Em]done
-[C]Hold on, [G]hold on
-Till the [D]morning [G]comes
+[D]Everything comes and [E]goes
+[D]There is so much that [A]we don’t [Bm]know
+[Bm]Take a [C#m]leap of [D]faith
+And [E]hit it [A]blow by [D]blow
 
-{Brug}
-Stilte, en dan een woord
-dat ik nooit had gehoord`;
+[Bm]The world is [C#m]old and you [D]know
+[Bm]This world is [C#m]new and you [D]know
+[E]There is a [A]love over[D]flow
+
+
+{Intro}
+[Bm A x2]
+
+{Vers 1}
+[Bm]Nothing will come [A]all by itself,
+[C#m]I should know this [D]all too [A]well
+
+{Vers 2}
+[Bm]Knowledge is power
+But[A] ignorance is bliss
+[C#m]Know what you choose
+And [D]what you’ll [A]miss
+
+{Refrein}
+[D]Everything comes and [E]goes
+There is [D]so much that [A]we don’t [Bm]know
+[Bm]Take a [C#m]leap of [D]faith
+And [E]hit it [A]blow by [D]blow
+
+[Bm]The world is [C#m]old and you [D]know
+[Bm]This world is [C#m]new and you [D]know
+[E]There is a [A]love over[D]flow
+
+` },
+    [`song-msiyjkia-icztp7`]: { id: `song-msiyjkia-icztp7`, title: `The Next Chapter`, key: `G`, bpm: `90`, lyrics: `{Intro}
+[G]
+{Verse}
+[G]This is the next chapter
+[G]Where I get to live twice
+[G]It's filled with tears and laughter
+[G]I'm sure I'll think it's nice
+
+[Am]Everything to see
+[Em]Everything to do
+[Bm]Nothing's old all is new
+
+{Verse}
+[G]This is the next chapter
+[G]Where I get to live twice
+[G]It's filled with tears and laughter
+[G]I'm sure I'll think it's nice
+
+[Am]Everything to see
+[Em]Everything to do
+[Bm]Nothing's old all is new
+
+{Refrain}
+[C]Follow [G]me
+[D]Follow me now right on board the
+Next Chapter [G]
+
+
+{Verse}
+[G]I'm afraid of really loud sounds
+[G]It shakes my soul so hard
+[G]I'm free nothing's out of bounds
+[G]Let me play every card
+
+[Am]Everything is large
+[Em]Everything is emotion
+[Bm]Every fluid is a potion
+
+{Refrain}
+[C]Follow [G]me
+[D]Follow me now right on board the
+Next Chapter [G]` },
+    [`song-msiyopm7-3lqw7w`]: { id: `song-msiyopm7-3lqw7w`, title: `Unplayful Sin`, key: ``, bpm: ``, lyrics: `{Verse}
+I only love when I'm feeling loved
+I play it tough when I'm feeling rough
+Never giving in to an unplayful sin
+But always hitting when it's time to fit in
+{Refrain}
+Lost in the mountains
+where the cowbells are ringing
+I dive in the fountain
+of a playful sin
+{Verse}
+Nothing is sacred, no one is sane
+For years I have tried to forget my own name
+Nothing is sacred no one is sane
+I don't know who but someone will take the blame
+{Refrain}
+Lost in the mountains
+where the cowbells are ringing
+I dive in the fountain
+of a playful sin
+
+` },
+    [`song-msiytb7n-1s4xq2`]: { id: `song-msiytb7n-1s4xq2`, title: `People don't change`, key: ``, bpm: ``, lyrics: `[E]
+[D A E]
+
+` },
+    [`song-msiyuixc-01h651`]: { id: `song-msiyuixc-01h651`, title: `Pick a God and pray`, key: ``, bpm: ``, lyrics: `Verse 1
+| C D7 | Em Em |
+| Am Am | Em Em |
+| C D7 | Em Em |
+| Am Am | Em Em |
+
+V1
+Nothing is black and white
+Except your color tv
+I won’t put a fight
+Unless you wanna see mee
+
+V1
+Nothing is left or right
+Except the distance to the sea
+Nothing is day or night
+When you decide on who to be
+
+Verse 2
+| C D7 | G Em |
+| Am Am | G G |
+| C D7 | G Em |
+| Am Am | G G |
+
+V2
+I remember everything
+Since you came around
+I was in the dark for so long
+You turned that around
+
+Chorus
+
+|  D7 | G |
+| Am C | D7 G |
+| D7 | G |
+| Am C | G Em |
+| D7 | G |
+| D7 | G |
+
+
+You said: Pick a god and pray
+Laugh at what life throws our way
+So now we pick a god and pray
+Live in love forever and a day
+Pick a god and pray
+Pick a god and pray
+
+
+V1
+Nothing is freeze or flight
+If evolution is free
+I won’t take a bite
+Unless you wanna feel me
+
+V1
+Everything comes in tides
+That’s what you have to understand
+Once you learn how to fly
+You don’t need solid land
+
+` },
+    [`song-msja7f5k-hunglg`]: { id: `song-msja7f5k-hunglg`, title: `A Vow in Eternity`, key: `B`, bpm: `166`, lyrics: `{Verse}
+[B]Looks like a [F#]burning sun
+Fire [E]on the run
+When [B]birds descend with there [F#]wings of fun[E].
+{Verse}
+[B]Looks like [F#]solid air
+Compressed [E]with all the flair
+Of a [B]newborn feeling That’s [F#]beautiful and bare[E].
+{Refrain}
+[C#m]Everything [F#]changed
+[B]Orders get [E]rearrenged
+[B]This is it [G#m]now
+[C#m]How to fit a
+[F#]Vow in eternit[B]y[ E B].
+{Verse}
+[B]Looks like a [F#]burning sun
+Fire [E]on the run
+When [B]birds descend with there [F#]wings of fun[E].
+{Verse}
+[B]Looks like [F#]solid air
+Compressed [E]with all the flair
+Of a [B]newborn feeling That’s [F#]beautiful and bare[E].
+{Refrain}
+[C#m]Everything [F#]changed
+[B]Orders get [E]rearrenged
+[B]This is it [G#m]now
+[C#m]How to fit a
+[F#]Vow in eternit[B]y[ E B].` },
+  }
+};
 
 function escapeHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// Parse a lyric line containing [Chord] markers into aligned chord + lyric strings
 function parseChordLine(raw){
   const chordRegex = /\[([^\]]+)\]/g;
   let lyric = '';
-  let chordPositions = [];
+  let chordPositions = []; // {pos, chord}
   let lastIndex = 0;
   let match;
   while ((match = chordRegex.exec(raw)) !== null) {
@@ -353,7 +622,7 @@ function parseChordLine(raw){
   let chordRow = '';
   chordPositions.forEach(cp => {
     let pos = cp.pos;
-    if (pos < chordRow.length) pos = chordRow.length;
+    if (pos < chordRow.length) pos = chordRow.length; // avoid overlap, push right
     chordRow += ' '.repeat(Math.max(0, pos - chordRow.length));
     chordRow += cp.chord;
   });
@@ -361,6 +630,7 @@ function parseChordLine(raw){
   return { hasChords:true, chordRow, lyricRow: lyric };
 }
 
+// Find first and last chord (in document order) across the whole lyric text
 function findFirstLastChord(text){
   const matches = [...text.matchAll(/\[([^\]]+)\]/g)].map(m => m[1]);
   if (matches.length === 0) return { first:null, last:null };
@@ -414,6 +684,9 @@ function songInfoBlockHtml(title, key, bpm, first, last){
   </div>`;
 }
 
+// =====================================================================
+// Library (albums + songs), persisted to localStorage
+// =====================================================================
 const LIB_KEY = 'songtool_library_v1';
 const storageWarning = document.getElementById('storageWarning');
 
@@ -438,12 +711,7 @@ function genId(prefix){
 }
 
 function defaultLibrary(){
-  const songId = genId('song');
-  const albumId = genId('album');
-  return {
-    albums: [ { id: albumId, name: 'Demo-album', songIds: [songId] } ],
-    songs: { [songId]: { id: songId, title: SAMPLE_TITLE, key: SAMPLE_KEY, bpm: SAMPLE_BPM, lyrics: SAMPLE } }
-  };
+  return JSON.parse(JSON.stringify(DEFAULT_LIBRARY));
 }
 
 function loadLibrary(){
@@ -473,93 +741,7 @@ function saveLibrary(){
       storageOK = false;
       updateStorageBanner();
     }
-    scheduleGhPush();
   }, 300);
-}
-
-/* ---------- GitHub sync (shared token with Sixto Builds, same origin) ---------- */
-const GH_OWNER = '666sixto666';
-const GH_REPO = 'SixtoTools';
-const GH_SYNC_PATH = 'data/songtool-sync.json';
-const GH_TOKEN_KEY = 'sixto_tools_gh_token';
-let syncState = { lastSyncedAt: null, syncing: false, lastError: null };
-let ghPushTimer = null;
-
-function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
-function setGhToken(t){ if(t) localStorage.setItem(GH_TOKEN_KEY, t); else localStorage.removeItem(GH_TOKEN_KEY); }
-
-function scheduleGhPush(){
-  if(!getGhToken()) return;
-  clearTimeout(ghPushTimer);
-  ghPushTimer = setTimeout(()=>{ pushToGitHub(); }, 4000);
-}
-
-async function pullFromGitHub(silent){
-  try{
-    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
-    if(res.status === 404){ return; }
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const payload = await res.json();
-    if(payload.updatedAt && payload.updatedAt === syncState.lastSyncedAt) return;
-    if(payload.library){
-      library = payload.library;
-      localStorage.setItem(LIB_KEY, JSON.stringify(library));
-    }
-    syncState.lastSyncedAt = payload.updatedAt;
-    syncState.lastError = null;
-    if(!silent){
-      renderSidebar();
-      const boot = firstAvailableSongId();
-      if(boot) loadSong(boot.songId); else clearEditorEmptyState();
-    }
-  }catch(e){
-    syncState.lastError = e.message;
-  }
-}
-
-async function pushToGitHub(){
-  const token = getGhToken();
-  if(!token) return;
-  syncState.syncing = true;
-  try{
-    const payload = { updatedAt: new Date().toISOString(), library };
-    const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_SYNC_PATH}`;
-    let sha = null;
-    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
-    if(getRes.ok){ const j = await getRes.json(); sha = j.sha; }
-    const body = {
-      message: 'Sync vanaf songtool',
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(payload)))),
-      branch: 'main'
-    };
-    if(sha) body.sha = sha;
-    const putRes = await fetch(api, { method:'PUT', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
-    if(!putRes.ok){ const j = await putRes.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+putRes.status)); }
-    syncState.lastSyncedAt = payload.updatedAt;
-    syncState.lastError = null;
-  }catch(e){
-    syncState.lastError = e.message;
-  }finally{
-    syncState.syncing = false;
-  }
-}
-
-async function openSyncSettings(){
-  const current = getGhToken();
-  const val = prompt('GitHub personal access token voor sync (leeg laten + OK om uit te schakelen):', current);
-  if(val === null) return;
-  const trimmed = val.trim();
-  setGhToken(trimmed);
-  if(trimmed){
-    await pullFromGitHub();
-    if(!syncState.lastSyncedAt){ await pushToGitHub(); }
-    renderSidebar();
-    const boot = firstAvailableSongId();
-    if(boot) loadSong(boot.songId);
-    alert(syncState.lastError ? ('Sync mislukt: '+syncState.lastError) : 'Gesynct ✓ (zelfde token werkt ook in Sixto Builds)');
-  } else {
-    alert('Sync uitgeschakeld op dit toestel.');
-  }
 }
 
 function findAlbumOfSong(songId){
@@ -573,6 +755,7 @@ function firstAvailableSongId(){
   return null;
 }
 
+// ---- Editor <-> library sync ----
 function loadSong(songId){
   const song = library.songs[songId];
   if (!song) return;
@@ -632,6 +815,7 @@ function updatePreview(){
   });
 });
 
+// ---- Sidebar rendering ----
 function renderSidebar(){
   albumList.innerHTML = '';
 
@@ -707,6 +891,7 @@ function renderSidebar(){
   });
 }
 
+// ---- Album / song CRUD ----
 function newAlbum(){
   const name = prompt('Naam van het nieuwe album:', '');
   if (name === null) return;
@@ -771,6 +956,7 @@ function deleteSong(songId){
   renderSidebar();
 }
 
+// ---- Drag & drop reordering ----
 function getDragAfterElement(container, y){
   const items = [...container.querySelectorAll('.track-item:not(.dragging)')];
   return items.reduce((closest, child) => {
@@ -815,6 +1001,7 @@ function attachDropHandlers(list){
     const toAlbum = library.albums.find(a => a.id === toAlbumId);
     if (!fromAlbum || !toAlbum) return;
 
+    // Determine new order directly from the current DOM order of this list
     fromAlbum.songIds = fromAlbum.songIds.filter(id => id !== data.songId);
     const domOrder = [...list.querySelectorAll('.track-item')].map(li => li.dataset.songId);
     if (!domOrder.includes(data.songId)) domOrder.push(data.songId);
@@ -827,6 +1014,7 @@ function attachDropHandlers(list){
 
 newAlbumBtn.addEventListener('click', newAlbum);
 
+// ---- Library import / export (backup) ----
 exportLibBtn.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(library, null, 2)], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -862,10 +1050,12 @@ importLibInput.addEventListener('change', (e) => {
   e.target.value = '';
 });
 
+// ---- Sidebar toggle ----
 libraryToggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('open');
 });
 
+// ---- Right-click chord insertion ----
 let pendingCaretPos = null;
 
 input.addEventListener('contextmenu', (e) => {
@@ -916,6 +1106,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// ---- Save / open single song as .txt ----
 function buildFileContent(){
   const meta = [];
   if (titleInput.value.trim()) meta.push('#title: ' + titleInput.value.trim());
@@ -958,6 +1149,8 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
     }
     if (idx < lines.length && lines[idx].trim() === '') idx++;
 
+    // Loading a .txt file fills the currently open song slot in the library.
+    // If nothing is open yet, create a fresh song in the first album (creating one if needed).
     if (!currentSongId) {
       if (library.albums.length === 0) {
         const albumId = genId('album');
@@ -985,6 +1178,7 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 
 document.getElementById('printBtn').addEventListener('click', () => window.print());
 
+// ---- Album print / PDF export ----
 function printAlbum(albumId){
   const album = library.albums.find(a => a.id === albumId);
   if (!album || album.songIds.length === 0) {
@@ -1011,9 +1205,11 @@ function printAlbum(albumId){
   };
   window.addEventListener('afterprint', cleanup);
   window.print();
+  // Fallback cleanup in case afterprint doesn't fire (some browsers/dialogs)
   setTimeout(cleanup, 5000);
 }
 
+// ---- Muze toggle ----
 museToggle.addEventListener('change', () => {
   musePanel.classList.toggle('open', museToggle.checked);
 });
@@ -1059,22 +1255,238 @@ function fallbackCopy(text){
   document.body.removeChild(ta);
 }
 
+// Best-effort: try to hand off to a local "museclaude://" protocol handler
+// (see muse-claude-installatie.md) that activates Claude Desktop and pastes
+// the clipboard content. Silently does nothing if not installed — the
+// clipboard copy above is always the reliable fallback.
+function tryOpenMuseClaude(){
+  try {
+    const a = document.createElement('a');
+    a.href = 'museclaude://open';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (e) { /* protocol not registered, nothing more to do */ }
+}
+
 museCopyBtn.addEventListener('click', () => {
   copyToClipboard(buildMuseText()).then(() => {
     museStatus.textContent = 'Gekopieerd ✓ — plak het in de chat';
     setTimeout(() => { museStatus.textContent = ''; }, 3000);
+    tryOpenMuseClaude();
   });
 });
 
-(async function initApp(){
-  if(getGhToken()){ await pullFromGitHub(true); }
-  updateStorageBanner();
-  renderSidebar();
-  const boot = firstAvailableSongId();
-  if (boot) loadSong(boot.songId);
-  else clearEditorEmptyState();
-  setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
-})();
+// =====================================================================
+// Fragments database (tekstflarden) — global bank, tagged on 3 axes,
+// separate from the song library. A fragment can carry multiple tags per
+// axis and show up under any of them.
+// =====================================================================
+const FRAG_KEY = 'songtool_fragments_v1';
+let fragments = loadFragments();
+let fragSaveTimer = null;
+const activeFilters = { type: new Set(), sfeer: new Set(), stanza: new Set() };
+
+function loadFragments(){
+  try {
+    const raw = localStorage.getItem(FRAG_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.fragments)) return [];
+    return parsed.fragments;
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveFragments(){
+  clearTimeout(fragSaveTimer);
+  fragSaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(FRAG_KEY, JSON.stringify({ fragments }));
+      if (!storageOK) { storageOK = true; updateStorageBanner(); }
+    } catch (e) {
+      storageOK = false;
+      updateStorageBanner();
+    }
+  }, 300);
+}
+
+function parseTags(str){
+  const seen = new Set();
+  return str.split(',').map(t => t.trim()).filter(t => {
+    if (!t || seen.has(t.toLowerCase())) return false;
+    seen.add(t.toLowerCase());
+    return true;
+  });
+}
+
+function allTagsFor(axis){
+  const set = new Set();
+  fragments.forEach(f => (f.tags[axis] || []).forEach(t => set.add(t)));
+  return [...set].sort((a, b) => a.localeCompare(b));
+}
+
+function fragmentMatchesFilters(frag){
+  return ['type', 'sfeer', 'stanza'].every(axis => {
+    if (activeFilters[axis].size === 0) return true;
+    return (frag.tags[axis] || []).some(t => activeFilters[axis].has(t));
+  });
+}
+
+function addFragment(){
+  const text = fragmentText.value.trim();
+  if (!text) return;
+  fragments.unshift({
+    id: genId('frag'),
+    text,
+    tags: {
+      type: parseTags(fragTypeInput.value),
+      sfeer: parseTags(fragSfeerInput.value),
+      stanza: parseTags(fragStanzaInput.value)
+    }
+  });
+  saveFragments();
+  fragmentText.value = '';
+  fragTypeInput.value = '';
+  fragSfeerInput.value = '';
+  fragStanzaInput.value = '';
+  renderFragments();
+}
+
+function deleteFragment(fragId){
+  const frag = fragments.find(f => f.id === fragId);
+  if (!frag) return;
+  if (!confirm('Dit fragment verwijderen?')) return;
+  fragments = fragments.filter(f => f.id !== fragId);
+  saveFragments();
+  renderFragments();
+}
+
+function insertFragmentIntoSong(fragId){
+  if (!currentSongId) {
+    alert('Open eerst een nummer in de bibliotheek om een fragment in te voegen.');
+    return;
+  }
+  const frag = fragments.find(f => f.id === fragId);
+  if (!frag) return;
+  const pos = (input.selectionStart != null) ? input.selectionStart : input.value.length;
+  const value = input.value;
+  const needsNewlineBefore = pos > 0 && value[pos - 1] !== '\n';
+  const insertion = (needsNewlineBefore ? '\n' : '') + frag.text;
+  input.value = value.slice(0, pos) + insertion + value.slice(pos);
+  const newPos = pos + insertion.length;
+  input.focus();
+  input.setSelectionRange(newPos, newPos);
+  updatePreview();
+  persistCurrentSongFromEditor();
+}
+
+function buildFragmentMuseText(frag){
+  const t = frag.tags.type.join(', ') || '(geen)';
+  const s = frag.tags.sfeer.join(', ') || '(geen)';
+  const st = frag.tags.stanza.join(', ') || '(geen)';
+  return `Fragment:\n"${frag.text}"\n\nHuidige tags — type: ${t}, sfeer: ${s}, stanza: ${st}\n\nKun je voorstellen welke labels (type / sfeer / stanza) hier het beste bij passen, eventueel ontbrekende varianten voorstellen, en/of een verdere uitwerking suggereren?`;
+}
+
+function renderFragmentFilters(){
+  fragmentFilters.innerHTML = '';
+  const axes = [['type', 'Type'], ['sfeer', 'Sfeer'], ['stanza', 'Stanza']];
+  axes.forEach(([axis]) => {
+    allTagsFor(axis).forEach(tag => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'filter-chip' + (activeFilters[axis].has(tag) ? ' active' : '');
+      chip.textContent = tag;
+      chip.addEventListener('click', () => {
+        if (activeFilters[axis].has(tag)) activeFilters[axis].delete(tag);
+        else activeFilters[axis].add(tag);
+        renderFragments();
+      });
+      fragmentFilters.appendChild(chip);
+    });
+  });
+}
+
+function renderFragments(){
+  renderFragmentFilters();
+  fragmentList.innerHTML = '';
+
+  const visible = fragments.filter(fragmentMatchesFilters);
+
+  if (fragments.length === 0) {
+    const hint = document.createElement('div');
+    hint.className = 'empty-hint';
+    hint.textContent = 'Nog geen fragmenten. Typ er hierboven een in en voeg tags toe.';
+    fragmentList.appendChild(hint);
+    return;
+  }
+  if (visible.length === 0) {
+    const hint = document.createElement('div');
+    hint.className = 'empty-hint';
+    hint.textContent = 'Geen fragmenten passen bij de actieve filters.';
+    fragmentList.appendChild(hint);
+    return;
+  }
+
+  visible.forEach(frag => {
+    const card = document.createElement('div');
+    card.className = 'fragment-card';
+
+    const textEl = document.createElement('div');
+    textEl.className = 'fragment-text';
+    textEl.textContent = frag.text;
+    card.appendChild(textEl);
+
+    const tagsEl = document.createElement('div');
+    tagsEl.className = 'fragment-tags';
+    ['type', 'sfeer', 'stanza'].forEach(axis => {
+      (frag.tags[axis] || []).forEach(tag => {
+        const pill = document.createElement('span');
+        pill.className = 'tag-pill ' + axis;
+        pill.textContent = tag;
+        tagsEl.appendChild(pill);
+      });
+    });
+    card.appendChild(tagsEl);
+
+    const actions = document.createElement('div');
+    actions.className = 'fragment-actions';
+    actions.innerHTML = `
+      <button data-action="insert">➕ In songtekst</button>
+      <button data-action="muse">🕯️ Muze</button>
+      <button data-action="delete">🗑</button>
+    `;
+    actions.querySelector('[data-action="insert"]').addEventListener('click', () => insertFragmentIntoSong(frag.id));
+    actions.querySelector('[data-action="delete"]').addEventListener('click', () => deleteFragment(frag.id));
+    actions.querySelector('[data-action="muse"]').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      copyToClipboard(buildFragmentMuseText(frag)).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Gekopieerd ✓';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+        tryOpenMuseClaude();
+      });
+    });
+    card.appendChild(actions);
+
+    fragmentList.appendChild(card);
+  });
+}
+
+addFragmentBtn.addEventListener('click', addFragment);
+fragmentsToggleBtn.addEventListener('click', () => {
+  fragmentsPanel.classList.toggle('open');
+});
+
+// ---- Boot ----
+updateStorageBanner();
+renderSidebar();
+renderFragments();
+const boot = firstAvailableSongId();
+if (boot) loadSong(boot.songId);
+else clearEditorEmptyState();
 </script>
 </body>
 </html>
