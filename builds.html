@@ -224,6 +224,114 @@ function loadBuilds(){
 }
 function saveBuilds(builds){ localStorage.setItem(LS_KEY, JSON.stringify(builds)); }
 
+/* ---------- GitHub sync ---------- */
+const GH_OWNER = '666sixto666';
+const GH_REPO = 'SixtoTools';
+const GH_SYNC_PATH = 'data/builds-sync.json';
+const GH_TOKEN_KEY = 'sixto_tools_gh_token';
+let syncState = { lastSyncedAt: null, syncing: false, lastError: null };
+let ghPushTimer = null;
+
+function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
+function setGhToken(t){ if(t) localStorage.setItem(GH_TOKEN_KEY, t); else localStorage.removeItem(GH_TOKEN_KEY); }
+
+function schedulePush(){
+  if(!getGhToken()) return;
+  clearTimeout(ghPushTimer);
+  ghPushTimer = setTimeout(()=>{ pushToGitHub(); }, 4000);
+}
+
+async function buildSyncPayload(){
+  const builds = JSON.parse(JSON.stringify(state.builds));
+  for(const b of builds){
+    delete b._thumb; delete b._collapsed;
+    for(const p of (b.photos||[])){
+      p.dataUrl = await getPhotoBlob(p.id);
+    }
+  }
+  return { updatedAt: new Date().toISOString(), template: loadTemplate(), builds };
+}
+
+async function applyRemotePayload(payload){
+  const builds = payload.builds || [];
+  for(const b of builds){
+    for(const p of (b.photos||[])){
+      if(p.dataUrl){ await savePhotoBlob(p.id, p.dataUrl); delete p.dataUrl; }
+    }
+  }
+  state.builds = builds;
+  if(payload.template) saveTemplate(payload.template);
+  saveBuilds(state.builds);
+}
+
+async function pullFromGitHub(silent){
+  try{
+    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    if(res.status === 404){ return; }
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const payload = await res.json();
+    if(payload.updatedAt && payload.updatedAt === syncState.lastSyncedAt) return;
+    await applyRemotePayload(payload);
+    syncState.lastSyncedAt = payload.updatedAt;
+    syncState.lastError = null;
+    if(!silent){ render(); if(state.currentBuildId) loadPhotos(state.currentBuildId); }
+  }catch(e){
+    syncState.lastError = e.message;
+  }
+}
+
+async function pushToGitHub(){
+  const token = getGhToken();
+  if(!token) return;
+  syncState.syncing = true;
+  try{
+    const payload = await buildSyncPayload();
+    const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_SYNC_PATH}`;
+    let sha = null;
+    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
+    if(getRes.ok){ const j = await getRes.json(); sha = j.sha; }
+    const body = {
+      message: 'Sync vanaf Sixto Builds',
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(payload)))),
+      branch: 'main'
+    };
+    if(sha) body.sha = sha;
+    const putRes = await fetch(api, { method:'PUT', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    if(!putRes.ok){ const j = await putRes.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+putRes.status)); }
+    syncState.lastSyncedAt = payload.updatedAt;
+    syncState.lastError = null;
+  }catch(e){
+    syncState.lastError = e.message;
+  }finally{
+    syncState.syncing = false;
+  }
+}
+
+function fmtDateTime(iso){ if(!iso) return null; try{ return new Date(iso).toLocaleString('nl-BE'); }catch(e){ return iso; } }
+
+async function saveGhToken(){
+  const val = document.getElementById('gh-token').value.trim();
+  setGhToken(val);
+  closeSheet();
+  if(val){
+    toast('Bezig met synchroniseren...');
+    await pullFromGitHub();
+    if(!syncState.lastSyncedAt){ await pushToGitHub(); }
+    render(); if(state.currentBuildId) loadPhotos(state.currentBuildId);
+    toast('Gesynct ✓');
+  } else {
+    toast('Token verwijderd, sync uitgeschakeld');
+  }
+}
+
+async function manualSyncClick(){
+  toast('Bezig met synchroniseren...');
+  await pullFromGitHub();
+  await pushToGitHub();
+  render(); if(state.currentBuildId) loadPhotos(state.currentBuildId);
+  toast(syncState.lastError ? 'Sync mislukt: '+syncState.lastError : 'Gesynct ✓');
+}
+
 /* ---------- Default checklist template ---------- */
 const DEFAULT_TEMPLATE = [
   {phase:"Intake & Ontwerp", steps:[
@@ -332,7 +440,7 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 /* ---------- App state ---------- */
 let state = { tab: 'library', builds: loadBuilds(), currentBuildId: null };
 
-function persist(){ saveBuilds(state.builds); }
+function persist(){ saveBuilds(state.builds); schedulePush(); }
 
 function getBuild(id){ return state.builds.find(b=>b.id===id); }
 
@@ -843,12 +951,23 @@ function openSheet(title, bodyHtml){
 function closeSheet(){ document.getElementById('overlayRoot').innerHTML=''; }
 
 function openMenu(){
+  const status = syncState.lastSyncedAt
+    ? `Laatst gesynct: ${fmtDateTime(syncState.lastSyncedAt)}`
+    : (getGhToken() ? 'Nog niet gesynct.' : 'Sync uitgeschakeld op dit toestel.');
   const html = `
+    <h2 class="section" style="margin-top:0;">GitHub sync</h2>
+    <label>Personal access token (blijft alleen op dit toestel)</label>
+    <input type="password" id="gh-token" placeholder="github_pat_..." value="${escAttr(getGhToken())}">
+    <button class="btn secondary block" style="margin-top:8px;" onclick="saveGhToken()">Token opslaan</button>
+    ${getGhToken() ? '<button class="btn block" style="margin-top:8px;" onclick="manualSyncClick()">🔄 Sync nu</button>' : ''}
+    <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''}</div>
+    <div class="small-note">Met een token gaat elke wijziging automatisch (na enkele seconden) naar je SixtoTools-repo, en wordt bij openen/elke 30s gecontroleerd op updates van je andere toestel. Zelfde token werkt ook in de songtool.</div>
+
+    <h2 class="section">Handmatige back-up</h2>
     <button class="btn secondary block" onclick="exportData()">⬇ Exporteer back-up (JSON)</button>
     <label style="margin-top:14px;">Importeer back-up</label>
     <input type="file" id="importFile" accept="application/json">
     <button class="btn secondary block" style="margin-top:10px;" onclick="importData()">⬆ Importeer</button>
-    <div class="small-note">Exporteer regelmatig een back-up. Deze tool draait nu op een vaste link — open dezelfde link op laptop en telefoon voor dezelfde app, maar de data zelf blijft lokaal per toestel/browser opgeslagen. Gebruik export/import om data over te zetten.</div>
     <div class="small-note" style="margin-top:14px;">Sixto Builds · lokale opslag in deze browser.</div>
   `;
   openSheet('Instellingen', html);
@@ -912,7 +1031,11 @@ function toast(msg){
 }
 
 /* ---------- Init ---------- */
-render();
+(async function initApp(){
+  if(getGhToken()){ await pullFromGitHub(true); }
+  render();
+  setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
+})();
 </script>
 </body>
 </html>
