@@ -168,6 +168,7 @@ a.link{color:var(--gold);text-decoration:underline;word-break:break-all;}
 
 <div class="tabbar">
   <button id="tab-library" class="active" onclick="goto('library')"><span class="ic">📚</span>Bibliotheek</button>
+  <button id="tab-todo" onclick="goto('todo')"><span class="ic">📝</span>Te doen</button>
   <button id="tab-active" onclick="goto('active')"><span class="ic">🔨</span>In build</button>
   <button id="tab-checklist" onclick="goto('template')"><span class="ic">✅</span>Checklist</button>
 </div>
@@ -467,8 +468,69 @@ function render(){
     return;
   }
   if(state.tab==='library'){ sub.textContent='Bibliotheek'; main.innerHTML = renderLibrary(); }
+  else if(state.tab==='todo'){ sub.textContent='Te doen'; main.innerHTML = renderTodo(); }
   else if(state.tab==='active'){ sub.textContent='Lopende builds'; main.innerHTML = renderActive(); }
   else if(state.tab==='template'){ sub.textContent='Standaard checklist'; main.innerHTML = renderTemplateEditor(); }
+}
+
+function nextSteps(b, limit){
+  const out = [];
+  for(let pi=0; pi<b.checklist.length; pi++){
+    const ph = b.checklist[pi];
+    for(let si=0; si<ph.steps.length; si++){
+      const s = ph.steps[si];
+      if(!s.checked){
+        out.push({phase: ph.phase, text: s.text, pi, si});
+        if(out.length>=limit) return out;
+      }
+    }
+  }
+  return out;
+}
+
+function renderTodo(){
+  const active = state.builds.filter(b=>b.status==='in_progress');
+  if(active.length===0){
+    return `<div class="empty"><div class="icon">📝</div><div>Geen lopende builds.<br>Start een build om hier je eerstvolgende stappen te zien.</div></div>`;
+  }
+  const sorted = [...active].sort((a,b)=>{
+    const ta = a.specs && a.specs.targetDate;
+    const tb = b.specs && b.specs.targetDate;
+    if(ta && tb) return ta.localeCompare(tb);
+    if(ta && !tb) return -1;
+    if(!ta && tb) return 1;
+    return (a.startDate||'').localeCompare(b.startDate||'');
+  });
+  let html = `<h2 class="section">Volgende stappen (${sorted.length} build${sorted.length!==1?'s':''})</h2>`;
+  sorted.forEach(b=>{ html += renderTodoCard(b); });
+  return html;
+}
+
+function renderTodoCard(b){
+  const steps = nextSteps(b, 3);
+  const p = buildProgress(b);
+  const thumbStyle = b._thumb ? `style="background-image:url('${b._thumb}')"` : '';
+  let stepsHtml;
+  if(steps.length===0){
+    stepsHtml = `<div class="small-note" style="color:var(--ok);margin-top:10px;">✓ Alle stappen afgevinkt — klaar om af te ronden.</div>`;
+  } else {
+    stepsHtml = `<div style="margin-top:10px;">` + steps.map(st=>`<div class="step" onclick="toggleStep('${b.id}',${st.pi},${st.si})" style="cursor:pointer;">
+      <div class="box"></div>
+      <div class="stext"><span style="color:var(--text-dim);font-size:11.5px;">${esc(st.phase)}</span><br>${esc(st.text)}</div>
+    </div>`).join('') + `</div>`;
+  }
+  return `<div class="card">
+    <div class="build-card" style="cursor:pointer;" onclick="openBuild('${b.id}')">
+      <div class="thumb" ${thumbStyle}>${b._thumb?'':'🎸'}</div>
+      <div class="info">
+        <div class="name">${esc(b.name||'Naamloze build')}</div>
+        <div class="meta">${esc(b.type||'')}${b.client?' · '+esc(b.client):''}</div>
+        <div class="progress-bar"><div style="width:${p.pct}%"></div></div>
+        <div class="progress-label">${p.done}/${p.total} stappen · ${p.pct}%</div>
+      </div>
+    </div>
+    ${stepsHtml}
+  </div>`;
 }
 
 function renderLibrary(){
