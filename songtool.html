@@ -207,6 +207,7 @@
   </div>
   <div class="toolbar">
     <button id="libraryToggleBtn">📚 Bibliotheek</button>
+    <button id="syncSettingsBtn" onclick="openSyncSettings()">🔗 Sync</button>
     <label class="toggle-wrap">
       <input type="checkbox" id="museToggle">
       <span class="toggle-slider"></span>
@@ -472,7 +473,93 @@ function saveLibrary(){
       storageOK = false;
       updateStorageBanner();
     }
+    scheduleGhPush();
   }, 300);
+}
+
+/* ---------- GitHub sync (shared token with Sixto Builds, same origin) ---------- */
+const GH_OWNER = '666sixto666';
+const GH_REPO = 'SixtoTools';
+const GH_SYNC_PATH = 'data/songtool-sync.json';
+const GH_TOKEN_KEY = 'sixto_tools_gh_token';
+let syncState = { lastSyncedAt: null, syncing: false, lastError: null };
+let ghPushTimer = null;
+
+function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
+function setGhToken(t){ if(t) localStorage.setItem(GH_TOKEN_KEY, t); else localStorage.removeItem(GH_TOKEN_KEY); }
+
+function scheduleGhPush(){
+  if(!getGhToken()) return;
+  clearTimeout(ghPushTimer);
+  ghPushTimer = setTimeout(()=>{ pushToGitHub(); }, 4000);
+}
+
+async function pullFromGitHub(silent){
+  try{
+    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    if(res.status === 404){ return; }
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const payload = await res.json();
+    if(payload.updatedAt && payload.updatedAt === syncState.lastSyncedAt) return;
+    if(payload.library){
+      library = payload.library;
+      localStorage.setItem(LIB_KEY, JSON.stringify(library));
+    }
+    syncState.lastSyncedAt = payload.updatedAt;
+    syncState.lastError = null;
+    if(!silent){
+      renderSidebar();
+      const boot = firstAvailableSongId();
+      if(boot) loadSong(boot.songId); else clearEditorEmptyState();
+    }
+  }catch(e){
+    syncState.lastError = e.message;
+  }
+}
+
+async function pushToGitHub(){
+  const token = getGhToken();
+  if(!token) return;
+  syncState.syncing = true;
+  try{
+    const payload = { updatedAt: new Date().toISOString(), library };
+    const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_SYNC_PATH}`;
+    let sha = null;
+    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
+    if(getRes.ok){ const j = await getRes.json(); sha = j.sha; }
+    const body = {
+      message: 'Sync vanaf songtool',
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(payload)))),
+      branch: 'main'
+    };
+    if(sha) body.sha = sha;
+    const putRes = await fetch(api, { method:'PUT', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    if(!putRes.ok){ const j = await putRes.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+putRes.status)); }
+    syncState.lastSyncedAt = payload.updatedAt;
+    syncState.lastError = null;
+  }catch(e){
+    syncState.lastError = e.message;
+  }finally{
+    syncState.syncing = false;
+  }
+}
+
+async function openSyncSettings(){
+  const current = getGhToken();
+  const val = prompt('GitHub personal access token voor sync (leeg laten + OK om uit te schakelen):', current);
+  if(val === null) return;
+  const trimmed = val.trim();
+  setGhToken(trimmed);
+  if(trimmed){
+    await pullFromGitHub();
+    if(!syncState.lastSyncedAt){ await pushToGitHub(); }
+    renderSidebar();
+    const boot = firstAvailableSongId();
+    if(boot) loadSong(boot.songId);
+    alert(syncState.lastError ? ('Sync mislukt: '+syncState.lastError) : 'Gesynct ✓ (zelfde token werkt ook in Sixto Builds)');
+  } else {
+    alert('Sync uitgeschakeld op dit toestel.');
+  }
 }
 
 function findAlbumOfSong(songId){
@@ -979,11 +1066,15 @@ museCopyBtn.addEventListener('click', () => {
   });
 });
 
-updateStorageBanner();
-renderSidebar();
-const boot = firstAvailableSongId();
-if (boot) loadSong(boot.songId);
-else clearEditorEmptyState();
+(async function initApp(){
+  if(getGhToken()){ await pullFromGitHub(true); }
+  updateStorageBanner();
+  renderSidebar();
+  const boot = firstAvailableSongId();
+  if (boot) loadSong(boot.songId);
+  else clearEditorEmptyState();
+  setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
+})();
 </script>
 </body>
 </html>
