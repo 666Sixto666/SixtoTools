@@ -230,15 +230,17 @@ const GH_OWNER = '666sixto666';
 const GH_REPO = 'SixtoTools';
 const GH_SYNC_PATH = 'data/builds-sync.json';
 const GH_TOKEN_KEY = 'sixto_tools_gh_token';
+const GH_DIRTY_KEY = 'sixto_tools_dirty_v1';
 let syncState = { lastSyncedAt: null, syncing: false, lastError: null };
 let ghPushTimer = null;
-let dirty = false; // true = local changes exist that haven't been confirmed pushed yet
+let dirty = localStorage.getItem(GH_DIRTY_KEY) === '1'; // survives reload: true = a change from a previous session may never have been pushed
 
 function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
 function setGhToken(t){ if(t) localStorage.setItem(GH_TOKEN_KEY, t); else localStorage.removeItem(GH_TOKEN_KEY); }
 
 function schedulePush(){
   dirty = true;
+  localStorage.setItem(GH_DIRTY_KEY, '1');
   if(!getGhToken()) return;
   clearTimeout(ghPushTimer);
   ghPushTimer = setTimeout(()=>{ pushToGitHub(); }, 4000);
@@ -256,12 +258,14 @@ async function buildSyncPayload(){
 }
 
 async function applyRemotePayload(payload){
+  if(dirty) return; // re-check: a local change may have landed while this pull's network request was in flight
   const builds = payload.builds || [];
   for(const b of builds){
     for(const p of (b.photos||[])){
       if(p.dataUrl){ await savePhotoBlob(p.id, p.dataUrl); delete p.dataUrl; }
     }
   }
+  if(dirty) return; // re-check again: photo writes above are also async
   state.builds = builds;
   if(payload.template) saveTemplate(payload.template);
   saveBuilds(state.builds);
@@ -271,11 +275,14 @@ async function pullFromGitHub(silent){
   if(dirty) return; // don't let a stale remote copy overwrite unsaved local changes
   try{
     const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    if(dirty) return; // re-check: the fetch above can take a moment, and a checkbox tap may have happened during it
     if(res.status === 404){ return; }
     if(!res.ok) throw new Error('HTTP '+res.status);
     const payload = await res.json();
+    if(dirty) return; // re-check once more after parsing the response
     if(payload.updatedAt && payload.updatedAt === syncState.lastSyncedAt) return;
     await applyRemotePayload(payload);
+    if(dirty) return; // applyRemotePayload may have aborted internally; don't report a stale sync as successful
     syncState.lastSyncedAt = payload.updatedAt;
     syncState.lastError = null;
     if(!silent){ render(); if(state.currentBuildId) loadPhotos(state.currentBuildId); }
@@ -305,6 +312,7 @@ async function pushToGitHub(){
     syncState.lastSyncedAt = payload.updatedAt;
     syncState.lastError = null;
     dirty = false;
+    localStorage.removeItem(GH_DIRTY_KEY);
   }catch(e){
     syncState.lastError = e.message;
   }finally{
@@ -1034,9 +1042,48 @@ function openMenu(){
     <label style="margin-top:14px;">Importeer back-up</label>
     <input type="file" id="importFile" accept="application/json">
     <button class="btn secondary block" style="margin-top:10px;" onclick="importData()">⬆ Importeer</button>
+
+    <h2 class="section">App-code bijwerken (geavanceerd)</h2>
+    <div class="small-note">Als Claude je een nieuwe versie van builds.html geeft: plak de volledige inhoud hieronder en tik op pushen. Dit gebruikt hetzelfde token als hierboven, rechtstreeks vanuit je browser — er komt niets bij Claude terecht. Bewaar het bestand dat je kreeg altijd ook gewoon, voor het geval iets misloopt.</div>
+    <textarea id="app-update-code" placeholder="Plak hier de volledige nieuwe builds.html inhoud..." style="min-height:90px;font-family:monospace;font-size:11.5px;"></textarea>
+    <button class="btn secondary block" style="margin-top:8px;" onclick="pushAppUpdate()">🚀 Push naar SixtoTools/builds.html</button>
+    <div class="small-note" id="app-update-status"></div>
+
     <div class="small-note" style="margin-top:14px;">Sixto Builds · lokale opslag in deze browser.</div>
   `;
   openSheet('Instellingen', html);
+}
+
+async function pushAppUpdate(){
+  const token = getGhToken();
+  const statusEl = document.getElementById('app-update-status');
+  if(!token){ alert('Stel eerst hierboven je GitHub token in en bewaar het.'); return; }
+  const code = document.getElementById('app-update-code').value;
+  if(!code.trim()){ alert('Plak eerst de nieuwe code in het veld.'); return; }
+  if(!code.trim().startsWith('<!DOCTYPE html>') || !code.trim().endsWith('</html>')){
+    alert('Dit lijkt geen volledig HTML-bestand (moet starten met <!DOCTYPE html> en eindigen met </html>). Niets gepusht, ter veiligheid.');
+    return;
+  }
+  if(!confirm('Dit vervangt builds.html live op GitHub Pages meteen voor alle toestellen. Weet je zeker dat dit de volledige, correcte nieuwe versie is?')) return;
+  statusEl.textContent = 'Bezig met pushen...';
+  try{
+    const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/builds.html`;
+    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
+    if(!getRes.ok) throw new Error('Kon huidige bestand niet ophalen (HTTP '+getRes.status+')');
+    const meta = await getRes.json();
+    const body = {
+      message: 'App-update via ingebouwde updateknop',
+      content: btoa(unescape(encodeURIComponent(code))),
+      branch: 'main',
+      sha: meta.sha
+    };
+    const putRes = await fetch(api, { method:'PUT', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    if(!putRes.ok){ const j = await putRes.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+putRes.status)); }
+    statusEl.textContent = 'Gepusht ✓ — GitHub Pages herbouwt binnen ~1 minuut. Herlaad de app dan.';
+    toast('App-update gepusht ✓');
+  }catch(e){
+    statusEl.textContent = 'Mislukt: '+e.message;
+  }
 }
 
 async function exportData(){
@@ -1098,9 +1145,25 @@ function toast(msg){
 
 /* ---------- Init ---------- */
 (async function initApp(){
-  if(getGhToken()){ await pullFromGitHub(true); }
+  if(getGhToken()){
+    if(dirty){
+      // A change from a previous visit may never have made it to GitHub — try to
+      // send it now before touching anything from the server, so we never pull
+      // a stale copy on top of an unsynced local edit.
+      await pushToGitHub();
+    }
+    await pullFromGitHub(true);
+  }
   render();
   setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
+  // Best-effort: try to flush a pending push the moment the app is backgrounded/closed,
+  // so the 4s debounce window rarely gets the chance to be interrupted in the first place.
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.visibilityState==='hidden' && dirty && getGhToken()){
+      clearTimeout(ghPushTimer);
+      pushToGitHub();
+    }
+  });
 })();
 </script>
 </body>
