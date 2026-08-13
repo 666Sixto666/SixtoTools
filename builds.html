@@ -87,15 +87,15 @@ textarea{resize:vertical;min-height:60px;}
 .phase-head .count{font-size:12px;color:var(--text-dim);}
 .phase-progress{height:4px;background:var(--card2);border-radius:3px;margin:0 4px 8px 4px;overflow:hidden;}
 .phase-progress>div{height:100%;background:var(--gold);}
-.step{display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--line);
-  border-radius:10px;padding:10px 12px;margin-bottom:7px;}
+.step{display:flex;align-items:flex-start;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:8px 8px 8px 12px;margin-bottom:7px;}
 .step.checked{opacity:.55;}
-.step .box{width:23px;height:23px;border-radius:7px;border:2px solid var(--wood-d);flex-shrink:0;
-  margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#1a1310;}
+.step .box{width:30px;height:30px;border-radius:8px;border:2px solid var(--wood-d);flex-shrink:0;
+  margin-top:-2px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#1a1310;}
 .step.checked .box{background:var(--wood);border-color:var(--wood);}
-.step .stext{flex:1;font-size:14.5px;line-height:1.35;}
+.step .stext{flex:1;font-size:14.5px;line-height:1.35;padding-top:4px;}
 .step.checked .stext{text-decoration:line-through;text-decoration-color:var(--text-dim);}
-.step .del{color:var(--text-dim);font-size:16px;padding:2px 4px;}
+.step .del{color:var(--text-dim);font-size:16px;padding:10px 8px;margin:-8px -6px -8px 0;}
 .step-note{width:100%;background:transparent;border:none;border-top:1px dashed var(--line);
   color:var(--text-dim);font-size:12.5px;margin-top:6px;padding-top:6px;font-family:inherit;}
 
@@ -118,6 +118,13 @@ textarea{resize:vertical;min-height:60px;}
   align-items:center;justify-content:center;padding:20px;}
 .lightbox img{max-width:100%;max-height:90vh;border-radius:8px;}
 .lightbox .close{position:absolute;top:20px;right:20px;color:#fff;font-size:26px;}
+
+.confirm-box{position:fixed;left:16px;right:16px;top:50%;transform:translateY(-50%);z-index:101;
+  background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:20px;
+  max-width:400px;margin:0 auto;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+.confirm-msg{font-size:15px;line-height:1.5;margin-bottom:18px;}
+.confirm-actions{display:flex;gap:10px;}
+.confirm-actions button{flex:1;}
 
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--bg2);
@@ -176,6 +183,7 @@ a.link{color:var(--gold);text-decoration:underline;word-break:break-all;}
 <button class="fab" onclick="openNewBuildSheet()">+</button>
 
 <div id="overlayRoot"></div>
+<div id="modalRoot"></div>
 
 <script>
 /* ---------- Storage layer ---------- */
@@ -294,6 +302,7 @@ async function pullFromGitHub(silent){
 async function pushToGitHub(){
   const token = getGhToken();
   if(!token) return;
+  if(syncState.syncing){ schedulePush(); return; } // another push is mid-flight; retry shortly instead of dropping this change silently
   syncState.syncing = true;
   try{
     const payload = await buildSyncPayload();
@@ -779,6 +788,58 @@ function showLightbox(url){
 }
 function closeLightbox(){ document.getElementById('overlayRoot').innerHTML=''; }
 
+// Native confirm()/alert() are unreliable in iOS home-screen ("Zet op beginscherm") standalone
+// mode — on some iOS versions they don't appear at all. This is a self-drawn replacement so
+// destructive actions behave identically whether opened in Safari or from the home screen.
+function appConfirm(message){
+  return new Promise((resolve)=>{
+    const root = document.getElementById('modalRoot');
+    root.innerHTML = `<div class="sheet-overlay"></div>
+      <div class="confirm-box">
+        <div class="confirm-msg">${esc(message)}</div>
+        <div class="confirm-actions">
+          <button class="btn secondary" id="confirm-cancel">Annuleer</button>
+          <button class="btn danger" id="confirm-ok">Bevestig</button>
+        </div>
+      </div>`;
+    document.getElementById('confirm-ok').onclick = ()=>{ root.innerHTML=''; resolve(true); };
+    document.getElementById('confirm-cancel').onclick = ()=>{ root.innerHTML=''; resolve(false); };
+  });
+}
+
+function appAlert(message){
+  return new Promise((resolve)=>{
+    const root = document.getElementById('modalRoot');
+    root.innerHTML = `<div class="sheet-overlay"></div>
+      <div class="confirm-box">
+        <div class="confirm-msg">${esc(message)}</div>
+        <div class="confirm-actions">
+          <button class="btn" id="alert-ok">Ok</button>
+        </div>
+      </div>`;
+    document.getElementById('alert-ok').onclick = ()=>{ root.innerHTML=''; resolve(); };
+  });
+}
+
+function appPrompt(message, defaultValue){
+  return new Promise((resolve)=>{
+    const root = document.getElementById('modalRoot');
+    root.innerHTML = `<div class="sheet-overlay"></div>
+      <div class="confirm-box">
+        <div class="confirm-msg">${esc(message)}</div>
+        <input type="text" id="prompt-input" value="${escAttr(defaultValue||'')}" style="margin-bottom:14px;">
+        <div class="confirm-actions">
+          <button class="btn secondary" id="prompt-cancel">Annuleer</button>
+          <button class="btn" id="prompt-ok">Ok</button>
+        </div>
+      </div>`;
+    const input = document.getElementById('prompt-input');
+    input.focus(); input.select();
+    document.getElementById('prompt-ok').onclick = ()=>{ const v = input.value; root.innerHTML=''; resolve(v); };
+    document.getElementById('prompt-cancel').onclick = ()=>{ root.innerHTML=''; resolve(null); };
+  });
+}
+
 /* ---------- Checklist actions ---------- */
 function toggleStep(buildId,pi,si){
   const b = getBuild(buildId);
@@ -836,8 +897,8 @@ function templateDeletePhase(pi){ const t=loadTemplate(); t.splice(pi,1); saveTe
 function templateAddPhase(){
   const t=loadTemplate(); t.push({phase:'Nieuwe fase', steps:[]}); saveTemplate(t); render();
 }
-function resetTemplate(){
-  if(confirm('Standaard checklist herstellen naar origineel? Eigen aanpassingen gaan verloren.')){
+async function resetTemplate(){
+  if(await appConfirm('Standaard checklist herstellen naar origineel? Eigen aanpassingen gaan verloren.')){
     saveTemplate(JSON.parse(JSON.stringify(DEFAULT_TEMPLATE))); render();
   }
 }
@@ -868,9 +929,9 @@ function openNewBuildSheet(){
   openSheet('Nieuwe build starten', html);
 }
 
-function createBuild(){
+async function createBuild(){
   const name = document.getElementById('nb-name').value.trim();
-  if(!name){ alert('Geef de build een naam.'); return; }
+  if(!name){ await appAlert('Geef de build een naam.'); return; }
   const type = document.getElementById('nb-type').value;
   const startDate = document.getElementById('nb-date').value || todayStr();
   const client = document.getElementById('nb-client').value.trim();
@@ -996,8 +1057,8 @@ function reopenBuild(buildId){
   persist(); render();
 }
 
-function deleteBuild(buildId){
-  if(!confirm('Deze build volledig verwijderen? Dit kan niet ongedaan gemaakt worden.')) return;
+async function deleteBuild(buildId){
+  if(!(await appConfirm('Deze build volledig verwijderen? Dit kan niet ongedaan gemaakt worden.'))) return;
   const b = getBuild(buildId);
   (b.photos||[]).forEach(p=>deletePhotoBlob(p.id));
   state.builds = state.builds.filter(x=>x.id!==buildId);
@@ -1005,9 +1066,9 @@ function deleteBuild(buildId){
   backToList();
 }
 
-function editSoundLink(buildId){
+async function editSoundLink(buildId){
   const b = getBuild(buildId);
-  const url = prompt('Link naar geluidsdemo (bv. voice memo in cloud, SoundCloud, etc.)', b.soundDemoLink||'');
+  const url = await appPrompt('Link naar geluidsdemo (bv. voice memo in cloud, SoundCloud, etc.)', b.soundDemoLink||'');
   if(url===null) return;
   b.soundDemoLink = url.trim();
   persist(); render();
@@ -1031,7 +1092,8 @@ function openMenu(){
   const html = `
     <h2 class="section" style="margin-top:0;">GitHub sync</h2>
     <label>Personal access token (blijft alleen op dit toestel)</label>
-    <input type="password" id="gh-token" placeholder="github_pat_..." value="${escAttr(getGhToken())}">
+    <input type="text" id="gh-token" placeholder="github_pat_..." value="${escAttr(getGhToken())}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:12.5px;">
+    <div class="small-note">Dit veld toont bewust gewone tekst, geen wachtwoordveld — zo probeert je iPhone niet per ongeluk een opgeslagen wachtwoord uit je sleutelhanger voor te stellen in plaats van je GitHub-token.</div>
     <button class="btn secondary block" style="margin-top:8px;" onclick="saveGhToken()">Token opslaan</button>
     ${getGhToken() ? '<button class="btn block" style="margin-top:8px;" onclick="manualSyncClick()">🔄 Sync nu</button>' : ''}
     <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''}</div>
@@ -1045,7 +1107,7 @@ function openMenu(){
 
     <h2 class="section">App-code bijwerken (geavanceerd)</h2>
     <div class="small-note">Als Claude je een nieuwe versie van builds.html geeft: plak de volledige inhoud hieronder en tik op pushen. Dit gebruikt hetzelfde token als hierboven, rechtstreeks vanuit je browser — er komt niets bij Claude terecht. Bewaar het bestand dat je kreeg altijd ook gewoon, voor het geval iets misloopt.</div>
-    <textarea id="app-update-code" placeholder="Plak hier de volledige nieuwe builds.html inhoud..." style="min-height:90px;font-family:monospace;font-size:11.5px;"></textarea>
+    <textarea id="app-update-code" placeholder="Plak hier de volledige nieuwe builds.html inhoud..." autocapitalize="off" autocorrect="off" spellcheck="false" style="min-height:90px;font-family:monospace;font-size:11.5px;"></textarea>
     <button class="btn secondary block" style="margin-top:8px;" onclick="pushAppUpdate()">🚀 Push naar SixtoTools/builds.html</button>
     <div class="small-note" id="app-update-status"></div>
 
@@ -1057,14 +1119,14 @@ function openMenu(){
 async function pushAppUpdate(){
   const token = getGhToken();
   const statusEl = document.getElementById('app-update-status');
-  if(!token){ alert('Stel eerst hierboven je GitHub token in en bewaar het.'); return; }
+  if(!token){ await appAlert('Stel eerst hierboven je GitHub token in en bewaar het.'); return; }
   const code = document.getElementById('app-update-code').value;
-  if(!code.trim()){ alert('Plak eerst de nieuwe code in het veld.'); return; }
+  if(!code.trim()){ await appAlert('Plak eerst de nieuwe code in het veld.'); return; }
   if(!code.trim().startsWith('<!DOCTYPE html>') || !code.trim().endsWith('</html>')){
-    alert('Dit lijkt geen volledig HTML-bestand (moet starten met <!DOCTYPE html> en eindigen met </html>). Niets gepusht, ter veiligheid.');
+    await appAlert('Dit lijkt geen volledig HTML-bestand (moet starten met <!DOCTYPE html> en eindigen met </html>). Niets gepusht, ter veiligheid.');
     return;
   }
-  if(!confirm('Dit vervangt builds.html live op GitHub Pages meteen voor alle toestellen. Weet je zeker dat dit de volledige, correcte nieuwe versie is?')) return;
+  if(!(await appConfirm('Dit vervangt builds.html live op GitHub Pages meteen voor alle toestellen. Weet je zeker dat dit de volledige, correcte nieuwe versie is?'))) return;
   statusEl.textContent = 'Bezig met pushen...';
   try{
     const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/builds.html`;
@@ -1104,15 +1166,15 @@ async function exportData(){
   toast('Back-up gedownload ✓');
 }
 
-function importData(){
+async function importData(){
   const input = document.getElementById('importFile');
   const file = input.files[0];
-  if(!file){ alert('Kies eerst een back-up bestand.'); return; }
+  if(!file){ await appAlert('Kies eerst een back-up bestand.'); return; }
   const reader = new FileReader();
   reader.onload = async (e)=>{
     try{
       const payload = JSON.parse(e.target.result);
-      if(!confirm('Importeren voegt builds toe aan je huidige bibliotheek (bestaande builds blijven staan). Doorgaan?')) return;
+      if(!(await appConfirm('Importeren voegt builds toe aan je huidige bibliotheek (bestaande builds blijven staan). Doorgaan?'))) return;
       if(payload.template) saveTemplate(payload.template);
       for(const b of (payload.builds||[])){
         for(const p of (b.photos||[])){
@@ -1126,7 +1188,7 @@ function importData(){
       closeSheet(); render();
       toast('Import voltooid ✓');
     }catch(err){
-      alert('Kon bestand niet lezen: '+err.message);
+      await appAlert('Kon bestand niet lezen: '+err.message);
     }
   };
   reader.readAsText(file);
