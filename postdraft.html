@@ -73,6 +73,19 @@
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#1b1712;
     padding:9px 16px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;}
   .toast.show{opacity:1;}
+
+  .schedule-card{border-color:var(--accent-2);}
+  .schedule-row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;}
+  .schedule-day{flex:1;min-width:88px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:9px 10px;text-align:center;}
+  .schedule-day.today{border-color:var(--accent);background:rgba(193,121,63,0.12);}
+  .schedule-day .d{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
+  .schedule-day .f{font-size:12.5px;margin-top:3px;color:var(--text);}
+  .today-banner{font-size:13.5px;line-height:1.5;padding:11px 13px;border-radius:8px;background:rgba(193,121,63,0.1);border:1px solid var(--accent);margin-bottom:14px;}
+  .today-banner.off{background:var(--card-2);border-color:var(--line);color:var(--text-dim);}
+  .week-progress{margin-top:14px;}
+  .week-progress .wp-head{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;}
+  .week-bar{height:8px;background:var(--card-2);border:1px solid var(--line);border-radius:5px;overflow:hidden;}
+  .week-bar > div{height:100%;background:var(--accent);transition:width .3s;}
 </style>
 </head>
 <body>
@@ -82,6 +95,16 @@
   <h1>Post Draft</h1>
   <p>Korte notities in &rarr; kant-en-klare Instagram caption + YouTube beschrijving uit, in de vaste Sixto-toon. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
 </header>
+
+<div class="card schedule-card">
+  <h2>Postschema</h2>
+  <div id="today-banner"></div>
+  <div class="schedule-row" id="schedule-row"></div>
+  <div class="week-progress">
+    <div class="wp-head"><span>Deze week gelogd</span><span id="wp-count">0 / 3</span></div>
+    <div class="week-bar"><div id="wp-bar" style="width:0%;"></div></div>
+  </div>
+</div>
 
 <div class="card">
   <h2>Build notities</h2>
@@ -296,6 +319,7 @@ function saveLog(d, ig, yt){
   log = log.slice(0, 50);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
+  renderWeekProgress();
 }
 
 function renderLog(){
@@ -353,6 +377,7 @@ function importLog(evt){
       const data = JSON.parse(e.target.result);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       renderLog();
+      renderWeekProgress();
     }catch(err){ alert('Kon bestand niet lezen.'); }
   };
   reader.readAsText(file);
@@ -396,8 +421,69 @@ document.getElementById('f-project').addEventListener('input', function(){
   }
 });
 
+// --- Posting schedule: Mon = progress, Thu = material/origin, Sat = story/finished (optional 3rd) ---
+const SCHEDULE = {
+  1: { label: 'Ma', full: 'maandag', focus: 'Voortgang / technische stap', tone: 'technical', bannerOn: 'Vandaag is een geplande postdag: focus op voortgang of een technische stap in de build.' },
+  4: { label: 'Do', full: 'donderdag', focus: 'Materiaal & herkomst', tone: 'curious', bannerOn: 'Vandaag is een geplande postdag: focus op het hout en zijn herkomst.' },
+  6: { label: 'Za', full: 'zaterdag', focus: 'Verhaal / afgewerkt stuk (optioneel)', tone: 'calm', bannerOn: 'Optionele derde postdag: ruimte voor merkverhaal of een afgewerkt stuk.' }
+};
+const SCHEDULE_DAYS_ORDER = [1, 4, 6];
+const DAY_LABELS = { 0:'Zo', 1:'Ma', 2:'Di', 3:'Wo', 4:'Do', 5:'Vr', 6:'Za' };
+
+function renderSchedule(){
+  const today = new Date().getDay();
+  const row = document.getElementById('schedule-row');
+  row.innerHTML = SCHEDULE_DAYS_ORDER.map(d => {
+    const s = SCHEDULE[d];
+    const isToday = d === today;
+    return `<div class="schedule-day${isToday ? ' today' : ''}">
+      <div class="d">${s.label}</div>
+      <div class="f">${s.focus}</div>
+    </div>`;
+  }).join('');
+
+  const banner = document.getElementById('today-banner');
+  if(SCHEDULE[today]){
+    banner.className = 'today-banner';
+    banner.textContent = SCHEDULE[today].bannerOn;
+  } else {
+    banner.className = 'today-banner off';
+    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 prima moment als je toch iets te delen hebt, maar geen verplichting.`;
+  }
+}
+
+function getISOWeekKey(date){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7; // Mon=0..Sun=6
+  d.setUTCDate(d.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const weekNum = 1 + Math.round(((d - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+  return `${d.getUTCFullYear()}-W${weekNum}`;
+}
+
+function renderWeekProgress(){
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
+  const thisWeek = getISOWeekKey(new Date());
+  const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek).length;
+  const target = 3;
+  const pct = Math.min(100, Math.round((count / target) * 100));
+  document.getElementById('wp-count').textContent = `${count} / ${target}`;
+  document.getElementById('wp-bar').style.width = pct + '%';
+}
+
 refreshBuilds();
 renderLog();
+renderSchedule();
+renderWeekProgress();
+
+(function applySuggestedTone(){
+  const today = new Date().getDay();
+  if(SCHEDULE[today]){
+    const toneSel = document.getElementById('f-tone');
+    if(toneSel) toneSel.value = SCHEDULE[today].tone;
+  }
+})();
 </script>
 
 </body>
