@@ -80,6 +80,7 @@
   .schedule-day.today{border-color:var(--accent);background:rgba(193,121,63,0.12);}
   .schedule-day .d{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
   .schedule-day .f{font-size:12.5px;margin-top:3px;color:var(--text);}
+  .yt-badge{margin-top:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--accent-2);border:1px solid var(--accent-2);border-radius:10px;padding:2px 6px;display:inline-block;}
   .today-banner{font-size:13.5px;line-height:1.5;padding:11px 13px;border-radius:8px;background:rgba(193,121,63,0.1);border:1px solid var(--accent);margin-bottom:14px;}
   .today-banner.off{background:var(--card-2);border-color:var(--line);color:var(--text-dim);}
   .week-progress{margin-top:14px;}
@@ -423,11 +424,13 @@ document.getElementById('f-project').addEventListener('input', function(){
 
 // --- Posting schedule: Mon = progress, Thu = material/origin, Sat = story/finished (optional 3rd) ---
 const SCHEDULE = {
-  1: { label: 'Ma', full: 'maandag', focus: 'Voortgang / technische stap', tone: 'technical', bannerOn: 'Vandaag is een geplande postdag: focus op voortgang of een technische stap in de build.' },
-  4: { label: 'Do', full: 'donderdag', focus: 'Materiaal & herkomst', tone: 'curious', bannerOn: 'Vandaag is een geplande postdag: focus op het hout en zijn herkomst.' },
-  6: { label: 'Za', full: 'zaterdag', focus: 'Verhaal / afgewerkt stuk (optioneel)', tone: 'calm', bannerOn: 'Optionele derde postdag: ruimte voor merkverhaal of een afgewerkt stuk.' }
+  1: { label: 'Ma', full: 'maandag', focus: 'Voortgang / technische stap', tone: 'technical', youtube: true, bannerOn: 'Vandaag is een vaste postdag: focus op voortgang of een technische stap in de build. Geschikt materiaal voor YouTube.' },
+  2: { label: 'Di', full: 'dinsdag', focus: 'Ontwerpkeuze / detail-moment', tone: 'curious', youtube: false, bannerOn: 'Vandaag is een vaste postdag: een kleine ontwerpkeuze of detail uitlichten, laagdrempelig.' },
+  4: { label: 'Do', full: 'donderdag', focus: 'Materiaal & herkomst', tone: 'curious', youtube: true, bannerOn: 'Vandaag is een vaste postdag: focus op het hout en zijn herkomst. Geschikt materiaal voor YouTube.' },
+  0: { label: 'Zo', full: 'zondag', focus: 'Verhaal / afgewerkt stuk (optioneel)', tone: 'calm', youtube: false, bannerOn: 'Optionele extra postdag: ruimte voor merkverhaal of een afgewerkt stuk.' }
 };
-const SCHEDULE_DAYS_ORDER = [1, 4, 6];
+const SCHEDULE_DAYS_ORDER = [1, 2, 4, 0];
+const WEEKLY_TARGET = 3; // ma/di/do = vast ritme; zondag telt als bonus daarboven
 const DAY_LABELS = { 0:'Zo', 1:'Ma', 2:'Di', 3:'Wo', 4:'Do', 5:'Vr', 6:'Za' };
 
 function renderSchedule(){
@@ -436,9 +439,11 @@ function renderSchedule(){
   row.innerHTML = SCHEDULE_DAYS_ORDER.map(d => {
     const s = SCHEDULE[d];
     const isToday = d === today;
+    const badge = s.youtube ? '<div class="yt-badge">+ YouTube</div>' : '';
     return `<div class="schedule-day${isToday ? ' today' : ''}">
       <div class="d">${s.label}</div>
       <div class="f">${s.focus}</div>
+      ${badge}
     </div>`;
   }).join('');
 
@@ -466,7 +471,7 @@ function renderWeekProgress(){
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   const thisWeek = getISOWeekKey(new Date());
   const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek).length;
-  const target = 3;
+  const target = WEEKLY_TARGET;
   const pct = Math.min(100, Math.round((count / target) * 100));
   document.getElementById('wp-count').textContent = `${count} / ${target}`;
   document.getElementById('wp-bar').style.width = pct + '%';
