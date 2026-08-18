@@ -87,6 +87,18 @@
   .week-progress .wp-head{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;}
   .week-bar{height:8px;background:var(--card-2);border:1px solid var(--line);border-radius:5px;overflow:hidden;}
   .week-bar > div{height:100%;background:var(--accent);transition:width .3s;}
+
+  .mini-out{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px;}
+  .mini-out-block .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+  .mini-out-block .mob-head span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);}
+  .mini-out-text{white-space:pre-wrap;background:var(--card-2);border:1px solid var(--line);border-radius:7px;padding:10px 11px;font-size:13.5px;line-height:1.5;color:var(--text);}
+
+  .yt-lock{text-align:center;padding:6px 4px 4px;}
+  .yt-lock p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0 0 12px;}
+  .yt-lock button{background:var(--accent-2);color:#150f0d;width:auto;padding:10px 20px;}
+  .yt-active-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8fae6a;border:1px solid #8fae6a;border-radius:10px;padding:2px 8px;margin-bottom:10px;}
+  .yt-off-toggle{margin-top:16px;text-align:right;}
+  .yt-off-toggle button{font-size:11px;padding:6px 10px;}
 </style>
 </head>
 <body>
@@ -175,6 +187,73 @@
       <div class="out-text" id="out-yt"></div>
       <a class="btn-ghost" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
     </div>
+  </div>
+</div>
+
+<div class="card" id="reel-card">
+  <h2>Reel &amp; Story (Instagram)</h2>
+  <label>Waar gaat de clip over?
+    <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
+  </label>
+  <textarea id="rs-input" placeholder="e.g. sanding the top, grain showing for the first time"></textarea>
+  <label>Sfeer van de clip</label>
+  <select id="rs-tone">
+    <option value="fast">Snel &amp; energiek</option>
+    <option value="calm">Rustig / ASMR-gevoel</option>
+    <option value="twist">Verrassend / twist</option>
+  </select>
+  <button class="btn-primary" onclick="generateReelStory()">Genereer reel &amp; story</button>
+
+  <div class="mini-out" id="rs-output" style="display:none;">
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Hook (eerste 2-3 sec)</span><button class="btn-ghost" onclick="copyMini('rs-hook')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-hook"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Overlay-tekst</span><button class="btn-ghost" onclick="copyMini('rs-overlay')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-overlay"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Caption (kort)</span><button class="btn-ghost" onclick="copyMini('rs-caption')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-caption"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Story-vraag</span><button class="btn-ghost" onclick="copyMini('rs-story')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-story"></div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="yt-card">
+  <h2>YouTube &mdash; aandachtsgenerator</h2>
+  <div id="yt-locked">
+    <div class="yt-lock">
+      <p>Nog niet actief. Zet aan wanneer je klaar bent om te filmen &mdash; gebruikt dan automatisch dezelfde build-notities van hierboven, geen extra werk.</p>
+      <button class="btn-ghost" onclick="setYtEnabled(true)">Activeer YouTube-luik</button>
+    </div>
+  </div>
+  <div id="yt-unlocked" style="display:none;">
+    <span class="yt-active-tag">Actief</span>
+    <p class="hint-text">Genereert automatisch mee zodra je bovenaan op "Genereer draft" klikt &mdash; gebruikt dezelfde build-notities, geen apart formulier.</p>
+    <div class="mini-out" id="yt-attention-output" style="display:none;">
+      <div class="mini-out-block">
+        <div class="mob-head"><span>Titel-opties</span><button class="btn-ghost" onclick="copyMini('yt-titles')">Kopieer</button></div>
+        <div class="mini-out-text" id="yt-titles"></div>
+      </div>
+      <div class="mini-out-block">
+        <div class="mob-head"><span>Thumbnail-tekst</span><button class="btn-ghost" onclick="copyMini('yt-thumb')">Kopieer</button></div>
+        <div class="mini-out-text" id="yt-thumb"></div>
+      </div>
+      <div class="mini-out-block">
+        <div class="mob-head"><span>Hook-script (eerste 15 sec)</span><button class="btn-ghost" onclick="copyMini('yt-hook')">Kopieer</button></div>
+        <div class="mini-out-text" id="yt-hook"></div>
+      </div>
+      <div class="mini-out-block">
+        <div class="mob-head"><span>Shorts-idee</span><button class="btn-ghost" onclick="copyMini('yt-shorts')">Kopieer</button></div>
+        <div class="mini-out-text" id="yt-shorts"></div>
+      </div>
+    </div>
+    <div class="yt-off-toggle"><button class="btn-ghost" onclick="setYtEnabled(false)">Zet YouTube-luik weer uit</button></div>
   </div>
 </div>
 
@@ -299,6 +378,7 @@ function generate(){
   document.getElementById('out-ig').textContent = ig;
   document.getElementById('out-yt').textContent = yt;
   updateIgCount(ig);
+  generateYtAttention(d);
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
 
@@ -351,6 +431,15 @@ function loadLog(i){
 
 function copyBlock(which){
   const text = document.getElementById(which === 'ig' ? 'out-ig' : 'out-yt').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1400);
+  });
+}
+
+function copyMini(id){
+  const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(()=>{
     const t = document.getElementById('toast');
     t.classList.add('show');
@@ -489,6 +578,109 @@ renderWeekProgress();
     if(toneSel) toneSel.value = SCHEDULE[today].tone;
   }
 })();
+
+// ============ Reel & Story generator (Instagram, spoor 2) ============
+const RS_HOOKS = {
+  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it."],
+  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building."],
+  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet."]
+};
+const RS_STORY_Q = {
+  fast:  ["Which step should I speed up next?", "More clips like this?"],
+  calm:  ["What do you notice first here?", "Ask me anything about this step."],
+  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right."]
+};
+const RS_CAPTION_LEAD = {
+  fast:  "Quick look at today's progress.",
+  calm:  "A slower moment from the workshop today.",
+  twist: "Not everything is what it looks like at this stage."
+};
+
+function generateReelStory(){
+  const input = document.getElementById('rs-input').value.trim();
+  if(!input){
+    document.getElementById('rs-input').style.borderColor = '#c1793f';
+    document.getElementById('rs-input').focus();
+    return;
+  }
+  const tone = document.getElementById('rs-tone').value;
+  const wood = document.getElementById('f-wood').value.trim();
+
+  const hook = pick(RS_HOOKS[tone]);
+  const overlay = input.charAt(0).toUpperCase() + input.slice(1);
+  let caption = `${RS_CAPTION_LEAD[tone]}\n\n${input}.`;
+  if(wood) caption += `\n\nWood: ${wood}.`;
+  caption += `\n\n#SixtoCustomGuitars #ReclaimedWood #HandbuiltGuitar`;
+  const storyQ = pick(RS_STORY_Q[tone]);
+
+  document.getElementById('rs-hook').textContent = hook;
+  document.getElementById('rs-overlay').textContent = overlay;
+  document.getElementById('rs-caption').textContent = caption;
+  document.getElementById('rs-story').textContent = storyQ;
+  document.getElementById('rs-output').style.display = 'grid';
+  document.getElementById('rs-input').style.borderColor = '';
+}
+
+// ============ YouTube attention generator (spoor 2, on hold behind toggle) ============
+const YT_ENABLED_KEY = 'sixto-postdraft-yt-enabled';
+
+function isYtEnabled(){ return localStorage.getItem(YT_ENABLED_KEY) === '1'; }
+
+function setYtEnabled(on){
+  localStorage.setItem(YT_ENABLED_KEY, on ? '1' : '0');
+  renderYtLockState();
+}
+
+function renderYtLockState(){
+  const on = isYtEnabled();
+  document.getElementById('yt-locked').style.display = on ? 'none' : 'block';
+  document.getElementById('yt-unlocked').style.display = on ? 'block' : 'none';
+  if(!on) document.getElementById('yt-attention-output').style.display = 'none';
+}
+
+const YT_TITLES = {
+  wood:     p => [`Sourcing reclaimed wood for ${p || 'a one-off guitar'}`, `Finding the right piece of reclaimed wood`, `This wood has a history before it's a guitar`],
+  shaping:  p => [`Shaping a guitar body by hand`, `Carving ${p || 'a one-off electric guitar'}`, `From block of wood to guitar shape`],
+  neck:     p => [`Building a guitar neck from scratch`, `Handmade neck construction, start to finish`, `The most personal part of a guitar build`],
+  finish:   p => [`A finish that keeps the wood grain visible`, `Finishing a handmade guitar the slow way`, `Why I don't use high-gloss finishes`],
+  assembly: p => [`Putting ${p || 'a one-off guitar'} together`, `Assembly day for a handbuilt guitar`, `From parts to a playable instrument`],
+  setup:    p => [`Final setup on a handmade guitar`, `Getting the action and intonation right`, `The last steps before this guitar is done`],
+  done:     p => [`${p || 'This guitar'} is finished \u2014 start to finish`, `Built from reclaimed wood, this is the result`, `The finished build, and what I learned`]
+};
+const YT_THUMB = {
+  wood:'REAL WOOD ORIGIN', shaping:'SHAPING BY HAND', neck:'NECK BUILD',
+  finish:'THE FINISH', assembly:'ASSEMBLY', setup:'FINAL SETUP', done:'FINISHED'
+};
+const YT_HOOK_SCRIPT = {
+  wood:"This piece of wood already had a life before it became part of a guitar. Let me show you where it came from.",
+  shaping:"This block of wood is about to become a guitar body. Here's how that happens, by hand.",
+  neck:"The neck is the part players touch the most. Here's how I build it.",
+  finish:"This finish is meant to disappear \u2014 you should see the wood, not the coating.",
+  assembly:"All the separate pieces come together today. Let's put this instrument together.",
+  setup:"Before this guitar leaves the workshop, it needs to play right. Here's the final setup.",
+  done:"This build is finished. Here's the result \u2014 and what I'd do differently next time."
+};
+const YT_SHORTS_IDEA = {
+  wood:"Shorts-idee: 10 sec clip van het moment dat de nerf zichtbaar wordt na het eerste schuren.",
+  shaping:"Shorts-idee: snelle voor/na-clip van het blok hout naar de vorm.",
+  neck:"Shorts-idee: close-up van het profileren van de nek, versneld.",
+  finish:"Shorts-idee: de overgang van dof hout naar de eerste laag finish.",
+  assembly:"Shorts-idee: time-lapse van onderdelen die samenkomen tot 1 instrument.",
+  setup:"Shorts-idee: actie-hoogte meten met een liniaal, 1 duidelijke actie.",
+  done:"Shorts-idee: 360°-shot van het afgewerkte instrument, 5 seconden."
+};
+
+function generateYtAttention(d){
+  if(!isYtEnabled()) return;
+  const titles = (YT_TITLES[d.phase] || YT_TITLES.wood)(d.project);
+  document.getElementById('yt-titles').textContent = titles.map((t,i)=>`${i+1}. ${t}`).join('\n');
+  document.getElementById('yt-thumb').textContent = YT_THUMB[d.phase] || YT_THUMB.wood;
+  document.getElementById('yt-hook').textContent = YT_HOOK_SCRIPT[d.phase] || YT_HOOK_SCRIPT.wood;
+  document.getElementById('yt-shorts').textContent = YT_SHORTS_IDEA[d.phase] || YT_SHORTS_IDEA.wood;
+  document.getElementById('yt-attention-output').style.display = 'grid';
+}
+
+renderYtLockState();
 </script>
 
 </body>
