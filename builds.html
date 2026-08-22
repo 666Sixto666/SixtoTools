@@ -102,11 +102,21 @@ textarea{resize:vertical;min-height:60px;}
 .addstep{display:flex;gap:8px;margin-top:4px;}
 .addstep input{flex:1;}
 
+.tpl-steps{list-style:none;margin:0;padding:0;}
+.tpl-step{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:8px 10px;margin-bottom:7px;}
+.tpl-step.dragging{opacity:.4;}
+.tpl-step .drag-handle{cursor:grab;color:var(--text-dim);font-size:15px;flex-shrink:0;}
+.tpl-photo-toggle{display:flex;align-items:center;gap:3px;font-size:14px;flex-shrink:0;cursor:pointer;}
+.tpl-photo-toggle input{width:auto;accent-color:var(--wood);}
+
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
 .photo-grid .ph{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--card2);}
 .photo-grid .ph img{width:100%;height:100%;object-fit:cover;display:block;}
 .photo-grid .ph .rm{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;
   border-radius:50%;width:22px;height:22px;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.photo-grid .ph .passport-badge{position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.6);color:#fff;
+  border-radius:6px;padding:1px 5px;font-size:11px;line-height:1.6;}
 .photo-grid .add{border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;
   color:var(--text-dim);font-size:24px;cursor:pointer;}
 
@@ -150,6 +160,39 @@ textarea{resize:vertical;min-height:60px;}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--card2);
   border:1px solid var(--line);padding:10px 18px;border-radius:20px;font-size:13.5px;z-index:200;
   box-shadow:0 4px 16px rgba(0,0,0,.4);}
+
+.passport-view{position:fixed;inset:0;z-index:110;background:var(--bg);overflow-y:auto;padding:0 0 40px 0;}
+.passport-view .pv-topbar{position:sticky;top:0;z-index:2;background:var(--bg2);border-bottom:1px solid var(--line);
+  padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
+.pv-hero{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;}
+.pv-brand{text-align:center;padding:26px 20px 10px 20px;}
+.pv-brand .mark{font-size:30px;}
+.pv-brand h1{font-family:Georgia,serif;font-size:20px;letter-spacing:2px;margin:8px 0 2px 0;color:var(--gold);text-transform:uppercase;}
+.pv-brand .sub{font-size:12px;color:var(--text-dim);letter-spacing:1px;}
+.pv-name{text-align:center;font-size:26px;font-weight:700;margin:18px 0 4px 0;padding:0 20px;}
+.pv-meta{text-align:center;font-size:13px;color:var(--text-dim);margin-bottom:24px;padding:0 20px;}
+.pv-section-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);
+  padding:0 20px;margin:26px 0 12px 0;}
+.pv-specs{padding:0 20px;}
+.pv-timeline{padding:0 20px;}
+.pv-moment{display:flex;gap:14px;margin-bottom:18px;}
+.pv-moment img{width:96px;height:96px;object-fit:cover;border-radius:10px;flex-shrink:0;}
+.pv-moment .cap{font-size:13px;line-height:1.4;padding-top:6px;color:var(--text-dim);}
+.pv-sig{text-align:center;padding:30px 20px 10px 20px;font-size:13px;color:var(--text-dim);border-top:1px solid var(--line);margin-top:20px;}
+.pv-sig .brand{color:var(--gold);font-weight:700;letter-spacing:1px;}
+
+@media print{
+  #app, .tabbar, .fab, .pv-topbar { display:none !important; }
+  body.printing-passport #overlayRoot > *:not(.passport-view){ display:none !important; }
+  .passport-view{position:static !important; background:#fbf7ee !important; color:#221f1a !important; overflow:visible !important;}
+  .pv-brand h1, .pv-section-title{ color:#a1652b !important; }
+  .pv-name{ color:#221f1a !important; }
+  .pv-meta, .pv-moment .cap, .pv-sig{ color:#6c6454 !important; }
+  .pv-sig .brand{ color:#a1652b !important; }
+  .pv-sig{ border-top:1px solid #e3d9c4 !important; }
+  .spec-grid .sk{ color:#6c6454 !important; }
+  .spec-grid .sv{ color:#221f1a !important; }
+}
 
 a.link{color:var(--gold);text-decoration:underline;word-break:break-all;}
 .hidden{display:none !important;}
@@ -364,7 +407,7 @@ const DEFAULT_TEMPLATE = [
   ]},
   {phase:"Hout & Voorbereiding", steps:[
     "Hout geacclimatiseerd / vochtgehalte gecontroleerd",
-    "Halsblank uitgezaagd",
+    {text:"Halsblank uitgezaagd", photoPrompt:true},
     "Bodyblank(s) uitgezaagd / verlijmd indien meerdelig",
     "Fretboard blank voorbereid",
     "Snijplan gemaakt"
@@ -373,17 +416,17 @@ const DEFAULT_TEMPLATE = [
     "Truss rod kanaal gefreesd",
     "Truss rod geplaatst",
     "Headstock vorm/hoek gemaakt (bv. scarf joint of peghead zagen)",
-    "Peghead veneer geplaatst (indien van toepassing)",
+    "Fretboard op hals gelijmd",
     "Fretboard radius geschuurd",
     "Fret slots gezaagd",
     "Inlays geplaatst (indien van toepassing)",
-    "Fretboard op hals gelijmd",
-    "Halsprofiel gecarved (achterkant vorm)",
     "Frets geplaatst",
+    {text:"Halsprofiel gecarved (achterkant vorm)", photoPrompt:true},
+    "Peghead veneer geplaatst (indien van toepassing)",
     "Hals fijn afgewerkt/geschuurd rond de frets, klaar voor lak/was"
   ]},
   {phase:"Body", steps:[
-    "Body vorm uitgezaagd/gefreesd (template routing)",
+    {text:"Body vorm uitgezaagd/gefreesd (template routing)", photoPrompt:true},
     "Chambering/uitholling gefreesd (indien semi-hollow/chambered)",
     "Pickup cavities gefreesd",
     "Control cavity + kabelkanalen gefreesd",
@@ -394,13 +437,13 @@ const DEFAULT_TEMPLATE = [
   ]},
   {phase:"Assemblage", steps:[
     "Neck-to-body fit gecontroleerd",
-    "Neck vastgezet (lijm/bouten)"
+    {text:"Neck vastgezet (lijm/bouten)", photoPrompt:true}
   ]},
   {phase:"Afwerking – Body", steps:[
-    "Kleur aangebracht (mica + aceton beits op het hout)",
+    {text:"Kleur aangebracht (mica + aceton beits op het hout)", photoPrompt:true},
     "Blanke lak lagen aangebracht",
     "Uitharding afgewacht",
-    "Polijsten/buffen"
+    {text:"Polijsten/buffen", photoPrompt:true}
   ]},
   {phase:"Afwerking – Hals", steps:[
     "Hals geschuurd tot eindkorrel",
@@ -425,7 +468,7 @@ const DEFAULT_TEMPLATE = [
     "Speelbaarheid getest over volledige hals",
     "Geluid getest / beoordeeld",
     "Geluidsdemo opgenomen",
-    "Eindfoto's gemaakt (studio/daglicht)"
+    {text:"Eindfoto's gemaakt (studio/daglicht)", photoPrompt:true}
   ]},
   {phase:"Oplevering & Archief", steps:[
     "Gewicht en finale specs genoteerd",
@@ -450,6 +493,7 @@ function templateToChecklist(template){
     steps: ph.steps.map(s=>({
       id: uid(),
       text: (typeof s === 'string') ? s : s.text,
+      photoPrompt: (typeof s === 'object' && !!s.photoPrompt),
       checked: false,
       note: '',
       date: null
@@ -491,7 +535,45 @@ function render(){
   if(state.tab==='library'){ sub.textContent='Bibliotheek'; main.innerHTML = renderLibrary(); }
   else if(state.tab==='todo'){ sub.textContent='Te doen'; main.innerHTML = renderTodo(); }
   else if(state.tab==='active'){ sub.textContent='Lopende builds'; main.innerHTML = renderActive(); }
-  else if(state.tab==='template'){ sub.textContent='Standaard checklist'; main.innerHTML = renderTemplateEditor(); }
+  else if(state.tab==='template'){ sub.textContent='Standaard checklist'; main.innerHTML = renderTemplateEditor(); attachTemplateDragHandlers(); }
+}
+
+function attachTemplateDragHandlers(){
+  document.querySelectorAll('.tpl-steps').forEach(list=>{
+    const pi = parseInt(list.dataset.phase,10);
+    list.querySelectorAll('.tpl-step').forEach(li=>{
+      li.addEventListener('dragstart', ()=>{ li.classList.add('dragging'); });
+      li.addEventListener('dragend', ()=>{ li.classList.remove('dragging'); commitTemplateOrder(pi, list); });
+    });
+    list.addEventListener('dragover', (e)=>{
+      e.preventDefault();
+      const dragging = list.querySelector('.tpl-step.dragging');
+      if(!dragging) return;
+      const after = getDragAfterElementGeneric(list, e.clientY, '.tpl-step');
+      if(after==null) list.appendChild(dragging); else list.insertBefore(dragging, after);
+    });
+  });
+}
+
+function getDragAfterElementGeneric(container, y, selector){
+  const items = [...container.querySelectorAll(selector+':not(.dragging)')];
+  return items.reduce((closest, child)=>{
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if(offset<0 && offset>closest.offset) return {offset, element: child};
+    return closest;
+  }, {offset:Number.NEGATIVE_INFINITY, element:null}).element;
+}
+
+function commitTemplateOrder(pi, list){
+  const t = loadTemplate();
+  const domOrder = [...list.querySelectorAll('.tpl-step')].map(li=>parseInt(li.dataset.si,10));
+  const oldSteps = t[pi].steps;
+  const changed = domOrder.some((oldIdx,newIdx)=>oldIdx!==newIdx);
+  if(!changed) return;
+  t[pi].steps = domOrder.map(oldIdx=>oldSteps[oldIdx]);
+  saveTemplate(t);
+  render();
 }
 
 function nextSteps(b, limit){
@@ -587,22 +669,27 @@ function renderBuildCard(b){
 
 function renderTemplateEditor(){
   const t = loadTemplate();
-  let html = `<div class="small-note">Dit is de standaard checklist die gebruikt wordt bij een nieuwe build. Pas fases en stappen aan — dit heeft geen invloed op builds die al gestart zijn.</div>`;
+  let html = `<div class="small-note">Dit is de standaard checklist die gebruikt wordt bij een nieuwe build. Pas fases en stappen aan — dit heeft geen invloed op builds die al gestart zijn. Sleep aan ⠿ om de volgorde binnen een fase te wijzigen. Vink 📷 aan bij een stap om automatisch om een foto te vragen zodra die wordt afgevinkt (handig voor je build-paspoort).</div>`;
   html += `<h2 class="section">Fases</h2>`;
   t.forEach((ph, pi)=>{
     html += `<div class="card">
       <div class="row2" style="margin-bottom:8px;">
         <input type="text" value="${escAttr(ph.phase)}" onchange="templateRenamePhase(${pi}, this.value)" style="grid-column:1/3;font-weight:600;">
       </div>
+      <ul class="tpl-steps" data-phase="${pi}">
       ${ph.steps.map((s,si)=>{
         const text = typeof s==='string'? s : s.text;
-        return `<div class="step" style="align-items:center;">
-          <div class="stext" style="flex:1;">
-            <input type="text" value="${escAttr(text)}" onchange="templateEditStep(${pi},${si}, this.value)" style="background:transparent;border:none;color:var(--text);width:100%;padding:0;font-size:14px;">
-          </div>
+        const photoFlag = (typeof s==='object' && s!==null && s.photoPrompt) || false;
+        return `<li class="tpl-step" draggable="true" data-si="${si}">
+          <span class="drag-handle">⠿</span>
+          <input type="text" value="${escAttr(text)}" onchange="templateEditStep(${pi},${si}, this.value)" style="background:transparent;border:none;color:var(--text);flex:1;padding:0;font-size:14px;">
+          <label class="tpl-photo-toggle" title="Vraagt om foto bij afvinken">
+            <input type="checkbox" ${photoFlag?'checked':''} onchange="templateToggleStepPhoto(${pi},${si}, this.checked)">📷
+          </label>
           <div class="del" onclick="templateDeleteStep(${pi},${si})">✕</div>
-        </div>`;
+        </li>`;
       }).join('')}
+      </ul>
       <div class="addstep">
         <input type="text" id="newstep-${pi}" placeholder="Nieuwe stap toevoegen...">
         <button class="btn small secondary" onclick="templateAddStep(${pi})">+</button>
@@ -635,6 +722,7 @@ function renderBuildDetail(b){
     ${b.status==='in_progress'
       ? `<button class="btn small" onclick="openCompleteSheet('${b.id}')">✓ Markeer voltooid</button>`
       : `<button class="btn secondary small" onclick="reopenBuild('${b.id}')">↺ Heropen build</button>`}
+    ${b.status==='completed' ? `<button class="btn small" onclick="openPassport('${b.id}')">🪪 Paspoort</button>` : ''}
     <button class="btn danger small" onclick="deleteBuild('${b.id}')">🗑</button>
   </div>`;
 
@@ -686,7 +774,7 @@ function renderStep(b,pi,si,s){
   return `<div class="step ${s.checked?'checked':''}">
     <div class="box" onclick="toggleStep('${b.id}',${pi},${si})">${s.checked?'✓':''}</div>
     <div class="stext">
-      ${esc(s.text)}
+      ${esc(s.text)}${s.photoPrompt?' <span title="Vraagt om foto bij afvinken">📷</span>':''}
       <textarea class="step-note" placeholder="Notitie (optioneel)" onchange="updateStepNote('${b.id}',${pi},${si},this.value)">${esc(s.note||'')}</textarea>
     </div>
     <div class="del" onclick="deleteBuildStep('${b.id}',${pi},${si})">✕</div>
@@ -724,7 +812,7 @@ async function loadPhotos(buildId){
   let html = '';
   for(const p of b.photos){
     const url = await getPhotoBlob(p.id);
-    html += `<div class="ph"><img src="${url}" onclick="showLightbox('${url}')"><div class="rm" onclick="removePhoto('${buildId}','${p.id}')">✕</div></div>`;
+    html += `<div class="ph"><img src="${url}" onclick="showLightbox('${url}')">${p.passport?'<div class="passport-badge" title="'+escAttr(p.caption||'')+'">📷</div>':''}<div class="rm" onclick="removePhoto('${buildId}','${p.id}')">✕</div></div>`;
   }
   html += `<div class="ph add" onclick="triggerPhotoUpload('${buildId}')">+</div>`;
   grid.innerHTML = html;
@@ -733,7 +821,7 @@ async function loadPhotos(buildId){
   }
 }
 
-function triggerPhotoUpload(buildId){
+function triggerPhotoUpload(buildId, momentLabel){
   const input = document.createElement('input');
   input.type='file'; input.accept='image/*'; input.multiple=true;
   input.onchange = async (e)=>{
@@ -744,7 +832,7 @@ function triggerPhotoUpload(buildId){
       await savePhotoBlob(id, dataUrl);
       const b = getBuild(buildId);
       b.photos = b.photos || [];
-      b.photos.push({id, caption:''});
+      b.photos.push({id, caption: momentLabel || '', passport: !!momentLabel});
     }
     persist();
     loadPhotos(buildId);
@@ -780,6 +868,63 @@ async function removePhoto(buildId, photoId){
   persist();
   await deletePhotoBlob(photoId);
   loadPhotos(buildId);
+}
+
+async function openPassport(buildId){
+  const b = getBuild(buildId);
+  if(!b) return;
+  const passportPhotos = (b.photos||[]).filter(p=>p.passport);
+  const heroSource = passportPhotos.length ? passportPhotos[passportPhotos.length-1] : (b.photos||[])[0];
+  const heroUrl = heroSource ? await getPhotoBlob(heroSource.id) : null;
+
+  let timelineHtml = '';
+  for(const p of passportPhotos){
+    const url = await getPhotoBlob(p.id);
+    timelineHtml += `<div class="pv-moment"><img src="${url}"><div class="cap">${esc(p.caption||'')}</div></div>`;
+  }
+  if(!timelineHtml){
+    timelineHtml = `<div class="small-note">Nog geen mijlpaalfoto's. Die worden automatisch gevraagd bij bepaalde checklist-stappen (📷) tijdens een volgende build.</div>`;
+  }
+
+  const html = `
+    <div class="passport-view" id="passportView">
+      <div class="pv-topbar">
+        <button class="btn secondary small" onclick="closePassport()">← Sluiten</button>
+        <button class="btn small" onclick="printPassport()">🖨 Print / PDF</button>
+      </div>
+      ${heroUrl ? `<img class="pv-hero" src="${heroUrl}">` : ''}
+      <div class="pv-brand">
+        <div class="mark">🎸</div>
+        <h1>Sixto Custom Guitars</h1>
+        <div class="sub">Build paspoort</div>
+      </div>
+      <div class="pv-name">${esc(b.name||'Naamloze build')}</div>
+      <div class="pv-meta">${esc(b.type||'')}${b.client?' · '+esc(b.client):''} · Voltooid ${fmtDate(b.completedDate)}</div>
+
+      <div class="pv-section-title">Specificaties</div>
+      <div class="pv-specs"><div class="spec-grid">${renderSpecGrid(b.specs)}</div></div>
+
+      <div class="pv-section-title">Het verhaal van deze build</div>
+      <div class="pv-timeline">${timelineHtml}</div>
+
+      ${b.soundDemoLink ? `<div class="pv-section-title">Geluidsdemo</div><div class="pv-specs"><a class="link" href="${escAttr(b.soundDemoLink)}" target="_blank" rel="noopener">${esc(b.soundDemoLink)}</a></div>` : ''}
+
+      ${b.finalNotes ? `<div class="pv-section-title">Notities</div><div class="pv-specs"><div class="small-note" style="font-size:13px;">${esc(b.finalNotes)}</div></div>` : ''}
+
+      <div class="pv-sig">Handgemaakt door <span class="brand">Sixto Custom Guitars</span><br>${fmtDate(b.completedDate)}</div>
+    </div>
+  `;
+  document.getElementById('overlayRoot').innerHTML = html;
+}
+
+function closePassport(){ document.getElementById('overlayRoot').innerHTML=''; }
+
+function printPassport(){
+  document.body.classList.add('printing-passport');
+  const cleanup = ()=>{ document.body.classList.remove('printing-passport'); window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  window.print();
+  setTimeout(cleanup, 5000);
 }
 
 function showLightbox(url){
@@ -843,10 +988,17 @@ function appPrompt(message, defaultValue){
 /* ---------- Checklist actions ---------- */
 function toggleStep(buildId,pi,si){
   const b = getBuild(buildId);
-  const s = b.checklist[pi].steps[si];
+  const ph = b.checklist[pi];
+  const s = ph.steps[si];
+  const wasChecked = s.checked;
   s.checked = !s.checked;
   s.date = s.checked ? todayStr() : null;
+  const shouldPromptPhoto = !wasChecked && s.checked && s.photoPrompt;
+  const momentLabel = `${ph.phase} — ${s.text}`;
   persist(); render(); loadPhotos(buildId);
+  if(shouldPromptPhoto){
+    triggerPhotoUpload(buildId, momentLabel);
+  }
 }
 function updateStepNote(buildId,pi,si,val){
   const b = getBuild(buildId);
@@ -875,7 +1027,7 @@ function togglePhase(buildId,pi){
 }
 function saveAsTemplate(buildId){
   const b = getBuild(buildId);
-  const t = b.checklist.map(ph=>({phase: ph.phase, steps: ph.steps.map(s=>s.text)}));
+  const t = b.checklist.map(ph=>({phase: ph.phase, steps: ph.steps.map(s=> s.photoPrompt ? {text:s.text, photoPrompt:true} : s.text)}));
   saveTemplate(t);
   toast('Checklist bewaard als nieuwe standaard ✓');
 }
@@ -884,7 +1036,16 @@ function saveAsTemplate(buildId){
 function templateRenamePhase(pi, val){ const t=loadTemplate(); t[pi].phase=val; saveTemplate(t); }
 function templateEditStep(pi,si,val){
   const t=loadTemplate();
-  t[pi].steps[si] = val;
+  const s = t[pi].steps[si];
+  if(typeof s === 'object' && s !== null){ s.text = val; }
+  else { t[pi].steps[si] = val; }
+  saveTemplate(t);
+}
+function templateToggleStepPhoto(pi,si,val){
+  const t=loadTemplate();
+  const s = t[pi].steps[si];
+  const text = (typeof s === 'object' && s !== null) ? s.text : s;
+  t[pi].steps[si] = val ? {text, photoPrompt:true} : text;
   saveTemplate(t);
 }
 function templateDeleteStep(pi,si){ const t=loadTemplate(); t[pi].steps.splice(si,1); saveTemplate(t); render(); }
