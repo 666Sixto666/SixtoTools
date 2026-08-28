@@ -66,6 +66,8 @@
   .log-entry{border-top:1px solid var(--line);padding:13px 2px;font-size:13px;}
   .log-entry:first-child{border-top:none;}
   .log-entry .lt{color:var(--text-dim);font-family:var(--mono);font-size:11px;}
+  .log-status{display:inline-block;margin-left:6px;font-size:12px;color:var(--text-dim);}
+  .log-status.used{color:#8fae6a;}
   .log-entry .ll{cursor:pointer;color:var(--text);margin-top:4px;padding:4px 0;font-size:14px;}
   .empty{color:var(--text-dim);font-size:13px;font-style:italic;}
 
@@ -188,6 +190,15 @@
       <a class="btn-ghost" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
     </div>
   </div>
+  <div class="card" id="confirm-card" style="margin-top:-6px;">
+    <div id="confirm-pending">
+      <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Effectief gepost?</p>
+      <button class="btn-primary" style="margin-top:0;background:#8fae6a;color:#150f0d;" onclick="confirmLastUsed()">&#10003; Bevestig gebruikt</button>
+    </div>
+    <div id="confirm-done" style="display:none;">
+      <p style="font-size:13.5px;color:#8fae6a;margin:0;">&#10003; Bevestigd &mdash; telt mee voor je weekteller.</p>
+    </div>
+  </div>
 </div>
 
 <div class="card" id="reel-card">
@@ -281,62 +292,90 @@ const PHASE_LABEL = {
 
 const OPENERS = {
   calm: {
-    wood:"Starting quiet, with the wood.",
-    shaping:"Slow, deliberate work today.",
-    neck:"Taking my time with the neck.",
-    finish:"Letting the finish do its work.",
-    assembly:"Bringing the pieces together, unhurried.",
-    setup:"The last, quiet adjustments.",
-    done:"It's finished. No rush to say more than that."
+    wood:["Starting quiet, with the wood.","Today began with just the wood, and time to look at it properly.","No rush yet \u2014 just getting to know this piece.","Some builds start loud. This one started quiet."],
+    shaping:["Slow, deliberate work today.","Taking the shape out one small cut at a time.","No shortcuts today \u2014 just steady hands.","Letting the shape reveal itself slowly."],
+    neck:["Taking my time with the neck.","The neck doesn't forgive rushing, so I didn't.","Quiet focus on the part players will touch the most.","Slow hands, sharp tools, the neck today."],
+    finish:["Letting the finish do its work.","Patience, today, more than skill.","The finish asks for time, not effort.","Quiet hours with pigment and rag."],
+    assembly:["Bringing the pieces together, unhurried.","Everything finally in one place, taking it slow.","No rush putting this together \u2014 it deserves care.","Quiet assembly day."],
+    setup:["The last, quiet adjustments.","Small movements now, nothing dramatic.","Fine-tuning, one small turn at a time.","Almost there, no need to hurry the last steps."],
+    done:["It's finished. No rush to say more than that.","Done, quietly.","This one is finished, and it deserves a moment of quiet.","Finished \u2014 no fanfare needed."]
   },
   milestone: {
-    wood:"Big decision made today.",
-    shaping:"Real progress on the body today.",
-    neck:"The neck is coming together, and it feels right.",
-    finish:"The finish is going on, and the wood is finally showing itself.",
-    assembly:"It's starting to look like a guitar.",
-    setup:"Final setup &mdash; almost there.",
-    done:"Done. This one's ready."
+    wood:["Big decision made today.","This is the wood that's going to become something.","Picked the wood today \u2014 this is really happening now.","The build officially starts here."],
+    shaping:["Real progress on the body today.","You can finally see the shape now.","Big step today \u2014 the body is taking form.","This is starting to look like a guitar."],
+    neck:["The neck is coming together, and it feels right.","Proud of how this neck is shaping up.","Big milestone today: the neck is taking shape.","This neck is going to feel great \u2014 I can already tell."],
+    finish:["The finish is going on, and the wood is finally showing itself.","This is the moment the wood really comes alive.","Big step \u2014 first coat is on.","The grain is finally getting the spotlight it deserves."],
+    assembly:["It's starting to look like a guitar.","Big day \u2014 everything is coming together.","This is the moment it stops being parts and starts being an instrument.","Proud of how this is coming together."],
+    setup:["Final setup \u2014 almost there.","So close now. Just the details left.","Big milestone \u2014 last adjustments before it's done.","Nearly ready to hand this one over."],
+    done:["Done. This one's ready.","Finished, and I'm genuinely proud of this one.","This build is complete.","Big moment \u2014 this one is done."]
   },
   curious: {
-    wood:"Trying something I haven't done before with this wood.",
-    shaping:"Experimenting with a shape I haven't cut before.",
-    neck:"A new approach to the neck on this one.",
-    finish:"Testing a finish approach I haven't used before.",
-    assembly:"Curious how these choices come together.",
-    setup:"Fine-tuning &mdash; still learning what this one wants to be.",
-    done:"Finished, and I learned something new building it."
+    wood:["Trying something I haven't done before with this wood.","Not sure yet exactly where this piece of wood is going.","Curious to see what this wood wants to become.","Testing an idea with this piece today."],
+    shaping:["Experimenting with a shape I haven't cut before.","Trying a new curve on this one \u2014 we'll see.","Not 100% sure this shape will work, but trying it.","New territory with this body shape."],
+    neck:["A new approach to the neck on this one.","Testing a neck profile I haven't tried before.","Curious how this neck shape will feel once it's done.","Experimenting with the neck today."],
+    finish:["Testing a finish approach I haven't used before.","New finish technique on this one \u2014 fingers crossed.","Curious how this tint will look once it cures.","Trying something different with the finish today."],
+    assembly:["Curious how these choices come together.","Not sure yet how this combination will feel, but assembling it now.","Interesting mix of parts on this one.","Testing how these pieces work together."],
+    setup:["Fine-tuning \u2014 still learning what this one wants to be.","Dialing this in, still discovering its character.","Curious what this one will actually feel like to play.","Testing the setup, still learning this instrument."],
+    done:["Finished, and I learned something new building it.","Done \u2014 and this one taught me a few things.","This build pushed me to try new things.","Finished. Curious what's next after this one."]
   },
   technical: {
-    wood:"Wood selection, and why it matters here.",
-    shaping:"Some notes on the shaping process.",
-    neck:"Neck construction notes.",
-    finish:"Finish process, in detail.",
-    assembly:"Assembly notes.",
-    setup:"Setup specs and reasoning.",
-    done:"Build complete &mdash; full specs below."
+    wood:["Wood selection, and why it matters here.","Notes on today's wood choice.","Some detail on why this specific piece was chosen.","Wood selection notes for this build."],
+    shaping:["Some notes on the shaping process.","Documenting today's shaping work.","Technical notes on the body shaping.","Process notes: shaping stage."],
+    neck:["Neck construction notes.","Documenting the neck build process.","Technical detail on today's neck work.","Neck build \u2014 process notes."],
+    finish:["Finish process, in detail.","Notes on today's finishing process.","Technical breakdown of the finish stage.","Documenting the finish process."],
+    assembly:["Assembly notes.","Process notes: assembly stage.","Documenting today's assembly work.","Technical detail on the assembly process."],
+    setup:["Setup specs and reasoning.","Documenting today's setup adjustments.","Technical notes on the setup process.","Setup stage \u2014 specs and reasoning."],
+    done:["Build complete \u2014 full specs below.","Final specs and build notes below.","Complete build documentation below.","Build finished \u2014 technical summary below."]
   }
 };
 
 const CLOSERS = {
-  calm:["More soon.","Following where the wood leads.","Next step when it's ready."],
-  milestone:["Proud of where this one's headed.","Can't wait to show you the finished piece.","Onward."],
-  curious:["We'll see how it turns out.","Still figuring this one out as I go.","Open to seeing where this leads."],
-  technical:["Full build documented as it progresses.","More technical notes to follow.","Next: continuing the build log."]
+  calm:["More soon.","Following where the wood leads.","Next step when it's ready.","Back to it tomorrow.","One step closer, quietly."],
+  milestone:["Proud of where this one's headed.","Can't wait to show you the finished piece.","Onward.","More progress soon.","This one's going to be special."],
+  curious:["We'll see how it turns out.","Still figuring this one out as I go.","Open to seeing where this leads.","Curious to see the next step.","Let's see what happens next."],
+  technical:["Full build documented as it progresses.","More technical notes to follow.","Next: continuing the build log.","Specs and progress logged as we go.","Build log continues."]
 };
+
+const HASHTAG_SETS = [
+  "#SixtoCustomGuitars #ReclaimedWood #OneOfOne #HandbuiltGuitar",
+  "#SixtoCustomGuitars #HandmadeGuitar #ReclaimedWood #Luthier",
+  "#SixtoCustomGuitars #OneOfOneGuitar #WoodWorking #CustomGuitar"
+];
+
+const FINAL_BLURBS = [
+  p => `${p || 'This build'} is complete \u2014 a one-of-one, built from reclaimed and locally sourced wood, finished with a translucent tint so the wood keeps telling its own story.`,
+  p => `This is ${p || 'the finished build'} \u2014 one-of-one, reclaimed wood, no two ever alike.`,
+  p => `${p || 'This build'} is done. Built by hand from reclaimed wood, finished translucent so the grain stays the star.`
+];
 
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
+// Shuffle-bag picker: won't repeat a variant until every other one in the pool has been used.
+function pickNoRepeat(arr, poolKey){
+  if(arr.length <= 1) return arr[0];
+  const storeKey = 'sixto-pd-varhist-' + poolKey;
+  let used = [];
+  try{ used = JSON.parse(localStorage.getItem(storeKey)) || []; }catch(e){ used = []; }
+  let available = arr.map((_, i) => i).filter(i => !used.includes(i));
+  if(available.length === 0){ used = []; available = arr.map((_, i) => i); }
+  const idx = available[Math.floor(Math.random() * available.length)];
+  used.push(idx);
+  localStorage.setItem(storeKey, JSON.stringify(used));
+  return arr[idx];
+}
+
 function buildCaption(d){
-  const opener = OPENERS[d.tone][d.phase] || OPENERS.calm[d.phase];
+  const pool = OPENERS[d.tone][d.phase] || OPENERS.calm[d.phase];
+  const opener = pickNoRepeat(pool, `opener-${d.tone}-${d.phase}`);
   let lines = [opener, ""];
   lines.push(`Wood: ${d.wood}`);
   if(d.update) lines.push("", d.update);
   if(d.final === 'yes'){
-    lines.push("", `${d.project || 'This build'} is complete &mdash; a one-of-one, built from reclaimed and locally sourced wood, finished with a translucent tint so the wood keeps telling its own story.`);
+    const blurb = pickNoRepeat(FINAL_BLURBS, 'final-blurb');
+    lines.push("", blurb(d.project));
   }
-  lines.push("", pick(CLOSERS[d.tone]));
-  lines.push("", "#SixtoCustomGuitars #ReclaimedWood #OneOfOne #HandbuiltGuitar");
+  lines.push("", pickNoRepeat(CLOSERS[d.tone], `closer-${d.tone}`));
+  lines.push("", pickNoRepeat(HASHTAG_SETS, 'hashtags'));
   return lines.join("\n");
 }
 
@@ -383,6 +422,8 @@ function generate(){
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
 
   saveLog(d, ig, yt);
+  currentDisplayedIndex = 0;
+  showConfirmState(false);
 }
 
 function updateIgCount(text){
@@ -396,7 +437,7 @@ function updateIgCount(text){
 function saveLog(d, ig, yt){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
-  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, ig, yt});
+  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, ig, yt, used: false});
   log = log.slice(0, 50);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
@@ -411,22 +452,55 @@ function renderLog(){
   el.innerHTML = log.map((e,i) => {
     const d = new Date(e.date);
     const dstr = d.toLocaleDateString('nl-BE', {day:'2-digit', month:'short', year:'numeric'});
+    const isUsed = e.used !== false; // undefined (oude entries) telt als gebruikt, expliciet false telt niet
+    const statusIcon = isUsed
+      ? '<span class="log-status used" title="Gebruikt \u2014 klik om ongedaan te maken">&#10003;</span>'
+      : '<span class="log-status" title="Nog niet bevestigd \u2014 klik om te bevestigen">&#9675;</span>';
     return `<div class="log-entry">
-      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}</div>
+      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase} <span onclick="toggleUsed(${i})" style="cursor:pointer;">${statusIcon}</span></div>
       <div class="ll" onclick="loadLog(${i})">${e.project || '(zonder naam)'}</div>
     </div>`;
   }).join('');
 }
 
+function toggleUsed(i){
+  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if(!log[i]) return;
+  const currentlyUsed = log[i].used !== false;
+  log[i].used = !currentlyUsed;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  renderLog();
+  renderWeekProgress();
+}
+
+let currentDisplayedIndex = 0;
+
 function loadLog(i){
   let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   const e = log[i];
   if(!e) return;
+  currentDisplayedIndex = i;
   document.getElementById('out-ig').textContent = e.ig;
   document.getElementById('out-yt').textContent = e.yt;
   updateIgCount(e.ig);
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+  showConfirmState(e.used !== false);
+}
+
+function showConfirmState(confirmed){
+  document.getElementById('confirm-pending').style.display = confirmed ? 'none' : 'block';
+  document.getElementById('confirm-done').style.display = confirmed ? 'block' : 'none';
+}
+
+function confirmLastUsed(){
+  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if(!log[currentDisplayedIndex]) return;
+  log[currentDisplayedIndex].used = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  showConfirmState(true);
+  renderLog();
+  renderWeekProgress();
 }
 
 function copyBlock(which){
@@ -559,7 +633,7 @@ function renderWeekProgress(){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   const thisWeek = getISOWeekKey(new Date());
-  const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek).length;
+  const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek && e.used !== false).length;
   const target = WEEKLY_TARGET;
   const pct = Math.min(100, Math.round((count / target) * 100));
   document.getElementById('wp-count').textContent = `${count} / ${target}`;
@@ -581,19 +655,19 @@ renderWeekProgress();
 
 // ============ Reel & Story generator (Instagram, spoor 2) ============
 const RS_HOOKS = {
-  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it."],
-  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building."],
-  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet."]
+  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it.", "Here's today's progress, fast.", "Zero to this, in one clip."],
+  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this."],
+  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks."]
 };
 const RS_STORY_Q = {
-  fast:  ["Which step should I speed up next?", "More clips like this?"],
-  calm:  ["What do you notice first here?", "Ask me anything about this step."],
-  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right."]
+  fast:  ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?"],
+  calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?"],
+  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?"]
 };
 const RS_CAPTION_LEAD = {
-  fast:  "Quick look at today's progress.",
-  calm:  "A slower moment from the workshop today.",
-  twist: "Not everything is what it looks like at this stage."
+  fast:  ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress."],
+  calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work."],
+  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect."]
 };
 
 function generateReelStory(){
@@ -606,12 +680,13 @@ function generateReelStory(){
   const tone = document.getElementById('rs-tone').value;
   const wood = document.getElementById('f-wood').value.trim();
 
-  const hook = pick(RS_HOOKS[tone]);
+  const hook = pickNoRepeat(RS_HOOKS[tone], `rs-hook-${tone}`);
   const overlay = input.charAt(0).toUpperCase() + input.slice(1);
-  let caption = `${RS_CAPTION_LEAD[tone]}\n\n${input}.`;
+  const lead = pickNoRepeat(RS_CAPTION_LEAD[tone], `rs-lead-${tone}`);
+  let caption = `${lead}\n\n${input}.`;
   if(wood) caption += `\n\nWood: ${wood}.`;
-  caption += `\n\n#SixtoCustomGuitars #ReclaimedWood #HandbuiltGuitar`;
-  const storyQ = pick(RS_STORY_Q[tone]);
+  caption += `\n\n${pickNoRepeat(HASHTAG_SETS, 'hashtags')}`;
+  const storyQ = pickNoRepeat(RS_STORY_Q[tone], `rs-story-${tone}`);
 
   document.getElementById('rs-hook').textContent = hook;
   document.getElementById('rs-overlay').textContent = overlay;
