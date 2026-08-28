@@ -121,6 +121,23 @@
   </div>
 </div>
 
+<div class="card" id="lookback-card">
+  <h2>Terugblik <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
+  <label>Welke build/element uit je geschiedenis?</label>
+  <input type="text" id="lb-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
+  <label>Wat wil je terugblikken?
+    <span class="hint">Een beslissing, een les, een moment &mdash; kort mag</span>
+  </label>
+  <textarea id="lb-memory" placeholder="e.g. the first time I tried a full body carve, and why it almost didn't work"></textarea>
+  <label>Invalshoek</label>
+  <select id="lb-angle">
+    <option value="then_vs_now">Toen vs. nu</option>
+    <option value="lesson">Les geleerd</option>
+    <option value="why">Waarom deze keuze, toen</option>
+  </select>
+  <button class="btn-primary" onclick="generateLookback()">Genereer terugblik</button>
+</div>
+
 <div class="card">
   <h2>Build notities</h2>
 
@@ -287,7 +304,8 @@ const STORAGE_KEY = 'sixto-postdraft-log-v1';
 
 const PHASE_LABEL = {
   wood:'wood selection', shaping:'shaping', neck:'neck work',
-  finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build'
+  finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build',
+  lookback:'terugblik / journey'
 };
 
 const OPENERS = {
@@ -654,7 +672,7 @@ function renderSchedule(){
     banner.textContent = SCHEDULE[today].bannerOn;
   } else {
     banner.className = 'today-banner off';
-    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 prima moment als je toch iets te delen hebt, maar geen verplichting.`;
+    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 geen verplichting. Geen actuele update? Gebruik de Terugblik hieronder voor een moment uit je geschiedenis.`;
   }
 }
 
@@ -690,6 +708,60 @@ renderWeekProgress();
     if(toneSel) toneSel.value = SCHEDULE[today].tone;
   }
 })();
+
+// ============ Terugblik / Look Back generator (reuses main output + log + confirm) ============
+const LOOKBACK_OPENERS = {
+  then_vs_now: ["Throwback to how this one started.","This didn't always look like this.","Where this build began.","A look back at an earlier stage.","This one's come a long way.","Revisiting an earlier build today."],
+  lesson: ["Something I learned from this build.","A lesson this one taught me.","Looking back, this build changed how I work.","This build taught me something I still use today.","An early lesson from the workshop.","What this build taught me, looking back."],
+  why: ["Why I made this choice, revisited.","The reasoning behind this decision, looking back.","Here's why I did it this way.","A decision from earlier in the journey, explained.","Revisiting a choice from this build.","Looking back at why I went this route."]
+};
+const LOOKBACK_CLOSERS = {
+  then_vs_now: ["Funny to look back on this.","Every build teaches the next one.","Progress looks different in hindsight.","Good to revisit where things started.","Still learning from builds like this one."],
+  lesson: ["Still applying this lesson today.","Good reminders don't expire.","Some lessons stick with you.","Worth remembering, even now.","This one shaped how I build now."],
+  why: ["Still stand by that decision.","Would I do it the same way today? Mostly yes.","Choices like this shape a build.","Small decisions, big impact.","That reasoning still holds up."]
+};
+
+function generateLookback(){
+  const memory = document.getElementById('lb-memory').value.trim();
+  if(!memory){
+    document.getElementById('lb-memory').style.borderColor = '#c1793f';
+    document.getElementById('lb-memory').focus();
+    return;
+  }
+  const buildName = document.getElementById('lb-build').value.trim();
+  const angle = document.getElementById('lb-angle').value;
+
+  const opener = pickNoRepeat(LOOKBACK_OPENERS[angle], `lb-opener-${angle}`);
+  const closer = pickNoRepeat(LOOKBACK_CLOSERS[angle], `lb-closer-${angle}`);
+  const hashtags = pickNoRepeat(HASHTAG_SETS, 'hashtags');
+
+  let lines = [opener, ""];
+  if(buildName) lines.push(buildName, "");
+  lines.push(memory);
+
+  // Optional read-only enrichment from Sixto Builds, same pattern as the wood auto-fill elsewhere.
+  const builds = loadBuildsList();
+  const match = builds.find(b => (b.name||'').trim().toLowerCase() === buildName.toLowerCase());
+  if(match){
+    const wood = woodFromBuild(match);
+    if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
+  }
+
+  lines.push("", closer, "", hashtags);
+  const ig = lines.join("\n");
+  const yt = `Throwback: ${buildName || 'an earlier build'}\n\n${memory}\n\nPart of the ongoing Sixto Custom Guitars journey \u2014 one-of-one builds, reclaimed wood, Blaasveld, Belgium.\n\nInstagram: @sixtocustomguitars`;
+
+  document.getElementById('out-ig').textContent = ig;
+  document.getElementById('out-yt').textContent = yt;
+  updateIgCount(ig);
+  document.getElementById('output').classList.add('show');
+  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+
+  saveLog({ project: buildName, phase: 'lookback' }, ig, yt);
+  currentDisplayedIndex = 0;
+  showConfirmState(false);
+  document.getElementById('lb-memory').style.borderColor = '';
+}
 
 // ============ Reel & Story generator (Instagram, spoor 2) ============
 const RS_HOOKS = {
