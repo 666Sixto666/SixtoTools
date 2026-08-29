@@ -369,7 +369,6 @@ const FINAL_BLURBS = [
   p => `That's ${p || 'this one'}, finished. Reclaimed wood, hand-built, one of one \u2014 always.`
 ];
 
-function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 // Shuffle-bag picker: won't repeat a variant until every other one in the pool has been used.
 function pickNoRepeat(arr, poolKey){
@@ -434,7 +433,7 @@ const YT_SECTION_LABELS = [
 
 function buildYT(d){
   const labels = pickNoRepeat(YT_SECTION_LABELS, 'yt-labels');
-  const title = d.project ? `${d.project} &mdash; ${PHASE_LABEL[d.phase]}` : PHASE_LABEL[d.phase];
+  const title = d.project ? `${d.project} \u2014 ${PHASE_LABEL[d.phase]}` : PHASE_LABEL[d.phase];
   let lines = [title, ""];
   lines.push(labels.origin);
   lines.push(d.wood, "");
@@ -444,7 +443,7 @@ function buildYT(d){
     lines.push("How it feels / sounds right now:");
     lines.push(d.feel, "");
   }
-  lines.push("Every Sixto instrument is a one-of-one, built from reclaimed and locally sourced wood in Blaasveld, Belgium. No models, no production line &mdash; every build is designed with the person it's for.");
+  lines.push("Every Sixto instrument is a one-of-one, built from reclaimed and locally sourced wood in Blaasveld, Belgium. No models, no production line \u2014 every build is designed with the person it's for.");
   lines.push("");
   lines.push("Instagram: @sixtocustomguitars");
   return lines.join("\n");
