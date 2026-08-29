@@ -208,12 +208,10 @@
     </div>
   </div>
   <div class="card" id="confirm-card" style="margin-top:-6px;">
-    <div id="confirm-pending">
-      <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Effectief gepost?</p>
-      <button class="btn-primary" style="margin-top:0;background:#8fae6a;color:#150f0d;" onclick="confirmLastUsed()">&#10003; Bevestig gebruikt</button>
-    </div>
-    <div id="confirm-done" style="display:none;">
-      <p style="font-size:13.5px;color:#8fae6a;margin:0;">&#10003; Bevestigd &mdash; telt mee voor je weekteller.</p>
+    <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Waar effectief geplaatst?</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-ghost" id="confirm-ig-btn" onclick="toggleConfirmCurrent('ig')" style="flex:1;min-width:130px;text-align:center;">&#9675; Instagram</button>
+      <button class="btn-ghost" id="confirm-yt-btn" onclick="toggleConfirmCurrent('yt')" style="flex:1;min-width:130px;text-align:center;">&#9675; YouTube</button>
     </div>
   </div>
 </div>
@@ -479,7 +477,7 @@ function generate(){
 
   saveLog(d, ig, yt);
   currentDisplayedIndex = 0;
-  showConfirmState(false);
+  refreshConfirmForCurrent();
 }
 
 function updateIgCount(text){
@@ -493,11 +491,18 @@ function updateIgCount(text){
 function saveLog(d, ig, yt){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
-  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, ig, yt, used: false});
+  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, ig, yt, usedIG: false, usedYT: false});
   log = log.slice(0, 50);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
   renderWeekProgress();
+}
+
+// Backward-compatible read: old entries only had a single `used` field (treated as Instagram-status).
+function getUsedStatus(e){
+  const ig = e.usedIG !== undefined ? e.usedIG : (e.used !== false);
+  const yt = e.usedYT !== undefined ? e.usedYT : false;
+  return { ig, yt };
 }
 
 function renderLog(){
@@ -508,25 +513,33 @@ function renderLog(){
   el.innerHTML = log.map((e,i) => {
     const d = new Date(e.date);
     const dstr = d.toLocaleDateString('nl-BE', {day:'2-digit', month:'short', year:'numeric'});
-    const isUsed = e.used !== false; // undefined (oude entries) telt als gebruikt, expliciet false telt niet
-    const statusIcon = isUsed
-      ? '<span class="log-status used" title="Gebruikt \u2014 klik om ongedaan te maken">&#10003;</span>'
-      : '<span class="log-status" title="Nog niet bevestigd \u2014 klik om te bevestigen">&#9675;</span>';
+    const status = getUsedStatus(e);
+    const igIcon = status.ig
+      ? '<span class="log-status used" title="Op Instagram geplaatst \u2014 klik om ongedaan te maken">IG&#10003;</span>'
+      : '<span class="log-status" title="Nog niet bevestigd voor Instagram \u2014 klik om te bevestigen">IG&#9675;</span>';
+    const ytIcon = status.yt
+      ? '<span class="log-status used" title="Op YouTube geplaatst \u2014 klik om ongedaan te maken">YT&#10003;</span>'
+      : '<span class="log-status" title="Nog niet bevestigd voor YouTube \u2014 klik om te bevestigen">YT&#9675;</span>';
     return `<div class="log-entry">
-      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase} <span onclick="toggleUsed(${i})" style="cursor:pointer;">${statusIcon}</span></div>
+      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}
+        <span onclick="toggleUsedPlatform(${i},'ig')" style="cursor:pointer;">${igIcon}</span>
+        <span onclick="toggleUsedPlatform(${i},'yt')" style="cursor:pointer;">${ytIcon}</span>
+      </div>
       <div class="ll" onclick="loadLog(${i})">${e.project || '(zonder naam)'}</div>
     </div>`;
   }).join('');
 }
 
-function toggleUsed(i){
+function toggleUsedPlatform(i, platform){
   let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   if(!log[i]) return;
-  const currentlyUsed = log[i].used !== false;
-  log[i].used = !currentlyUsed;
+  const status = getUsedStatus(log[i]);
+  if(platform === 'ig') log[i].usedIG = !status.ig;
+  else log[i].usedYT = !status.yt;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
   renderWeekProgress();
+  if(i === currentDisplayedIndex) renderConfirmButtons(log[i]);
 }
 
 let currentDisplayedIndex = 0;
@@ -541,22 +554,32 @@ function loadLog(i){
   updateIgCount(e.ig);
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
-  showConfirmState(e.used !== false);
+  renderConfirmButtons(e);
 }
 
-function showConfirmState(confirmed){
-  document.getElementById('confirm-pending').style.display = confirmed ? 'none' : 'block';
-  document.getElementById('confirm-done').style.display = confirmed ? 'block' : 'none';
+function renderConfirmButtons(entry){
+  const igBtn = document.getElementById('confirm-ig-btn');
+  const ytBtn = document.getElementById('confirm-yt-btn');
+  const status = entry ? getUsedStatus(entry) : { ig:false, yt:false };
+  igBtn.textContent = (status.ig ? '\u2713 ' : '\u25CB ') + 'Instagram';
+  igBtn.style.background = status.ig ? '#8fae6a' : '';
+  igBtn.style.color = status.ig ? '#150f0d' : '';
+  igBtn.style.borderColor = status.ig ? '#8fae6a' : '';
+  ytBtn.textContent = (status.yt ? '\u2713 ' : '\u25CB ') + 'YouTube';
+  ytBtn.style.background = status.yt ? '#8fae6a' : '';
+  ytBtn.style.color = status.yt ? '#150f0d' : '';
+  ytBtn.style.borderColor = status.yt ? '#8fae6a' : '';
 }
 
-function confirmLastUsed(){
+function toggleConfirmCurrent(platform){
+  toggleUsedPlatform(currentDisplayedIndex, platform);
   let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  if(!log[currentDisplayedIndex]) return;
-  log[currentDisplayedIndex].used = true;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
-  showConfirmState(true);
-  renderLog();
-  renderWeekProgress();
+  renderConfirmButtons(log[currentDisplayedIndex]);
+}
+
+function refreshConfirmForCurrent(){
+  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  renderConfirmButtons(log[currentDisplayedIndex]);
 }
 
 function copyBlock(which){
@@ -689,7 +712,7 @@ function renderWeekProgress(){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   const thisWeek = getISOWeekKey(new Date());
-  const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek && e.used !== false).length;
+  const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek && getUsedStatus(e).ig).length;
   const target = WEEKLY_TARGET;
   const pct = Math.min(100, Math.round((count / target) * 100));
   document.getElementById('wp-count').textContent = `${count} / ${target}`;
@@ -759,7 +782,7 @@ function generateSpotlight(){
 
   saveLog({ project: buildName, phase: 'spotlight' }, ig, yt);
   currentDisplayedIndex = 0;
-  showConfirmState(false);
+  refreshConfirmForCurrent();
   document.getElementById('sp-desc').style.borderColor = '';
 }
 
