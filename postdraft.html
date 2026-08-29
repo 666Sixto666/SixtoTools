@@ -306,7 +306,7 @@ const STORAGE_KEY = 'sixto-postdraft-log-v1';
 const PHASE_LABEL = {
   wood:'wood selection', shaping:'shaping', neck:'neck work',
   finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build',
-  spotlight:'journey spotlight'
+  spotlight:'journey spotlight', reel_story:'reel & story'
 };
 
 const OPENERS = {
@@ -574,13 +574,24 @@ function applyOutputLabels(kind){
     ytLabel.textContent = 'Overlay-tekst (video)';
     ytLink.style.display = 'none';
     igLink.style.display = 'inline-block';
+    ytBlock.style.display = 'block';
+  } else if(kind === 'reel'){
+    igLabel.textContent = 'Reel & Story caption';
+    igLink.style.display = 'inline-block';
+    if(isYtEnabled()){
+      ytLabel.textContent = 'YouTube Shorts (zelfde clip)';
+      ytLink.style.display = 'inline-block';
+      ytBlock.style.display = 'block';
+    } else {
+      ytBlock.style.display = 'none';
+    }
   } else {
     igLabel.textContent = 'Instagram caption';
     ytLabel.textContent = 'YouTube beschrijving';
     ytLink.style.display = 'inline-block';
     igLink.style.display = 'inline-block';
+    ytBlock.style.display = 'block';
   }
-  ytBlock.style.display = 'block';
 }
 
 function enterFocusMode(){
@@ -868,6 +879,15 @@ const RS_OVERLAY_PREFIX = {
   twist: ["Not yet: ", "Wait for it: ", "", "Almost: "]
 };
 
+function buildShortsCompanion(hook, input, wood){
+  let lines = [hook, ""];
+  lines.push(input.charAt(0).toUpperCase() + input.slice(1) + ".");
+  if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
+  lines.push("", "Same clip as on Instagram. Follow the build: @sixtocustomguitars");
+  lines.push(`${pickNoRepeat(HASHTAG_SETS, 'hashtags')} #Shorts`);
+  return lines.join("\n");
+}
+
 function generateReelStory(){
   const input = document.getElementById('rs-input').value.trim();
   if(!input){
@@ -893,6 +913,19 @@ function generateReelStory(){
   document.getElementById('rs-story').textContent = storyQ;
   document.getElementById('rs-output').style.display = 'grid';
   document.getElementById('rs-input').style.borderColor = '';
+
+  // Mirror into the shared output+log+confirm system, same pattern as Spotlight.
+  const ytCompanion = isYtEnabled() ? buildShortsCompanion(hook, input, wood) : '';
+  document.getElementById('out-ig').textContent = caption;
+  document.getElementById('out-yt').textContent = ytCompanion;
+  updateIgCount(caption);
+  applyOutputLabels('reel');
+  document.getElementById('output').classList.add('show');
+  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+
+  saveLog({ project: input.slice(0, 40), phase: 'reel_story', kind: 'reel' }, caption, ytCompanion);
+  currentDisplayedIndex = 0;
+  refreshConfirmForCurrent();
 }
 
 // ============ YouTube attention generator (spoor 2, on hold behind toggle) ============
