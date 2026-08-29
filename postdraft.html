@@ -111,7 +111,7 @@
   <p>Korte notities in &rarr; kant-en-klare Instagram caption + YouTube beschrijving uit, in de vaste Sixto-toon. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
 </header>
 
-<div class="card schedule-card">
+<div class="card schedule-card gen-card">
   <h2>Postschema</h2>
   <div id="today-banner"></div>
   <div class="schedule-row" id="schedule-row"></div>
@@ -121,7 +121,7 @@
   </div>
 </div>
 
-<div class="card" id="spotlight-card">
+<div class="card gen-card" id="spotlight-card">
   <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
   <label>Welke build/element staat in de spotlight?</label>
   <input type="text" id="sp-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
@@ -138,7 +138,7 @@
   <button class="btn-primary" onclick="generateSpotlight()">Genereer spotlight</button>
 </div>
 
-<div class="card">
+<div class="card gen-card" id="build-card">
   <h2>Build notities</h2>
 
   <label>Build / project naam</label>
@@ -194,17 +194,20 @@
 </div>
 
 <div class="output" id="output">
+  <div id="focus-exit-bar" style="display:none;margin-bottom:10px;">
+    <button class="btn-ghost" onclick="exitFocusMode()">&larr; Terug naar generator</button>
+  </div>
   <div class="card">
     <div class="out-block">
-      <div class="out-head"><span>Instagram caption</span><button class="btn-ghost" onclick="copyBlock('ig')">Kopieer</button></div>
+      <div class="out-head"><span id="out-ig-label">Instagram caption</span><button class="btn-ghost" onclick="copyBlock('ig')">Kopieer</button></div>
       <div class="out-text" id="out-ig"></div>
       <div class="hint-text" id="ig-count" style="margin-top:6px;"></div>
-      <a class="btn-ghost" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open Instagram &rarr;</a>
+      <a class="btn-ghost" id="out-ig-link" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open Instagram &rarr;</a>
     </div>
-    <div class="out-block" style="margin-bottom:0;">
-      <div class="out-head"><span>YouTube beschrijving</span><button class="btn-ghost" onclick="copyBlock('yt')">Kopieer</button></div>
+    <div class="out-block" id="out-yt-block" style="margin-bottom:0;">
+      <div class="out-head"><span id="out-yt-label">YouTube beschrijving</span><button class="btn-ghost" onclick="copyBlock('yt')">Kopieer</button></div>
       <div class="out-text" id="out-yt"></div>
-      <a class="btn-ghost" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
+      <a class="btn-ghost" id="out-yt-link" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
     </div>
   </div>
   <div class="card" id="confirm-card" style="margin-top:-6px;">
@@ -216,7 +219,7 @@
   </div>
 </div>
 
-<div class="card" id="reel-card">
+<div class="card gen-card" id="reel-card">
   <h2>Reel &amp; Story (Instagram)</h2>
   <label>Waar gaat de clip over?
     <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
@@ -250,7 +253,7 @@
   </div>
 </div>
 
-<div class="card" id="yt-card">
+<div class="card gen-card" id="yt-card">
   <h2>YouTube &mdash; aandachtsgenerator</h2>
   <div id="yt-locked">
     <div class="yt-lock">
@@ -283,16 +286,16 @@
   </div>
 </div>
 
-<div class="card">
+<div class="card" id="log-card">
   <div class="footer-row">
-    <h2 style="margin:0;">Log</h2>
+    <h2 style="margin:0;cursor:pointer;" onclick="toggleLogVisibility()">Log <span id="log-toggle-arrow">&#9656;</span></h2>
     <div>
       <button class="btn-ghost" onclick="exportLog()">Export JSON</button>
       <button class="btn-ghost" onclick="document.getElementById('importFile').click()">Import</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importLog(event)">
     </div>
   </div>
-  <div id="log-list" style="margin-top:10px;"></div>
+  <div id="log-list" style="margin-top:10px;display:none;"></div>
 </div>
 
 <div class="toast" id="toast">Gekopieerd</div>
@@ -463,13 +466,15 @@ function generate(){
     update: document.getElementById('f-update').value.trim(),
     feel: document.getElementById('f-feel').value.trim(),
     tone: document.getElementById('f-tone').value,
-    final: document.getElementById('f-final').value
+    final: document.getElementById('f-final').value,
+    kind: 'post'
   };
   const ig = buildCaption(d);
   const yt = buildYT(d);
   document.getElementById('out-ig').textContent = ig;
   document.getElementById('out-yt').textContent = yt;
   updateIgCount(ig);
+  applyOutputLabels('post');
   generateYtAttention(d);
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
@@ -490,7 +495,7 @@ function updateIgCount(text){
 function saveLog(d, ig, yt){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
-  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, ig, yt, usedIG: false, usedYT: false});
+  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, kind: d.kind || 'post', ig, yt, usedIG: false, usedYT: false});
   log = log.slice(0, 50);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
@@ -551,9 +556,56 @@ function loadLog(i){
   document.getElementById('out-ig').textContent = e.ig;
   document.getElementById('out-yt').textContent = e.yt;
   updateIgCount(e.ig);
+  applyOutputLabels(e.kind);
   document.getElementById('output').classList.add('show');
-  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
   renderConfirmButtons(e);
+  enterFocusMode();
+  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function applyOutputLabels(kind){
+  const igLabel = document.getElementById('out-ig-label');
+  const ytBlock = document.getElementById('out-yt-block');
+  const ytLabel = document.getElementById('out-yt-label');
+  const igLink = document.getElementById('out-ig-link');
+  const ytLink = document.getElementById('out-yt-link');
+  if(kind === 'spotlight'){
+    igLabel.textContent = 'Reel / Story caption';
+    ytLabel.textContent = 'Overlay-tekst (video)';
+    ytLink.style.display = 'none';
+    igLink.style.display = 'inline-block';
+  } else {
+    igLabel.textContent = 'Instagram caption';
+    ytLabel.textContent = 'YouTube beschrijving';
+    ytLink.style.display = 'inline-block';
+    igLink.style.display = 'inline-block';
+  }
+  ytBlock.style.display = 'block';
+}
+
+function enterFocusMode(){
+  document.querySelectorAll('.gen-card').forEach(el => el.style.display = 'none');
+  document.getElementById('focus-exit-bar').style.display = 'block';
+  const logList = document.getElementById('log-list');
+  const arrow = document.getElementById('log-toggle-arrow');
+  logList.style.display = 'block';
+  arrow.innerHTML = '&#9662;';
+}
+
+function exitFocusMode(){
+  document.querySelectorAll('.gen-card').forEach(el => el.style.display = '');
+  document.getElementById('focus-exit-bar').style.display = 'none';
+  document.getElementById('output').classList.remove('show');
+  document.getElementById('log-list').style.display = 'none';
+  document.getElementById('log-toggle-arrow').innerHTML = '&#9656;';
+}
+
+function toggleLogVisibility(){
+  const logList = document.getElementById('log-list');
+  const arrow = document.getElementById('log-toggle-arrow');
+  const isHidden = logList.style.display === 'none';
+  logList.style.display = isHidden ? 'block' : 'none';
+  arrow.innerHTML = isHidden ? '&#9662;' : '&#9656;';
 }
 
 function renderConfirmButtons(entry){
@@ -742,6 +794,11 @@ const SPOTLIGHT_CLOSERS = {
   detail: ["Small details, big difference.","The kind of detail that's easy to miss.","Worth zooming in on, every time.","Little things like this matter to me.","Details make the build."],
   moment: ["Just a moment worth sharing.","The workshop has plenty of these.","Small moments, still worth a post.","More of these coming.","Just felt like sharing this one."]
 };
+const SPOTLIGHT_STORY_Q = {
+  build: ["Which build should get the spotlight next?", "Remember this one?", "Should I revisit builds like this more often?"],
+  detail: ["Notice this detail before?", "What detail would you want a close-up of next?", "Worth zooming in on, right?"],
+  moment: ["More behind-the-scenes like this?", "Want to see more workshop moments?", "Anything you'd want to see more of?"]
+};
 
 function generateSpotlight(){
   const desc = document.getElementById('sp-desc').value.trim();
@@ -753,11 +810,13 @@ function generateSpotlight(){
   const buildName = document.getElementById('sp-build').value.trim();
   const type = document.getElementById('sp-type').value;
 
-  const opener = pickNoRepeat(SPOTLIGHT_OPENERS[type], `sp-opener-${type}`);
+  const hook = pickNoRepeat(SPOTLIGHT_OPENERS[type], `sp-opener-${type}`);
   const closer = pickNoRepeat(SPOTLIGHT_CLOSERS[type], `sp-closer-${type}`);
+  const storyQ = pickNoRepeat(SPOTLIGHT_STORY_Q[type], `sp-storyq-${type}`);
   const hashtags = pickNoRepeat(HASHTAG_SETS, 'hashtags');
+  const overlay = desc.charAt(0).toUpperCase() + desc.slice(1);
 
-  let lines = [opener, ""];
+  let lines = [hook, ""];
   if(buildName) lines.push(buildName, "");
   lines.push(desc);
 
@@ -769,17 +828,18 @@ function generateSpotlight(){
     if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
   }
 
-  lines.push("", closer, "", hashtags);
-  const ig = lines.join("\n");
-  const yt = `Spotlight: ${buildName || 'from the Sixto workshop'}\n\n${desc}\n\nPart of the ongoing Sixto Custom Guitars journey \u2014 one-of-one builds, reclaimed wood, Blaasveld, Belgium.\n\nInstagram: @sixtocustomguitars`;
+  lines.push("", closer, "", storyQ, "", hashtags);
+  const ig = lines.join("\n"); // reel/story caption \u2014 hook + context + closer + story-question, ready to paste
+  const yt = overlay; // short on-video overlay-text suggestion, not a YouTube description
 
   document.getElementById('out-ig').textContent = ig;
   document.getElementById('out-yt').textContent = yt;
   updateIgCount(ig);
+  applyOutputLabels('spotlight');
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
 
-  saveLog({ project: buildName, phase: 'spotlight' }, ig, yt);
+  saveLog({ project: buildName, phase: 'spotlight', kind: 'spotlight' }, ig, yt);
   currentDisplayedIndex = 0;
   refreshConfirmForCurrent();
   document.getElementById('sp-desc').style.borderColor = '';
