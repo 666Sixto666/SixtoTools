@@ -68,6 +68,8 @@
   .log-entry .lt{color:var(--text-dim);font-family:var(--mono);font-size:11px;}
   .log-status{display:inline-block;margin-left:6px;font-size:12px;color:var(--text-dim);}
   .log-status.used{color:#8fae6a;}
+  .log-delete{display:inline-block;margin-left:8px;font-size:11px;color:var(--text-dim);opacity:.6;cursor:pointer;padding:2px 4px;}
+  .log-delete:active{opacity:1;color:#c1793f;}
   .log-entry .ll{cursor:pointer;color:var(--text);margin-top:4px;padding:4px 0;font-size:14px;}
   .empty{color:var(--text-dim);font-size:13px;font-style:italic;}
 
@@ -496,7 +498,7 @@ function saveLog(d, ig, yt){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, kind: d.kind || 'post', ig, yt, usedIG: false, usedYT: false});
-  log = log.slice(0, 50);
+  log = log.slice(0, 300); // ~2 jaar aan 3x/week, ruim binnen localStorage-limieten
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
   renderWeekProgress();
@@ -528,10 +530,29 @@ function renderLog(){
       <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}
         <span onclick="toggleUsedPlatform(${i},'ig')" style="cursor:pointer;">${igIcon}</span>
         <span onclick="toggleUsedPlatform(${i},'yt')" style="cursor:pointer;">${ytIcon}</span>
+        <span class="log-delete" onclick="deleteLogEntry(${i})" title="Verwijder deze entry">&#10005;</span>
       </div>
       <div class="ll" onclick="loadLog(${i})">${e.project || '(zonder naam)'}</div>
     </div>`;
   }).join('');
+}
+
+function deleteLogEntry(i){
+  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if(!log[i]) return;
+  const label = log[i].project || '(zonder naam)';
+  if(!confirm(`"${label}" definitief verwijderen uit de log?`)) return;
+  const wasCurrent = (i === currentDisplayedIndex);
+  log.splice(i, 1);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  renderLog();
+  renderWeekProgress();
+  if(wasCurrent){
+    document.getElementById('output').classList.remove('show');
+    if(document.getElementById('focus-exit-bar').style.display === 'block') exitFocusMode();
+  } else if(i < currentDisplayedIndex){
+    currentDisplayedIndex -= 1;
+  }
 }
 
 function toggleUsedPlatform(i, platform){
@@ -662,9 +683,24 @@ function copyMini(id){
   });
 }
 
+function getAllVarHistKeys(){
+  const keys = [];
+  for(let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.indexOf('sixto-pd-varhist-') === 0) keys.push(k);
+  }
+  return keys;
+}
+
 function exportLog(){
-  const log = localStorage.getItem(STORAGE_KEY) || '[]';
-  const blob = new Blob([log], {type:'application/json'});
+  let log = [];
+  try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
+  const varhist = {};
+  getAllVarHistKeys().forEach(k => {
+    try{ varhist[k] = JSON.parse(localStorage.getItem(k)); }catch(e){ /* skip unreadable key */ }
+  });
+  const bundle = { version: 2, exportedAt: new Date().toISOString(), log, varhist };
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -680,7 +716,21 @@ function importLog(evt){
   reader.onload = function(e){
     try{
       const data = JSON.parse(e.target.result);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      let logData;
+      if(Array.isArray(data)){
+        // Legacy export: a bare array of log entries, no variety history.
+        logData = data;
+      } else if(data && Array.isArray(data.log)){
+        logData = data.log;
+        if(data.varhist){
+          Object.keys(data.varhist).forEach(k => {
+            localStorage.setItem(k, JSON.stringify(data.varhist[k]));
+          });
+        }
+      } else {
+        throw new Error('Onbekend bestandsformaat');
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(logData));
       renderLog();
       renderWeekProgress();
     }catch(err){ alert('Kon bestand niet lezen.'); }
