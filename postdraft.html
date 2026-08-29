@@ -121,21 +121,21 @@
   </div>
 </div>
 
-<div class="card" id="lookback-card">
-  <h2>Terugblik <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
-  <label>Welke build/element uit je geschiedenis?</label>
-  <input type="text" id="lb-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
-  <label>Wat wil je terugblikken?
-    <span class="hint">Een beslissing, een les, een moment &mdash; kort mag</span>
+<div class="card" id="spotlight-card">
+  <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
+  <label>Welke build/element staat in de spotlight?</label>
+  <input type="text" id="sp-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
+  <label>Wat wil je laten zien?
+    <span class="hint">Een foto, moment of detail dat de moeite waard is &mdash; kort mag</span>
   </label>
-  <textarea id="lb-memory" placeholder="e.g. the first time I tried a full body carve, and why it almost didn't work"></textarea>
-  <label>Invalshoek</label>
-  <select id="lb-angle">
-    <option value="then_vs_now">Toen vs. nu</option>
-    <option value="lesson">Les geleerd</option>
-    <option value="why">Waarom deze keuze, toen</option>
+  <textarea id="sp-desc" placeholder="e.g. a close-up of the grain on the top, or a shot from the bench today"></textarea>
+  <label>Type</label>
+  <select id="sp-type">
+    <option value="build">Afgewerkte build</option>
+    <option value="detail">Detail / close-up</option>
+    <option value="moment">Werkplaats-moment</option>
   </select>
-  <button class="btn-primary" onclick="generateLookback()">Genereer terugblik</button>
+  <button class="btn-primary" onclick="generateSpotlight()">Genereer spotlight</button>
 </div>
 
 <div class="card">
@@ -305,7 +305,7 @@ const STORAGE_KEY = 'sixto-postdraft-log-v1';
 const PHASE_LABEL = {
   wood:'wood selection', shaping:'shaping', neck:'neck work',
   finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build',
-  lookback:'terugblik / journey'
+  spotlight:'journey spotlight'
 };
 
 const OPENERS = {
@@ -672,7 +672,7 @@ function renderSchedule(){
     banner.textContent = SCHEDULE[today].bannerOn;
   } else {
     banner.className = 'today-banner off';
-    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 geen verplichting. Geen actuele update? Gebruik de Terugblik hieronder voor een moment uit je geschiedenis.`;
+    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 geen verplichting. Geen actuele update? Gebruik Journey Spotlight hieronder om iets anders in de kijker te zetten.`;
   }
 }
 
@@ -709,35 +709,35 @@ renderWeekProgress();
   }
 })();
 
-// ============ Terugblik / Look Back generator (reuses main output + log + confirm) ============
-const LOOKBACK_OPENERS = {
-  then_vs_now: ["Throwback to how this one started.","This didn't always look like this.","Where this build began.","A look back at an earlier stage.","This one's come a long way.","Revisiting an earlier build today."],
-  lesson: ["Something I learned from this build.","A lesson this one taught me.","Looking back, this build changed how I work.","This build taught me something I still use today.","An early lesson from the workshop.","What this build taught me, looking back."],
-  why: ["Why I made this choice, revisited.","The reasoning behind this decision, looking back.","Here's why I did it this way.","A decision from earlier in the journey, explained.","Revisiting a choice from this build.","Looking back at why I went this route."]
+// ============ Journey Spotlight generator (reuses main output + log + confirm) ============
+const SPOTLIGHT_OPENERS = {
+  build: ["Some love for an earlier build.","This one deserves another moment in the spotlight.","Revisiting a favorite from the workshop.","One from the archive.","A build worth another look.","Putting this one back in the spotlight."],
+  detail: ["A detail worth a closer look.","Zooming in on something I like.","One of my favorite details.","A small detail, worth sharing.","This close-up deserves its own post.","Something I don't usually show up close."],
+  moment: ["A moment from the workshop.","Something from the bench, just because.","A quick one worth sharing.","From the workshop archive.","A small moment, worth a post.","Just a good shot from the shop."]
 };
-const LOOKBACK_CLOSERS = {
-  then_vs_now: ["Funny to look back on this.","Every build teaches the next one.","Progress looks different in hindsight.","Good to revisit where things started.","Still learning from builds like this one."],
-  lesson: ["Still applying this lesson today.","Good reminders don't expire.","Some lessons stick with you.","Worth remembering, even now.","This one shaped how I build now."],
-  why: ["Still stand by that decision.","Would I do it the same way today? Mostly yes.","Choices like this shape a build.","Small decisions, big impact.","That reasoning still holds up."]
+const SPOTLIGHT_CLOSERS = {
+  build: ["Always good to give this one another moment.","One of the builds I keep coming back to.","Worth a second look, I think.","Glad I get to share this one again.","This one still holds up."],
+  detail: ["Small details, big difference.","The kind of detail that's easy to miss.","Worth zooming in on, every time.","Little things like this matter to me.","Details make the build."],
+  moment: ["Just a moment worth sharing.","The workshop has plenty of these.","Small moments, still worth a post.","More of these coming.","Just felt like sharing this one."]
 };
 
-function generateLookback(){
-  const memory = document.getElementById('lb-memory').value.trim();
-  if(!memory){
-    document.getElementById('lb-memory').style.borderColor = '#c1793f';
-    document.getElementById('lb-memory').focus();
+function generateSpotlight(){
+  const desc = document.getElementById('sp-desc').value.trim();
+  if(!desc){
+    document.getElementById('sp-desc').style.borderColor = '#c1793f';
+    document.getElementById('sp-desc').focus();
     return;
   }
-  const buildName = document.getElementById('lb-build').value.trim();
-  const angle = document.getElementById('lb-angle').value;
+  const buildName = document.getElementById('sp-build').value.trim();
+  const type = document.getElementById('sp-type').value;
 
-  const opener = pickNoRepeat(LOOKBACK_OPENERS[angle], `lb-opener-${angle}`);
-  const closer = pickNoRepeat(LOOKBACK_CLOSERS[angle], `lb-closer-${angle}`);
+  const opener = pickNoRepeat(SPOTLIGHT_OPENERS[type], `sp-opener-${type}`);
+  const closer = pickNoRepeat(SPOTLIGHT_CLOSERS[type], `sp-closer-${type}`);
   const hashtags = pickNoRepeat(HASHTAG_SETS, 'hashtags');
 
   let lines = [opener, ""];
   if(buildName) lines.push(buildName, "");
-  lines.push(memory);
+  lines.push(desc);
 
   // Optional read-only enrichment from Sixto Builds, same pattern as the wood auto-fill elsewhere.
   const builds = loadBuildsList();
@@ -749,7 +749,7 @@ function generateLookback(){
 
   lines.push("", closer, "", hashtags);
   const ig = lines.join("\n");
-  const yt = `Throwback: ${buildName || 'an earlier build'}\n\n${memory}\n\nPart of the ongoing Sixto Custom Guitars journey \u2014 one-of-one builds, reclaimed wood, Blaasveld, Belgium.\n\nInstagram: @sixtocustomguitars`;
+  const yt = `Spotlight: ${buildName || 'from the Sixto workshop'}\n\n${desc}\n\nPart of the ongoing Sixto Custom Guitars journey \u2014 one-of-one builds, reclaimed wood, Blaasveld, Belgium.\n\nInstagram: @sixtocustomguitars`;
 
   document.getElementById('out-ig').textContent = ig;
   document.getElementById('out-yt').textContent = yt;
@@ -757,10 +757,10 @@ function generateLookback(){
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
 
-  saveLog({ project: buildName, phase: 'lookback' }, ig, yt);
+  saveLog({ project: buildName, phase: 'spotlight' }, ig, yt);
   currentDisplayedIndex = 0;
   showConfirmState(false);
-  document.getElementById('lb-memory').style.borderColor = '';
+  document.getElementById('sp-desc').style.borderColor = '';
 }
 
 // ============ Reel & Story generator (Instagram, spoor 2) ============
