@@ -180,6 +180,9 @@ textarea{resize:vertical;min-height:60px;}
 .pv-moment{display:flex;gap:14px;margin-bottom:18px;}
 .pv-moment img{width:96px;height:96px;object-fit:cover;border-radius:10px;flex-shrink:0;}
 .pv-moment .cap{font-size:13px;line-height:1.4;padding-top:6px;color:var(--text-dim);}
+.pv-shared-label{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);opacity:.7;margin-bottom:3px;}
+.pv-shared-text{font-size:13.5px;line-height:1.45;color:var(--text);font-style:italic;}
+.pv-shared-badge{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--gold);}
 .pv-sig{text-align:center;padding:30px 20px 10px 20px;font-size:13px;color:var(--text-dim);border-top:1px solid var(--line);margin-top:20px;}
 .pv-sig .brand{color:var(--gold);font-weight:700;letter-spacing:1px;}
 
@@ -190,6 +193,9 @@ textarea{resize:vertical;min-height:60px;}
   .pv-brand h1, .pv-section-title{ color:#a1652b !important; }
   .pv-name{ color:#221f1a !important; }
   .pv-meta, .pv-moment .cap, .pv-sig{ color:#6c6454 !important; }
+  .pv-shared-label{ color:#8a8070 !important; }
+  .pv-shared-text{ color:#221f1a !important; }
+  .pv-shared-badge{ color:#a1652b !important; }
   .pv-sig .brand{ color:#a1652b !important; }
   .pv-sig{ border-top:1px solid #e3d9c4 !important; }
   .spec-grid .sk{ color:#6c6454 !important; }
@@ -917,9 +923,19 @@ async function openPassport(buildId){
   const heroUrl = heroSource ? await getPhotoBlob(heroSource.id) : null;
 
   let timelineHtml = '';
+  const PLATFORM_LABELS = { ig: 'Instagram', yt: 'YouTube' };
   for(const p of passportPhotos){
     const url = await getPhotoBlob(p.id);
-    timelineHtml += `<div class="pv-moment"><img src="${url}"><div class="cap">${esc(p.caption||'')}</div></div>`;
+    let capHtml;
+    if(p.sharedCaption){
+      const platforms = (p.sharedPlatforms||[]).map(pl => PLATFORM_LABELS[pl] || pl).join(', ');
+      capHtml = `<div class="pv-shared-label">${esc(p.caption||'')}</div>
+        <div class="pv-shared-text">${esc(p.sharedCaption)}</div>
+        ${platforms ? `<div class="pv-shared-badge">&#128241; Gedeeld op ${esc(platforms)}</div>` : ''}`;
+    } else {
+      capHtml = esc(p.caption||'');
+    }
+    timelineHtml += `<div class="pv-moment"><img src="${url}"><div class="cap">${capHtml}</div></div>`;
   }
   if(!timelineHtml){
     timelineHtml = `<div class="small-note">Nog geen mijlpaalfoto's. Die worden automatisch gevraagd bij bepaalde checklist-stappen (📷) tijdens een volgende build.</div>`;
@@ -1055,6 +1071,31 @@ function queuePendingPost(buildId, buildName, phase, stepText, momentLabel){
   });
   queue = queue.slice(0, 30);
   localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(queue));
+}
+
+/* ---------- Post confirmations from Post Draft (sixto_post_confirmations_v1) ----------
+   Post Draft is the sole writer; Builds is the sole consumer. When a post linked to a photo-moment
+   gets confirmed as posted (IG/YT), the actual caption gets merged into that passport photo, so the
+   build paspoort shows the real shared text instead of just the internal checklist label. */
+const POST_CONFIRMATIONS_KEY = 'sixto_post_confirmations_v1';
+function consumePostConfirmations(){
+  let queue = [];
+  try{ queue = JSON.parse(localStorage.getItem(POST_CONFIRMATIONS_KEY)) || []; }catch(e){ queue = []; }
+  if(queue.length === 0) return;
+  let anyMatched = false;
+  for(const conf of queue){
+    const b = getBuild(conf.buildId);
+    if(!b || !b.photos) continue;
+    const photo = b.photos.find(p => p.caption === conf.momentLabel);
+    if(!photo) continue;
+    photo.sharedCaption = conf.caption || photo.sharedCaption || '';
+    photo.sharedPlatforms = Array.from(new Set([...(photo.sharedPlatforms||[]), conf.platform]));
+    anyMatched = true;
+  }
+  if(anyMatched) persist();
+  // Clear the whole queue regardless of match: unmatched entries (e.g. a photo that was later
+  // deleted) can't ever resolve later either, so nothing is gained by keeping them around.
+  localStorage.setItem(POST_CONFIRMATIONS_KEY, '[]');
 }
 
 function updateStepNote(buildId,pi,si,val){
@@ -1434,6 +1475,7 @@ function toast(msg){
     }
     await pullFromGitHub(true);
   }
+  consumePostConfirmations();
   render();
   setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
   // Best-effort: try to flush a pending push the moment the app is backgrounded/closed,
