@@ -136,6 +136,9 @@
     <option value="fast">Snel &amp; energiek</option>
     <option value="calm">Rustig / ASMR-gevoel</option>
     <option value="twist">Verrassend / twist</option>
+    <option value="milestone">Trots / mijlpaal</option>
+    <option value="technical">Technisch / precies</option>
+    <option value="humor">Speels / luchtig</option>
   </select>
   <button class="btn-primary" onclick="generateReelStory()">Genereer reel &amp; story</button>
 
@@ -966,23 +969,35 @@ function generateSpotlight(){
 const RS_HOOKS = {
   fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it.", "Here's today's progress, fast.", "Zero to this, in one clip.", "One clip, real progress.", "Fast forward through today's work.", "Today, condensed into one clip.", "This is what today looked like, sped up.", "Watch a piece of this build happen.", "One clip, one step closer.", "Here's the fast version of today."],
   calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this.", "A slower side of the workshop.", "Just wood, hands, and time today.", "A calm minute from the bench.", "Not everything needs to move fast.", "Some quiet time in the workshop today.", "This one's meant to be watched slowly.", "A moment worth slowing down for."],
-  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it.", "This clip has a twist coming.", "Not what you think, keep watching.", "There's a reason this looks odd right now.", "This won't make sense until the end.", "Hold your judgment until the last second."]
+  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it.", "This clip has a twist coming.", "Not what you think, keep watching.", "There's a reason this looks odd right now.", "This won't make sense until the end.", "Hold your judgment until the last second."],
+  milestone: ["Proud of this moment.", "This is a big step today.", "Watch this milestone happen.", "A moment worth celebrating.", "This one deserves a proper look.", "Big step, captured in one clip.", "This is what progress looks like.", "A milestone clip, no filter needed.", "Today's win, in one clip.", "This is the good part.", "A proud moment from the bench.", "Watch this come together."],
+  technical: ["Here's exactly how this works.", "A closer look at the technique.", "The process, step by step.", "Watch the technique here.", "Here's how this actually gets done.", "The technical side of this build.", "A precise look at this step.", "Here's the method behind this.", "Breaking down this step.", "The mechanics of this stage.", "A detailed look at the process.", "Here's what's actually happening."],
+  humor: ["This didn't go as planned.", "Not my finest moment, but here we are.", "Every build has one of these moments.", "This is the part nobody shows you.", "Workshop reality, not the highlight reel.", "This almost went very wrong.", "The less glamorous side of building.", "Not everything works the first time.", "A little workshop chaos today.", "This is what mistakes look like.", "Even this happens sometimes.", "The bloopers reel, basically."]
 };
 const RS_STORY_Q = {
   fast:  ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?", "Fast clips or slower ones \u2014 which do you prefer?", "Want more speed-run clips like this?", "Which part moved too fast for you?", "More quick clips or longer ones?"],
   calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?", "What would you slow down on if you were me?", "What catches your eye first?", "Any questions about this step?", "What would you want to see more of, here?"],
-  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?", "Think you know where this is going?", "Drop your guess before I show the result.", "What's your best guess?"]
+  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?", "Think you know where this is going?", "Drop your guess before I show the result.", "What's your best guess?"],
+  milestone: ["What milestone should I celebrate next?", "Which step felt like the biggest win to you?", "Worth celebrating, right?", "What's your favorite kind of milestone moment?", "Should I share more of these?", "Which part stood out to you?", "What would you be proudest of here?", "More proud-moment clips like this?"],
+  technical: ["Any questions about this technique?", "Want a deeper breakdown of this step?", "Curious about the tools used here?", "What technical detail would you want explained?", "Should I go deeper on this next time?", "Any part of this unclear?", "What would you want to know about this process?", "More technical breakdowns like this?"],
+  humor: ["Ever had one of these moments?", "Tell me I'm not the only one.", "What's your workshop blooper story?", "Relatable, or just me?", "Anyone else run into this?", "What would you have done here?", "Worth a laugh, right?", "More of these honest moments?"]
 };
 const RS_CAPTION_LEAD = {
   fast:  ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress.", "Fast clip, real work behind it.", "Today's clip, no filler.", "A quick moment from a longer day.", "Short and to the point today."],
   calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work.", "Taking today's clip a little slower.", "A calm minute from an otherwise busy day.", "Some unhurried bench time today.", "A quieter side of today's work."],
-  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like.", "Today's clip isn't what it appears to be.", "There's more going on here than it looks.", "This one needs a second look."]
+  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like.", "Today's clip isn't what it appears to be.", "There's more going on here than it looks.", "This one needs a second look."],
+  milestone: ["A proud moment from today.", "Today felt like a milestone.", "A win worth sharing today.", "This one felt good to finish.", "Today's small victory.", "A proud step forward today.", "This moment deserved its own post.", "A milestone worth pausing for."],
+  technical: ["A technical look at today's step.", "The process behind today's work.", "Breaking down today's technique.", "Today's step, explained.", "The method behind this stage.", "A closer look at the process today.", "Today's technical detail.", "The mechanics behind today's work."],
+  humor: ["Not every clip is a highlight reel.", "The honest side of building today.", "A little workshop chaos, for once.", "Today wasn't picture-perfect, and that's fine.", "The less polished side of today.", "Keeping it real today.", "Not everything goes to plan.", "A more honest look at today."]
 };
 
 const RS_OVERLAY_PREFIX = {
   fast:  ["", "Today: ", "Right now: ", "In progress: ", "Live from the bench: ", "Happening now: "],
   calm:  ["", "Slowly: ", "One step at a time: ", "Today: ", "Quietly: ", "Taking it slow: "],
-  twist: ["Not yet: ", "Wait for it: ", "", "Almost: ", "Not what it seems: ", "Keep watching: "]
+  twist: ["Not yet: ", "Wait for it: ", "", "Almost: ", "Not what it seems: ", "Keep watching: "],
+  milestone: ["", "Milestone: ", "Proud moment: ", "Today's win: ", "Finally: ", "Big step: "],
+  technical: ["", "Technique: ", "How it's done: ", "The process: ", "Method: ", "Step-by-step: "],
+  humor: ["", "Real talk: ", "Not gonna lie: ", "Honestly: ", "Plot twist: ", "Reality check: "]
 };
 
 function buildShortsCompanion(hook, input, wood){
