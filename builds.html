@@ -107,6 +107,8 @@ textarea{resize:vertical;min-height:60px;}
   border-radius:10px;padding:8px 10px;margin-bottom:7px;}
 .tpl-step.dragging{opacity:.4;}
 .tpl-step .drag-handle{cursor:grab;color:var(--text-dim);font-size:15px;flex-shrink:0;}
+.phase.dragging{opacity:.4;}
+.phase-head .drag-handle{cursor:grab;color:var(--text-dim);font-size:15px;margin-right:6px;}
 .tpl-photo-toggle{display:flex;align-items:center;gap:3px;font-size:14px;flex-shrink:0;cursor:pointer;}
 .tpl-photo-toggle input{width:auto;accent-color:var(--wood);}
 
@@ -529,7 +531,9 @@ function render(){
   const sub = document.getElementById('headerSub');
   if(state.currentBuildId){
     sub.textContent = 'Build detail';
-    main.innerHTML = renderBuildDetail(getBuild(state.currentBuildId));
+    const b = getBuild(state.currentBuildId);
+    main.innerHTML = renderBuildDetail(b);
+    if(b && b.status === 'in_progress') attachBuildPhaseDragHandlers(b.id);
     return;
   }
   if(state.tab==='library'){ sub.textContent='Bibliotheek'; main.innerHTML = renderLibrary(); }
@@ -573,6 +577,34 @@ function commitTemplateOrder(pi, list){
   if(!changed) return;
   t[pi].steps = domOrder.map(oldIdx=>oldSteps[oldIdx]);
   saveTemplate(t);
+  render();
+}
+
+function attachBuildPhaseDragHandlers(buildId){
+  const list = document.getElementById(`phaseList-${buildId}`);
+  if(!list) return;
+  list.querySelectorAll('.phase').forEach(el=>{
+    el.addEventListener('dragstart', ()=>{ el.classList.add('dragging'); });
+    el.addEventListener('dragend', ()=>{ el.classList.remove('dragging'); commitBuildPhaseOrder(buildId, list); });
+  });
+  list.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    const dragging = list.querySelector('.phase.dragging');
+    if(!dragging) return;
+    const after = getDragAfterElementGeneric(list, e.clientY, '.phase');
+    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging, after);
+  });
+}
+
+function commitBuildPhaseOrder(buildId, list){
+  const b = getBuild(buildId);
+  if(!b) return;
+  const domOrder = [...list.querySelectorAll('.phase')].map(el=>parseInt(el.dataset.pi,10));
+  const oldChecklist = b.checklist;
+  const changed = domOrder.some((oldIdx,newIdx)=>oldIdx!==newIdx);
+  if(!changed) return;
+  b.checklist = domOrder.map(oldIdx=>oldChecklist[oldIdx]);
+  persist();
   render();
 }
 
@@ -745,12 +777,18 @@ function renderBuildDetail(b){
   }
 
   html += `<h2 class="section">Checklist</h2>`;
+  const canReorder = b.status === 'in_progress';
+  if(canReorder){
+    html += `<div class="small-note" style="margin-bottom:8px;">Sleep aan ⠿ om de volgorde van de fases voor deze build aan te passen.</div>`;
+  }
+  html += `<div class="phase-list" id="phaseList-${b.id}">`;
   b.checklist.forEach((ph, pi)=>{
     const total = ph.steps.length;
     const done = ph.steps.filter(s=>s.checked).length;
     const pct = total? Math.round(done/total*100):0;
-    html += `<div class="phase">
+    html += `<div class="phase" data-pi="${pi}" ${canReorder?'draggable="true"':''}>
       <div class="phase-head" onclick="togglePhase('${b.id}',${pi})">
+        ${canReorder?'<span class="drag-handle" onclick="event.stopPropagation()">⠿</span>':''}
         <div class="title">${done===total && total>0?'✅':'▫️'} ${esc(ph.phase)}</div>
         <div class="count">${done}/${total}</div>
       </div>
@@ -764,6 +802,7 @@ function renderBuildDetail(b){
       </div>
     </div>`;
   });
+  html += `</div>`;
 
   html += `<button class="btn ghost block" style="margin-top:10px;" onclick="saveAsTemplate('${b.id}')">💾 Bewaar deze checklist als standaard</button>`;
 
@@ -998,8 +1037,26 @@ function toggleStep(buildId,pi,si){
   persist(); render(); loadPhotos(buildId);
   if(shouldPromptPhoto){
     triggerPhotoUpload(buildId, momentLabel);
+    queuePendingPost(buildId, b.name, ph.phase, s.text, momentLabel);
   }
 }
+
+/* ---------- Pending post suggestions (shared with Post Draft, sixto_pending_posts_v1) ----------
+   Read-only from Builds' perspective beyond appending: Post Draft consumes/removes entries.
+   Purely additive suggestion queue -- never required, Post Draft keeps working exactly as before. */
+const PENDING_POSTS_KEY = 'sixto_pending_posts_v1';
+function queuePendingPost(buildId, buildName, phase, stepText, momentLabel){
+  let queue = [];
+  try{ queue = JSON.parse(localStorage.getItem(PENDING_POSTS_KEY)) || []; }catch(e){ queue = []; }
+  queue.unshift({
+    id: uid(),
+    buildId, buildName: buildName || '', phase: phase || '', stepText: stepText || '',
+    momentLabel: momentLabel || '', date: new Date().toISOString()
+  });
+  queue = queue.slice(0, 30);
+  localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(queue));
+}
+
 function updateStepNote(buildId,pi,si,val){
   const b = getBuild(buildId);
   b.checklist[pi].steps[si].note = val;
