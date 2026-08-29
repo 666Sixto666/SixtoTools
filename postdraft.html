@@ -69,6 +69,15 @@
   .log-status{display:inline-block;margin-left:6px;font-size:12px;color:var(--text-dim);}
   .log-status.used{color:#8fae6a;}
   .log-delete{display:inline-block;margin-left:8px;font-size:11px;color:var(--text-dim);opacity:.6;cursor:pointer;padding:2px 4px;}
+
+  .pending-box{border:1px solid var(--accent-2);border-radius:8px;padding:11px 12px;background:rgba(125,133,99,0.1);}
+  .pending-box .ph-title{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px;}
+  .pending-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);}
+  .pending-row:first-of-type{border-top:none;}
+  .pending-row .pr-text{font-size:12.5px;line-height:1.4;}
+  .pending-row .pr-text b{color:var(--text);}
+  .pending-row .pr-actions{display:flex;gap:6px;flex-shrink:0;}
+  .pending-row .pr-actions button{font-size:11px;padding:6px 10px;}
   .log-delete:active{opacity:1;color:#c1793f;}
   .log-entry .ll{cursor:pointer;color:var(--text);margin-top:4px;padding:4px 0;font-size:14px;}
   .empty{color:var(--text-dim);font-size:13px;font-style:italic;}
@@ -190,6 +199,7 @@
 
 <div class="card gen-card" id="spotlight-card">
   <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
+  <div id="pending-posts-banner" style="display:none;margin-bottom:14px;"></div>
   <label>Welke build/element staat in de spotlight?</label>
   <input type="text" id="sp-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
   <label>Wat wil je laten zien?
@@ -804,6 +814,67 @@ function loadBuildsList(){
   try{ return JSON.parse(localStorage.getItem(BUILDS_KEY)) || []; }catch(e){ return []; }
 }
 
+// --- Pending post suggestions from Builds (sixto_pending_posts_v1). Builds only appends here;
+// Post Draft is the only consumer -- reads, and removes entries once used or dismissed.
+// Purely additive: the normal Post Draft workflow is unaffected if this is empty or unused. ---
+const PENDING_POSTS_KEY = 'sixto_pending_posts_v1';
+
+function loadPendingPosts(){
+  try{ return JSON.parse(localStorage.getItem(PENDING_POSTS_KEY)) || []; }catch(e){ return []; }
+}
+
+function savePendingPosts(list){
+  localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(list));
+}
+
+function renderPendingPostsBanner(){
+  const box = document.getElementById('pending-posts-banner');
+  const queue = loadPendingPosts();
+  if(queue.length === 0){
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+  box.style.display = 'block';
+  const rows = queue.map(entry => {
+    const label = entry.stepText || entry.momentLabel || 'Foto-moment';
+    return `<div class="pending-row">
+      <div class="pr-text"><b>${esc(entry.buildName || 'Onbekende build')}</b><br>${esc(label)}</div>
+      <div class="pr-actions">
+        <button class="btn-ghost" onclick="usePendingPost('${entry.id}')">Gebruik</button>
+        <button class="btn-ghost" onclick="dismissPendingPost('${entry.id}')">&#10005;</button>
+      </div>
+    </div>`;
+  }).join('');
+  box.innerHTML = `<div class="pending-box">
+    <div class="ph-title">&#128248; Nieuw vanuit Builds</div>
+    ${rows}
+  </div>`;
+}
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function usePendingPost(id){
+  const queue = loadPendingPosts();
+  const entry = queue.find(e => e.id === id);
+  if(!entry) return;
+  document.getElementById('sp-build').value = entry.buildName || '';
+  document.getElementById('sp-desc').value = entry.stepText || entry.momentLabel || '';
+  document.getElementById('sp-type').value = 'build';
+  savePendingPosts(queue.filter(e => e.id !== id));
+  renderPendingPostsBanner();
+  document.getElementById('sp-desc').scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('sp-desc').focus();
+}
+
+function dismissPendingPost(id){
+  const queue = loadPendingPosts().filter(e => e.id !== id);
+  savePendingPosts(queue);
+  renderPendingPostsBanner();
+}
+
 function refreshBuilds(){
   const builds = loadBuildsList();
   const dl = document.getElementById('build-list');
@@ -894,6 +965,7 @@ refreshBuilds();
 renderLog();
 renderSchedule();
 renderWeekProgress();
+renderPendingPostsBanner();
 
 (function applySuggestedTone(){
   const today = new Date().getDay();
