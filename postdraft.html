@@ -123,6 +123,68 @@
   </div>
 </div>
 
+<div class="card gen-card" id="reel-card">
+  <h2>Reel &amp; Story (Instagram)</h2>
+  <label>Waar gaat de clip over?
+    <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
+  </label>
+  <textarea id="rs-input" placeholder="e.g. sanding the top, grain showing for the first time"></textarea>
+  <label>Hout <span class="hint">(optioneel &mdash; onafhankelijk van Build notities hieronder)</span></label>
+  <input type="text" id="rs-wood" placeholder="e.g. reclaimed oak">
+  <label>Sfeer van de clip</label>
+  <select id="rs-tone">
+    <option value="fast">Snel &amp; energiek</option>
+    <option value="calm">Rustig / ASMR-gevoel</option>
+    <option value="twist">Verrassend / twist</option>
+  </select>
+  <button class="btn-primary" onclick="generateReelStory()">Genereer reel &amp; story</button>
+
+  <div class="mini-out" id="rs-output" style="display:none;">
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Hook (eerste 2-3 sec)</span><button class="btn-ghost" onclick="copyMini('rs-hook')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-hook"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Overlay-tekst</span><button class="btn-ghost" onclick="copyMini('rs-overlay')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-overlay"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Caption (kort)</span><button class="btn-ghost" onclick="copyMini('rs-caption')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-caption"></div>
+    </div>
+    <div class="mini-out-block">
+      <div class="mob-head"><span>Story-vraag</span><button class="btn-ghost" onclick="copyMini('rs-story')">Kopieer</button></div>
+      <div class="mini-out-text" id="rs-story"></div>
+    </div>
+  </div>
+</div>
+
+<div class="output" id="output">
+  <div id="focus-exit-bar" style="display:none;margin-bottom:10px;">
+    <button class="btn-ghost" onclick="exitFocusMode()">&larr; Terug naar generator</button>
+  </div>
+  <div class="card">
+    <div class="out-block">
+      <div class="out-head"><span id="out-ig-label">Instagram caption</span><button class="btn-ghost" onclick="copyBlock('ig')">Kopieer</button></div>
+      <div class="out-text" id="out-ig"></div>
+      <div class="hint-text" id="ig-count" style="margin-top:6px;"></div>
+      <a class="btn-ghost" id="out-ig-link" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open Instagram &rarr;</a>
+    </div>
+    <div class="out-block" id="out-yt-block" style="margin-bottom:0;">
+      <div class="out-head"><span id="out-yt-label">YouTube beschrijving</span><button class="btn-ghost" onclick="copyBlock('yt')">Kopieer</button></div>
+      <div class="out-text" id="out-yt"></div>
+      <a class="btn-ghost" id="out-yt-link" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
+    </div>
+  </div>
+  <div class="card" id="confirm-card" style="margin-top:-6px;">
+    <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Waar effectief geplaatst?</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-ghost" id="confirm-ig-btn" onclick="toggleConfirmCurrent('ig')" style="flex:1;min-width:130px;text-align:center;">&#9675; Instagram</button>
+      <button class="btn-ghost" id="confirm-yt-btn" onclick="toggleConfirmCurrent('yt')" style="flex:1;min-width:130px;text-align:center;">&#9675; YouTube</button>
+    </div>
+  </div>
+</div>
+
 <div class="card gen-card" id="spotlight-card">
   <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
   <label>Welke build/element staat in de spotlight?</label>
@@ -193,66 +255,6 @@
   </div>
 
   <button class="btn-primary" onclick="generate()">Genereer draft</button>
-</div>
-
-<div class="output" id="output">
-  <div id="focus-exit-bar" style="display:none;margin-bottom:10px;">
-    <button class="btn-ghost" onclick="exitFocusMode()">&larr; Terug naar generator</button>
-  </div>
-  <div class="card">
-    <div class="out-block">
-      <div class="out-head"><span id="out-ig-label">Instagram caption</span><button class="btn-ghost" onclick="copyBlock('ig')">Kopieer</button></div>
-      <div class="out-text" id="out-ig"></div>
-      <div class="hint-text" id="ig-count" style="margin-top:6px;"></div>
-      <a class="btn-ghost" id="out-ig-link" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open Instagram &rarr;</a>
-    </div>
-    <div class="out-block" id="out-yt-block" style="margin-bottom:0;">
-      <div class="out-head"><span id="out-yt-label">YouTube beschrijving</span><button class="btn-ghost" onclick="copyBlock('yt')">Kopieer</button></div>
-      <div class="out-text" id="out-yt"></div>
-      <a class="btn-ghost" id="out-yt-link" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
-    </div>
-  </div>
-  <div class="card" id="confirm-card" style="margin-top:-6px;">
-    <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Waar effectief geplaatst?</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn-ghost" id="confirm-ig-btn" onclick="toggleConfirmCurrent('ig')" style="flex:1;min-width:130px;text-align:center;">&#9675; Instagram</button>
-      <button class="btn-ghost" id="confirm-yt-btn" onclick="toggleConfirmCurrent('yt')" style="flex:1;min-width:130px;text-align:center;">&#9675; YouTube</button>
-    </div>
-  </div>
-</div>
-
-<div class="card gen-card" id="reel-card">
-  <h2>Reel &amp; Story (Instagram)</h2>
-  <label>Waar gaat de clip over?
-    <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
-  </label>
-  <textarea id="rs-input" placeholder="e.g. sanding the top, grain showing for the first time"></textarea>
-  <label>Sfeer van de clip</label>
-  <select id="rs-tone">
-    <option value="fast">Snel &amp; energiek</option>
-    <option value="calm">Rustig / ASMR-gevoel</option>
-    <option value="twist">Verrassend / twist</option>
-  </select>
-  <button class="btn-primary" onclick="generateReelStory()">Genereer reel &amp; story</button>
-
-  <div class="mini-out" id="rs-output" style="display:none;">
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Hook (eerste 2-3 sec)</span><button class="btn-ghost" onclick="copyMini('rs-hook')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-hook"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Overlay-tekst</span><button class="btn-ghost" onclick="copyMini('rs-overlay')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-overlay"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Caption (kort)</span><button class="btn-ghost" onclick="copyMini('rs-caption')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-caption"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Story-vraag</span><button class="btn-ghost" onclick="copyMini('rs-story')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-story"></div>
-    </div>
-  </div>
 </div>
 
 <div class="card gen-card" id="yt-card">
@@ -962,25 +964,25 @@ function generateSpotlight(){
 
 // ============ Reel & Story generator (Instagram, spoor 2) ============
 const RS_HOOKS = {
-  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it.", "Here's today's progress, fast.", "Zero to this, in one clip.", "One clip, real progress.", "Fast forward through today's work."],
-  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this.", "A slower side of the workshop.", "Just wood, hands, and time today."],
-  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it."]
+  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it.", "Here's today's progress, fast.", "Zero to this, in one clip.", "One clip, real progress.", "Fast forward through today's work.", "Today, condensed into one clip.", "This is what today looked like, sped up.", "Watch a piece of this build happen.", "One clip, one step closer.", "Here's the fast version of today."],
+  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this.", "A slower side of the workshop.", "Just wood, hands, and time today.", "A calm minute from the bench.", "Not everything needs to move fast.", "Some quiet time in the workshop today.", "This one's meant to be watched slowly.", "A moment worth slowing down for."],
+  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it.", "This clip has a twist coming.", "Not what you think, keep watching.", "There's a reason this looks odd right now.", "This won't make sense until the end.", "Hold your judgment until the last second."]
 };
 const RS_STORY_Q = {
-  fast:  ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?", "Fast clips or slower ones \u2014 which do you prefer?"],
-  calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?", "What would you slow down on if you were me?"],
-  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?"]
+  fast:  ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?", "Fast clips or slower ones \u2014 which do you prefer?", "Want more speed-run clips like this?", "Which part moved too fast for you?", "More quick clips or longer ones?"],
+  calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?", "What would you slow down on if you were me?", "What catches your eye first?", "Any questions about this step?", "What would you want to see more of, here?"],
+  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?", "Think you know where this is going?", "Drop your guess before I show the result.", "What's your best guess?"]
 };
 const RS_CAPTION_LEAD = {
-  fast:  ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress.", "Fast clip, real work behind it."],
-  calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work.", "Taking today's clip a little slower."],
-  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like."]
+  fast:  ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress.", "Fast clip, real work behind it.", "Today's clip, no filler.", "A quick moment from a longer day.", "Short and to the point today."],
+  calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work.", "Taking today's clip a little slower.", "A calm minute from an otherwise busy day.", "Some unhurried bench time today.", "A quieter side of today's work."],
+  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like.", "Today's clip isn't what it appears to be.", "There's more going on here than it looks.", "This one needs a second look."]
 };
 
 const RS_OVERLAY_PREFIX = {
-  fast:  ["", "Today: ", "Right now: ", "In progress: "],
-  calm:  ["", "Slowly: ", "One step at a time: ", "Today: "],
-  twist: ["Not yet: ", "Wait for it: ", "", "Almost: "]
+  fast:  ["", "Today: ", "Right now: ", "In progress: ", "Live from the bench: ", "Happening now: "],
+  calm:  ["", "Slowly: ", "One step at a time: ", "Today: ", "Quietly: ", "Taking it slow: "],
+  twist: ["Not yet: ", "Wait for it: ", "", "Almost: ", "Not what it seems: ", "Keep watching: "]
 };
 
 function buildShortsCompanion(hook, input, wood){
@@ -1000,7 +1002,7 @@ function generateReelStory(){
     return;
   }
   const tone = document.getElementById('rs-tone').value;
-  const wood = document.getElementById('f-wood').value.trim();
+  const wood = document.getElementById('rs-wood').value.trim();
 
   const hook = pickNoRepeat(RS_HOOKS[tone], `rs-hook-${tone}`);
   const overlayPrefix = pickNoRepeat(RS_OVERLAY_PREFIX[tone], `rs-overlay-prefix-${tone}`);
