@@ -134,6 +134,7 @@
 
 <div class="card gen-card" id="reel-card">
   <h2>Reel &amp; Story (Instagram)</h2>
+  <div id="reel-link-hint" class="hint-text" style="display:none;margin-bottom:10px;color:var(--accent-2);"></div>
   <label>Waar gaat de clip over?
     <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
   </label>
@@ -200,6 +201,7 @@
 <div class="card gen-card" id="spotlight-card">
   <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
   <div id="pending-posts-banner" style="display:none;margin-bottom:14px;"></div>
+  <div id="spotlight-link-hint" class="hint-text" style="display:none;margin-bottom:10px;color:var(--accent-2);"></div>
   <label>Welke build/element staat in de spotlight?</label>
   <input type="text" id="sp-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
   <label>Wat wil je laten zien?
@@ -566,7 +568,14 @@ function updateIgCount(text){
 function saveLog(d, ig, yt){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
-  log.unshift({date: new Date().toISOString(), project: d.project, phase: d.phase, kind: d.kind || 'post', ig, yt, usedIG: false, usedYT: false});
+  const entry = {date: new Date().toISOString(), project: d.project, phase: d.phase, kind: d.kind || 'post', ig, yt, usedIG: false, usedYT: false};
+  if(currentPendingSource){
+    entry.buildId = currentPendingSource.buildId;
+    entry.momentLabel = currentPendingSource.momentLabel;
+    currentPendingSource = null;
+    clearLinkHints();
+  }
+  log.unshift(entry);
   log = log.slice(0, 300); // ~2 jaar aan 3x/week, ruim binnen localStorage-limieten
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
@@ -595,8 +604,11 @@ function renderLog(){
     const ytIcon = status.yt
       ? '<span class="log-status used" title="Op YouTube geplaatst \u2014 klik om ongedaan te maken">YT&#10003;</span>'
       : '<span class="log-status" title="Nog niet bevestigd voor YouTube \u2014 klik om te bevestigen">YT&#9675;</span>';
+    const linkBadge = e.buildId
+      ? '<span class="log-status" title="Ontstaan uit een foto-moment in Builds \u2014 bevestiging stroomt door naar het paspoort" style="opacity:.7;">&#128279;</span>'
+      : '';
     return `<div class="log-entry">
-      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}
+      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}${linkBadge}
         <span onclick="toggleUsedPlatform(${i},'ig')" style="cursor:pointer;">${igIcon}</span>
         <span onclick="toggleUsedPlatform(${i},'yt')" style="cursor:pointer;">${ytIcon}</span>
         <span class="log-delete" onclick="deleteLogEntry(${i})" title="Verwijder deze entry">&#10005;</span>
@@ -628,9 +640,13 @@ function toggleUsedPlatform(i, platform){
   let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   if(!log[i]) return;
   const status = getUsedStatus(log[i]);
-  if(platform === 'ig') log[i].usedIG = !status.ig;
-  else log[i].usedYT = !status.yt;
+  const newValue = platform === 'ig' ? !status.ig : !status.yt;
+  if(platform === 'ig') log[i].usedIG = newValue;
+  else log[i].usedYT = newValue;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  if(newValue && log[i].buildId){
+    queuePostConfirmation(log[i].buildId, log[i].momentLabel, log[i].ig, platform);
+  }
   renderLog();
   renderWeekProgress();
   if(i === currentDisplayedIndex) renderConfirmButtons(log[i]);
@@ -819,12 +835,30 @@ function loadBuildsList(){
 // Purely additive: the normal Post Draft workflow is unaffected if this is empty or unused. ---
 const PENDING_POSTS_KEY = 'sixto_pending_posts_v1';
 
+// Outbound: when a post linked to a Builds photo-moment gets confirmed (IG/YT), we tell Builds
+// about it here. Builds is the sole consumer/owner of this key -- it merges the caption into the
+// matching passport photo and clears consumed entries. One-directional, same pattern as above.
+const POST_CONFIRMATIONS_KEY = 'sixto_post_confirmations_v1';
+
+// Set by usePendingPost() when a suggestion is loaded into a form; consumed (and cleared) the
+// next time that form's generator saves a log entry, tagging it with buildId/momentLabel so a
+// later confirmation can be traced back to the right Builds photo.
+let currentPendingSource = null;
+
 function loadPendingPosts(){
   try{ return JSON.parse(localStorage.getItem(PENDING_POSTS_KEY)) || []; }catch(e){ return []; }
 }
 
 function savePendingPosts(list){
   localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(list));
+}
+
+function queuePostConfirmation(buildId, momentLabel, caption, platform){
+  if(!buildId || !momentLabel) return;
+  let q = [];
+  try{ q = JSON.parse(localStorage.getItem(POST_CONFIRMATIONS_KEY)) || []; }catch(e){ q = []; }
+  q.push({ buildId, momentLabel, caption: caption || '', platform, date: new Date().toISOString() });
+  localStorage.setItem(POST_CONFIRMATIONS_KEY, JSON.stringify(q.slice(-50)));
 }
 
 function renderPendingPostsBanner(){
@@ -841,7 +875,8 @@ function renderPendingPostsBanner(){
     return `<div class="pending-row">
       <div class="pr-text"><b>${esc(entry.buildName || 'Onbekende build')}</b><br>${esc(label)}</div>
       <div class="pr-actions">
-        <button class="btn-ghost" onclick="usePendingPost('${entry.id}')">Gebruik</button>
+        <button class="btn-ghost" onclick="usePendingPost('${entry.id}','spotlight')">&rarr; Spotlight</button>
+        <button class="btn-ghost" onclick="usePendingPost('${entry.id}','reel')">&rarr; Reel</button>
         <button class="btn-ghost" onclick="dismissPendingPost('${entry.id}')">&#10005;</button>
       </div>
     </div>`;
@@ -856,17 +891,43 @@ function esc(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function usePendingPost(id){
+function usePendingPost(id, target){
   const queue = loadPendingPosts();
   const entry = queue.find(e => e.id === id);
   if(!entry) return;
-  document.getElementById('sp-build').value = entry.buildName || '';
-  document.getElementById('sp-desc').value = entry.stepText || entry.momentLabel || '';
-  document.getElementById('sp-type').value = 'build';
+  currentPendingSource = { buildId: entry.buildId, momentLabel: entry.momentLabel };
+
+  if(target === 'reel'){
+    document.getElementById('rs-input').value = entry.stepText || entry.momentLabel || '';
+    document.getElementById('rs-wood').value = '';
+    renderLinkHint('reel-link-hint', entry.buildName);
+    document.getElementById('rs-input').scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('rs-input').focus();
+  } else {
+    document.getElementById('sp-build').value = entry.buildName || '';
+    document.getElementById('sp-desc').value = entry.stepText || entry.momentLabel || '';
+    document.getElementById('sp-type').value = 'build';
+    renderLinkHint('spotlight-link-hint', entry.buildName);
+    document.getElementById('sp-desc').scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('sp-desc').focus();
+  }
+
   savePendingPosts(queue.filter(e => e.id !== id));
   renderPendingPostsBanner();
-  document.getElementById('sp-desc').scrollIntoView({behavior:'smooth', block:'center'});
-  document.getElementById('sp-desc').focus();
+}
+
+function renderLinkHint(elId, buildName){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.style.display = 'block';
+  el.textContent = `\uD83D\uDD17 Gekoppeld aan ${buildName || 'deze build'} \u2014 bevestiging stroomt door naar het paspoort.`;
+}
+
+function clearLinkHints(){
+  ['spotlight-link-hint','reel-link-hint'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.style.display = 'none'; el.textContent = ''; }
+  });
 }
 
 function dismissPendingPost(id){
