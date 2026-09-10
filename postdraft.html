@@ -46,48 +46,64 @@
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   @media(max-width:480px){.row2{grid-template-columns:1fr;}}
 
-  button{
-    font-family:var(--sans);font-size:14px;font-weight:600;border:none;border-radius:7px;
-    padding:12px 18px;cursor:pointer;
-  }
+  button{font-family:var(--sans);font-size:14px;font-weight:600;border:none;border-radius:7px;padding:12px 18px;cursor:pointer;}
   .btn-primary{background:var(--accent);color:#1b1712;width:100%;margin-top:18px;font-size:15px;padding:13px;}
-  .btn-primary:active{opacity:.85;}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed;}
+  .btn-primary:active:not(:disabled){opacity:.85;}
   .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text-dim);font-size:13px;padding:11px 14px;}
   .btn-ghost:active{background:var(--card-2);}
 
+  /* Type picker: multi-select chip checkboxes */
+  .type-picker{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+  .type-chip{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card-2);cursor:pointer;}
+  .type-chip.checked{border-color:var(--accent);background:rgba(193,121,63,0.1);}
+  .type-chip input{margin-top:2px;width:18px;height:18px;flex-shrink:0;accent-color:var(--accent);}
+  .type-chip .tc-text{font-size:13.5px;line-height:1.4;}
+  .type-chip .tc-text b{color:var(--text);}
+  .type-chip .tc-text span{display:block;color:var(--text-dim);font-size:11.5px;margin-top:1px;}
+
+  /* Inline YouTube toggle -- replaces the old full card */
+  .yt-inline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card-2);margin-top:10px;}
+  .yt-inline .yl-label{font-size:12.5px;color:var(--text-dim);}
+  .yt-inline .yl-label b{color:var(--text);}
+  .yt-inline button{font-size:11.5px;padding:7px 12px;}
+  .yt-inline.active{border-color:#8fae6a;}
+  .yt-inline.active .yl-label b{color:#8fae6a;}
+
+  /* Output blocks (dynamic, one per generated piece) */
   .output{display:none;}
   .output.show{display:block;}
   .out-block{margin-bottom:16px;}
+  .out-block:last-child{margin-bottom:0;}
   .out-block .out-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
   .out-block .out-head span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2);}
   .out-text{white-space:pre-wrap;background:var(--card-2);border:1px solid var(--line);border-radius:7px;
     padding:12px;font-size:14px;line-height:1.55;font-family:var(--sans);color:var(--text);}
+  .out-meta{font-size:11px;color:var(--text-dim);opacity:.8;margin-top:6px;}
+
+  .quick-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick-links a{display:inline-block;text-decoration:none;}
+
+  .confirm-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
+  .confirm-box p{font-size:13.5px;color:var(--text-dim);margin:0 0 10px;}
+  .confirm-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .confirm-row button{flex:1;min-width:130px;text-align:center;}
 
   .log-entry{border-top:1px solid var(--line);padding:13px 2px;font-size:13px;}
   .log-entry:first-child{border-top:none;}
   .log-entry .lt{color:var(--text-dim);font-family:var(--mono);font-size:11px;}
+  .log-entry .ll{cursor:pointer;color:var(--text);margin-top:4px;padding:4px 0;font-size:14px;}
   .log-status{display:inline-block;margin-left:6px;font-size:12px;color:var(--text-dim);}
   .log-status.used{color:#8fae6a;}
   .log-delete{display:inline-block;margin-left:8px;font-size:11px;color:var(--text-dim);opacity:.6;cursor:pointer;padding:2px 4px;}
-
-  .pending-box{border:1px solid var(--accent-2);border-radius:8px;padding:11px 12px;background:rgba(125,133,99,0.1);}
-  .pending-box .ph-title{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px;}
-  .pending-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);}
-  .pending-row:first-of-type{border-top:none;}
-  .pending-row .pr-text{font-size:12.5px;line-height:1.4;}
-  .pending-row .pr-text b{color:var(--text);}
-  .pending-row .pr-actions{display:flex;gap:6px;flex-shrink:0;}
-  .pending-row .pr-actions button{font-size:11px;padding:6px 10px;}
   .log-delete:active{opacity:1;color:#c1793f;}
-  .log-entry .ll{cursor:pointer;color:var(--text);margin-top:4px;padding:4px 0;font-size:14px;}
   .empty{color:var(--text-dim);font-size:13px;font-style:italic;}
 
-  .footer-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;}
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#1b1712;
     padding:9px 16px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;}
   .toast.show{opacity:1;}
 
-  .schedule-card{border-color:var(--accent-2);}
   .schedule-row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;}
   .schedule-day{flex:1;min-width:88px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:9px 10px;text-align:center;}
   .schedule-day.today{border-color:var(--accent);background:rgba(193,121,63,0.12);}
@@ -101,17 +117,18 @@
   .week-bar{height:8px;background:var(--card-2);border:1px solid var(--line);border-radius:5px;overflow:hidden;}
   .week-bar > div{height:100%;background:var(--accent);transition:width .3s;}
 
-  .mini-out{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px;}
-  .mini-out-block .mob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-  .mini-out-block .mob-head span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);}
-  .mini-out-text{white-space:pre-wrap;background:var(--card-2);border:1px solid var(--line);border-radius:7px;padding:10px 11px;font-size:13.5px;line-height:1.5;color:var(--text);}
+  .pending-box{border:1px solid var(--accent-2);border-radius:8px;padding:11px 12px;background:rgba(125,133,99,0.1);margin-bottom:14px;}
+  .pending-box .ph-title{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px;}
+  .pending-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);flex-wrap:wrap;}
+  .pending-row:first-of-type{border-top:none;}
+  .pending-row .pr-text{font-size:12.5px;line-height:1.4;}
+  .pending-row .pr-text b{color:var(--text);}
+  .pending-row .pr-actions{display:flex;gap:6px;flex-shrink:0;}
+  .pending-row .pr-actions button{font-size:11px;padding:6px 10px;}
 
-  .yt-lock{text-align:center;padding:6px 4px 4px;}
-  .yt-lock p{font-size:13px;color:var(--text-dim);line-height:1.5;margin:0 0 12px;}
-  .yt-lock button{background:var(--accent-2);color:#150f0d;width:auto;padding:10px 20px;}
-  .yt-active-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8fae6a;border:1px solid #8fae6a;border-radius:10px;padding:2px 8px;margin-bottom:10px;}
-  .yt-off-toggle{margin-top:16px;text-align:right;}
-  .yt-off-toggle button{font-size:11px;padding:6px 10px;}
+  .link-hint{font-size:12px;color:var(--accent-2);margin-top:8px;}
+
+  #focus-exit-bar{display:none;margin-bottom:14px;}
 </style>
 </head>
 <body>
@@ -119,10 +136,10 @@
 <header>
   <div class="eyebrow">Sixto Tools</div>
   <h1>Post Draft</h1>
-  <p>Korte notities in &rarr; kant-en-klare Instagram caption + YouTube beschrijving uit, in de vaste Sixto-toon. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
+  <p>Eén formulier, kies daarna wat je wil genereren. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
 </header>
 
-<div class="card schedule-card gen-card">
+<div class="card schedule-card" id="schedule-card">
   <h2>Postschema</h2>
   <div id="today-banner"></div>
   <div class="schedule-row" id="schedule-row"></div>
@@ -132,95 +149,16 @@
   </div>
 </div>
 
-<div class="card gen-card" id="reel-card">
-  <h2>Reel &amp; Story (Instagram)</h2>
-  <div id="reel-link-hint" class="hint-text" style="display:none;margin-bottom:10px;color:var(--accent-2);"></div>
-  <label>Waar gaat de clip over?
-    <span class="hint">Paar losse woorden volstaan &mdash; bv. "hout schuren, eerste keer nerf zichtbaar"</span>
-  </label>
-  <textarea id="rs-input" placeholder="e.g. sanding the top, grain showing for the first time"></textarea>
-  <label>Hout <span class="hint">(optioneel &mdash; onafhankelijk van Build notities hieronder)</span></label>
-  <input type="text" id="rs-wood" placeholder="e.g. reclaimed oak">
-  <label>Sfeer van de clip</label>
-  <select id="rs-tone">
-    <option value="fast">Snel &amp; energiek</option>
-    <option value="calm">Rustig / ASMR-gevoel</option>
-    <option value="twist">Verrassend / twist</option>
-    <option value="milestone">Trots / mijlpaal</option>
-    <option value="technical">Technisch / precies</option>
-    <option value="humor">Speels / luchtig</option>
-  </select>
-  <button class="btn-primary" onclick="generateReelStory()">Genereer reel &amp; story</button>
-
-  <div class="mini-out" id="rs-output" style="display:none;">
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Hook (eerste 2-3 sec)</span><button class="btn-ghost" onclick="copyMini('rs-hook')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-hook"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Overlay-tekst</span><button class="btn-ghost" onclick="copyMini('rs-overlay')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-overlay"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Caption (kort)</span><button class="btn-ghost" onclick="copyMini('rs-caption')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-caption"></div>
-    </div>
-    <div class="mini-out-block">
-      <div class="mob-head"><span>Story-vraag</span><button class="btn-ghost" onclick="copyMini('rs-story')">Kopieer</button></div>
-      <div class="mini-out-text" id="rs-story"></div>
-    </div>
-  </div>
+<div id="focus-exit-bar">
+  <button class="btn-ghost" onclick="exitFocusMode()">&larr; Terug naar formulier</button>
 </div>
 
-<div class="output" id="output">
-  <div id="focus-exit-bar" style="display:none;margin-bottom:10px;">
-    <button class="btn-ghost" onclick="exitFocusMode()">&larr; Terug naar generator</button>
-  </div>
-  <div class="card">
-    <div class="out-block">
-      <div class="out-head"><span id="out-ig-label">Instagram caption</span><button class="btn-ghost" onclick="copyBlock('ig')">Kopieer</button></div>
-      <div class="out-text" id="out-ig"></div>
-      <div class="hint-text" id="ig-count" style="margin-top:6px;"></div>
-      <a class="btn-ghost" id="out-ig-link" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open Instagram &rarr;</a>
-    </div>
-    <div class="out-block" id="out-yt-block" style="margin-bottom:0;">
-      <div class="out-head"><span id="out-yt-label">YouTube beschrijving</span><button class="btn-ghost" onclick="copyBlock('yt')">Kopieer</button></div>
-      <div class="out-text" id="out-yt"></div>
-      <a class="btn-ghost" id="out-yt-link" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;text-decoration:none;">Open YouTube Studio &rarr;</a>
-    </div>
-  </div>
-  <div class="card" id="confirm-card" style="margin-top:-6px;">
-    <p style="font-size:13.5px;color:var(--text-dim);margin:0 0 10px;">Waar effectief geplaatst?</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn-ghost" id="confirm-ig-btn" onclick="toggleConfirmCurrent('ig')" style="flex:1;min-width:130px;text-align:center;">&#9675; Instagram</button>
-      <button class="btn-ghost" id="confirm-yt-btn" onclick="toggleConfirmCurrent('yt')" style="flex:1;min-width:130px;text-align:center;">&#9675; YouTube</button>
-    </div>
-  </div>
-</div>
+<div class="card" id="main-card">
+  <h2>Wat wil je delen?</h2>
+  <div id="pending-posts-banner" style="display:none;"></div>
+  <div id="link-hint" class="link-hint" style="display:none;"></div>
 
-<div class="card gen-card" id="spotlight-card">
-  <h2>Journey Spotlight <span class="hint-text" style="font-weight:400;">&mdash; voor dagen zonder actuele update</span></h2>
-  <div id="pending-posts-banner" style="display:none;margin-bottom:14px;"></div>
-  <div id="spotlight-link-hint" class="hint-text" style="display:none;margin-bottom:10px;color:var(--accent-2);"></div>
-  <label>Welke build/element staat in de spotlight?</label>
-  <input type="text" id="sp-build" list="build-list" placeholder="bv. Castellum, of de eiken SG one-off">
-  <label>Wat wil je laten zien?
-    <span class="hint">Een foto, moment of detail dat de moeite waard is &mdash; kort mag</span>
-  </label>
-  <textarea id="sp-desc" placeholder="e.g. a close-up of the grain on the top, or a shot from the bench today"></textarea>
-  <label>Type</label>
-  <select id="sp-type">
-    <option value="build">Afgewerkte build</option>
-    <option value="detail">Detail / close-up</option>
-    <option value="moment">Werkplaats-moment</option>
-  </select>
-  <button class="btn-primary" onclick="generateSpotlight()">Genereer spotlight</button>
-</div>
-
-<div class="card gen-card" id="build-card">
-  <h2>Build notities</h2>
-
-  <label>Build / project naam</label>
+  <label>Build / project naam <span class="hint">optioneel</span></label>
   <div style="display:flex;gap:8px;align-items:flex-start;">
     <input type="text" id="f-project" list="build-list" placeholder="bv. Sixto Bass #1" style="flex:1;">
     <button class="btn-ghost" type="button" onclick="refreshBuilds()" title="Herlaad build-lijst">&#8635;</button>
@@ -228,7 +166,7 @@
   <datalist id="build-list"></datalist>
   <div class="hint-text" id="autofill-hint" style="display:none;margin-top:4px;">Hout automatisch ingevuld vanuit Sixto Builds.</div>
 
-  <label>Fase</label>
+  <label>Fase <span class="hint">bepaalt de insteek voor een Post; niet nodig voor een Journey Spotlight</span></label>
   <select id="f-phase">
     <option value="wood">Houtselectie</option>
     <option value="shaping">Vormgeven</option>
@@ -239,25 +177,27 @@
     <option value="done">Voltooid instrument</option>
   </select>
 
-  <label>Hout &amp; herkomst <span class="req">*verplicht</span>
-    <span class="hint">Vaste anchor (Decision 010) &mdash; zonder dit veld geen bruikbare caption.</span>
+  <label>Hout &amp; herkomst
+    <span class="hint">Vaste anchor (Decision 010) voor een Post &mdash; optioneel voor Reel/Spotlight</span>
   </label>
   <textarea id="f-wood" placeholder="e.g. reclaimed oak from a demolished barn beam near Blaasveld"></textarea>
 
-  <label>Wat is er gebeurd</label>
+  <label>Waarover gaat dit? <span class="hint">Kort mag &mdash; een stap, een detail, een moment</span></label>
   <textarea id="f-update" placeholder="e.g. carved the top contour, first time shaping this transition by hand"></textarea>
 
-  <label>Hoe voelt/klinkt het nu <span class="hint">(optioneel &mdash; YouTube-anchor 3)</span></label>
+  <label>Extra detail <span class="hint">optioneel &mdash; hoe het voelt/klinkt, of een tweede zin</span></label>
   <textarea id="f-feel" placeholder="e.g. neck feels fast, still needs fret levelling before I can judge sustain"></textarea>
 
   <div class="row2">
     <div>
-      <label>Toon</label>
+      <label>Sfeer</label>
       <select id="f-tone">
         <option value="calm">Rustig / bedachtzaam</option>
         <option value="milestone">Trots / mijlpaal</option>
-        <option value="curious">Nieuwsgierig / experimenteel</option>
+        <option value="curious">Bewust experimenteel</option>
         <option value="technical">Technisch / precies</option>
+        <option value="fast">Snel &amp; energiek</option>
+        <option value="humor">Speels / luchtig</option>
       </select>
     </div>
     <div>
@@ -269,45 +209,50 @@
     </div>
   </div>
 
-  <button class="btn-primary" onclick="generate()">Genereer draft</button>
+  <label style="margin-top:18px;">Wat wil je genereren? <span class="hint">meerdere mag &mdash; delen automatisch waar mogelijk</span></label>
+  <div class="type-picker">
+    <label class="type-chip" id="chip-post">
+      <input type="checkbox" id="type-post" checked onchange="onTypeChange()">
+      <div class="tc-text"><b>Post</b> &mdash; Instagram-caption<span id="post-yt-note" style="display:none;">, + YouTube-video-ideeën (titels, thumbnail, hook)</span></div>
+    </label>
+    <label class="type-chip" id="chip-reel">
+      <input type="checkbox" id="type-reel" onchange="onTypeChange()">
+      <div class="tc-text"><b>Reel &amp; Story</b> &mdash; hook, overlay, korte caption, story-vraag<span id="reel-yt-note" style="display:none;">, dubbelt automatisch als YouTube Short</span></div>
+    </label>
+    <label class="type-chip" id="chip-spotlight">
+      <input type="checkbox" id="type-spotlight" onchange="onTypeChange()">
+      <div class="tc-text"><b>Journey Spotlight</b> &mdash; ander moment, geen actuele update nodig<span> (gebruikt Build/project-naam hierboven als onderwerp)</span></div>
+    </label>
+  </div>
+
+  <div class="yt-inline" id="yt-inline">
+    <div class="yl-label" id="yt-inline-label">YouTube: <b>nog niet actief</b></div>
+    <button class="btn-ghost" id="yt-inline-btn" onclick="toggleYtEnabled()">Activeer</button>
+  </div>
+
+  <button class="btn-primary" id="generate-btn" onclick="generateAll()">Genereer</button>
 </div>
 
-<div class="card gen-card" id="yt-card">
-  <h2>YouTube &mdash; aandachtsgenerator</h2>
-  <div id="yt-locked">
-    <div class="yt-lock">
-      <p>Nog niet actief. Zet aan wanneer je klaar bent om te filmen &mdash; gebruikt dan automatisch dezelfde build-notities van hierboven, geen extra werk.</p>
-      <button class="btn-ghost" onclick="setYtEnabled(true)">Activeer YouTube-luik</button>
+<div class="output" id="output">
+  <div class="card">
+    <div id="output-blocks"></div>
+    <div class="quick-links" id="quick-links">
+      <a class="btn-ghost" href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener">Open Instagram &rarr;</a>
+      <a class="btn-ghost" id="yt-studio-link" href="https://studio.youtube.com/" target="_blank" rel="noopener" style="display:none;">Open YouTube Studio &rarr;</a>
     </div>
-  </div>
-  <div id="yt-unlocked" style="display:none;">
-    <span class="yt-active-tag">Actief</span>
-    <p class="hint-text">Genereert automatisch mee zodra je bovenaan op "Genereer draft" klikt &mdash; gebruikt dezelfde build-notities, geen apart formulier.</p>
-    <div class="mini-out" id="yt-attention-output" style="display:none;">
-      <div class="mini-out-block">
-        <div class="mob-head"><span>Titel-opties</span><button class="btn-ghost" onclick="copyMini('yt-titles')">Kopieer</button></div>
-        <div class="mini-out-text" id="yt-titles"></div>
-      </div>
-      <div class="mini-out-block">
-        <div class="mob-head"><span>Thumbnail-tekst</span><button class="btn-ghost" onclick="copyMini('yt-thumb')">Kopieer</button></div>
-        <div class="mini-out-text" id="yt-thumb"></div>
-      </div>
-      <div class="mini-out-block">
-        <div class="mob-head"><span>Hook-script (eerste 15 sec)</span><button class="btn-ghost" onclick="copyMini('yt-hook')">Kopieer</button></div>
-        <div class="mini-out-text" id="yt-hook"></div>
-      </div>
-      <div class="mini-out-block">
-        <div class="mob-head"><span>Shorts-idee</span><button class="btn-ghost" onclick="copyMini('yt-shorts')">Kopieer</button></div>
-        <div class="mini-out-text" id="yt-shorts"></div>
+    <div class="confirm-box">
+      <p>Waar effectief geplaatst?</p>
+      <div class="confirm-row">
+        <button class="btn-ghost" id="confirm-ig-btn" onclick="toggleConfirmCurrent('ig')">&#9675; Instagram</button>
+        <button class="btn-ghost" id="confirm-yt-btn" onclick="toggleConfirmCurrent('yt')">&#9675; YouTube</button>
       </div>
     </div>
-    <div class="yt-off-toggle"><button class="btn-ghost" onclick="setYtEnabled(false)">Zet YouTube-luik weer uit</button></div>
   </div>
 </div>
 
 <div class="card" id="log-card">
   <div class="footer-row">
-    <h2 style="margin:0;cursor:pointer;" onclick="toggleLogVisibility()">Log <span id="log-toggle-arrow">&#9656;</span></h2>
+    <h2 style="margin:0;cursor:pointer;" onclick="toggleLogVisibility()">Log <span id="log-caret">&#9656;</span></h2>
     <div>
       <button class="btn-ghost" onclick="exportLog()">Export JSON</button>
       <button class="btn-ghost" onclick="document.getElementById('importFile').click()">Import</button>
@@ -324,101 +269,93 @@ const STORAGE_KEY = 'sixto-postdraft-log-v1';
 
 const PHASE_LABEL = {
   wood:'wood selection', shaping:'shaping', neck:'neck work',
-  finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build',
-  spotlight:'journey spotlight', reel_story:'reel & story'
+  finish:'finishing', assembly:'assembly', setup:'setup', done:'finished build'
 };
+
+/* ============================================================
+   TONE VOICE GUIDE (applies across every bank below)
+   - Confidence through specific technique/decisions, never through
+     bragging adjectives ("amazing", "perfect", "stunning").
+   - "curious" = deliberate, controlled experimentation by someone who
+     knows what they're doing -- NEVER passive uncertainty ("not sure",
+     "we'll see", "hope it works"). The craftsman is always in charge
+     of the outcome, even when trying something new.
+   - Personality allowed and encouraged (esp. "humor" tone), but never
+     at the expense of looking unsure of the work itself.
+   - Matches 01_BRAND_FOUNDATION.md: professional, knowledgeable,
+     approachable, passionate -- never arrogant, never elitist.
+   ============================================================ */
 
 const OPENERS = {
   calm: {
-    wood:["Starting quiet, with the wood.","Today began with just the wood, and time to look at it properly.","No rush yet \u2014 just getting to know this piece.","Some builds start loud. This one started quiet.","Just spending time with this piece before anything else.","Getting to know the grain before the first cut.","Nothing rushed about picking this piece.","Sat with this wood a while before deciding.","The wood decides more than people think."],
-    shaping:["Slow, deliberate work today.","Taking the shape out one small cut at a time.","No shortcuts today \u2014 just steady hands.","Letting the shape reveal itself slowly.","One pass at a time today.","Nothing dramatic, just steady progress.","Every pass brings it closer, slowly.","Letting the shape earn itself.","Quiet hands, no shortcuts today."],
-    neck:["Taking my time with the neck.","The neck doesn't forgive rushing, so I didn't.","Quiet focus on the part players will touch the most.","Slow hands, sharp tools, the neck today.","Careful hands on the neck today.","Not rushing the part that matters most to the player.","The neck asks for patience, so that's what it gets.","Nothing fast about this part.","Sat with the neck a while today."],
-    finish:["Letting the finish do its work.","Patience, today, more than skill.","The finish asks for time, not effort.","Quiet hours with pigment and rag.","Letting the pigment settle in, slowly.","A patient stage, today more than most.","No rushing pigment into wood.","The kind of stage that can't be hurried.","Letting the colour arrive on its own time."],
-    assembly:["Bringing the pieces together, unhurried.","Everything finally in one place, taking it slow.","No rush putting this together \u2014 it deserves care.","Quiet assembly day.","Piece by piece, no hurry.","Taking today one connection at a time.","Every piece finding its place, slowly.","No rushing the coming-together.","A calm kind of progress today."],
-    setup:["The last, quiet adjustments.","Small movements now, nothing dramatic.","Fine-tuning, one small turn at a time.","Almost there, no need to hurry the last steps.","Small, careful adjustments today.","The kind of work that rewards patience.","The smallest turns matter most here.","Patience over speed, today especially.","Nothing dramatic, just fine adjustments."],
-    done:["It's finished. No rush to say more than that.","Done, quietly.","This one is finished, and it deserves a moment of quiet.","Finished \u2014 no fanfare needed.","Finished. Sitting with that for a moment.","It's done — and that's enough said.","No big statement needed, it's simply done.","Quietly finished, and that's enough.","Done, and content to leave it at that."],
+    wood:["Spending time with the wood before the first cut.","No rush at this stage \u2014 just getting to know the piece.","Some time with the grain before deciding anything.","Letting the wood set the pace today.","A quiet start: just the wood, for now.","Taking a moment with this piece before it becomes anything."],
+    shaping:["One careful pass at a time.","Letting the shape come through slowly.","No shortcuts in the shaping today.","Steady hands, no rush.","Taking the body down to shape, gradually.","A slow, deliberate stage today."],
+    neck:["Careful work on the neck today.","The neck doesn't forgive rushing, so I'm not rushing it.","Slow hands on the part that matters most to the player.","Taking my time with the neck profile.","A patient stage \u2014 the neck earns that.","No rushing the part players will feel the most."],
+    finish:["Letting the finish do its work, slowly.","Patience matters more than skill at this stage.","Quiet hours with pigment and rag today.","No rushing the finish \u2014 it asks for time.","Taking the finish stage slow, on purpose.","A stage that rewards patience more than speed."],
+    assembly:["Bringing the pieces together, unhurried.","No rush putting this together \u2014 it deserves care.","Quiet assembly day.","Everything finally in one place, taking it slow.","One connection at a time today.","Assembling this one carefully, no shortcuts."],
+    setup:["The last, quiet adjustments.","Small movements now, nothing dramatic.","Fine-tuning, one small turn at a time.","No need to hurry the last steps.","Patience for the final details.","Small, deliberate moves at this stage."],
+    done:["It's finished. No rush to say more than that.","Done, quietly.","Finished \u2014 no fanfare needed.","This one is finished, and it deserves a moment of quiet.","Complete. Sitting with that for a moment.","Done. That's the whole update, and it's enough."]
   },
   milestone: {
-    wood:["Big decision made today.","This is the wood that's going to become something.","Picked the wood today \u2014 this is really happening now.","The build officially starts here.","The wood for this one is locked in.","This is where the story of this build begins.","This is the moment a build actually starts.","The wood is chosen, no turning back now.","Every build needs this moment, and here it is."],
-    shaping:["Real progress on the body today.","You can finally see the shape now.","Big step today \u2014 the body is taking form.","This is starting to look like a guitar.","Watching this take real shape today.","A big step forward on the body today.","The shape is finally speaking for itself.","This is the part that makes it feel real.","Big step, and it shows."],
-    neck:["The neck is coming together, and it feels right.","Proud of how this neck is shaping up.","Big milestone today: the neck is taking shape.","This neck is going to feel great \u2014 I can already tell.","This neck is really coming into its own.","Happy with how this neck is turning out.","This neck is turning into something special.","A real milestone for this build today.","The neck is where this build proves itself."],
-    finish:["The finish is going on, and the wood is finally showing itself.","This is the moment the wood really comes alive.","Big step \u2014 first coat is on.","The grain is finally getting the spotlight it deserves.","The colour is finally showing through.","This is the stage that changes everything visually.","This is the reveal moment, and it delivers.","The wood finally gets to show off.","A milestone finish stage, no doubt about it."],
-    assembly:["It's starting to look like a guitar.","Big day \u2014 everything is coming together.","This is the moment it stops being parts and starts being an instrument.","Proud of how this is coming together.","Watching this become an actual instrument today.","A real milestone — it's taking its final form.","This is where it stops being parts.","A real moment — it's an instrument now.","Big step, and it's finally coming together."],
-    setup:["Final setup \u2014 almost there.","So close now. Just the details left.","Big milestone \u2014 last adjustments before it's done.","Nearly ready to hand this one over.","The finish line is in sight.","Getting close to calling this one done.","This is the final stretch, and it shows.","Big milestone — the finish line is close.","Almost done, and it's looking great."],
-    done:["Done. This one's ready.","Finished, and I'm genuinely proud of this one.","This build is complete.","Big moment \u2014 this one is done.","This one turned out exactly how I hoped.","Happy to call this build finished.","A genuine milestone for the workshop.","This build hit every mark I hoped for.","Proud doesn't begin to cover this one."],
+    wood:["The wood for this build is chosen.","This is where the build really begins.","Locked in the wood today \u2014 the direction is set.","Decision made. This piece is going into the build.","The starting point for this one is settled.","This is the wood, and this is officially a build now."],
+    shaping:["The body is really taking shape now.","This is the stage where it starts looking like a guitar.","Big step today \u2014 the silhouette is there.","Proud of how this shape is coming together.","The form is set. This is really happening.","You can finally see where this one is headed."],
+    neck:["The neck is coming together, and it feels right.","This neck profile is exactly what I was aiming for.","Big milestone \u2014 the neck shape is locked in.","Proud of how this neck is turning out.","The neck's done, and it plays the way I hoped.","This is the neck I set out to build."],
+    finish:["The finish is going on, and the wood is finally showing itself.","This is the moment the grain really comes alive.","Big step \u2014 first coat is on.","The colour's finally showing through.","Proud of how this finish is turning out.","The wood is finally getting the spotlight it earned."],
+    assembly:["It's starting to look like a guitar.","Big day \u2014 everything is coming together.","This is the moment it stops being parts and starts being an instrument.","Proud of how this is coming together.","Assembly day, and it's finally an instrument.","This is the day the parts become one thing."],
+    setup:["Final setup \u2014 almost there.","So close now. Just the details left.","Big milestone \u2014 last adjustments before it's done.","Nearly ready to hand this one over.","The finish line's in sight.","This is the last real stage before it's finished."],
+    done:["Done. This one's ready.","Finished, and I'm genuinely proud of this one.","This build is complete.","Big moment \u2014 this one is done.","Finished. Exactly what I set out to build.","This one turned out the way I planned it to."]
   },
   curious: {
-    wood:["Trying something I haven't done before with this wood.","Not sure yet exactly where this piece of wood is going.","Curious to see what this wood wants to become.","Testing an idea with this piece today.","Not entirely sure how this piece will behave yet.","An interesting piece of wood to work with.","An interesting piece, still figuring out its story.","This wood might surprise me yet.","Not fully sure what this piece wants to be."],
-    shaping:["Experimenting with a shape I haven't cut before.","Trying a new curve on this one \u2014 we'll see.","Not 100% sure this shape will work, but trying it.","New territory with this body shape.","Seeing how far I can push this shape.","An experiment in progress.","Testing the limits of this shape today.","This curve might not work, but worth trying.","An experiment in progress, still unsure."],
-    neck:["A new approach to the neck on this one.","Testing a neck profile I haven't tried before.","Curious how this neck shape will feel once it's done.","Experimenting with the neck today.","Trying a profile I've been wanting to test.","Curious how players will feel about this neck.","This neck profile is new territory for me.","Curious how this will actually play.","Testing something I've wanted to try for a while."],
-    finish:["Testing a finish approach I haven't used before.","New finish technique on this one \u2014 fingers crossed.","Curious how this tint will look once it cures.","Trying something different with the finish today.","An experiment with the finish on this one.","Not sure yet how this will read once cured.","An untested approach on this finish.","Curious how this pigment will behave.","This finish technique is new for me."],
-    assembly:["Curious how these choices come together.","Not sure yet how this combination will feel, but assembling it now.","Interesting mix of parts on this one.","Testing how these pieces work together.","An unusual combination of parts on this one.","Curious to see how this all plays together.","An unusual combination, curious how it lands.","Testing a pairing I haven't tried before.","Not sure yet how this combination feels."],
-    setup:["Fine-tuning \u2014 still learning what this one wants to be.","Dialing this in, still discovering its character.","Curious what this one will actually feel like to play.","Testing the setup, still learning this instrument.","Still discovering what this instrument wants.","Learning this one's character as I dial it in.","Still learning what this instrument wants to be.","Curious how this setup will feel in the end.","Discovering this one's character as I go."],
-    done:["Finished, and I learned something new building it.","Done \u2014 and this one taught me a few things.","This build pushed me to try new things.","Finished. Curious what's next after this one.","This build surprised me a few times.","Finished — and it didn't go quite as planned, in a good way.","This build didn't go quite as planned, and that's fine.","Finished, and still processing what I learned.","A build that taught me more than expected."],
+    wood:["Testing this piece before committing to the cut.","Reading the grain to decide how this piece gets used.","Working out where the figure in this piece will land on the final shape.","Matching this wood to the build it's meant for.","Studying the grain before it tells me where to cut.","Deciding, deliberately, what this piece is going to become."],
+    shaping:["Pushing this curve a little further than usual, on purpose.","Testing how far this shape can go before it changes the balance.","Working through a variation on the usual carve here.","Trying a slightly different approach to this contour, by design.","Shaping this one with a small deviation from the norm, intentionally.","Testing a shape decision I've been planning for a while."],
+    neck:["Testing a neck profile I've wanted to try for a while.","Working through a new carve on this neck, on purpose.","Trying a different shoulder shape on this neck, deliberately.","Exploring a slightly different taper on this one.","Testing how this profile feels compared to my usual, by design.","Putting a planned variation on the neck profile to the test."],
+    finish:["Testing a new approach to the finish on this one, deliberately.","Trying a different tint ratio to see how it reads on this wood.","Working through a finish technique I haven't used before, on purpose.","Testing how this pigment settles into this particular grain.","Trying a new sequence for the finish coats on this build.","Putting a finish idea I've had for a while into practice."],
+    assembly:["Testing this hardware combination for the first time, on purpose.","Trying a pairing of parts I haven't used together before.","Working through an unusual combination on this one, deliberately.","Testing how these components sit together before final assembly.","Trying a layout I've been planning for this build.","Testing a combination I chose specifically for this build."],
+    setup:["Testing action heights I haven't tried on a build like this.","Dialing in a setup style I've been wanting to try.","Trying a slightly different intonation approach here, on purpose.","Testing how this one responds to a lower action, deliberately.","Working through a setup variation I planned for this build.","Testing a setup decision made specifically for this instrument."],
+    done:["Finished \u2014 and I tried a few things on this one worth remembering.","Done, with a couple of deliberate experiments that paid off.","This build tested a few new ideas, and they held up.","Finished, having tried some things I'll use again.","Complete \u2014 a few calculated choices on this one, and they worked.","Done. Every deliberate risk on this build paid off."]
   },
   technical: {
-    wood:["Wood selection, and why it matters here.","Notes on today's wood choice.","Some detail on why this specific piece was chosen.","Wood selection notes for this build.","Some background on this build's wood choice.","Wood selection reasoning for this project.","Wood choice reasoning, laid out here.","Some background on today's material decision.","Notes on why this piece made the cut."],
-    shaping:["Some notes on the shaping process.","Documenting today's shaping work.","Technical notes on the body shaping.","Process notes: shaping stage.","Shaping notes and process for this build.","Documenting the body-shaping approach here.","Shaping process, documented as it happens.","Technical notes from today's shaping stage.","Process breakdown for the body shaping."],
-    neck:["Neck construction notes.","Documenting the neck build process.","Technical detail on today's neck work.","Neck build \u2014 process notes.","Neck build specs and process.","Notes on today's neck construction.","Neck construction, documented step by step.","Technical notes from today's neck stage.","Process breakdown for the neck build."],
-    finish:["Finish process, in detail.","Notes on today's finishing process.","Technical breakdown of the finish stage.","Documenting the finish process.","Finish process notes for this build.","Technical detail on the finishing approach.","Finish process notes, documented as it happens.","Technical breakdown from today's finishing stage.","Process notes for the finish stage."],
-    assembly:["Assembly notes.","Process notes: assembly stage.","Documenting today's assembly work.","Technical detail on the assembly process.","Assembly process, documented.","Notes from today's assembly stage.","Assembly process, documented step by step.","Technical notes from today's assembly stage.","Process breakdown for assembly."],
-    setup:["Setup specs and reasoning.","Documenting today's setup adjustments.","Technical notes on the setup process.","Setup stage \u2014 specs and reasoning.","Setup process and specs for this build.","Documented setup notes below.","Setup process, documented in detail.","Technical notes from today's setup stage.","Process breakdown for the setup stage."],
-    done:["Build complete \u2014 full specs below.","Final specs and build notes below.","Complete build documentation below.","Build finished \u2014 technical summary below.","Full build breakdown below.","Complete specs for the finished instrument.","Final build documentation, complete.","Technical summary for the finished build.","Full process notes, start to finish."],
+    wood:["Wood selection notes for this build.","Assessing grain direction and density before committing.","Checking this piece for stability before it goes into the build.","Wood specs for this one, documented here.","A look at why this specific piece was chosen.","Notes on today's wood selection, and the reasoning behind it."],
+    shaping:["Shaping notes: body contour and thickness at this stage.","Documenting the carve process for this build.","Working to spec on the body dimensions today.","Technical detail on today's shaping work.","Process notes: roughing out the body shape.","Body shaping, documented step by step."],
+    neck:["Neck construction notes for this build.","Profile specs and shaping process for the neck.","Documenting the neck carve, step by step.","Technical detail on today's neck work.","Neck dimensions and process notes, here.","Notes on the neck profile and construction method."],
+    finish:["Finish process notes: pigment, coats, and cure time.","Documenting today's finishing process.","Technical breakdown of the finish stage.","Finish specs for this build, noted here.","Process notes on the tint and topcoat.","The finishing schedule for this build, documented."],
+    assembly:["Assembly notes and hardware specs.","Documenting today's assembly process.","Process notes: assembly stage.","Technical detail on the assembly process.","Component list and assembly notes, here.","Notes on hardware choices and assembly order."],
+    setup:["Setup specs: action, intonation, relief.","Documenting today's setup adjustments.","Technical notes on the setup process.","Setup stage \u2014 specs and reasoning.","Measurements and adjustments, noted here.","The setup numbers for this build, documented."],
+    done:["Build complete \u2014 full specs below.","Final specs and build notes below.","Complete build documentation below.","Build finished \u2014 technical summary below.","Full breakdown of the finished instrument below.","The finished specs for this build, documented in full."]
+  },
+  fast: {
+    wood:["New wood, new build \u2014 let's go.","Picked the wood. On to the next step.","Quick look at what's going into this build.","Wood's chosen. Moving fast on this one.","Straight into it \u2014 this is today's wood.","No delay \u2014 the wood is picked, the build starts now."],
+    shaping:["Watch the shape happen.","From block to body, today.","Fast progress on the shaping today.","The shape's coming together quickly now.","Quick update: the body's taking form.","No wasted moves today \u2014 the shape is moving fast."],
+    neck:["Neck work today, no filler.","From blank to profile \u2014 the neck's moving fast.","Quick look at today's neck progress.","The neck's shaping up fast today.","Straight into the neck carve today.","Neck stage, moving quickly today."],
+    finish:["First coat's on. Moving fast today.","Quick look at the finish progress.","The grain's coming through fast now.","Finish stage, moving right along.","Straight into the finish today.","No delay on the finish today \u2014 straight to work."],
+    assembly:["Parts to instrument, today.","Assembly's moving fast now.","Quick look at today's assembly progress.","Putting it together, fast.","Straight into assembly today.","No wasted time \u2014 assembly's moving quickly."],
+    setup:["Setup's moving fast \u2014 almost there.","Quick pass on the final adjustments.","Dialing this in, fast.","Nearly done \u2014 setup's flying today.","Straight into final setup today.","Setup, fast and to the point today."],
+    done:["Done. Start to finish, right here.","Finished \u2014 quick recap below.","That's a wrap on this build.","Done and dusted.","Finished. On to the next one.","No delay \u2014 it's finished, plain and simple."]
+  },
+  humor: {
+    wood:["Talking to a piece of wood again. Normal Tuesday.","This piece had opinions about being cut. We negotiated.","Not every board makes the cut. This one did.","Spent longer picking this wood than most people spend picking a car.","The wood auditions are over. We have a winner.","This board beat out three others for the job. Tough market."],
+    shaping:["Made a lot of sawdust and one guitar body. Acceptable ratio.","The shop looks like a wood chipper exploded. Progress.","This body shape did not exist three hours ago.","Turns out 'just take a little more off' is a trap. Every time.","Sanding: 90% of the job, 10% of the glory.","The dust extractor earned its keep today."],
+    neck:["The neck and I had a disagreement. I won. Mostly.","Spent an hour on a curve you'll feel but never see. Worth it.","This neck profile took three tries and one small crisis.","Sanding a neck by hand builds character. Also blisters.","The neck is smooth. My patience is not.","Somewhere a guitar teacher is proud of this neck. Eventually."],
+    finish:["Wore more finish than the guitar did. Standard.","The grain is finally showing off. As it should.","Finish fumes: not a personality trait, just a Tuesday.","This is the stage where I stop touching it every five minutes. Mostly.","The wood looks better than I do right now.","Fair warning: the shop smells like a very committed hobby today."],
+    assembly:["Turns out screws have opinions about where they want to go. Mine differed.","Assembly day: where I find out if my measurements from three weeks ago were right.","One dropped screw, zero lost. Personal record.","This is the stage where the guitar finally looks smarter than the mess around it.","Assembly: 80% skill, 20% not dropping things.","Every screw found its home. Eventually. Mostly on the first try."],
+    setup:["The guitar plays better than I do. Low bar, but still.","Setup day: turning tiny screws and having big feelings about it.","One string at a time, so nobody panics. Mostly me.","This is the stage where 0.1mm actually matters. Ask me why.","Almost done. Definitely not rushing the last five minutes. Definitely.","The tuner and I are in a committed relationship today."],
+    done:["It's done. I'm allowed to sit down now.","Finished. The sawdust will take longer to clean up than the build took.","This guitar now knows more about patience than I do.","Done. Somewhere, a pile of wood shavings is very proud too.","Complete. My tools are already asking what's next.","Finished. The workbench has never looked this empty."]
   }
 };
 
 const CLOSERS = {
-  calm:["More soon.","Following where the wood leads.","Next step when it's ready.","Back to it tomorrow.","One step closer, quietly.","No need to rush the next part either.","Taking it as it comes.","There's more, in time.","Content with today's pace."],
-  milestone:["Proud of where this one's headed.","Can't wait to show you the finished piece.","Onward.","More progress soon.","This one's going to be special.","Feeling good about this build.","Momentum like this doesn't happen often.","Excited for the next stage.","This one keeps surprising me, in the best way."],
-  curious:["We'll see how it turns out.","Still figuring this one out as I go.","Open to seeing where this leads.","Curious to see the next step.","Let's see what happens next.","No idea yet how this ends up, and I like that.","This one keeps changing my plan, and that's fine.","One experiment leads to the next.","Still learning as this one takes shape."],
-  technical:["Full build documented as it progresses.","More technical notes to follow.","Next: continuing the build log.","Specs and progress logged as we go.","Build log continues.","Full specs available on request.","Documenting every stage for the record.","More process notes coming with the next update.","Keeping this one well documented, start to finish."]
+  calm:["More soon.","Following where the wood leads.","Next step when it's ready.","Back to it tomorrow.","One step closer, quietly.","No need to rush the next part either."],
+  milestone:["Proud of where this one's headed.","Can't wait to show you the finished piece.","Onward.","More progress soon.","This one's going to be special.","Momentum like this doesn't happen often."],
+  curious:["Worth trying, and it worked.","Small, deliberate risks \u2014 taken on purpose.","This is how the next build gets better too.","Noted, for the next one.","Testing pays off, eventually.","Every calculated risk teaches something worth keeping."],
+  technical:["Full build documented as it progresses.","More technical notes to follow.","Next: continuing the build log.","Specs and progress logged as we go.","Build log continues.","Full specs available on request."],
+  fast:["More soon, same pace.","Next update coming fast too.","Onward, quickly.","More progress, soon.","Moving on to the next step.","Keeping the pace up."],
+  humor:["More sawdust incoming.","The shop survives another day.","Back to it before the coffee gets cold.","Onward, mildly caffeinated.","The tools are already plotting the next step.","More of this nonsense soon."]
 };
 
-const BRAND_TAG = "#SixtoCustomGuitars";
-
-// Broad tags: higher-volume, generic guitar-audience discovery.
-const BROAD_TAGS = [
-  "#CustomGuitar", "#GuitarBuilder", "#Luthier", "#HandmadeGuitar",
-  "#GuitarBuilding", "#ElectricGuitar", "#GuitarCommunity", "#GuitarPorn",
-  "#GuitarsDaily", "#BuiltNotBought"
-];
-
-// Niche tags: the actual differentiator, targets people specifically interested in reclaimed/handmade craft.
-const NICHE_TAGS = [
-  "#ReclaimedWood", "#OneOfOneGuitar", "#SustainableCraft", "#WoodWorking",
-  "#SlowMade", "#Woodworker", "#UpcycledWood", "#CraftedNotManufactured",
-  "#OneOfOne", "#HandcraftedGuitar"
-];
-
-// Location tags: occasional, for local/regional discovery.
+const HASHTAG_SETS_BRAND = "#SixtoCustomGuitars";
+const BROAD_TAGS = ["#CustomGuitar", "#GuitarBuilder", "#Luthier", "#HandmadeGuitar", "#GuitarBuilding", "#ElectricGuitar", "#GuitarCommunity", "#GuitarPorn", "#GuitarsDaily", "#BuiltNotBought"];
+const NICHE_TAGS = ["#ReclaimedWood", "#OneOfOneGuitar", "#SustainableCraft", "#WoodWorking", "#SlowMade", "#Woodworker", "#UpcycledWood", "#CraftedNotManufactured", "#OneOfOne", "#HandcraftedGuitar"];
 const LOCATION_TAGS = ["#Blaasveld", "#MadeInBelgium", "#BelgianCraft"];
-
-// Draws n distinct items for a single call, using the shared shuffle-bag store per poolKey
-// so the underlying rotation still avoids reuse until the whole pool has cycled.
-function pickMultiNoRepeat(arr, n, poolKey){
-  const picks = [];
-  const taken = new Set();
-  let guard = 0;
-  while(picks.length < n && guard < n * 5){
-    guard++;
-    const item = pickNoRepeat(arr, poolKey);
-    if(!taken.has(item)){ taken.add(item); picks.push(item); }
-  }
-  return picks;
-}
-
-// Combinatorial hashtag builder: brand (always) + 2 broad + 2 niche + occasional location tag.
-// With 10 broad and 10 niche tags this alone gives 45 x 45 = 2025+ combinations, before location variation.
-function buildHashtags(){
-  const broad = pickMultiNoRepeat(BROAD_TAGS, 2, 'hashtag-broad');
-  const niche = pickMultiNoRepeat(NICHE_TAGS, 2, 'hashtag-niche');
-  const parts = [BRAND_TAG, ...broad, ...niche];
-  if(Math.random() < 0.35){
-    parts.push(pickNoRepeat(LOCATION_TAGS, 'hashtag-location'));
-  }
-  return parts.join(' ');
-}
-
 const WOOD_LABELS = ["Wood:", "Today's wood:", "Working with:", "This piece:", "The wood on this one:"];
 
 const FINAL_BLURBS = [
@@ -428,8 +365,6 @@ const FINAL_BLURBS = [
   p => `That's ${p || 'this one'}, finished. Reclaimed wood, hand-built, one of one \u2014 always.`
 ];
 
-
-// Shuffle-bag picker: won't repeat a variant until every other one in the pool has been used.
 function pickNoRepeat(arr, poolKey){
   if(arr.length <= 1) return arr[0];
   const storeKey = 'sixto-pd-varhist-' + poolKey;
@@ -443,62 +378,45 @@ function pickNoRepeat(arr, poolKey){
   return arr[idx];
 }
 
-// Three different skeletons for arranging the same building blocks \u2014 varies the shape, not just the words.
-const CAPTION_STRUCTURES = [
-  // A: opener, wood, update, (blurb), closer, hashtags \u2014 the classic order
-  (b) => {
-    let l = [b.opener, "", b.woodLine];
-    if(b.update) l.push("", b.update);
-    if(b.blurb) l.push("", b.blurb);
-    l.push("", b.closer, "", b.hashtags);
-    return l;
-  },
-  // B: opener merges with update as one paragraph, wood comes after
-  (b) => {
-    let l = [b.update ? `${b.opener} ${b.update}` : b.opener, "", b.woodLine];
-    if(b.blurb) l.push("", b.blurb);
-    l.push("", b.closer, "", b.hashtags);
-    return l;
-  },
-  // C: wood-first, opener as a follow-up line
-  (b) => {
-    let l = [b.woodLine, "", b.opener];
-    if(b.update) l.push("", b.update);
-    if(b.blurb) l.push("", b.blurb);
-    l.push("", b.closer, "", b.hashtags);
-    return l;
-  },
-  // D: closer used as the lead line (short, punchy open), everything else follows
-  (b) => {
-    let l = [b.closer, "", b.opener];
-    if(b.update) l.push("", b.update);
-    l.push("", b.woodLine);
-    if(b.blurb) l.push("", b.blurb);
-    l.push("", b.hashtags);
-    return l;
-  },
-  // E: update-first when present (leads with the concrete news), opener as context after
-  (b) => {
-    let l = b.update ? [b.update, "", b.opener] : [b.opener];
-    l.push("", b.woodLine);
-    if(b.blurb) l.push("", b.blurb);
-    l.push("", b.closer, "", b.hashtags);
-    return l;
+function pickMultiNoRepeat(arr, n, poolKey){
+  const picks = [];
+  const taken = new Set();
+  let guard = 0;
+  while(picks.length < n && guard < n * 5){
+    guard++;
+    const item = pickNoRepeat(arr, poolKey);
+    if(!taken.has(item)){ taken.add(item); picks.push(item); }
   }
+  return picks;
+}
+
+function buildHashtags(){
+  const broad = pickMultiNoRepeat(BROAD_TAGS, 2, 'hashtag-broad');
+  const niche = pickMultiNoRepeat(NICHE_TAGS, 2, 'hashtag-niche');
+  const parts = [HASHTAG_SETS_BRAND, ...broad, ...niche];
+  if(Math.random() < 0.35) parts.push(pickNoRepeat(LOCATION_TAGS, 'hashtag-location'));
+  return parts.join(' ');
+}
+
+const CAPTION_STRUCTURES = [
+  (b) => { let l = [b.opener, "", b.woodLine]; if(b.update) l.push("", b.update); if(b.blurb) l.push("", b.blurb); l.push("", b.closer, "", b.hashtags); return l; },
+  (b) => { let l = [b.update ? `${b.opener} ${b.update}` : b.opener, "", b.woodLine]; if(b.blurb) l.push("", b.blurb); l.push("", b.closer, "", b.hashtags); return l; },
+  (b) => { let l = [b.woodLine, "", b.opener]; if(b.update) l.push("", b.update); if(b.blurb) l.push("", b.blurb); l.push("", b.closer, "", b.hashtags); return l; },
+  (b) => { let l = [b.closer, "", b.opener]; if(b.update) l.push("", b.update); l.push("", b.woodLine); if(b.blurb) l.push("", b.blurb); l.push("", b.hashtags); return l; },
+  (b) => { let l = b.update ? [b.update, "", b.opener] : [b.opener]; l.push("", b.woodLine); if(b.blurb) l.push("", b.blurb); l.push("", b.closer, "", b.hashtags); return l; }
 ];
 
-function buildCaption(d){
+function buildPostCaption(d){
   const pool = OPENERS[d.tone][d.phase] || OPENERS.calm[d.phase];
   const opener = pickNoRepeat(pool, `opener-${d.tone}-${d.phase}`);
   const woodLabel = pickNoRepeat(WOOD_LABELS, 'wood-label');
-  const woodLine = `${woodLabel} ${d.wood}`;
+  const woodLine = d.wood ? `${woodLabel} ${d.wood}` : '';
   const closer = pickNoRepeat(CLOSERS[d.tone], `closer-${d.tone}`);
   const hashtags = buildHashtags();
   const blurb = d.final === 'yes' ? pickNoRepeat(FINAL_BLURBS, 'final-blurb')(d.project) : null;
-
   const structureFn = pickNoRepeat(CAPTION_STRUCTURES, 'caption-structure');
   const lines = structureFn({ opener, woodLine, update: d.update, blurb, closer, hashtags });
-  return lines.join("\n");
+  return lines.filter((l,i,arr) => !(l === '' && arr[i-1] === '')).join("\n").replace(/^\n+|\n+$/g,'');
 }
 
 const YT_SECTION_LABELS = [
@@ -507,86 +425,306 @@ const YT_SECTION_LABELS = [
   { origin:"About the wood:", stage:"This stage of the build:" }
 ];
 
-function buildYT(d){
+function buildYtDescription(d){
   const labels = pickNoRepeat(YT_SECTION_LABELS, 'yt-labels');
   const title = d.project ? `${d.project} \u2014 ${PHASE_LABEL[d.phase]}` : PHASE_LABEL[d.phase];
   let lines = [title, ""];
-  lines.push(labels.origin);
-  lines.push(d.wood, "");
+  if(d.wood){ lines.push(labels.origin); lines.push(d.wood, ""); }
   lines.push(labels.stage);
   lines.push(d.update || "(add build notes here)", "");
-  if(d.feel){
-    lines.push("How it feels / sounds right now:");
-    lines.push(d.feel, "");
-  }
+  if(d.feel){ lines.push("How it feels / sounds right now:"); lines.push(d.feel, ""); }
   lines.push("Every Sixto instrument is a one-of-one, built from reclaimed and locally sourced wood in Blaasveld, Belgium. No models, no production line \u2014 every build is designed with the person it's for.");
   lines.push("");
   lines.push("Instagram: @sixtocustomguitars");
   return lines.join("\n");
 }
 
-function generate(){
-  const wood = document.getElementById('f-wood').value.trim();
-  if(!wood){
+const YT_TITLES = {
+  wood:     p => [`Sourcing reclaimed wood for ${p || 'a one-off guitar'}`, `Finding the right piece of reclaimed wood`, `This wood has a history before it's a guitar`],
+  shaping:  p => [`Shaping a guitar body by hand`, `Carving ${p || 'a one-off electric guitar'}`, `From block of wood to guitar shape`],
+  neck:     p => [`Building a guitar neck from scratch`, `Handmade neck construction, start to finish`, `The most personal part of a guitar build`],
+  finish:   p => [`A finish that keeps the wood grain visible`, `Finishing a handmade guitar the slow way`, `Why I don't use high-gloss finishes`],
+  assembly: p => [`Putting ${p || 'a one-off guitar'} together`, `Assembly day for a handbuilt guitar`, `From parts to a playable instrument`],
+  setup:    p => [`Final setup on a handmade guitar`, `Getting the action and intonation right`, `The last steps before this guitar is done`],
+  done:     p => [`${p || 'This guitar'} is finished \u2014 start to finish`, `Built from reclaimed wood, this is the result`, `The finished build, and what I learned`]
+};
+const YT_THUMB = { wood:'REAL WOOD ORIGIN', shaping:'SHAPING BY HAND', neck:'NECK BUILD', finish:'THE FINISH', assembly:'ASSEMBLY', setup:'FINAL SETUP', done:'FINISHED' };
+const YT_HOOK_SCRIPT = {
+  wood:"This piece of wood already had a life before it became part of a guitar. Let me show you where it came from.",
+  shaping:"This block of wood is about to become a guitar body. Here's how that happens, by hand.",
+  neck:"The neck is the part players touch the most. Here's how I build it.",
+  finish:"This finish is meant to disappear \u2014 you should see the wood, not the coating.",
+  assembly:"All the separate pieces come together today. Let's put this instrument together.",
+  setup:"Before this guitar leaves the workshop, it needs to play right. Here's the final setup.",
+  done:"This build is finished. Here's the result \u2014 and what I'd do differently next time."
+};
+const YT_SHORTS_IDEA = {
+  wood:"Shorts-idee: 10 sec clip van het moment dat de nerf zichtbaar wordt na het eerste schuren.",
+  shaping:"Shorts-idee: snelle voor/na-clip van het blok hout naar de vorm.",
+  neck:"Shorts-idee: close-up van het profileren van de nek, versneld.",
+  finish:"Shorts-idee: de overgang van dof hout naar de eerste laag finish.",
+  assembly:"Shorts-idee: time-lapse van onderdelen die samenkomen tot 1 instrument.",
+  setup:"Shorts-idee: actie-hoogte meten met een liniaal, 1 duidelijke actie.",
+  done:"Shorts-idee: 360°-shot van het afgewerkte instrument, 5 seconden."
+};
+
+/* ---- Reel & Story banks (same 6 unified tones) ---- */
+const RS_HOOKS = {
+  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this.", "A slower side of the workshop.", "Just wood, hands, and time today.", "A calm minute from the bench.", "Not everything needs to move fast.", "Some quiet time in the workshop today.", "This one's meant to be watched slowly.", "A moment worth slowing down for."],
+  milestone: ["Proud of this moment.", "This is a big step today.", "Watch this milestone happen.", "A moment worth celebrating.", "This one deserves a proper look.", "Big step, captured in one clip.", "This is what progress looks like.", "A milestone clip, no filter needed.", "Today's win, in one clip.", "This is the good part.", "A proud moment from the bench.", "Watch this come together."],
+  curious: ["You won't guess what this becomes.", "This started as something else entirely, on purpose.", "Not what it looks like yet \u2014 that's the point.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it.", "This clip has a deliberate twist coming.", "Not what you think, keep watching.", "There's a reason this looks unusual right now.", "This won't make sense until the end \u2014 that's by design.", "Hold your judgment until the last second."],
+  technical: ["Here's exactly how this works.", "A closer look at the technique.", "The process, step by step.", "Watch the technique here.", "Here's how this actually gets done.", "The technical side of this build.", "A precise look at this step.", "Here's the method behind this.", "Breaking down this step.", "The mechanics of this stage.", "A detailed look at the process.", "Here's what's actually happening."],
+  fast: ["Watch this take shape.", "From rough wood to this.", "Zero to this, in one clip.", "One clip, real progress.", "Fast forward through today's work.", "Today, condensed into one clip.", "This is what today looked like, sped up.", "Watch a piece of this build happen.", "One clip, one step closer.", "Here's the fast version of today.", "No filler \u2014 just the progress.", "Straight to the point today."],
+  humor: ["This didn't go as planned, and that's the fun part.", "Not my finest moment, but here we are.", "Every build has one of these moments.", "This is the part nobody shows you.", "Workshop reality, not the highlight reel.", "This almost went sideways \u2014 stuck the landing though.", "The less glamorous side of building.", "Not everything works the first time. This didn't.", "A little workshop chaos today.", "This is what a small mistake looks like, handled.", "Even this happens sometimes.", "The bloopers reel, basically."]
+};
+const RS_STORY_Q = {
+  calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?", "What would you slow down on if you were me?", "What catches your eye first?", "Any questions about this step?", "What would you want to see more of, here?"],
+  milestone: ["What milestone should I celebrate next?", "Which step felt like the biggest win to you?", "Worth celebrating, right?", "What's your favorite kind of milestone moment?", "Should I share more of these?", "Which part stood out to you?", "What would you be proudest of here?", "More proud-moment clips like this?"],
+  curious: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?", "Think you know where this is going?", "Drop your guess before I show the result.", "What's your best guess?"],
+  technical: ["Any questions about this technique?", "Want a deeper breakdown of this step?", "Curious about the tools used here?", "What technical detail would you want explained?", "Should I go deeper on this next time?", "Any part of this unclear?", "What would you want to know about this process?", "More technical breakdowns like this?"],
+  fast: ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?", "Fast clips or slower ones \u2014 which do you prefer?", "Want more speed-run clips like this?", "Which part moved too fast for you?", "More quick clips or longer ones?"],
+  humor: ["Ever had one of these moments?", "Tell me I'm not the only one.", "What's your workshop story like this?", "Relatable, or just me?", "Anyone else run into this?", "What would you have done here?", "Worth a laugh, right?", "More of these honest moments?"]
+};
+const RS_CAPTION_LEAD = {
+  calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work.", "Taking today's clip a little slower.", "A calm minute from an otherwise busy day.", "Some unhurried bench time today.", "A quieter side of today's work."],
+  milestone: ["A proud moment from today.", "Today felt like a milestone.", "A win worth sharing today.", "This one felt good to finish.", "Today's small victory.", "A proud step forward today.", "This moment deserved its own post.", "A milestone worth pausing for."],
+  curious: ["Not everything is what it looks like at this stage \u2014 on purpose.", "This isn't what it seems yet.", "There's a deliberate twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like, and that's the idea.", "Today's clip isn't what it appears to be.", "There's more going on here than it looks.", "This one needs a second look."],
+  technical: ["A technical look at today's step.", "The process behind today's work.", "Breaking down today's technique.", "Today's step, explained.", "The method behind this stage.", "A closer look at the process today.", "Today's technical detail.", "The mechanics behind today's work."],
+  fast: ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress.", "Fast clip, real work behind it.", "Today's clip, no filler.", "A quick moment from a longer day.", "Short and to the point today."],
+  humor: ["Not every clip is a highlight reel.", "The honest side of building today.", "A little workshop chaos, for once.", "Today wasn't picture-perfect, and that's fine.", "The less polished side of today.", "Keeping it real today.", "Not everything goes exactly to plan.", "A more honest look at today."]
+};
+const RS_OVERLAY_PREFIX = {
+  calm:  ["", "Slowly: ", "One step at a time: ", "Today: ", "Quietly: ", "Taking it slow: "],
+  milestone: ["", "Milestone: ", "Proud moment: ", "Today's win: ", "Finally: ", "Big step: "],
+  curious: ["Not yet: ", "Wait for it: ", "", "Almost: ", "Not what it seems: ", "Keep watching: "],
+  technical: ["", "Technique: ", "How it's done: ", "The process: ", "Method: ", "Step-by-step: "],
+  fast: ["", "Today: ", "Right now: ", "In progress: ", "Live from the bench: ", "Happening now: "],
+  humor: ["", "Real talk: ", "Not gonna lie: ", "Honestly: ", "Plot twist: ", "Reality check: "]
+};
+
+function buildShortsCompanion(hook, input, wood){
+  let lines = [hook, ""];
+  lines.push(input.charAt(0).toUpperCase() + input.slice(1) + ".");
+  if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
+  lines.push("", "Same clip as on Instagram. Follow the build: @sixtocustomguitars");
+  lines.push(`${buildHashtags()} #Shorts`);
+  return lines.join("\n");
+}
+
+function buildReelBlocks(d){
+  const tone = d.tone;
+  const input = d.update || d.project || 'this build';
+  const hook = pickNoRepeat(RS_HOOKS[tone], `rs-hook-${tone}`);
+  const overlayPrefix = pickNoRepeat(RS_OVERLAY_PREFIX[tone], `rs-overlay-prefix-${tone}`);
+  const overlay = overlayPrefix + input.charAt(0).toUpperCase() + input.slice(1);
+  const lead = pickNoRepeat(RS_CAPTION_LEAD[tone], `rs-lead-${tone}`);
+  let caption = `${lead}\n\n${input}.`;
+  if(d.wood) caption += `\n\n${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${d.wood}.`;
+  caption += `\n\n${buildHashtags()}`;
+  const storyQ = pickNoRepeat(RS_STORY_Q[tone], `rs-story-${tone}`);
+  return { hook, overlay, caption, storyQ };
+}
+
+/* ---- Journey Spotlight banks ---- */
+const SPOTLIGHT_OPENERS = {
+  build: ["Some love for an earlier build.","This one deserves another moment in the spotlight.","Revisiting a favorite from the workshop.","One from the archive.","A build worth another look.","Putting this one back in the spotlight.","Digging this one back out for a moment.","A past build that still deserves attention."],
+  detail: ["A detail worth a closer look.","Zooming in on something I like.","One of my favorite details.","A small detail, worth sharing.","This close-up deserves its own post.","Something I don't usually show up close.","A detail most people scroll past.","Slowing down on one small part today."],
+  moment: ["A moment from the workshop.","Something from the bench, just because.","A quick one worth sharing.","From the workshop archive.","A small moment, worth a post.","Just a good shot from the shop.","Nothing special, just a good moment.","A snapshot from the bench today."]
+};
+const SPOTLIGHT_CLOSERS = {
+  build: ["Always good to give this one another moment.","One of the builds I keep coming back to.","Worth a second look, I think.","Glad I get to share this one again.","This one still holds up.","Doesn't get old, this one.","Still one of my favorites to look back on."],
+  detail: ["Small details, big difference.","The kind of detail that's easy to miss.","Worth zooming in on, every time.","Little things like this matter to me.","Details make the build.","The small stuff adds up.","Easy to miss, worth pointing out."],
+  moment: ["Just a moment worth sharing.","The workshop has plenty of these.","Small moments, still worth a post.","More of these coming.","Just felt like sharing this one.","Not every post needs a big update.","Sometimes it's just a good moment."]
+};
+const SPOTLIGHT_STORY_Q = {
+  build: ["Which build should get the spotlight next?", "Remember this one?", "Should I revisit builds like this more often?", "Which older build do you want to see again?", "Worth another deep dive on this one?"],
+  detail: ["Notice this detail before?", "What detail would you want a close-up of next?", "Worth zooming in on, right?", "Which detail should I zoom in on next?", "Anything you'd want a close-up of?"],
+  moment: ["More behind-the-scenes like this?", "Want to see more workshop moments?", "Anything you'd want to see more of?", "More of these quick moments?", "Worth doing more of these?"]
+};
+
+function buildSpotlightBlock(d){
+  const type = d.spotlightType || 'build';
+  const opener = pickNoRepeat(SPOTLIGHT_OPENERS[type], `sp-opener-${type}`);
+  const closer = pickNoRepeat(SPOTLIGHT_CLOSERS[type], `sp-closer-${type}`);
+  const desc = d.update || 'A moment worth another look.';
+  let lines = [opener, ""];
+  if(d.project) lines.push(d.project, "");
+  lines.push(desc);
+  if(d.wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${d.wood}`);
+  lines.push("", closer, "", buildHashtags());
+  return lines.join("\n");
+}
+
+/* ============================================================
+   Type picker / YouTube toggle
+   ============================================================ */
+const YT_ENABLED_KEY = 'sixto-postdraft-yt-enabled';
+function isYtEnabled(){ return localStorage.getItem(YT_ENABLED_KEY) === '1'; }
+function toggleYtEnabled(){
+  localStorage.setItem(YT_ENABLED_KEY, isYtEnabled() ? '0' : '1');
+  renderYtToggle();
+  onTypeChange();
+}
+function renderYtToggle(){
+  const on = isYtEnabled();
+  const box = document.getElementById('yt-inline');
+  const label = document.getElementById('yt-inline-label');
+  const btn = document.getElementById('yt-inline-btn');
+  box.classList.toggle('active', on);
+  label.innerHTML = on ? 'YouTube: <b>actief</b>' : 'YouTube: <b>nog niet actief</b>';
+  btn.textContent = on ? 'Zet uit' : 'Activeer';
+}
+
+function onTypeChange(){
+  const postOn = document.getElementById('type-post').checked;
+  const reelOn = document.getElementById('type-reel').checked;
+  const spotOn = document.getElementById('type-spotlight').checked;
+  document.getElementById('chip-post').classList.toggle('checked', postOn);
+  document.getElementById('chip-reel').classList.toggle('checked', reelOn);
+  document.getElementById('chip-spotlight').classList.toggle('checked', spotOn);
+  document.getElementById('post-yt-note').style.display = (postOn && isYtEnabled()) ? 'inline' : 'none';
+  document.getElementById('reel-yt-note').style.display = (reelOn && isYtEnabled()) ? 'inline' : 'none';
+  document.getElementById('generate-btn').disabled = !(postOn || reelOn || spotOn);
+}
+
+/* ============================================================
+   Unified generate
+   ============================================================ */
+function updateIgCount(text){
+  const len = text.length;
+  const over = len > 2200;
+  return `${len} / 2200 tekens` + (over ? ' \u2014 te lang, Instagram knipt af' : '') + ` \u00b7 eerste ~125 tekens zijn zichtbaar voor "meer weergeven"`;
+}
+
+function generateAll(){
+  const postOn = document.getElementById('type-post').checked;
+  const reelOn = document.getElementById('type-reel').checked;
+  const spotOn = document.getElementById('type-spotlight').checked;
+  if(!postOn && !reelOn && !spotOn) return;
+
+  const d = {
+    project: document.getElementById('f-project').value.trim(),
+    phase: document.getElementById('f-phase').value,
+    wood: document.getElementById('f-wood').value.trim(),
+    update: capitalizeFirst(document.getElementById('f-update').value.trim()),
+    feel: document.getElementById('f-feel').value.trim(),
+    tone: document.getElementById('f-tone').value,
+    final: document.getElementById('f-final').value,
+    spotlightType: 'build'
+  };
+
+  if(postOn && !d.wood){
     document.getElementById('f-wood').style.borderColor = '#c1793f';
     document.getElementById('f-wood').focus();
     return;
   }
-  const d = {
-    project: document.getElementById('f-project').value.trim(),
-    phase: document.getElementById('f-phase').value,
-    wood: wood,
-    update: document.getElementById('f-update').value.trim(),
-    feel: document.getElementById('f-feel').value.trim(),
-    tone: document.getElementById('f-tone').value,
-    final: document.getElementById('f-final').value,
-    kind: 'post'
-  };
-  const ig = buildCaption(d);
-  const yt = buildYT(d);
-  document.getElementById('out-ig').textContent = ig;
-  document.getElementById('out-yt').textContent = yt;
-  updateIgCount(ig);
-  applyOutputLabels('post');
-  generateYtAttention(d);
+  document.getElementById('f-wood').style.borderColor = '';
+
+  const yt = isYtEnabled();
+  const blocks = [];
+
+  if(postOn){
+    const ig = buildPostCaption(d);
+    blocks.push({ key:'post-ig', label:'Instagram caption', text: ig, ig:true });
+    if(yt){
+      const ytDesc = buildYtDescription(d);
+      blocks.push({ key:'post-yt', label:'YouTube beschrijving', text: ytDesc, ytBlock:true });
+      const titles = (YT_TITLES[d.phase] || YT_TITLES.wood)(d.project);
+      blocks.push({ key:'post-yt-titles', label:'YouTube titel-opties', text: titles.map((t,i)=>`${i+1}. ${t}`).join('\n'), ytBlock:true });
+      blocks.push({ key:'post-yt-thumb', label:'Thumbnail-tekst', text: YT_THUMB[d.phase] || YT_THUMB.wood, ytBlock:true });
+      blocks.push({ key:'post-yt-hook', label:'Hook-script (eerste 15 sec)', text: YT_HOOK_SCRIPT[d.phase] || YT_HOOK_SCRIPT.wood, ytBlock:true });
+      blocks.push({ key:'post-yt-shorts', label:'Shorts-idee', text: YT_SHORTS_IDEA[d.phase] || YT_SHORTS_IDEA.wood, ytBlock:true });
+    }
+  }
+
+  if(reelOn){
+    const rb = buildReelBlocks(d);
+    blocks.push({ key:'reel-hook', label:'Reel hook (eerste 2-3 sec)', text: rb.hook });
+    blocks.push({ key:'reel-overlay', label:'Overlay-tekst', text: rb.overlay });
+    blocks.push({ key:'reel-caption', label:'Reel & Story caption', text: rb.caption, ig:true });
+    blocks.push({ key:'reel-storyq', label:'Story-vraag', text: rb.storyQ });
+    if(yt){
+      const shorts = buildShortsCompanion(rb.hook, d.update || d.project || 'this build', d.wood);
+      blocks.push({ key:'reel-yt', label:'YouTube Shorts (zelfde clip)', text: shorts, ytBlock:true });
+    }
+  }
+
+  if(spotOn){
+    const spot = buildSpotlightBlock(d);
+    blocks.push({ key:'spotlight-ig', label:'Journey Spotlight caption', text: spot, ig:true });
+  }
+
+  renderOutputBlocks(blocks);
+  document.getElementById('yt-studio-link').style.display = blocks.some(b=>b.ytBlock) ? 'inline-block' : 'none';
   document.getElementById('output').classList.add('show');
   document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
 
-  saveLog(d, ig, yt);
-  currentDisplayedIndex = 0;
-  refreshConfirmForCurrent();
+  const types = [];
+  if(postOn) types.push('post');
+  if(reelOn) types.push('reel');
+  if(spotOn) types.push('spotlight');
+
+  saveLog({ project: d.project, phase: d.phase, types, blocks });
 }
 
-function updateIgCount(text){
-  const len = text.length;
-  const el = document.getElementById('ig-count');
-  const over = len > 2200;
-  el.textContent = `${len} / 2200 tekens` + (over ? ' — te lang, Instagram knipt af' : '') + ` · eerste ~125 tekens zijn zichtbaar voor "meer weergeven"`;
-  el.style.color = over ? '#c1793f' : '';
+function renderOutputBlocks(blocks){
+  const container = document.getElementById('output-blocks');
+  container.innerHTML = blocks.map(b => {
+    const meta = b.ig ? `<div class="out-meta">${updateIgCount(b.text)}</div>` : '';
+    return `<div class="out-block" data-key="${b.key}">
+      <div class="out-head"><span>${escHtml(b.label)}</span><button class="btn-ghost" onclick="copyOutBlock(this)">Kopieer</button></div>
+      <div class="out-text">${escHtml(b.text)}</div>
+      ${meta}
+    </div>`;
+  }).join('');
 }
 
-function saveLog(d, ig, yt){
+function copyOutBlock(btn){
+  const text = btn.closest('.out-block').querySelector('.out-text').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1400);
+  });
+}
+
+function escHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function capitalizeFirst(s){
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+/* ============================================================
+   Log, confirm, focus mode
+   ============================================================ */
+function saveLog(d){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
-  const entry = {date: new Date().toISOString(), project: d.project, phase: d.phase, kind: d.kind || 'post', ig, yt, usedIG: false, usedYT: false};
+  const entry = { date: new Date().toISOString(), project: d.project, phase: d.phase, types: d.types, blocks: d.blocks, usedIG:false, usedYT:false };
   if(currentPendingSource){
     entry.buildId = currentPendingSource.buildId;
     entry.momentLabel = currentPendingSource.momentLabel;
     currentPendingSource = null;
-    clearLinkHints();
+    clearLinkHint();
   }
   log.unshift(entry);
-  log = log.slice(0, 300); // ~2 jaar aan 3x/week, ruim binnen localStorage-limieten
+  log = log.slice(0, 300);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
   renderLog();
   renderWeekProgress();
 }
 
-// Backward-compatible read: old entries only had a single `used` field (treated as Instagram-status).
 function getUsedStatus(e){
   const ig = e.usedIG !== undefined ? e.usedIG : (e.used !== false);
   const yt = e.usedYT !== undefined ? e.usedYT : false;
   return { ig, yt };
+}
+
+function typesLabel(e){
+  if(e.types && e.types.length) return e.types.map(t => ({post:'Post', reel:'Reel', spotlight:'Spotlight'}[t] || t)).join(' + ');
+  return PHASE_LABEL[e.phase] || e.phase || e.kind || 'post';
 }
 
 function renderLog(){
@@ -608,14 +746,22 @@ function renderLog(){
       ? '<span class="log-status" title="Ontstaan uit een foto-moment in Builds \u2014 bevestiging stroomt door naar het paspoort" style="opacity:.7;">&#128279;</span>'
       : '';
     return `<div class="log-entry">
-      <div class="lt">${dstr} &middot; ${PHASE_LABEL[e.phase]||e.phase}${linkBadge}
+      <div class="lt">${dstr} &middot; ${escHtml(typesLabel(e))}${linkBadge}
         <span onclick="toggleUsedPlatform(${i},'ig')" style="cursor:pointer;">${igIcon}</span>
         <span onclick="toggleUsedPlatform(${i},'yt')" style="cursor:pointer;">${ytIcon}</span>
         <span class="log-delete" onclick="deleteLogEntry(${i})" title="Verwijder deze entry">&#10005;</span>
       </div>
-      <div class="ll" onclick="loadLog(${i})">${e.project || '(zonder naam)'}</div>
+      <div class="ll" onclick="loadLog(${i})">${escHtml(e.project || '(zonder naam)')}</div>
     </div>`;
   }).join('');
+}
+
+function toggleLogVisibility(){
+  const list = document.getElementById('log-list');
+  const caret = document.getElementById('log-caret');
+  const showing = list.style.display === 'block';
+  list.style.display = showing ? 'none' : 'block';
+  caret.innerHTML = showing ? '&#9656;' : '&#9662;';
 }
 
 function deleteLogEntry(i){
@@ -630,99 +776,43 @@ function deleteLogEntry(i){
   renderWeekProgress();
   if(wasCurrent){
     document.getElementById('output').classList.remove('show');
-    if(document.getElementById('focus-exit-bar').style.display === 'block') exitFocusMode();
+    exitFocusMode();
   } else if(i < currentDisplayedIndex){
     currentDisplayedIndex -= 1;
   }
 }
 
-function toggleUsedPlatform(i, platform){
-  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  if(!log[i]) return;
-  const status = getUsedStatus(log[i]);
-  const newValue = platform === 'ig' ? !status.ig : !status.yt;
-  if(platform === 'ig') log[i].usedIG = newValue;
-  else log[i].usedYT = newValue;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
-  if(newValue && log[i].buildId){
-    queuePostConfirmation(log[i].buildId, log[i].momentLabel, log[i].ig, platform);
-  }
-  renderLog();
-  renderWeekProgress();
-  if(i === currentDisplayedIndex) renderConfirmButtons(log[i]);
-}
-
 let currentDisplayedIndex = 0;
+let currentPendingSource = null;
 
 function loadLog(i){
   let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   const e = log[i];
   if(!e) return;
   currentDisplayedIndex = i;
-  document.getElementById('out-ig').textContent = e.ig;
-  document.getElementById('out-yt').textContent = e.yt;
-  updateIgCount(e.ig);
-  applyOutputLabels(e.kind);
-  document.getElementById('output').classList.add('show');
-  renderConfirmButtons(e);
-  enterFocusMode();
-  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
-}
 
-function applyOutputLabels(kind){
-  const igLabel = document.getElementById('out-ig-label');
-  const ytBlock = document.getElementById('out-yt-block');
-  const ytLabel = document.getElementById('out-yt-label');
-  const igLink = document.getElementById('out-ig-link');
-  const ytLink = document.getElementById('out-yt-link');
-  if(kind === 'spotlight'){
-    igLabel.textContent = 'Reel / Story caption';
-    ytLabel.textContent = 'Overlay-tekst (video)';
-    ytLink.style.display = 'none';
-    igLink.style.display = 'inline-block';
-    ytBlock.style.display = 'block';
-  } else if(kind === 'reel'){
-    igLabel.textContent = 'Reel & Story caption';
-    igLink.style.display = 'inline-block';
-    if(isYtEnabled()){
-      ytLabel.textContent = 'YouTube Shorts (zelfde clip)';
-      ytLink.style.display = 'inline-block';
-      ytBlock.style.display = 'block';
-    } else {
-      ytBlock.style.display = 'none';
-    }
-  } else {
-    igLabel.textContent = 'Instagram caption';
-    ytLabel.textContent = 'YouTube beschrijving';
-    ytLink.style.display = 'inline-block';
-    igLink.style.display = 'inline-block';
-    ytBlock.style.display = 'block';
+  let blocks = e.blocks;
+  if(!blocks){
+    blocks = [];
+    if(e.ig) blocks.push({ key:'legacy-ig', label: e.kind === 'spotlight' ? 'Journey Spotlight caption' : (e.kind === 'reel' ? 'Reel & Story caption' : 'Instagram caption'), text: e.ig, ig:true });
+    if(e.yt) blocks.push({ key:'legacy-yt', label:'YouTube', text: e.yt, ytBlock:true });
   }
+  renderOutputBlocks(blocks);
+  document.getElementById('yt-studio-link').style.display = blocks.some(b=>b.ytBlock) ? 'inline-block' : 'none';
+
+  enterFocusMode();
+  document.getElementById('output').classList.add('show');
+  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+  renderConfirmButtons(e);
 }
 
 function enterFocusMode(){
-  document.querySelectorAll('.gen-card').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.gen-card, #main-card, #schedule-card').forEach(el => el.style.display = 'none');
   document.getElementById('focus-exit-bar').style.display = 'block';
-  const logList = document.getElementById('log-list');
-  const arrow = document.getElementById('log-toggle-arrow');
-  logList.style.display = 'block';
-  arrow.innerHTML = '&#9662;';
 }
-
 function exitFocusMode(){
-  document.querySelectorAll('.gen-card').forEach(el => el.style.display = '');
+  document.querySelectorAll('.gen-card, #main-card, #schedule-card').forEach(el => el.style.display = '');
   document.getElementById('focus-exit-bar').style.display = 'none';
-  document.getElementById('output').classList.remove('show');
-  document.getElementById('log-list').style.display = 'none';
-  document.getElementById('log-toggle-arrow').innerHTML = '&#9656;';
-}
-
-function toggleLogVisibility(){
-  const logList = document.getElementById('log-list');
-  const arrow = document.getElementById('log-toggle-arrow');
-  const isHidden = logList.style.display === 'none';
-  logList.style.display = isHidden ? 'block' : 'none';
-  arrow.innerHTML = isHidden ? '&#9662;' : '&#9656;';
 }
 
 function renderConfirmButtons(entry){
@@ -750,41 +840,34 @@ function refreshConfirmForCurrent(){
   renderConfirmButtons(log[currentDisplayedIndex]);
 }
 
-function copyBlock(which){
-  const text = document.getElementById(which === 'ig' ? 'out-ig' : 'out-yt').textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 1400);
-  });
-}
-
-function copyMini(id){
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 1400);
-  });
-}
-
-function getAllVarHistKeys(){
-  const keys = [];
-  for(let i = 0; i < localStorage.length; i++){
-    const k = localStorage.key(i);
-    if(k && k.indexOf('sixto-pd-varhist-') === 0) keys.push(k);
+function toggleUsedPlatform(i, platform){
+  let log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if(!log[i]) return;
+  const status = getUsedStatus(log[i]);
+  const newValue = platform === 'ig' ? !status.ig : !status.yt;
+  if(platform === 'ig') log[i].usedIG = newValue; else log[i].usedYT = newValue;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  if(newValue && log[i].buildId){
+    const mainBlock = (log[i].blocks || []).find(b=>b.ig);
+    const mainText = mainBlock ? mainBlock.text : (log[i].ig || '');
+    queuePostConfirmation(log[i].buildId, log[i].momentLabel, mainText, platform);
   }
-  return keys;
+  renderLog();
+  renderWeekProgress();
+  if(i === currentDisplayedIndex) renderConfirmButtons(log[i]);
 }
 
 function exportLog(){
   let log = [];
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   const varhist = {};
-  getAllVarHistKeys().forEach(k => {
-    try{ varhist[k] = JSON.parse(localStorage.getItem(k)); }catch(e){ /* skip unreadable key */ }
-  });
-  const bundle = { version: 2, exportedAt: new Date().toISOString(), log, varhist };
+  for(let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.indexOf('sixto-pd-varhist-') === 0){
+      try{ varhist[k] = JSON.parse(localStorage.getItem(k)); }catch(e){}
+    }
+  }
+  const bundle = { version: 3, exportedAt: new Date().toISOString(), log, varhist };
   const blob = new Blob([JSON.stringify(bundle, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -803,14 +886,11 @@ function importLog(evt){
       const data = JSON.parse(e.target.result);
       let logData;
       if(Array.isArray(data)){
-        // Legacy export: a bare array of log entries, no variety history.
         logData = data;
       } else if(data && Array.isArray(data.log)){
         logData = data.log;
         if(data.varhist){
-          Object.keys(data.varhist).forEach(k => {
-            localStorage.setItem(k, JSON.stringify(data.varhist[k]));
-          });
+          Object.keys(data.varhist).forEach(k => localStorage.setItem(k, JSON.stringify(data.varhist[k])));
         }
       } else {
         throw new Error('Onbekend bestandsformaat');
@@ -823,35 +903,33 @@ function importLog(evt){
   reader.readAsText(file);
 }
 
-// --- Read-only link with Sixto Builds (sixto_builds_v1). Never writes to this key. ---
+/* ============================================================
+   Read-only link with Sixto Builds
+   ============================================================ */
 const BUILDS_KEY = 'sixto_builds_v1';
-
 function loadBuildsList(){
   try{ return JSON.parse(localStorage.getItem(BUILDS_KEY)) || []; }catch(e){ return []; }
 }
+function refreshBuilds(){
+  const builds = loadBuildsList();
+  const dl = document.getElementById('build-list');
+  dl.innerHTML = builds.map(b => `<option value="${(b.name||'').replace(/"/g,'&quot;')}">`).join('');
+}
+function woodFromBuild(b){
+  const parts = [b.specs && b.specs.topWood, b.specs && b.specs.backSidesWood, b.specs && b.specs.neckWood, b.specs && b.specs.fretboardWood].filter(Boolean);
+  return parts.join(', ');
+}
 
-// --- Pending post suggestions from Builds (sixto_pending_posts_v1). Builds only appends here;
-// Post Draft is the only consumer -- reads, and removes entries once used or dismissed.
-// Purely additive: the normal Post Draft workflow is unaffected if this is empty or unused. ---
+/* ============================================================
+   Pending-post suggestions from Builds + confirmation writeback
+   ============================================================ */
 const PENDING_POSTS_KEY = 'sixto_pending_posts_v1';
-
-// Outbound: when a post linked to a Builds photo-moment gets confirmed (IG/YT), we tell Builds
-// about it here. Builds is the sole consumer/owner of this key -- it merges the caption into the
-// matching passport photo and clears consumed entries. One-directional, same pattern as above.
 const POST_CONFIRMATIONS_KEY = 'sixto_post_confirmations_v1';
-
-// Set by usePendingPost() when a suggestion is loaded into a form; consumed (and cleared) the
-// next time that form's generator saves a log entry, tagging it with buildId/momentLabel so a
-// later confirmation can be traced back to the right Builds photo.
-let currentPendingSource = null;
 
 function loadPendingPosts(){
   try{ return JSON.parse(localStorage.getItem(PENDING_POSTS_KEY)) || []; }catch(e){ return []; }
 }
-
-function savePendingPosts(list){
-  localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(list));
-}
+function savePendingPosts(list){ localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(list)); }
 
 function queuePostConfirmation(buildId, momentLabel, caption, platform){
   if(!buildId || !momentLabel) return;
@@ -864,110 +942,51 @@ function queuePostConfirmation(buildId, momentLabel, caption, platform){
 function renderPendingPostsBanner(){
   const box = document.getElementById('pending-posts-banner');
   const queue = loadPendingPosts();
-  if(queue.length === 0){
-    box.style.display = 'none';
-    box.innerHTML = '';
-    return;
-  }
+  if(queue.length === 0){ box.style.display = 'none'; box.innerHTML = ''; return; }
   box.style.display = 'block';
   const rows = queue.map(entry => {
     const label = entry.stepText || entry.momentLabel || 'Foto-moment';
     return `<div class="pending-row">
-      <div class="pr-text"><b>${esc(entry.buildName || 'Onbekende build')}</b><br>${esc(label)}</div>
+      <div class="pr-text"><b>${escHtml(entry.buildName || 'Onbekende build')}</b><br>${escHtml(label)}</div>
       <div class="pr-actions">
-        <button class="btn-ghost" onclick="usePendingPost('${entry.id}','spotlight')">&rarr; Spotlight</button>
-        <button class="btn-ghost" onclick="usePendingPost('${entry.id}','reel')">&rarr; Reel</button>
+        <button class="btn-ghost" onclick="usePendingPost('${entry.id}')">Gebruik</button>
         <button class="btn-ghost" onclick="dismissPendingPost('${entry.id}')">&#10005;</button>
       </div>
     </div>`;
   }).join('');
-  box.innerHTML = `<div class="pending-box">
-    <div class="ph-title">&#128248; Nieuw vanuit Builds</div>
-    ${rows}
-  </div>`;
+  box.innerHTML = `<div class="pending-box"><div class="ph-title">&#128248; Nieuw vanuit Builds</div>${rows}</div>`;
 }
 
-function esc(s){
-  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function usePendingPost(id, target){
+function usePendingPost(id){
   const queue = loadPendingPosts();
   const entry = queue.find(e => e.id === id);
   if(!entry) return;
   currentPendingSource = { buildId: entry.buildId, momentLabel: entry.momentLabel };
-
-  if(target === 'reel'){
-    document.getElementById('rs-input').value = entry.stepText || entry.momentLabel || '';
-    document.getElementById('rs-wood').value = '';
-    renderLinkHint('reel-link-hint', entry.buildName);
-    document.getElementById('rs-input').scrollIntoView({behavior:'smooth', block:'center'});
-    document.getElementById('rs-input').focus();
-  } else {
-    document.getElementById('sp-build').value = entry.buildName || '';
-    document.getElementById('sp-desc').value = entry.stepText || entry.momentLabel || '';
-    document.getElementById('sp-type').value = 'build';
-    renderLinkHint('spotlight-link-hint', entry.buildName);
-    document.getElementById('sp-desc').scrollIntoView({behavior:'smooth', block:'center'});
-    document.getElementById('sp-desc').focus();
-  }
-
+  document.getElementById('f-project').value = entry.buildName || '';
+  document.getElementById('f-update').value = entry.stepText || entry.momentLabel || '';
+  const hint = document.getElementById('link-hint');
+  hint.style.display = 'block';
+  hint.textContent = `\uD83D\uDD17 Gekoppeld aan ${entry.buildName || 'deze build'} \u2014 bevestiging stroomt door naar het paspoort.`;
   savePendingPosts(queue.filter(e => e.id !== id));
   renderPendingPostsBanner();
+  document.getElementById('f-update').scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('f-update').focus();
 }
 
-function renderLinkHint(elId, buildName){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  el.style.display = 'block';
-  el.textContent = `\uD83D\uDD17 Gekoppeld aan ${buildName || 'deze build'} \u2014 bevestiging stroomt door naar het paspoort.`;
-}
-
-function clearLinkHints(){
-  ['spotlight-link-hint','reel-link-hint'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el){ el.style.display = 'none'; el.textContent = ''; }
-  });
+function clearLinkHint(){
+  const el = document.getElementById('link-hint');
+  el.style.display = 'none';
+  el.textContent = '';
 }
 
 function dismissPendingPost(id){
-  const queue = loadPendingPosts().filter(e => e.id !== id);
-  savePendingPosts(queue);
+  savePendingPosts(loadPendingPosts().filter(e => e.id !== id));
   renderPendingPostsBanner();
 }
 
-function refreshBuilds(){
-  const builds = loadBuildsList();
-  const dl = document.getElementById('build-list');
-  dl.innerHTML = builds.map(b => `<option value="${(b.name||'').replace(/"/g,'&quot;')}">`).join('');
-}
-
-function woodFromBuild(b){
-  const parts = [b.specs && b.specs.topWood, b.specs && b.specs.backSidesWood,
-                 b.specs && b.specs.neckWood, b.specs && b.specs.fretboardWood]
-    .filter(Boolean);
-  return parts.join(', ');
-}
-
-document.getElementById('f-project').addEventListener('input', function(){
-  const val = this.value.trim();
-  if(!val) return;
-  const builds = loadBuildsList();
-  const match = builds.find(b => (b.name||'').trim().toLowerCase() === val.toLowerCase());
-  const woodField = document.getElementById('f-wood');
-  const hint = document.getElementById('autofill-hint');
-  if(match){
-    const wood = woodFromBuild(match);
-    if(wood && !woodField.value.trim()){
-      woodField.value = wood;
-      hint.style.display = 'block';
-    }
-  } else {
-    hint.style.display = 'none';
-  }
-});
-
-// --- Posting schedule: Mon = progress, Thu = material/origin, Sat = story/finished (optional 3rd) ---
+/* ============================================================
+   Postschema
+   ============================================================ */
 const SCHEDULE = {
   1: { label: 'Ma', full: 'maandag', focus: 'Voortgang / technische stap', tone: 'technical', youtube: true, bannerOn: 'Vandaag is een vaste postdag: focus op voortgang of een technische stap in de build. Geschikt materiaal voor YouTube.' },
   2: { label: 'Di', full: 'dinsdag', focus: 'Ontwerpkeuze / detail-moment', tone: 'curious', youtube: false, bannerOn: 'Vandaag is een vaste postdag: een kleine ontwerpkeuze of detail uitlichten, laagdrempelig.' },
@@ -975,7 +994,7 @@ const SCHEDULE = {
   0: { label: 'Zo', full: 'zondag', focus: 'Verhaal / afgewerkt stuk (optioneel)', tone: 'calm', youtube: false, bannerOn: 'Optionele extra postdag: ruimte voor merkverhaal of een afgewerkt stuk.' }
 };
 const SCHEDULE_DAYS_ORDER = [1, 2, 4, 0];
-const WEEKLY_TARGET = 3; // ma/di/do = vast ritme; zondag telt als bonus daarboven
+const WEEKLY_TARGET = 3;
 const DAY_LABELS = { 0:'Zo', 1:'Ma', 2:'Di', 3:'Wo', 4:'Do', 5:'Vr', 6:'Za' };
 
 function renderSchedule(){
@@ -985,11 +1004,7 @@ function renderSchedule(){
     const s = SCHEDULE[d];
     const isToday = d === today;
     const badge = s.youtube ? '<div class="yt-badge">+ YouTube</div>' : '';
-    return `<div class="schedule-day${isToday ? ' today' : ''}">
-      <div class="d">${s.label}</div>
-      <div class="f">${s.focus}</div>
-      ${badge}
-    </div>`;
+    return `<div class="schedule-day${isToday ? ' today' : ''}"><div class="d">${s.label}</div><div class="f">${s.focus}</div>${badge}</div>`;
   }).join('');
 
   const banner = document.getElementById('today-banner');
@@ -998,13 +1013,13 @@ function renderSchedule(){
     banner.textContent = SCHEDULE[today].bannerOn;
   } else {
     banner.className = 'today-banner off';
-    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 geen verplichting. Geen actuele update? Gebruik Journey Spotlight hieronder om iets anders in de kijker te zetten.`;
+    banner.textContent = `Vandaag (${DAY_LABELS[today]}) is geen vaste postdag \u2014 geen verplichting. Geen actuele update? Vink Journey Spotlight aan hierboven.`;
   }
 }
 
 function getISOWeekKey(date){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = (d.getUTCDay() + 6) % 7; // Mon=0..Sun=6
+  const dayNum = (d.getUTCDay() + 6) % 7;
   d.setUTCDate(d.getUTCDate() - dayNum + 3);
   const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
   const weekNum = 1 + Math.round(((d - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
@@ -1016,17 +1031,36 @@ function renderWeekProgress(){
   try{ log = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ log = []; }
   const thisWeek = getISOWeekKey(new Date());
   const count = log.filter(e => getISOWeekKey(new Date(e.date)) === thisWeek && getUsedStatus(e).ig).length;
-  const target = WEEKLY_TARGET;
-  const pct = Math.min(100, Math.round((count / target) * 100));
-  document.getElementById('wp-count').textContent = `${count} / ${target}`;
+  const pct = Math.min(100, Math.round((count / WEEKLY_TARGET) * 100));
+  document.getElementById('wp-count').textContent = `${count} / ${WEEKLY_TARGET}`;
   document.getElementById('wp-bar').style.width = pct + '%';
 }
+
+/* ============================================================
+   Init
+   ============================================================ */
+document.getElementById('f-project').addEventListener('input', function(){
+  const val = this.value.trim();
+  if(!val) return;
+  const builds = loadBuildsList();
+  const match = builds.find(b => (b.name||'').trim().toLowerCase() === val.toLowerCase());
+  const woodField = document.getElementById('f-wood');
+  const hint = document.getElementById('autofill-hint');
+  if(match){
+    const wood = woodFromBuild(match);
+    if(wood && !woodField.value.trim()){ woodField.value = wood; hint.style.display = 'block'; }
+  } else {
+    hint.style.display = 'none';
+  }
+});
 
 refreshBuilds();
 renderLog();
 renderSchedule();
 renderWeekProgress();
 renderPendingPostsBanner();
+renderYtToggle();
+onTypeChange();
 
 (function applySuggestedTone(){
   const today = new Date().getDay();
@@ -1035,213 +1069,6 @@ renderPendingPostsBanner();
     if(toneSel) toneSel.value = SCHEDULE[today].tone;
   }
 })();
-
-// ============ Journey Spotlight generator (reuses main output + log + confirm) ============
-const SPOTLIGHT_OPENERS = {
-  build: ["Some love for an earlier build.","This one deserves another moment in the spotlight.","Revisiting a favorite from the workshop.","One from the archive.","A build worth another look.","Putting this one back in the spotlight.","Digging this one back out for a moment.","A past build that still deserves attention."],
-  detail: ["A detail worth a closer look.","Zooming in on something I like.","One of my favorite details.","A small detail, worth sharing.","This close-up deserves its own post.","Something I don't usually show up close.","A detail most people scroll past.","Slowing down on one small part today."],
-  moment: ["A moment from the workshop.","Something from the bench, just because.","A quick one worth sharing.","From the workshop archive.","A small moment, worth a post.","Just a good shot from the shop.","Nothing special, just a good moment.","A snapshot from the bench today."]
-};
-const SPOTLIGHT_CLOSERS = {
-  build: ["Always good to give this one another moment.","One of the builds I keep coming back to.","Worth a second look, I think.","Glad I get to share this one again.","This one still holds up.","Doesn't get old, this one.","Still one of my favorites to look back on."],
-  detail: ["Small details, big difference.","The kind of detail that's easy to miss.","Worth zooming in on, every time.","Little things like this matter to me.","Details make the build.","The small stuff adds up.","Easy to miss, worth pointing out."],
-  moment: ["Just a moment worth sharing.","The workshop has plenty of these.","Small moments, still worth a post.","More of these coming.","Just felt like sharing this one.","Not every post needs a big update.","Sometimes it's just a good moment."]
-};
-const SPOTLIGHT_STORY_Q = {
-  build: ["Which build should get the spotlight next?", "Remember this one?", "Should I revisit builds like this more often?", "Which older build do you want to see again?", "Worth another deep dive on this one?"],
-  detail: ["Notice this detail before?", "What detail would you want a close-up of next?", "Worth zooming in on, right?", "Which detail should I zoom in on next?", "Anything you'd want a close-up of?"],
-  moment: ["More behind-the-scenes like this?", "Want to see more workshop moments?", "Anything you'd want to see more of?", "More of these quick moments?", "Worth doing more of these?"]
-};
-
-function generateSpotlight(){
-  const desc = document.getElementById('sp-desc').value.trim();
-  if(!desc){
-    document.getElementById('sp-desc').style.borderColor = '#c1793f';
-    document.getElementById('sp-desc').focus();
-    return;
-  }
-  const buildName = document.getElementById('sp-build').value.trim();
-  const type = document.getElementById('sp-type').value;
-
-  const hook = pickNoRepeat(SPOTLIGHT_OPENERS[type], `sp-opener-${type}`);
-  const closer = pickNoRepeat(SPOTLIGHT_CLOSERS[type], `sp-closer-${type}`);
-  const storyQ = pickNoRepeat(SPOTLIGHT_STORY_Q[type], `sp-storyq-${type}`);
-  const hashtags = buildHashtags();
-  const overlay = desc.charAt(0).toUpperCase() + desc.slice(1);
-
-  let lines = [hook, ""];
-  if(buildName) lines.push(buildName, "");
-  lines.push(desc);
-
-  // Optional read-only enrichment from Sixto Builds, same pattern as the wood auto-fill elsewhere.
-  const builds = loadBuildsList();
-  const match = builds.find(b => (b.name||'').trim().toLowerCase() === buildName.toLowerCase());
-  if(match){
-    const wood = woodFromBuild(match);
-    if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
-  }
-
-  lines.push("", closer, "", storyQ, "", hashtags);
-  const ig = lines.join("\n"); // reel/story caption \u2014 hook + context + closer + story-question, ready to paste
-  const yt = overlay; // short on-video overlay-text suggestion, not a YouTube description
-
-  document.getElementById('out-ig').textContent = ig;
-  document.getElementById('out-yt').textContent = yt;
-  updateIgCount(ig);
-  applyOutputLabels('spotlight');
-  document.getElementById('output').classList.add('show');
-  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
-
-  saveLog({ project: buildName, phase: 'spotlight', kind: 'spotlight' }, ig, yt);
-  currentDisplayedIndex = 0;
-  refreshConfirmForCurrent();
-  document.getElementById('sp-desc').style.borderColor = '';
-}
-
-// ============ Reel & Story generator (Instagram, spoor 2) ============
-const RS_HOOKS = {
-  fast:  ["Watch this take shape.", "From rough wood to this.", "This almost didn't make it.", "Here's today's progress, fast.", "Zero to this, in one clip.", "One clip, real progress.", "Fast forward through today's work.", "Today, condensed into one clip.", "This is what today looked like, sped up.", "Watch a piece of this build happen.", "One clip, one step closer.", "Here's the fast version of today."],
-  calm:  ["Slow down and watch this.", "No rush here \u2014 just wood and hands.", "This is the quiet part of building.", "A quieter moment from the bench.", "Take a breath, watch this.", "A slower side of the workshop.", "Just wood, hands, and time today.", "A calm minute from the bench.", "Not everything needs to move fast.", "Some quiet time in the workshop today.", "This one's meant to be watched slowly.", "A moment worth slowing down for."],
-  twist: ["You won't guess what this becomes.", "This started as something totally different.", "Not what it looks like yet.", "This isn't finished \u2014 wait for it.", "There's more to this than it looks.", "This is only half the story.", "Give this a second before you judge it.", "This clip has a twist coming.", "Not what you think, keep watching.", "There's a reason this looks odd right now.", "This won't make sense until the end.", "Hold your judgment until the last second."],
-  milestone: ["Proud of this moment.", "This is a big step today.", "Watch this milestone happen.", "A moment worth celebrating.", "This one deserves a proper look.", "Big step, captured in one clip.", "This is what progress looks like.", "A milestone clip, no filter needed.", "Today's win, in one clip.", "This is the good part.", "A proud moment from the bench.", "Watch this come together."],
-  technical: ["Here's exactly how this works.", "A closer look at the technique.", "The process, step by step.", "Watch the technique here.", "Here's how this actually gets done.", "The technical side of this build.", "A precise look at this step.", "Here's the method behind this.", "Breaking down this step.", "The mechanics of this stage.", "A detailed look at the process.", "Here's what's actually happening."],
-  humor: ["This didn't go as planned.", "Not my finest moment, but here we are.", "Every build has one of these moments.", "This is the part nobody shows you.", "Workshop reality, not the highlight reel.", "This almost went very wrong.", "The less glamorous side of building.", "Not everything works the first time.", "A little workshop chaos today.", "This is what mistakes look like.", "Even this happens sometimes.", "The bloopers reel, basically."]
-};
-const RS_STORY_Q = {
-  fast:  ["Which step should I speed up next?", "More clips like this?", "Want to see this in full speed next time?", "Should I do more of these?", "Fast clips or slower ones \u2014 which do you prefer?", "Want more speed-run clips like this?", "Which part moved too fast for you?", "More quick clips or longer ones?"],
-  calm:  ["What do you notice first here?", "Ask me anything about this step.", "What would you want to know about this?", "Anything you're curious about here?", "What would you slow down on if you were me?", "What catches your eye first?", "Any questions about this step?", "What would you want to see more of, here?"],
-  twist: ["Guess what this becomes \u2014 drop it below.", "Betting no one gets this right.", "Take a guess, I'll reveal it next.", "What do you think this turns into?", "Any guesses before the reveal?", "Think you know where this is going?", "Drop your guess before I show the result.", "What's your best guess?"],
-  milestone: ["What milestone should I celebrate next?", "Which step felt like the biggest win to you?", "Worth celebrating, right?", "What's your favorite kind of milestone moment?", "Should I share more of these?", "Which part stood out to you?", "What would you be proudest of here?", "More proud-moment clips like this?"],
-  technical: ["Any questions about this technique?", "Want a deeper breakdown of this step?", "Curious about the tools used here?", "What technical detail would you want explained?", "Should I go deeper on this next time?", "Any part of this unclear?", "What would you want to know about this process?", "More technical breakdowns like this?"],
-  humor: ["Ever had one of these moments?", "Tell me I'm not the only one.", "What's your workshop blooper story?", "Relatable, or just me?", "Anyone else run into this?", "What would you have done here?", "Worth a laugh, right?", "More of these honest moments?"]
-};
-const RS_CAPTION_LEAD = {
-  fast:  ["Quick look at today's progress.", "Today's progress, fast.", "A quick one from the bench today.", "Short clip, real progress.", "Fast clip, real work behind it.", "Today's clip, no filler.", "A quick moment from a longer day.", "Short and to the point today."],
-  calm:  ["A slower moment from the workshop today.", "A quieter moment from today's session.", "Some quiet bench time today.", "A slower look at today's work.", "Taking today's clip a little slower.", "A calm minute from an otherwise busy day.", "Some unhurried bench time today.", "A quieter side of today's work."],
-  twist: ["Not everything is what it looks like at this stage.", "This isn't what it seems yet.", "There's a twist coming with this one.", "Wait for it \u2014 not what you'd expect.", "This one isn't quite what it looks like.", "Today's clip isn't what it appears to be.", "There's more going on here than it looks.", "This one needs a second look."],
-  milestone: ["A proud moment from today.", "Today felt like a milestone.", "A win worth sharing today.", "This one felt good to finish.", "Today's small victory.", "A proud step forward today.", "This moment deserved its own post.", "A milestone worth pausing for."],
-  technical: ["A technical look at today's step.", "The process behind today's work.", "Breaking down today's technique.", "Today's step, explained.", "The method behind this stage.", "A closer look at the process today.", "Today's technical detail.", "The mechanics behind today's work."],
-  humor: ["Not every clip is a highlight reel.", "The honest side of building today.", "A little workshop chaos, for once.", "Today wasn't picture-perfect, and that's fine.", "The less polished side of today.", "Keeping it real today.", "Not everything goes to plan.", "A more honest look at today."]
-};
-
-const RS_OVERLAY_PREFIX = {
-  fast:  ["", "Today: ", "Right now: ", "In progress: ", "Live from the bench: ", "Happening now: "],
-  calm:  ["", "Slowly: ", "One step at a time: ", "Today: ", "Quietly: ", "Taking it slow: "],
-  twist: ["Not yet: ", "Wait for it: ", "", "Almost: ", "Not what it seems: ", "Keep watching: "],
-  milestone: ["", "Milestone: ", "Proud moment: ", "Today's win: ", "Finally: ", "Big step: "],
-  technical: ["", "Technique: ", "How it's done: ", "The process: ", "Method: ", "Step-by-step: "],
-  humor: ["", "Real talk: ", "Not gonna lie: ", "Honestly: ", "Plot twist: ", "Reality check: "]
-};
-
-function buildShortsCompanion(hook, input, wood){
-  let lines = [hook, ""];
-  lines.push(input.charAt(0).toUpperCase() + input.slice(1) + ".");
-  if(wood) lines.push("", `${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}`);
-  lines.push("", "Same clip as on Instagram. Follow the build: @sixtocustomguitars");
-  lines.push(`${buildHashtags()} #Shorts`);
-  return lines.join("\n");
-}
-
-function generateReelStory(){
-  const input = document.getElementById('rs-input').value.trim();
-  if(!input){
-    document.getElementById('rs-input').style.borderColor = '#c1793f';
-    document.getElementById('rs-input').focus();
-    return;
-  }
-  const tone = document.getElementById('rs-tone').value;
-  const wood = document.getElementById('rs-wood').value.trim();
-
-  const hook = pickNoRepeat(RS_HOOKS[tone], `rs-hook-${tone}`);
-  const overlayPrefix = pickNoRepeat(RS_OVERLAY_PREFIX[tone], `rs-overlay-prefix-${tone}`);
-  const overlay = overlayPrefix + input.charAt(0).toUpperCase() + input.slice(1);
-  const lead = pickNoRepeat(RS_CAPTION_LEAD[tone], `rs-lead-${tone}`);
-  let caption = `${lead}\n\n${input}.`;
-  if(wood) caption += `\n\n${pickNoRepeat(WOOD_LABELS, 'wood-label')} ${wood}.`;
-  caption += `\n\n${buildHashtags()}`;
-  const storyQ = pickNoRepeat(RS_STORY_Q[tone], `rs-story-${tone}`);
-
-  document.getElementById('rs-hook').textContent = hook;
-  document.getElementById('rs-overlay').textContent = overlay;
-  document.getElementById('rs-caption').textContent = caption;
-  document.getElementById('rs-story').textContent = storyQ;
-  document.getElementById('rs-output').style.display = 'grid';
-  document.getElementById('rs-input').style.borderColor = '';
-
-  // Mirror into the shared output+log+confirm system, same pattern as Spotlight.
-  const ytCompanion = isYtEnabled() ? buildShortsCompanion(hook, input, wood) : '';
-  document.getElementById('out-ig').textContent = caption;
-  document.getElementById('out-yt').textContent = ytCompanion;
-  updateIgCount(caption);
-  applyOutputLabels('reel');
-  document.getElementById('output').classList.add('show');
-  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
-
-  saveLog({ project: input.slice(0, 40), phase: 'reel_story', kind: 'reel' }, caption, ytCompanion);
-  currentDisplayedIndex = 0;
-  refreshConfirmForCurrent();
-}
-
-// ============ YouTube attention generator (spoor 2, on hold behind toggle) ============
-const YT_ENABLED_KEY = 'sixto-postdraft-yt-enabled';
-
-function isYtEnabled(){ return localStorage.getItem(YT_ENABLED_KEY) === '1'; }
-
-function setYtEnabled(on){
-  localStorage.setItem(YT_ENABLED_KEY, on ? '1' : '0');
-  renderYtLockState();
-}
-
-function renderYtLockState(){
-  const on = isYtEnabled();
-  document.getElementById('yt-locked').style.display = on ? 'none' : 'block';
-  document.getElementById('yt-unlocked').style.display = on ? 'block' : 'none';
-  if(!on) document.getElementById('yt-attention-output').style.display = 'none';
-}
-
-const YT_TITLES = {
-  wood:     p => [`Sourcing reclaimed wood for ${p || 'a one-off guitar'}`, `Finding the right piece of reclaimed wood`, `This wood has a history before it's a guitar`],
-  shaping:  p => [`Shaping a guitar body by hand`, `Carving ${p || 'a one-off electric guitar'}`, `From block of wood to guitar shape`],
-  neck:     p => [`Building a guitar neck from scratch`, `Handmade neck construction, start to finish`, `The most personal part of a guitar build`],
-  finish:   p => [`A finish that keeps the wood grain visible`, `Finishing a handmade guitar the slow way`, `Why I don't use high-gloss finishes`],
-  assembly: p => [`Putting ${p || 'a one-off guitar'} together`, `Assembly day for a handbuilt guitar`, `From parts to a playable instrument`],
-  setup:    p => [`Final setup on a handmade guitar`, `Getting the action and intonation right`, `The last steps before this guitar is done`],
-  done:     p => [`${p || 'This guitar'} is finished \u2014 start to finish`, `Built from reclaimed wood, this is the result`, `The finished build, and what I learned`]
-};
-const YT_THUMB = {
-  wood:'REAL WOOD ORIGIN', shaping:'SHAPING BY HAND', neck:'NECK BUILD',
-  finish:'THE FINISH', assembly:'ASSEMBLY', setup:'FINAL SETUP', done:'FINISHED'
-};
-const YT_HOOK_SCRIPT = {
-  wood:"This piece of wood already had a life before it became part of a guitar. Let me show you where it came from.",
-  shaping:"This block of wood is about to become a guitar body. Here's how that happens, by hand.",
-  neck:"The neck is the part players touch the most. Here's how I build it.",
-  finish:"This finish is meant to disappear \u2014 you should see the wood, not the coating.",
-  assembly:"All the separate pieces come together today. Let's put this instrument together.",
-  setup:"Before this guitar leaves the workshop, it needs to play right. Here's the final setup.",
-  done:"This build is finished. Here's the result \u2014 and what I'd do differently next time."
-};
-const YT_SHORTS_IDEA = {
-  wood:"Shorts-idee: 10 sec clip van het moment dat de nerf zichtbaar wordt na het eerste schuren.",
-  shaping:"Shorts-idee: snelle voor/na-clip van het blok hout naar de vorm.",
-  neck:"Shorts-idee: close-up van het profileren van de nek, versneld.",
-  finish:"Shorts-idee: de overgang van dof hout naar de eerste laag finish.",
-  assembly:"Shorts-idee: time-lapse van onderdelen die samenkomen tot 1 instrument.",
-  setup:"Shorts-idee: actie-hoogte meten met een liniaal, 1 duidelijke actie.",
-  done:"Shorts-idee: 360°-shot van het afgewerkte instrument, 5 seconden."
-};
-
-function generateYtAttention(d){
-  if(!isYtEnabled()) return;
-  const titles = (YT_TITLES[d.phase] || YT_TITLES.wood)(d.project);
-  document.getElementById('yt-titles').textContent = titles.map((t,i)=>`${i+1}. ${t}`).join('\n');
-  document.getElementById('yt-thumb').textContent = YT_THUMB[d.phase] || YT_THUMB.wood;
-  document.getElementById('yt-hook').textContent = YT_HOOK_SCRIPT[d.phase] || YT_HOOK_SCRIPT.wood;
-  document.getElementById('yt-shorts').textContent = YT_SHORTS_IDEA[d.phase] || YT_SHORTS_IDEA.wood;
-  document.getElementById('yt-attention-output').style.display = 'grid';
-}
-
-renderYtLockState();
 </script>
 
 </body>
