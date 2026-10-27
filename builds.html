@@ -183,9 +183,6 @@ textarea{resize:vertical;min-height:60px;}
 .pv-moment{display:flex;gap:14px;margin-bottom:18px;}
 .pv-moment img{width:96px;height:96px;object-fit:cover;border-radius:10px;flex-shrink:0;}
 .pv-moment .cap{font-size:13px;line-height:1.4;padding-top:6px;color:var(--text-dim);}
-.pv-shared-label{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);opacity:.7;margin-bottom:3px;}
-.pv-shared-text{font-size:13.5px;line-height:1.45;color:var(--text);font-style:italic;}
-.pv-shared-badge{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--gold);}
 .pv-sig{text-align:center;padding:30px 20px 10px 20px;font-size:13px;color:var(--text-dim);border-top:1px solid var(--line);margin-top:20px;}
 .pv-sig .brand{color:var(--gold);font-weight:700;letter-spacing:1px;}
 
@@ -196,10 +193,7 @@ textarea{resize:vertical;min-height:60px;}
   .pv-brand h1, .pv-section-title{ color:#a1652b !important; }
   .pv-name{ color:#221f1a !important; }
   .pv-meta, .pv-moment .cap, .pv-sig{ color:#6c6454 !important; }
-  .pv-shared-label{ color:#8a8070 !important; }
-  .pv-shared-text{ color:#221f1a !important; }
-  .pv-shared-badge{ color:#a1652b !important; }
-  .pv-sig .brand{ color:#a1652b !important; }
+        .pv-sig .brand{ color:#a1652b !important; }
   .pv-sig{ border-top:1px solid #e3d9c4 !important; }
   .spec-grid .sk{ color:#6c6454 !important; }
   .spec-grid .sv{ color:#221f1a !important; }
@@ -229,7 +223,8 @@ h2.section{color:var(--wood);font-size:11px;letter-spacing:.18em;font-weight:600
 .card{background:linear-gradient(180deg,var(--card),#1d1511);box-shadow:0 1px 0 rgba(255,255,255,.025) inset,0 10px 26px rgba(0,0,0,.28);}
 .btn{background:var(--wood);color:#1a120d;}
 .btn.ghost{color:var(--gold);border-color:var(--wood-d);}
-.fab{background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
+main{padding-bottom:160px;}
+.fab{bottom:calc(78px + env(safe-area-inset-bottom));background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
 .progress-bar>div,.phase-progress>div{background:linear-gradient(90deg,var(--wood-d),var(--gold));}
 .detail-header .type{color:var(--wood);letter-spacing:.14em;font-size:11px;}
 .detail-header h2.name,.sheet h3,.pv-name,.build-card .name,.job-card .name{font-family:var(--serif);font-weight:600;}
@@ -267,7 +262,7 @@ textarea.step-note,input.step-note{min-height:0;height:auto;resize:none;padding:
   <button id="tab-library" class="active" onclick="goto('library')"><span class="ic">📚</span>Bibliotheek</button>
   <button id="tab-todo" onclick="goto('todo')"><span class="ic">📝</span>Te doen</button>
   <button id="tab-active" onclick="goto('active')"><span class="ic">🔨</span>In build</button>
-  <button id="tab-checklist" onclick="goto('template')"><span class="ic">✅</span>Checklist</button>
+  <button id="tab-template" onclick="goto('template')"><span class="ic">✅</span>Checklist</button>
 </div>
 
 <button class="fab" onclick="openNewBuildSheet()">+</button>
@@ -457,24 +452,19 @@ const DEFAULT_TEMPLATE = [
    "Naam bepaald uit het vorige leven van het hout",
    "Specs blad ingevuld (scale, radius, nutbreedte, vorm, chambering ja/nee)",
    "Referentiefoto's / moodboard verzameld",
-   "Prijs besproken en akkoord van de klant (klantbuild)"
+   "Contract getekend: prijs, schijven per ijkpunt en garantie (klantbuild)",
+   "Eerste schijf ontvangen (klantbuild)"
   ]
  },
  {
   "phase": "Hout & Voorbereiding",
   "steps": [
-   {
-    "text": "Hout gefotografeerd vóór verwerking (vorig leven, kopse kant)",
-    "photoPrompt": true
-   },
+   "Hout gefotografeerd vóór verwerking (vorig leven, kopse kant)",
    "Spijkers, schroeven en ander metaal verwijderd (metaaldetector)",
    "Hout nagekeken op scheuren, rot en insecten",
    "Hout geacclimatiseerd / vochtgehalte gecontroleerd",
    "Snijplan gemaakt",
-   {
-    "text": "Halsblank uitgezaagd",
-    "photoPrompt": true
-   },
+   "Halsblank uitgezaagd",
    "Bodyblank(s) uitgezaagd / verlijmd indien meerdelig",
    "Fretboard blank voorbereid"
   ]
@@ -491,10 +481,7 @@ const DEFAULT_TEMPLATE = [
    "Fret slots gezaagd",
    "Inlays en side dots geplaatst (indien van toepassing)",
    "Fretboard op hals gelijmd",
-   {
-    "text": "Halsprofiel gecarved (achterkant vorm)",
-    "photoPrompt": true
-   },
+   "Halsprofiel gecarved (achterkant vorm)",
    "Frets geplaatst",
    "Frets afgewerkt: level, crown, polish en fret ends",
    "Hals fijn afgewerkt/geschuurd rond de frets, klaar voor lak/was"
@@ -503,10 +490,7 @@ const DEFAULT_TEMPLATE = [
  {
   "phase": "Body",
   "steps": [
-   {
-    "text": "Body vorm uitgezaagd/gefreesd (template routing)",
-    "photoPrompt": true
-   },
+   "Body vorm uitgezaagd/gefreesd (template routing)",
    "Chambering/uitholling gefreesd (indien semi-hollow/chambered)",
    "Top/back verlijmd en f-gat(en) gezaagd (indien semi-hollow)",
    "Pickup cavities gefreesd",
@@ -522,25 +506,16 @@ const DEFAULT_TEMPLATE = [
   "phase": "Assemblage",
   "steps": [
    "Neck-to-body fit gecontroleerd",
-   {
-    "text": "Neck vastgezet (lijm/bouten)",
-    "photoPrompt": true
-   }
+   "Neck vastgezet (lijm/bouten)"
   ]
  },
  {
   "phase": "Afwerking – Body",
   "steps": [
-   {
-    "text": "Kleur aangebracht (mica + aceton beits op het hout)",
-    "photoPrompt": true
-   },
+   "Kleur aangebracht (mica + aceton beits op het hout)",
    "Blanke lak lagen aangebracht",
    "Uitharding afgewacht",
-   {
-    "text": "Polijsten/buffen",
-    "photoPrompt": true
-   }
+   "Polijsten/buffen"
   ]
  },
  {
@@ -583,10 +558,7 @@ const DEFAULT_TEMPLATE = [
    "Geluid getest / beoordeeld",
    "Na 1–2 weken rust: hals en setup opnieuw nagekeken (acclimatiseren)",
    "Geluidsdemo opgenomen",
-   {
-    "text": "Eindfoto's gemaakt (studio/daglicht)",
-    "photoPrompt": true
-   }
+   "Eindfoto's gemaakt (studio/daglicht)"
   ]
  },
  {
@@ -596,8 +568,8 @@ const DEFAULT_TEMPLATE = [
    "Build Paspoort ingevuld",
    "Eindnotities geschreven",
    "Eindreel / Short gepost",
-   "Klant overdracht / verzending (indien van toepassing)",
-   "Betaling ontvangen (factuur met vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Laatste schijf ontvangen (klantbuild)",
+   "Overdracht aan de klant (klantbuild)",
    "Build gearchiveerd in bibliotheek"
   ]
  }
@@ -1040,22 +1012,13 @@ async function openPassport(buildId){
   const heroUrl = heroSource ? await getPhotoBlob(heroSource.id) : null;
 
   let timelineHtml = '';
-  const PLATFORM_LABELS = { ig: 'Instagram', yt: 'YouTube' };
-  for(const p of passportPhotos){
+  // geen gemarkeerde mijlpaalfoto's (standaard sinds er geen fotomomenten meer zijn): dan alle foto's, in volgorde
+  for(const p of (passportPhotos.length ? passportPhotos : (b.photos||[]))){
     const url = await getPhotoBlob(p.id);
-    let capHtml;
-    if(p.sharedCaption){
-      const platforms = (p.sharedPlatforms||[]).map(pl => PLATFORM_LABELS[pl] || pl).join(', ');
-      capHtml = `<div class="pv-shared-label">${esc(p.caption||'')}</div>
-        <div class="pv-shared-text">${esc(p.sharedCaption)}</div>
-        ${platforms ? `<div class="pv-shared-badge">&#128241; Gedeeld op ${esc(platforms)}</div>` : ''}`;
-    } else {
-      capHtml = esc(p.caption||'');
-    }
-    timelineHtml += `<div class="pv-moment"><img src="${url}"><div class="cap">${capHtml}</div></div>`;
+    timelineHtml += `<div class="pv-moment"><img src="${url}"><div class="cap">${esc(p.caption||'')}</div></div>`;
   }
   if(!timelineHtml){
-    timelineHtml = `<div class="small-note">Nog geen mijlpaalfoto's. Die worden automatisch gevraagd bij bepaalde checklist-stappen (📷) tijdens een volgende build.</div>`;
+    timelineHtml = `<div class="small-note">Nog geen foto's bij deze build.</div>`;
   }
 
   const html = `
@@ -1170,50 +1133,9 @@ function toggleStep(buildId,pi,si){
   persist(); render(); loadPhotos(buildId);
   if(shouldPromptPhoto){
     triggerPhotoUpload(buildId, momentLabel);
-    queuePendingPost(buildId, b.name, ph.phase, s.text, momentLabel);
   }
 }
 
-/* ---------- Pending post suggestions (shared with Post Draft, sixto_pending_posts_v1) ----------
-   Read-only from Builds' perspective beyond appending: Post Draft consumes/removes entries.
-   Purely additive suggestion queue -- never required, Post Draft keeps working exactly as before. */
-const PENDING_POSTS_KEY = 'sixto_pending_posts_v1';
-function queuePendingPost(buildId, buildName, phase, stepText, momentLabel){
-  let queue = [];
-  try{ queue = JSON.parse(localStorage.getItem(PENDING_POSTS_KEY)) || []; }catch(e){ queue = []; }
-  queue.unshift({
-    id: uid(),
-    buildId, buildName: buildName || '', phase: phase || '', stepText: stepText || '',
-    momentLabel: momentLabel || '', date: new Date().toISOString()
-  });
-  queue = queue.slice(0, 30);
-  localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(queue));
-}
-
-/* ---------- Post confirmations from Post Draft (sixto_post_confirmations_v1) ----------
-   Post Draft is the sole writer; Builds is the sole consumer. When a post linked to a photo-moment
-   gets confirmed as posted (IG/YT), the actual caption gets merged into that passport photo, so the
-   build paspoort shows the real shared text instead of just the internal checklist label. */
-const POST_CONFIRMATIONS_KEY = 'sixto_post_confirmations_v1';
-function consumePostConfirmations(){
-  let queue = [];
-  try{ queue = JSON.parse(localStorage.getItem(POST_CONFIRMATIONS_KEY)) || []; }catch(e){ queue = []; }
-  if(queue.length === 0) return;
-  let anyMatched = false;
-  for(const conf of queue){
-    const b = getBuild(conf.buildId);
-    if(!b || !b.photos) continue;
-    const photo = b.photos.find(p => p.caption === conf.momentLabel);
-    if(!photo) continue;
-    photo.sharedCaption = conf.caption || photo.sharedCaption || '';
-    photo.sharedPlatforms = Array.from(new Set([...(photo.sharedPlatforms||[]), conf.platform]));
-    anyMatched = true;
-  }
-  if(anyMatched) persist();
-  // Clear the whole queue regardless of match: unmatched entries (e.g. a photo that was later
-  // deleted) can't ever resolve later either, so nothing is gained by keeping them around.
-  localStorage.setItem(POST_CONFIRMATIONS_KEY, '[]');
-}
 
 function updateStepNote(buildId,pi,si,val){
   const b = getBuild(buildId);
@@ -1481,48 +1403,11 @@ function openMenu(){
     <input type="file" id="importFile" accept="application/json">
     <button class="btn secondary block" style="margin-top:10px;" onclick="importData()">⬆ Importeer</button>
 
-    <h2 class="section">App-code bijwerken (geavanceerd)</h2>
-    <div class="small-note">Als Claude je een nieuwe versie van builds.html geeft: plak de volledige inhoud hieronder en tik op pushen. Dit gebruikt hetzelfde token als hierboven, rechtstreeks vanuit je browser — er komt niets bij Claude terecht. Bewaar het bestand dat je kreeg altijd ook gewoon, voor het geval iets misloopt.</div>
-    <textarea id="app-update-code" placeholder="Plak hier de volledige nieuwe builds.html inhoud..." autocapitalize="off" autocorrect="off" spellcheck="false" style="min-height:90px;font-family:monospace;font-size:11.5px;"></textarea>
-    <button class="btn secondary block" style="margin-top:8px;" onclick="pushAppUpdate()">🚀 Push naar SixtoTools/builds.html</button>
-    <div class="small-note" id="app-update-status"></div>
-
     <div class="small-note" style="margin-top:14px;">Sixto Custom Guitars · Builds · lokale opslag in deze browser.</div>
   `;
   openSheet('Instellingen', html);
 }
 
-async function pushAppUpdate(){
-  const token = getGhToken();
-  const statusEl = document.getElementById('app-update-status');
-  if(!token){ await appAlert('Stel eerst hierboven je GitHub token in en bewaar het.'); return; }
-  const code = document.getElementById('app-update-code').value;
-  if(!code.trim()){ await appAlert('Plak eerst de nieuwe code in het veld.'); return; }
-  if(!code.trim().startsWith('<!DOCTYPE html>') || !code.trim().endsWith('</html>')){
-    await appAlert('Dit lijkt geen volledig HTML-bestand (moet starten met <!DOCTYPE html> en eindigen met </html>). Niets gepusht, ter veiligheid.');
-    return;
-  }
-  if(!(await appConfirm('Dit vervangt builds.html live op GitHub Pages meteen voor alle toestellen. Weet je zeker dat dit de volledige, correcte nieuwe versie is?'))) return;
-  statusEl.textContent = 'Bezig met pushen...';
-  try{
-    const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/builds.html`;
-    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
-    if(!getRes.ok) throw new Error('Kon huidige bestand niet ophalen (HTTP '+getRes.status+')');
-    const meta = await getRes.json();
-    const body = {
-      message: 'App-update via ingebouwde updateknop',
-      content: btoa(unescape(encodeURIComponent(code))),
-      branch: 'main',
-      sha: meta.sha
-    };
-    const putRes = await fetch(api, { method:'PUT', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
-    if(!putRes.ok){ const j = await putRes.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+putRes.status)); }
-    statusEl.textContent = 'Gepusht ✓ — GitHub Pages herbouwt binnen ~1 minuut. Herlaad de app dan.';
-    toast('App-update gepusht ✓');
-  }catch(e){
-    statusEl.textContent = 'Mislukt: '+e.message;
-  }
-}
 
 async function exportData(){
   const builds = JSON.parse(JSON.stringify(state.builds));
@@ -1592,7 +1477,6 @@ function toast(msg){
     }
     await pullFromGitHub(true);
   }
-  consumePostConfirmations();
   render();
   setInterval(()=>{ if(document.visibilityState==='visible') pullFromGitHub(); }, 30000);
   // Best-effort: try to flush a pending push the moment the app is backgrounded/closed,
