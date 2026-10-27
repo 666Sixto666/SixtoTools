@@ -3,44 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sixto Tools</title>
+<title>Sixto Custom Guitars · Werkplaats</title>
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#150f0d">
 <style>
-  :root{
-    --bg:#171412; --card:#242019; --wood:#b9793f; --wood-d:#8a5a2c;
-    --text:#f1e9df; --text-dim:#b8ab9c; --line:#3a332b;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-  .wrap{max-width:420px;width:100%;}
-  h1{font-size:22px;margin:0 0 4px 0;}
-  p.sub{color:var(--text-dim);font-size:13.5px;margin:0 0 24px 0;}
-  a.tool{
-    display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:16px 18px;margin-bottom:12px;text-decoration:none;color:var(--text);
-  }
-  a.tool .name{font-weight:700;font-size:16px;margin-bottom:3px;}
-  a.tool .desc{font-size:13px;color:var(--text-dim);}
+  :root{--bg:#150f0d;--card:#211814;--line:#3a2c24;--text:#f3ead9;--dim:#b4a28a;--brass:#c7a165;--gold:#dcbb82;
+    --serif:'Fraunces',Georgia,serif;--sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;min-height:100vh;color:var(--text);font-family:var(--sans);
+    background:radial-gradient(120% 60% at 50% -15%, rgba(199,161,101,.14), transparent 60%), var(--bg);
+    display:flex;align-items:center;justify-content:center;padding:32px 16px calc(32px + env(safe-area-inset-bottom));}
+  .wrap{max-width:440px;width:100%;}
+  .hero{text-align:center;margin-bottom:30px;}
+  .mark{width:72px;height:72px;margin:0 auto 16px;border:1.5px solid var(--brass);border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-weight:600;font-size:36px;color:var(--brass);box-shadow:0 0 0 6px rgba(199,161,101,.07);}
+  h1{font-family:var(--serif);font-weight:600;font-size:34px;margin:0;line-height:1.05;}
+  .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-top:8px;}
+  .tag{color:var(--dim);font-size:13.5px;margin-top:12px;font-style:italic;font-family:var(--serif);}
+  a.tool{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,var(--card),#1d1511);border:1px solid var(--line);border-radius:16px;
+    padding:16px 16px;margin-bottom:12px;text-decoration:none;color:var(--text);box-shadow:0 10px 26px rgba(0,0,0,.28);}
+  a.tool:active{transform:scale(.985);border-color:var(--brass);}
+  a.tool .ic{width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:21px;
+    background:rgba(199,161,101,.1);border:1px solid rgba(199,161,101,.28);}
+  a.tool .name{font-family:var(--serif);font-weight:600;font-size:19px;}
+  a.tool .desc{font-size:12.5px;color:var(--dim);margin-top:2px;line-height:1.35;}
+  a.tool .go{margin-left:auto;color:var(--brass);font-size:18px;}
+  .foot{text-align:center;margin-top:24px;font-size:12px;color:var(--dim);}
+  .foot a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(220,187,130,.35);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🎸 Sixto Tools</h1>
-  <p class="sub">Persoonlijke werktools — Sixto Custom Guitars</p>
-  <a class="tool" href="builds.html">
-    <div class="name">🔨 Sixto Builds</div>
-    <div class="desc">Bouwtracker per gitaar — checklist, foto's, specs</div>
-  </a>
-  <a class="tool" href="service.html">
-    <div class="name">🔧 Sixto Service</div>
-    <div class="desc">Reparatie/setup-klussen — checklist per klus</div>
-  </a>
-  <a class="tool" href="postdraft.html">
-    <div class="name">📝 Post Draft</div>
-    <div class="desc">Build notities → Instagram caption + YouTube beschrijving</div>
-  </a>
+  <div class="hero">
+    <div class="mark">S</div>
+    <h1>Sixto</h1>
+    <div class="eyebrow">Custom Guitars</div>
+    <div class="tag">Werkplaats-tools · Tools With A Soul</div>
+  </div>
+  <a class="tool" href="builds.html"><div class="ic">🔨</div><div><div class="name">Builds</div><div class="desc">Bouwtracker per gitaar: checklist, foto's, specs, paspoort</div></div><div class="go">›</div></a>
+  <a class="tool" href="service.html"><div class="ic">🔧</div><div><div class="name">Service</div><div class="desc">Setups, herstellingen en upgrades: checklist per klus</div></div><div class="go">›</div></a>
+  <a class="tool" href="postdraft.html"><div class="ic">📣</div><div><div class="name">Posts</div><div class="desc">Klaar om te posten, captions voor Instagram en YouTube</div></div><div class="go">›</div></a>
+  <div class="foot"><a href="site/">De website</a></div>
 </div>
 </body>
 </html>
