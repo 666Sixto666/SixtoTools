@@ -71,6 +71,10 @@ h2.section:first-child{margin-top:4px;}
   padding:3px 8px;border-radius:20px;}
 .badge.progress{background:rgba(201,139,58,.18);color:var(--warn);}
 .badge.done{background:rgba(95,158,111,.18);color:var(--ok);}
+.badge.proto{background:rgba(199,161,101,.12);color:var(--gold);border:1px solid rgba(199,161,101,.45);}
+.check-line{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2);}
+.check-line input{width:20px;height:20px;margin-top:1px;flex-shrink:0;accent-color:var(--wood);}
+.check-line b{display:block;font-size:14px;}.check-line span{font-size:12px;color:var(--text-dim);}
 
 .empty{text-align:center;padding:50px 20px;color:var(--text-dim);}
 .empty .icon{font-size:40px;margin-bottom:10px;}
@@ -450,6 +454,7 @@ const DEFAULT_TEMPLATE = [
    "Houtkeuze bepaald (body, hals, toets) en gecontroleerd op voorraad/kwaliteit",
    "Houtverhaal genoteerd: herkomst en vorig leven",
    "Naam bepaald uit het vorige leven van het hout",
+   "Wat ik voor het eerst probeer, genoteerd (prototype)",
    "Specs blad ingevuld (scale, radius, nutbreedte, vorm, chambering ja/nee)",
    "Referentiefoto's / moodboard verzameld",
    "Contract getekend: prijs, schijven per ijkpunt en garantie (klantbuild)",
@@ -567,6 +572,7 @@ const DEFAULT_TEMPLATE = [
    "Gewicht en finale specs genoteerd",
    "Build Paspoort ingevuld",
    "Eindnotities geschreven",
+   "Lessen genoteerd: wat werkte, wat de volgende keer anders (prototype)",
    "Eindreel / Short gepost",
    "Laatste schijf ontvangen (klantbuild)",
    "Overdracht aan de klant (klantbuild)",
@@ -583,6 +589,25 @@ function loadTemplate(){
   return JSON.parse(JSON.stringify(DEFAULT_TEMPLATE));
 }
 function saveTemplate(t){ localStorage.setItem(LS_TEMPLATE_KEY, JSON.stringify(t)); }
+
+/* Stappen met "(klantbuild)" of "(prototype)" gelden enkel voor builds met een klant of met de prototype-vlag (Decision 023).
+   Geldt een stap: toevoegen als hij ontbreekt (op zijn plaats in de fase). Geldt hij niet meer: weg, tenzij al afgevinkt. */
+function syncConditionalSteps(b){
+  const applies = t => !((t.includes('(klantbuild)') && !b.client) || (t.includes('(prototype)') && !b.prototype));
+  for(const tph of loadTemplate()){
+    const texts = tph.steps.map(s => typeof s === 'string' ? s : s.text);
+    const cond = texts.filter(t => t.includes('(klantbuild)') || t.includes('(prototype)'));
+    if(!cond.length) continue;
+    let ph = b.checklist.find(p => p.phase === tph.phase);
+    if(!ph){ if(!cond.some(applies)) continue; ph = {phase: tph.phase, steps: []}; b.checklist.push(ph); }
+    ph.steps = ph.steps.filter(s => !cond.includes(s.text) || applies(s.text) || s.checked);
+    for(const t of cond){
+      if(!applies(t) || ph.steps.some(s => s.text === t)) continue;
+      const prev = texts.slice(0, texts.indexOf(t)).reverse().map(x => ph.steps.findIndex(s => s.text === x)).find(i => i >= 0);
+      ph.steps.splice(prev === undefined ? 0 : prev + 1, 0, {id: uid(), text: t, photoPrompt: false, checked: false, note: '', date: null});
+    }
+  }
+}
 
 function templateToChecklist(template){
   return template.map(ph=>({
@@ -753,7 +778,7 @@ function renderTodoCard(b){
     <div class="build-card" style="cursor:pointer;" onclick="openBuild('${b.id}')">
       <div class="thumb" ${thumbStyle}>${b._thumb?'':'🎸'}</div>
       <div class="info">
-        <div class="name">${esc(b.name||'Naamloze build')}</div>
+        <div class="name">${esc(b.name||'Naamloze build')}${b.prototype?' <span class="badge proto">Prototype</span>':''}</div>
         <div class="meta">${esc(b.type||'')}${b.client?' · '+esc(b.client):''}</div>
         <div class="progress-bar"><div style="width:${p.pct}%"></div></div>
         <div class="progress-label">${p.done}/${p.total} stappen · ${p.pct}%</div>
@@ -785,7 +810,7 @@ function renderBuildCard(b){
   return `<div class="card build-card" onclick="openBuild('${b.id}')">
     <div class="thumb" id="thumb-${b.id}" ${thumbStyle}>${b._thumb?'':'🎸'}</div>
     <div class="info">
-      <div class="name">${esc(b.name||'Naamloze build')}</div>
+      <div class="name">${esc(b.name||'Naamloze build')}${b.prototype?' <span class="badge proto">Prototype</span>':''}</div>
       <div class="meta">${esc(b.type||'')}${b.client?' · '+esc(b.client):''}</div>
       ${b.status==='completed'
         ? `<span class="badge done">Afgewerkt</span>`
@@ -839,7 +864,7 @@ function renderBuildDetail(b){
   let html = `<button class="btn secondary small" onclick="backToList()">← Terug</button>`;
   html += `<div class="detail-header" style="margin-top:14px;">
     <div class="type">${esc(b.type||'Build')}</div>
-    <h2 class="name">${esc(b.name||'Naamloze build')}</h2>
+    <h2 class="name">${esc(b.name||'Naamloze build')}</h2>${b.prototype?'<span class="badge proto">Prototype</span>':''}
     <div class="meta-row">${b.client?esc(b.client)+' · ':''}Gestart ${fmtDate(b.startDate)}${b.completedDate?' · Voltooid '+fmtDate(b.completedDate):''}</div>
     ${b.status==='completed'?'<span class="badge done" style="margin-top:8px;">Afgewerkt</span>':`<div class="progress-bar" style="margin-top:10px;"><div style="width:${p.pct}%"></div></div><div class="progress-label">${p.done}/${p.total} stappen afgevinkt (${p.pct}%)</div>`}
   </div>`;
@@ -1033,7 +1058,7 @@ async function openPassport(buildId){
         <h1>Sixto Custom Guitars</h1>
         <div class="sub">Build paspoort</div>
       </div>
-      <div class="pv-name">${esc(b.name||'Naamloze build')}</div>
+      <div class="pv-name">${esc(b.name||'Naamloze build')}</div>${b.prototype?'<div class="pv-meta" style="margin-top:4px;letter-spacing:.18em;text-transform:uppercase;">Prototype</div>':''}
       <div class="pv-meta">${esc(b.type||'')}${b.client?' · '+esc(b.client):''} · Voltooid ${fmtDate(b.completedDate)}</div>
 
       <div class="pv-section-title">Specificaties</div>
@@ -1220,6 +1245,7 @@ function openNewBuildSheet(){
     </div>
     <label>Klant (leeg = eigen build)</label>
     <input type="text" id="nb-client" placeholder="bv. Eigen build / naam klant">
+    <label class="check-line"><input type="checkbox" id="nb-proto"><div><b>Prototype</b><span>Iets dat je voor het eerst probeert. Kan ook later nog aan of uit.</span></div></label>
     <label>Notities / doel</label>
     <textarea id="nb-notes" placeholder="Wat wil je met deze build bereiken/uitproberen?"></textarea>
     <button class="btn block" style="margin-top:16px;" onclick="createBuild()">Start build</button>
@@ -1234,13 +1260,15 @@ async function createBuild(){
   const startDate = document.getElementById('nb-date').value || todayStr();
   const client = document.getElementById('nb-client').value.trim();
   const notes = document.getElementById('nb-notes').value.trim();
+  const prototype = document.getElementById('nb-proto').checked;
   const b = {
-    id: uid(), name, type, client, startDate, completedDate:null,
+    id: uid(), name, type, client, prototype, startDate, completedDate:null,
     status:'in_progress',
     specs:{ notes, targetDate:'' },
     checklist: templateToChecklist(loadTemplate()),
     photos: [], soundDemoLink:'', finalNotes:''
   };
+  syncConditionalSteps(b);
   state.builds.push(b);
   persist();
   closeSheet();
@@ -1292,6 +1320,7 @@ function openEditInfoSheet(buildId){
       <div><label>Finish type</label><input type="text" id="ei-finish" value="${escAttr(sp.finishType||'')}"></div>
       <div><label>Gewicht</label><input type="text" id="ei-weight" value="${escAttr(sp.weight||'')}"></div>
     </div>
+    <label class="check-line"><input type="checkbox" id="ei-proto"${b.prototype?' checked':''}><div><b>Prototype</b><span>Iets dat je voor het eerst probeert. Kan ook later nog aan of uit.</span></div></label>
     <label>Notities</label><textarea id="ei-notes">${esc(sp.notes||'')}</textarea>
     <button class="btn block" style="margin-top:16px;" onclick="saveEditInfo('${buildId}')">Opslaan</button>
   `;
@@ -1303,6 +1332,8 @@ function saveEditInfo(buildId){
   b.name = document.getElementById('ei-name').value.trim() || b.name;
   b.type = document.getElementById('ei-type').value.trim();
   b.client = document.getElementById('ei-client').value.trim();
+  b.prototype = document.getElementById('ei-proto').checked;
+  syncConditionalSteps(b);
   b.startDate = document.getElementById('ei-start').value;
   b.specs = b.specs || {};
   b.specs.targetDate = document.getElementById('ei-target').value;
