@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sixto Builds</title>
+<title>Sixto Custom Guitars · Builds</title>
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#150f0d">
 <style>
 :root{
   --bg:#171412; --bg2:#1f1b18; --card:#242019; --card2:#2c2620;
@@ -207,15 +210,51 @@ a.link{color:var(--gold);text-decoration:underline;word-break:break-all;}
 .filebtn{display:inline-block;background:var(--card2);border:1px solid var(--line);color:var(--text);
   border-radius:10px;padding:11px 12px;font-size:14px;text-align:center;cursor:pointer;}
 .small-note{font-size:11.5px;color:var(--text-dim);margin-top:8px;line-height:1.4;}
+/* ===== Sixto Custom Guitars — huisstijl van de site (27/10/2026) ===== */
+:root{
+  --bg:#150f0d; --bg2:#1b1310; --card:#211814; --card2:#2a1f1a;
+  --wood:#c7a165; --wood-d:#8a6a35; --gold:#dcbb82;
+  --text:#f3ead9; --text-dim:#b4a28a; --line:#3a2c24;
+  --ok:#8fae6a; --warn:#d0a25a; --danger:#c0604f;
+  --serif:'Fraunces', Georgia, serif; --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+html,body{font-family:var(--sans);background:radial-gradient(120% 55% at 50% -12%, rgba(199,161,101,.11), transparent 62%), var(--bg);background-attachment:fixed;}
+header.top{background:linear-gradient(180deg,rgba(27,19,16,.97),rgba(21,15,13,.93));border-bottom:1px solid rgba(199,161,101,.2);}
+header.top .brand .mark{background:none;border:1.5px solid var(--wood);border-radius:50%;color:var(--wood);
+  font-family:var(--serif);font-weight:600;font-size:19px;width:38px;height:38px;}
+header.top .eyebrow{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--wood);font-weight:600;margin-bottom:1px;}
+header.top h1{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:0;line-height:1.1;}
+header.top button.icon{border-radius:50%;}
+h2.section{color:var(--wood);font-size:11px;letter-spacing:.18em;font-weight:600;}
+.card{background:linear-gradient(180deg,var(--card),#1d1511);box-shadow:0 1px 0 rgba(255,255,255,.025) inset,0 10px 26px rgba(0,0,0,.28);}
+.btn{background:var(--wood);color:#1a120d;}
+.btn.ghost{color:var(--gold);border-color:var(--wood-d);}
+.fab{background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
+.progress-bar>div,.phase-progress>div{background:linear-gradient(90deg,var(--wood-d),var(--gold));}
+.detail-header .type{color:var(--wood);letter-spacing:.14em;font-size:11px;}
+.detail-header h2.name,.sheet h3,.pv-name,.build-card .name,.job-card .name{font-family:var(--serif);font-weight:600;}
+.detail-header h2.name{font-size:27px;}
+.phase-head .title{font-family:var(--serif);font-weight:600;font-size:16px;}
+.step .box{border-color:var(--wood-d);}
+.step.checked .box{background:var(--wood);border-color:var(--wood);}
+.tabbar{background:rgba(27,19,16,.96);backdrop-filter:blur(8px);border-top:1px solid rgba(199,161,101,.2);}
+.tabbar button.active{color:var(--gold);position:relative;}
+.tabbar button.active::before{content:"";position:absolute;top:0;left:32%;right:32%;height:2px;border-radius:2px;background:var(--wood);}
+.pv-brand h1{font-family:var(--serif);color:var(--gold);letter-spacing:.12em;}
+.step{padding:10px 10px 10px 12px;border-radius:12px;}
+textarea.step-note,input.step-note{min-height:0;height:auto;resize:none;padding:6px 0 0;margin-top:6px;font-size:12.5px;border-radius:0;background:transparent;}
+.step.checked{opacity:.5;}
+.pv-brand .mark{width:54px;height:54px;margin:0 auto;border:1.5px solid var(--wood);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);color:var(--wood);font-size:27px;}
 </style>
 </head>
 <body>
 <div id="app">
   <header class="top">
     <div class="brand">
-      <div class="mark">🎸</div>
+      <div class="mark">S</div>
       <div>
-        <h1>Sixto Builds</h1>
+        <div class="eyebrow">Sixto Custom Guitars</div>
+        <h1>Builds</h1>
         <div class="sub" id="headerSub">Bibliotheek</div>
       </div>
     </div>
@@ -407,83 +446,161 @@ async function manualSyncClick(){
 
 /* ---------- Default checklist template ---------- */
 const DEFAULT_TEMPLATE = [
-  {phase:"Intake & Ontwerp", steps:[
-    "Concept / ontwerpidee vastgelegd (schets of tekening)",
-    "Houtkeuze bepaald (body, hals, toets) en gecontroleerd op voorraad/kwaliteit",
-    "Specs blad ingevuld (scale, radius, nutbreedte, vorm, chambering ja/nee)",
-    "Referentiefoto's / moodboard verzameld"
-  ]},
-  {phase:"Hout & Voorbereiding", steps:[
-    "Hout geacclimatiseerd / vochtgehalte gecontroleerd",
-    {text:"Halsblank uitgezaagd", photoPrompt:true},
-    "Bodyblank(s) uitgezaagd / verlijmd indien meerdelig",
-    "Fretboard blank voorbereid",
-    "Snijplan gemaakt"
-  ]},
-  {phase:"Hals", steps:[
-    "Truss rod kanaal gefreesd",
-    "Truss rod geplaatst",
-    "Headstock vorm/hoek gemaakt (bv. scarf joint of peghead zagen)",
-    "Fretboard op hals gelijmd",
-    "Fretboard radius geschuurd",
-    "Fret slots gezaagd",
-    "Inlays geplaatst (indien van toepassing)",
-    "Frets geplaatst",
-    {text:"Halsprofiel gecarved (achterkant vorm)", photoPrompt:true},
-    "Peghead veneer geplaatst (indien van toepassing)",
-    "Hals fijn afgewerkt/geschuurd rond de frets, klaar voor lak/was"
-  ]},
-  {phase:"Body", steps:[
-    {text:"Body vorm uitgezaagd/gefreesd (template routing)", photoPrompt:true},
-    "Chambering/uitholling gefreesd (indien semi-hollow/chambered)",
-    "Pickup cavities gefreesd",
-    "Control cavity + kabelkanalen gefreesd",
-    "Neck pocket gefreesd (bolt-on) of neck joint voorbereid (set-neck)",
-    "Top carving/contouring (indien van toepassing)",
-    "Belly cut / arm bevel geschaafd",
-    "Body klaar voor afwerking (laatste schuurronde)"
-  ]},
-  {phase:"Assemblage", steps:[
-    "Neck-to-body fit gecontroleerd",
-    {text:"Neck vastgezet (lijm/bouten)", photoPrompt:true}
-  ]},
-  {phase:"Afwerking – Body", steps:[
-    {text:"Kleur aangebracht (mica + aceton beits op het hout)", photoPrompt:true},
-    "Blanke lak lagen aangebracht",
-    "Uitharding afgewacht",
-    {text:"Polijsten/buffen", photoPrompt:true}
-  ]},
-  {phase:"Afwerking – Hals", steps:[
-    "Hals geschuurd tot eindkorrel",
-    "Bijenwas aangebracht",
-    "Gepolijst/gebufferd"
-  ]},
-  {phase:"Hardware & Elektronica", steps:[
-    "Bridge/tailpiece gemonteerd",
-    "Tuners gemonteerd",
-    "Pickups gemonteerd",
-    "Elektronica bedraad (potmeters, schakelaar, jack)",
-    "Elektronica getest"
-  ]},
-  {phase:"Setup & String-up", steps:[
-    "Zaagsnede (nut) gemaakt en afgesteld",
-    "Eerste besnaring",
-    "Action ingesteld",
-    "Intonatie ingesteld"
-  ]},
-  {phase:"QC & Speeltest", steps:[
-    "Visuele eindinspectie (finish, frets, hardware)",
-    "Speelbaarheid getest over volledige hals",
-    "Geluid getest / beoordeeld",
-    "Geluidsdemo opgenomen",
-    {text:"Eindfoto's gemaakt (studio/daglicht)", photoPrompt:true}
-  ]},
-  {phase:"Oplevering & Archief", steps:[
-    "Gewicht en finale specs genoteerd",
-    "Eindnotities geschreven",
-    "Klant overdracht / verzending (indien van toepassing)",
-    "Build gearchiveerd in bibliotheek"
-  ]}
+ {
+  "phase": "Intake & Ontwerp",
+  "steps": [
+   "Intake-vragenlijst ontvangen en samen doorgenomen (klantbuild)",
+   "Concept / ontwerpidee vastgelegd (schets of tekening)",
+   "Klantkeuzes vastgelegd: vorm, hals, pickups, afwerking, beleving (klantbuild)",
+   "Houtkeuze bepaald (body, hals, toets) en gecontroleerd op voorraad/kwaliteit",
+   "Houtverhaal genoteerd: herkomst en vorig leven",
+   "Naam bepaald uit het vorige leven van het hout",
+   "Specs blad ingevuld (scale, radius, nutbreedte, vorm, chambering ja/nee)",
+   "Referentiefoto's / moodboard verzameld",
+   "Prijs besproken en akkoord van de klant (klantbuild)"
+  ]
+ },
+ {
+  "phase": "Hout & Voorbereiding",
+  "steps": [
+   {
+    "text": "Hout gefotografeerd vóór verwerking (vorig leven, kopse kant)",
+    "photoPrompt": true
+   },
+   "Spijkers, schroeven en ander metaal verwijderd (metaaldetector)",
+   "Hout nagekeken op scheuren, rot en insecten",
+   "Hout geacclimatiseerd / vochtgehalte gecontroleerd",
+   "Snijplan gemaakt",
+   {
+    "text": "Halsblank uitgezaagd",
+    "photoPrompt": true
+   },
+   "Bodyblank(s) uitgezaagd / verlijmd indien meerdelig",
+   "Fretboard blank voorbereid"
+  ]
+ },
+ {
+  "phase": "Hals",
+  "steps": [
+   "Truss rod kanaal gefreesd",
+   "Truss rod geplaatst",
+   "Headstock vorm/hoek gemaakt (bv. scarf joint of peghead zagen)",
+   "Peghead veneer geplaatst (indien van toepassing)",
+   "Fretboard verhard/gestabiliseerd (indien zacht hout)",
+   "Fretboard radius geschuurd",
+   "Fret slots gezaagd",
+   "Inlays en side dots geplaatst (indien van toepassing)",
+   "Fretboard op hals gelijmd",
+   {
+    "text": "Halsprofiel gecarved (achterkant vorm)",
+    "photoPrompt": true
+   },
+   "Frets geplaatst",
+   "Frets afgewerkt: level, crown, polish en fret ends",
+   "Hals fijn afgewerkt/geschuurd rond de frets, klaar voor lak/was"
+  ]
+ },
+ {
+  "phase": "Body",
+  "steps": [
+   {
+    "text": "Body vorm uitgezaagd/gefreesd (template routing)",
+    "photoPrompt": true
+   },
+   "Chambering/uitholling gefreesd (indien semi-hollow/chambered)",
+   "Top/back verlijmd en f-gat(en) gezaagd (indien semi-hollow)",
+   "Pickup cavities gefreesd",
+   "Control cavity + kabelkanalen gefreesd",
+   "Neck pocket gefreesd (bolt-on) of neck joint voorbereid (set-neck)",
+   "Top carving/contouring (indien van toepassing)",
+   "Belly cut / arm bevel geschaafd",
+   "Spijkergaten en scheurtjes: gevuld of bewust zichtbaar gelaten",
+   "Body klaar voor afwerking (laatste schuurronde)"
+  ]
+ },
+ {
+  "phase": "Assemblage",
+  "steps": [
+   "Neck-to-body fit gecontroleerd",
+   {
+    "text": "Neck vastgezet (lijm/bouten)",
+    "photoPrompt": true
+   }
+  ]
+ },
+ {
+  "phase": "Afwerking – Body",
+  "steps": [
+   {
+    "text": "Kleur aangebracht (mica + aceton beits op het hout)",
+    "photoPrompt": true
+   },
+   "Blanke lak lagen aangebracht",
+   "Uitharding afgewacht",
+   {
+    "text": "Polijsten/buffen",
+    "photoPrompt": true
+   }
+  ]
+ },
+ {
+  "phase": "Afwerking – Hals",
+  "steps": [
+   "Hals geschuurd tot eindkorrel",
+   "Bijenwas aangebracht",
+   "Gepolijst/gebufferd"
+  ]
+ },
+ {
+  "phase": "Hardware & Elektronica",
+  "steps": [
+   "Cavities afgeschermd (koperfolie of geleidende verf)",
+   "Bridge/tailpiece gemonteerd",
+   "Tuners gemonteerd",
+   "Strap buttons / strap locks gemonteerd",
+   "Pickups gemonteerd",
+   "Elektronica bedraad (potmeters, schakelaar, jack)",
+   "Elektronica getest",
+   "Slagplaat / covers gemonteerd (evt. 3D-geprint)"
+  ]
+ },
+ {
+  "phase": "Setup & String-up",
+  "steps": [
+   "Kam (nut) gemaakt en afgesteld",
+   "Eerste besnaring",
+   "Halskromming ingesteld (truss rod)",
+   "Action ingesteld",
+   "Pickuphoogte ingesteld",
+   "Intonatie ingesteld"
+  ]
+ },
+ {
+  "phase": "QC & Speeltest",
+  "steps": [
+   "Visuele eindinspectie (finish, frets, hardware)",
+   "Speelbaarheid getest over volledige hals",
+   "Geluid getest / beoordeeld",
+   "Na 1–2 weken rust: hals en setup opnieuw nagekeken (acclimatiseren)",
+   "Geluidsdemo opgenomen",
+   {
+    "text": "Eindfoto's gemaakt (studio/daglicht)",
+    "photoPrompt": true
+   }
+  ]
+ },
+ {
+  "phase": "Oplevering & Archief",
+  "steps": [
+   "Gewicht en finale specs genoteerd",
+   "Build Paspoort ingevuld",
+   "Eindnotities geschreven",
+   "Eindreel / Short gepost",
+   "Klant overdracht / verzending (indien van toepassing)",
+   "Betaling ontvangen (factuur met vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Build gearchiveerd in bibliotheek"
+  ]
+ }
 ];
 
 function loadTemplate(){
@@ -949,7 +1066,7 @@ async function openPassport(buildId){
       </div>
       ${heroUrl ? `<img class="pv-hero" src="${heroUrl}">` : ''}
       <div class="pv-brand">
-        <div class="mark">🎸</div>
+        <div class="mark">S</div>
         <h1>Sixto Custom Guitars</h1>
         <div class="sub">Build paspoort</div>
       </div>
@@ -1370,7 +1487,7 @@ function openMenu(){
     <button class="btn secondary block" style="margin-top:8px;" onclick="pushAppUpdate()">🚀 Push naar SixtoTools/builds.html</button>
     <div class="small-note" id="app-update-status"></div>
 
-    <div class="small-note" style="margin-top:14px;">Sixto Builds · lokale opslag in deze browser.</div>
+    <div class="small-note" style="margin-top:14px;">Sixto Custom Guitars · Builds · lokale opslag in deze browser.</div>
   `;
   openSheet('Instellingen', html);
 }
