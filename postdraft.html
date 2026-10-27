@@ -1103,8 +1103,9 @@ function renderReadyQueue(){
       ['Instagram — caption', p.igCaption], ['Instagram — lange versie', p.igCaptionLong],
       ['YouTube Short — titel', p.ytTitle], ['YouTube Short — beschrijving', p.ytDescription]
     ].filter(b => b[1]);
-    const video = p.videoUrl ? `<video controls playsinline preload="metadata" src="${escHtml(p.videoUrl)}"></video>
-      <div class="quick-links" style="margin:0 0 12px;"><a class="btn-ghost" href="${escHtml(p.videoUrl)}" download>⬇ Video bewaren</a></div>` : '';
+    // GitHub levert de video als download (geen inline afspelen op iPhone): dus enkel een downloadknop
+    const video = p.videoUrl ? `<div class="quick-links" style="margin:0 0 6px;"><a class="btn-ghost" href="${escHtml(p.videoUrl)}" download>⬇ Video downloaden</a></div>
+      <div class="hint-text" style="margin-bottom:12px;">iPhone: tik › Download › open in Bestanden › Deel › Bewaar video. Daarna staat hij in Foto's.</div>` : '';
     const st = p.posted || {};
     return `<div class="ready-post" data-id="${escHtml(p.id)}">
       <h3>${escHtml(p.title)}</h3>
