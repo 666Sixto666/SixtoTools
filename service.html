@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sixto Service</title>
+<title>Sixto Custom Guitars · Service</title>
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#150f0d">
 <style>
 :root{
   --bg:#171412; --bg2:#1f1b18; --card:#242019; --card2:#2c2620;
@@ -142,15 +145,51 @@ textarea{resize:vertical;min-height:60px;}
 
 .hidden{display:none !important;}
 .small-note{font-size:11.5px;color:var(--text-dim);margin-top:8px;line-height:1.4;}
+/* ===== Sixto Custom Guitars — huisstijl van de site (27/10/2026) ===== */
+:root{
+  --bg:#150f0d; --bg2:#1b1310; --card:#211814; --card2:#2a1f1a;
+  --wood:#c7a165; --wood-d:#8a6a35; --gold:#dcbb82;
+  --text:#f3ead9; --text-dim:#b4a28a; --line:#3a2c24;
+  --ok:#8fae6a; --warn:#d0a25a; --danger:#c0604f;
+  --serif:'Fraunces', Georgia, serif; --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+html,body{font-family:var(--sans);background:radial-gradient(120% 55% at 50% -12%, rgba(199,161,101,.11), transparent 62%), var(--bg);background-attachment:fixed;}
+header.top{background:linear-gradient(180deg,rgba(27,19,16,.97),rgba(21,15,13,.93));border-bottom:1px solid rgba(199,161,101,.2);}
+header.top .brand .mark{background:none;border:1.5px solid var(--wood);border-radius:50%;color:var(--wood);
+  font-family:var(--serif);font-weight:600;font-size:19px;width:38px;height:38px;}
+header.top .eyebrow{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--wood);font-weight:600;margin-bottom:1px;}
+header.top h1{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:0;line-height:1.1;}
+header.top button.icon{border-radius:50%;}
+h2.section{color:var(--wood);font-size:11px;letter-spacing:.18em;font-weight:600;}
+.card{background:linear-gradient(180deg,var(--card),#1d1511);box-shadow:0 1px 0 rgba(255,255,255,.025) inset,0 10px 26px rgba(0,0,0,.28);}
+.btn{background:var(--wood);color:#1a120d;}
+.btn.ghost{color:var(--gold);border-color:var(--wood-d);}
+.fab{background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
+.progress-bar>div,.phase-progress>div{background:linear-gradient(90deg,var(--wood-d),var(--gold));}
+.detail-header .type{color:var(--wood);letter-spacing:.14em;font-size:11px;}
+.detail-header h2.name,.sheet h3,.pv-name,.build-card .name,.job-card .name{font-family:var(--serif);font-weight:600;}
+.detail-header h2.name{font-size:27px;}
+.phase-head .title{font-family:var(--serif);font-weight:600;font-size:16px;}
+.step .box{border-color:var(--wood-d);}
+.step.checked .box{background:var(--wood);border-color:var(--wood);}
+.tabbar{background:rgba(27,19,16,.96);backdrop-filter:blur(8px);border-top:1px solid rgba(199,161,101,.2);}
+.tabbar button.active{color:var(--gold);position:relative;}
+.tabbar button.active::before{content:"";position:absolute;top:0;left:32%;right:32%;height:2px;border-radius:2px;background:var(--wood);}
+.pv-brand h1{font-family:var(--serif);color:var(--gold);letter-spacing:.12em;}
+.step{padding:10px 10px 10px 12px;border-radius:12px;}
+textarea.step-note,input.step-note{min-height:0;height:auto;resize:none;padding:6px 0 0;margin-top:6px;font-size:12.5px;border-radius:0;background:transparent;}
+.step.checked{opacity:.5;}
+.pv-brand .mark{width:54px;height:54px;margin:0 auto;border:1.5px solid var(--wood);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);color:var(--wood);font-size:27px;}
 </style>
 </head>
 <body>
 <div id="app">
   <header class="top">
     <div class="brand">
-      <div class="mark">🔧</div>
+      <div class="mark">S</div>
       <div>
-        <h1>Sixto Service</h1>
+        <div class="eyebrow">Sixto Custom Guitars</div>
+        <h1>Service</h1>
         <div class="sub" id="headerSub">Klussen</div>
       </div>
     </div>
@@ -177,6 +216,231 @@ function loadJobs(){ try{ return JSON.parse(localStorage.getItem(LS_JOBS)) || []
 function saveJobs(jobs){ localStorage.setItem(LS_JOBS, JSON.stringify(jobs)); }
 
 const DEFAULT_TEMPLATES = [
+ {
+  "name": "Setup",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Snaren eraf, toets en frets gereinigd",
+   "Halskromming nagekeken en afgesteld (truss rod)",
+   "Kam (nut): hoogte en sleuven nagekeken, gesmeerd",
+   "Nieuwe snaren gelegd",
+   "Action ingesteld",
+   "Intonatie ingesteld",
+   "Pickuphoogte ingesteld",
+   "Elektronica getest (potmeters, schakelaar, jack), contactspray",
+   "Hardware nagekeken (schroeven, strap buttons, mechanieken)",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Fretwerk (level, crown, polish)",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Frets beoordeeld (slijtage, hoogteverschillen, losse frets)",
+   "Snaren eraf, hals recht gezet (truss rod)",
+   "Toets afgeplakt/beschermd",
+   "Frets afgevlakt (level)",
+   "Frets opnieuw geprofileerd (crown)",
+   "Fret ends nagekeken en afgewerkt",
+   "Frets gepolijst",
+   "Toets gereinigd en geolied",
+   "Nieuwe snaren + volledige setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Refret",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Fretmaat en materiaal gekozen met de klant (nikkel, RVS)",
+   "Oude frets verwijderd (toets beschermd, eventueel verwarmd)",
+   "Sleuven gereinigd en diepte nagekeken",
+   "Toets bijgeschuurd / radius nagekeken",
+   "Nieuwe frets geplaatst",
+   "Fret ends afgewerkt",
+   "Frets afgevlakt, geprofileerd en gepolijst",
+   "Toets gereinigd en geolied",
+   "Nieuwe snaren + volledige setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Kam (nut) of zadel vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Materiaal gekozen (bot, TUSQ, …)",
+   "Oude kam/zadel verwijderd",
+   "Nieuwe kam/zadel op maat gemaakt",
+   "Sleuven gevijld op de juiste hoogte",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Elektronica: storing",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Probleem gereproduceerd en omschreven (kraken, brom, uitval)",
+   "Elektronica visueel geïnspecteerd (soldeerpunten, bedrading)",
+   "Potmeters getest en gereinigd",
+   "Schakelaar getest",
+   "Jack getest",
+   "Pickup(s) gemeten (weerstand/signaal)",
+   "Afscherming en massa nagekeken",
+   "Defect onderdeel vervangen",
+   "Volledige test na herstel",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Pickups / bedrading vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Nieuwe onderdelen gekozen met de klant",
+   "Schema opgemaakt (coil-split, killswitch, …)",
+   "Oude onderdelen verwijderd en bewaard voor de klant",
+   "Nieuwe pickups/onderdelen geplaatst en bedraad",
+   "Volledige test na herstel",
+   "Pickuphoogte afgesteld",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Hardware vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Nieuwe hardware gekozen met de klant (brug, mechanieken, strap locks)",
+   "Pasvorm nagekeken (gaten, maten)",
+   "Oude hardware verwijderd en bewaard voor de klant",
+   "Nieuwe hardware gemonteerd",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Afwerking: bijwerken of herafwerken",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Omvang besproken (plaatselijk bijwerken of volledig herafwerken)",
+   "Hardware en elektronica gedemonteerd",
+   "Schade bijgewerkt / oude afwerking verwijderd",
+   "Kleur aangebracht",
+   "Blanke lak aangebracht en laten uitharden",
+   "Gepolijst",
+   "Hardware en elektronica teruggeplaatst",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Structurele herstelling",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Schade beoordeeld (barst, gebroken kop, losse hals) en aanpak besproken",
+   "Breuk gereinigd en droog gepast",
+   "Gelijmd en geklemd",
+   "Uitharding afgewacht",
+   "Eventuele versterking (spline, cleats) aangebracht",
+   "Lijmnaad bijgewerkt en afwerking hersteld",
+   "Nieuwe snaren + setup",
+   "Na enkele dagen spanning opnieuw nagekeken",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Aanpassing / mod",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Wens en uitvoerbaarheid besproken",
+   "Plan of mal gemaakt (slagplaat, frezing)",
+   "Aanpassing uitgevoerd",
+   "Afwerking bijgewerkt",
+   "Alles teruggemonteerd en getest",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Factuur gemaakt (vermelding vrijstellingsregeling kleine ondernemingen)",
+   "Opgehaald, met korte uitleg en onderhoudstips"
+  ]
+ }
+];
+const OLD_DEFAULT_TEMPLATES = [
   { name: "Basic setup", steps: [
     "Snaren beoordeeld / vervangen",
     "Halskromming gecontroleerd en afgesteld (truss rod)",
@@ -210,14 +474,29 @@ const DEFAULT_TEMPLATES = [
   ]}
 ];
 
+const LS_TPL_VER = 'sixto_service_templates_ver';
+const SERVICE_TPL_VERSION = 2;
 function loadTemplates(){
   try{
-    const t = JSON.parse(localStorage.getItem(LS_TEMPLATES));
-    if(t && Array.isArray(t) && t.length) return t;
+    let t = JSON.parse(localStorage.getItem(LS_TEMPLATES));
+    if(t && Array.isArray(t) && t.length){
+      if((parseInt(localStorage.getItem(LS_TPL_VER),10) || 1) < SERVICE_TPL_VERSION){
+        t = migrateTemplates(t); saveTemplates(t); localStorage.setItem(LS_TPL_VER, String(SERVICE_TPL_VERSION));
+      }
+      return t;
+    }
   }catch(e){}
   const fresh = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
-  saveTemplates(fresh);
+  saveTemplates(fresh); localStorage.setItem(LS_TPL_VER, String(SERVICE_TPL_VERSION));
   return fresh;
+}
+/* v2 (27/10/2026): oude standaardtemplates die Tom niet aanpaste, worden vervangen door de nieuwe set.
+   Templates die hij zelf maakte of aanpaste, blijven staan. */
+function migrateTemplates(t){
+  const same = (a,b) => JSON.stringify(a) === JSON.stringify(b);
+  const kept = t.filter(x => { const o = OLD_DEFAULT_TEMPLATES.find(d => d.name === x.name); return !(o && same(o.steps, x.steps)); });
+  const names = new Set(kept.map(x => x.name));
+  return JSON.parse(JSON.stringify(DEFAULT_TEMPLATES)).filter(x => !names.has(x.name)).concat(kept);
 }
 function saveTemplates(t){ localStorage.setItem(LS_TEMPLATES, JSON.stringify(t)); }
 
@@ -532,7 +811,7 @@ function openMenu(){
     <input type="file" id="importFile" accept="application/json">
     <button class="btn secondary block" style="margin-top:10px;" onclick="importData()">⬆ Importeer</button>
     <div class="small-note">Exporteer regelmatig een back-up. Deze tool draait op een vaste link — open dezelfde link op laptop en telefoon voor dezelfde app, maar de data zelf blijft lokaal per toestel/browser opgeslagen. Gebruik export/import om data over te zetten (bv. via iCloud Drive).</div>
-    <div class="small-note" style="margin-top:14px;">Sixto Service · lokale opslag in deze browser.</div>
+    <div class="small-note" style="margin-top:14px;">Sixto Custom Guitars · Service · lokale opslag in deze browser.</div>
   `;
   openSheet('Instellingen', html);
 }
