@@ -164,7 +164,8 @@ h2.section{color:var(--wood);font-size:11px;letter-spacing:.18em;font-weight:600
 .card{background:linear-gradient(180deg,var(--card),#1d1511);box-shadow:0 1px 0 rgba(255,255,255,.025) inset,0 10px 26px rgba(0,0,0,.28);}
 .btn{background:var(--wood);color:#1a120d;}
 .btn.ghost{color:var(--gold);border-color:var(--wood-d);}
-.fab{background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
+main{padding-bottom:160px;}
+.fab{bottom:calc(78px + env(safe-area-inset-bottom));background:linear-gradient(135deg,var(--gold),var(--wood));color:#1a120d;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 5px rgba(199,161,101,.12);}
 .progress-bar>div,.phase-progress>div{background:linear-gradient(90deg,var(--wood-d),var(--gold));}
 .detail-header .type{color:var(--wood);letter-spacing:.14em;font-size:11px;}
 .detail-header h2.name,.sheet h3,.pv-name,.build-card .name,.job-card .name{font-family:var(--serif);font-weight:600;}
@@ -216,6 +217,253 @@ function loadJobs(){ try{ return JSON.parse(localStorage.getItem(LS_JOBS)) || []
 function saveJobs(jobs){ localStorage.setItem(LS_JOBS, JSON.stringify(jobs)); }
 
 const DEFAULT_TEMPLATES = [
+ {
+  "name": "Setup",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Snaren eraf, toets en frets gereinigd",
+   "Halskromming nagekeken en afgesteld (truss rod)",
+   "Kam (nut): hoogte en sleuven nagekeken, gesmeerd",
+   "Nieuwe snaren gelegd",
+   "Action ingesteld",
+   "Intonatie ingesteld",
+   "Pickuphoogte ingesteld",
+   "Elektronica getest (potmeters, schakelaar, jack), contactspray",
+   "Hardware nagekeken (schroeven, strap buttons, mechanieken)",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Fretwerk (level, crown, polish)",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Frets beoordeeld (slijtage, hoogteverschillen, losse frets)",
+   "Snaren eraf, hals recht gezet (truss rod)",
+   "Toets afgeplakt/beschermd",
+   "Frets afgevlakt (level)",
+   "Frets opnieuw geprofileerd (crown)",
+   "Fret ends nagekeken en afgewerkt",
+   "Frets gepolijst",
+   "Toets gereinigd en geolied",
+   "Nieuwe snaren + volledige setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Refret",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Fretmaat en materiaal gekozen met de klant (nikkel, RVS)",
+   "Oude frets verwijderd (toets beschermd, eventueel verwarmd)",
+   "Sleuven gereinigd en diepte nagekeken",
+   "Toets bijgeschuurd / radius nagekeken",
+   "Nieuwe frets geplaatst",
+   "Fret ends afgewerkt",
+   "Frets afgevlakt, geprofileerd en gepolijst",
+   "Toets gereinigd en geolied",
+   "Nieuwe snaren + volledige setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Kam (nut) of zadel vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Materiaal gekozen (bot, TUSQ, …)",
+   "Oude kam/zadel verwijderd",
+   "Nieuwe kam/zadel op maat gemaakt",
+   "Sleuven gevijld op de juiste hoogte",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Elektronica: storing",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Probleem gereproduceerd en omschreven (kraken, brom, uitval)",
+   "Elektronica visueel geïnspecteerd (soldeerpunten, bedrading)",
+   "Potmeters getest en gereinigd",
+   "Schakelaar getest",
+   "Jack getest",
+   "Pickup(s) gemeten (weerstand/signaal)",
+   "Afscherming en massa nagekeken",
+   "Defect onderdeel vervangen",
+   "Volledige test na herstel",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Pickups / bedrading vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Nieuwe onderdelen gekozen met de klant",
+   "Schema opgemaakt (coil-split, killswitch, …)",
+   "Oude onderdelen verwijderd en bewaard voor de klant",
+   "Nieuwe pickups/onderdelen geplaatst en bedraad",
+   "Volledige test na herstel",
+   "Pickuphoogte afgesteld",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Hardware vervangen",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Nieuwe hardware gekozen met de klant (brug, mechanieken, strap locks)",
+   "Pasvorm nagekeken (gaten, maten)",
+   "Oude hardware verwijderd en bewaard voor de klant",
+   "Nieuwe hardware gemonteerd",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Afwerking: bijwerken of herafwerken",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Omvang besproken (plaatselijk bijwerken of volledig herafwerken)",
+   "Hardware en elektronica gedemonteerd",
+   "Schade bijgewerkt / oude afwerking verwijderd",
+   "Kleur aangebracht",
+   "Blanke lak aangebracht en laten uitharden",
+   "Gepolijst",
+   "Hardware en elektronica teruggeplaatst",
+   "Nieuwe snaren + setup",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Structurele herstelling",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Schade beoordeeld (barst, gebroken kop, losse hals) en aanpak besproken",
+   "Breuk gereinigd en droog gepast",
+   "Gelijmd en geklemd",
+   "Uitharding afgewacht",
+   "Eventuele versterking (spline, cleats) aangebracht",
+   "Lijmnaad bijgewerkt en afwerking hersteld",
+   "Nieuwe snaren + setup",
+   "Na enkele dagen spanning opnieuw nagekeken",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ },
+ {
+  "name": "Aanpassing / mod",
+  "steps": [
+   "Intake-formulier ontvangen of probleem in eigen woorden genoteerd",
+   "Gitaar binnen: staat gefotografeerd (schade, krassen) en genoteerd",
+   "Stemming, snaardikte en brugtype genoteerd",
+   "Probleem gereproduceerd",
+   "Prijs gegeven en akkoord van de klant (vóór de start)",
+   "Wens en uitvoerbaarheid besproken",
+   "Plan of mal gemaakt (slagplaat, frezing)",
+   "Aanpassing uitgevoerd",
+   "Afwerking bijgewerkt",
+   "Alles teruggemonteerd en getest",
+   "Eindtest: speelbaarheid over de hele hals en via versterker",
+   "Voor/na-foto's (content, enkel met toestemming klant)",
+   "Klant verwittigd: klaar om op te halen",
+   "Opgehaald en betaald, met korte uitleg en onderhoudstips"
+  ]
+ }
+];
+const OLD_DEFAULT_TEMPLATES = [
+  { name: "Basic setup", steps: [
+    "Snaren beoordeeld / vervangen",
+    "Halskromming gecontroleerd en afgesteld (truss rod)",
+    "Action ingesteld",
+    "Intonatie ingesteld",
+    "Pickup-hoogte gecontroleerd",
+    "Frets gecontroleerd op slijtage",
+    "Zaagsnede (nut) gecontroleerd/gesmeerd",
+    "Elektronica getest (potmeters, schakelaar, jack)",
+    "Eindtest speelbaarheid"
+  ]},
+  { name: "Fret dressing", steps: [
+    "Frets beoordeeld (slijtage, hoogteverschillen)",
+    "Snaren verwijderd",
+    "Fretboard afgeplakt/beschermd",
+    "Frets afgevlakt (level)",
+    "Frets herprofiel (crown)",
+    "Frets gepolijst",
+    "Fretboard gehydrateerd/geolied",
+    "Nieuwe snaren + volledige setup"
+  ]},
+  { name: "Elektronica-probleem", steps: [
+    "Probleem gereproduceerd en omschreven",
+    "Elektronica visueel geïnspecteerd (soldeer, bedrading)",
+    "Potmeters getest",
+    "Schakelaar getest",
+    "Jack getest",
+    "Pickup(s) getest (weerstand/signaal)",
+    "Defect onderdeel vervangen",
+    "Volledige test na herstel"
+  ]},
+
  {
   "name": "Setup",
   "steps": [
@@ -440,42 +688,9 @@ const DEFAULT_TEMPLATES = [
   ]
  }
 ];
-const OLD_DEFAULT_TEMPLATES = [
-  { name: "Basic setup", steps: [
-    "Snaren beoordeeld / vervangen",
-    "Halskromming gecontroleerd en afgesteld (truss rod)",
-    "Action ingesteld",
-    "Intonatie ingesteld",
-    "Pickup-hoogte gecontroleerd",
-    "Frets gecontroleerd op slijtage",
-    "Zaagsnede (nut) gecontroleerd/gesmeerd",
-    "Elektronica getest (potmeters, schakelaar, jack)",
-    "Eindtest speelbaarheid"
-  ]},
-  { name: "Fret dressing", steps: [
-    "Frets beoordeeld (slijtage, hoogteverschillen)",
-    "Snaren verwijderd",
-    "Fretboard afgeplakt/beschermd",
-    "Frets afgevlakt (level)",
-    "Frets herprofiel (crown)",
-    "Frets gepolijst",
-    "Fretboard gehydrateerd/geolied",
-    "Nieuwe snaren + volledige setup"
-  ]},
-  { name: "Elektronica-probleem", steps: [
-    "Probleem gereproduceerd en omschreven",
-    "Elektronica visueel geïnspecteerd (soldeer, bedrading)",
-    "Potmeters getest",
-    "Schakelaar getest",
-    "Jack getest",
-    "Pickup(s) getest (weerstand/signaal)",
-    "Defect onderdeel vervangen",
-    "Volledige test na herstel"
-  ]}
-];
 
 const LS_TPL_VER = 'sixto_service_templates_ver';
-const SERVICE_TPL_VERSION = 2;
+const SERVICE_TPL_VERSION = 3;
 function loadTemplates(){
   try{
     let t = JSON.parse(localStorage.getItem(LS_TEMPLATES));
@@ -490,11 +705,11 @@ function loadTemplates(){
   saveTemplates(fresh); localStorage.setItem(LS_TPL_VER, String(SERVICE_TPL_VERSION));
   return fresh;
 }
-/* v2 (27/10/2026): oude standaardtemplates die Tom niet aanpaste, worden vervangen door de nieuwe set.
+/* v2/v3 (27/10/2026): oude standaardtemplates (v1 en v2) die Tom niet aanpaste, worden vervangen door de nieuwe set.
    Templates die hij zelf maakte of aanpaste, blijven staan. */
 function migrateTemplates(t){
   const same = (a,b) => JSON.stringify(a) === JSON.stringify(b);
-  const kept = t.filter(x => { const o = OLD_DEFAULT_TEMPLATES.find(d => d.name === x.name); return !(o && same(o.steps, x.steps)); });
+  const kept = t.filter(x => { return !OLD_DEFAULT_TEMPLATES.some(d => d.name === x.name && same(d.steps, x.steps)); });
   const names = new Set(kept.map(x => x.name));
   return JSON.parse(JSON.stringify(DEFAULT_TEMPLATES)).filter(x => !names.has(x.name)).concat(kept);
 }
