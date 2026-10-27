@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Sixto Post Draft</title>
+<title>Sixto Custom Guitars · Posts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#150f0d">
 <style>
   :root{
     --bg:#1b1712;
@@ -139,14 +142,35 @@
   .ready-post .rp-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
   .ready-post .rp-status button{flex:1;min-width:140px;}
   .ready-post .rp-status button.done{border-color:#8fae6a;color:#8fae6a;}
+/* ===== Sixto Custom Guitars — huisstijl van de site (27/10/2026) ===== */
+:root{
+  --bg:#150f0d; --card:#211814; --card-2:#2a1f1a; --line:#3a2c24;
+  --text:#f3ead9; --text-dim:#b4a28a; --accent:#c7a165; --accent-2:#a9b585;
+  --serif:'Fraunces', Georgia, serif; --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+html,body{background:radial-gradient(120% 55% at 50% -12%, rgba(199,161,101,.11), transparent 62%), var(--bg);background-attachment:fixed;}
+header{display:flex;gap:14px;align-items:center;}
+header .mark{width:46px;height:46px;flex-shrink:0;border:1.5px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:600;font-size:23px;color:var(--accent);}
+header .eyebrow{font-family:var(--sans);font-weight:600;letter-spacing:.22em;font-size:10px;}
+h1{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.05;}
+.card{background:linear-gradient(180deg,var(--card),#1d1511);box-shadow:0 1px 0 rgba(255,255,255,.025) inset,0 10px 26px rgba(0,0,0,.28);border-radius:14px;}
+.card h2{font-family:var(--serif);font-weight:600;font-size:18px;}
+.ready-card{border-color:rgba(199,161,101,.55);box-shadow:0 0 0 4px rgba(199,161,101,.07),0 10px 26px rgba(0,0,0,.28);}
+.ready-post h3{font-weight:600;font-size:19px;}
+.btn-primary{background:linear-gradient(135deg,#dcbb82,var(--accent));color:#1a120d;border-radius:10px;}
+.toast{background:var(--accent);color:#1a120d;}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="eyebrow">Sixto Tools</div>
-  <h1>Post Draft</h1>
+  <div class="mark">S</div>
+  <div>
+  <div class="eyebrow">Sixto Custom Guitars</div>
+  <h1>Posts</h1>
   <p>Eén formulier, kies daarna wat je wil genereren. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
+  </div>
 </header>
 
 <div class="card ready-card" id="ready-card" style="display:none;">
