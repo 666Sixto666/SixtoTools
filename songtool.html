@@ -106,6 +106,10 @@ main{ flex:1; min-height:0; position:relative; }
 .pil{ font-size:11px; padding:2px 8px; border-radius:10px; background:var(--panel2); color:var(--dim); }
 .pil.type{ color:var(--accent); } .pil.sfeer{ color:var(--muse); } .pil.stanza{ color:var(--accent2); }
 .frag .ac{ display:flex; gap:6px; margin-top:8px; }
+.memo{ margin:6px 0 2px; }
+.memo .mini-blad{ max-height:none; background:var(--panel); }
+.memo .blad{ font-size:15px; }
+.melodie{ font-family:var(--mono); font-size:13px; color:var(--accent2); margin:6px 0; line-height:1.6; }
 .frag .ac button{ padding:6px 10px; font-size:14px; }
 .filters{ display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; border-bottom:1px solid var(--line); }
 .filters .chip{ font-family:var(--sans); font-size:13px; padding:4px 10px; }
@@ -180,7 +184,7 @@ audio{ width:100%; margin-top:8px; }
 
 <div class="scherm verborgen" id="scherm-frag"></div>
 <aside class="lade rechts" id="frag">
-  <div class="lade-kop"><b>Fragmenten</b><button class="plat" id="kNieuwFrag">＋ Nieuw</button><button class="ib" id="kFragDicht" aria-label="Sluiten">✕</button></div>
+  <div class="lade-kop"><b>Fragmenten</b><button class="plat" id="kOpname" title="Voice memo opnemen">🎙</button><button class="plat" id="kNieuwFrag">＋ Nieuw</button><button class="ib" id="kFragDicht" aria-label="Sluiten">✕</button></div>
   <div class="lade-zoek"><input type="search" id="fragZoek" placeholder="Zoek in fragmenten"></div>
   <div class="filters" id="fragFilters"></div>
   <div class="lade-lijst" id="fragLijst"></div>
@@ -205,7 +209,7 @@ audio{ width:100%; margin-top:8px; }
 var DROPBOX_APP_KEY = 'elals0a8q81c5l1';
 
 var LIB_KEY = 'songtool_library_v1', FRAG_KEY = 'songtool_fragments_v1', META_KEY = 'songtool_meta_v2',
-    AUTH_KEY = 'songtool_dropbox_v1', STUDIO_KEY = 'songtool_studio_v1', UI_KEY = 'songtool_ui_v1';
+    AUTH_KEY = 'songtool_dropbox_v1', STUDIO_KEY = 'songtool_studio_v1', UI_KEY = 'songtool_ui_v1', MEMO_KEY = 'songtool_memos_v1';
 var SECTIES = ['Intro', 'Verse', 'Pre-chorus', 'Chorus', 'Refrain', 'Bridge', 'Solo', 'Intermezzo', 'Ref-riff', 'Outro'];
 
 // ---------- hulpjes ----------
@@ -553,6 +557,7 @@ function toonHulp(){
     '<p><b>Op de iPhone:</b> tik in de tekst waar het akkoord moet komen, en dan op een akkoord in de balk (of typ het in "+ akkoord" en tik op Gereed). "{ } Sectie" zet een sectie aan het begin van de regel.</p>' +
     '<p><b>Op de laptop:</b> rechtsklik in de tekst om een akkoord op die plek te zetten.</p>' +
     '<p><b>Weergave:</b> één knop rechtsboven wisselt tussen bewerken en weergave. In de weergave kun je transponeren, de letters groter maken en laten scrollen om mee te spelen.</p>' +
+    '<p><b>Voice memo:</b> tik in Fragmenten op 🎙 en zing, speel of spreek je idee in (of kies een bestand uit Dictafoon). De laptop (Songtool Studio) zet het om: woorden, toonaard, akkoorden als er een instrument meespeelt, de melodie als je alleen zingt, en een blad met de akkoorden boven de woorden. Met − ½ / + ½ transponeer je het.</p>' +
     '<p><b>Alles wordt vanzelf bewaard</b>, en met Dropbox-synchronisatie verschijnt het binnen enkele seconden op je andere toestellen.</p>' })]);
 }
 
@@ -673,6 +678,7 @@ function tags(str){ var gezien = {}; return String(str || '').split(',').map(fun
 function alleTags(as){ var s = {}; db.fragments.forEach(function(f){ (f.tags[as] || []).forEach(function(t){ s[t] = 1; }); }); return Object.keys(s).sort(function(a, b){ return a.localeCompare(b); }); }
 $('fragZoek').addEventListener('input', renderFrag);
 $('kNieuwFrag').addEventListener('click', function(){ fragmentVel(null); });
+$('kOpname').addEventListener('click', function(){ opnemen(null); });
 function renderFrag(){
   var f = $('fragFilters'); f.innerHTML = '';
   ['type','sfeer','stanza'].forEach(function(as){
@@ -684,41 +690,199 @@ function renderFrag(){
   var lijst = $('fragLijst'); lijst.innerHTML = '';
   var q = norm($('fragZoek').value);
   var zicht = db.fragments.filter(function(x){
-    if (q && norm(x.text).indexOf(q) < 0) return false;
+    var mi = x.memo ? memoResultaat(x) : null;
+    if (q && norm(x.text).indexOf(q) < 0 && !(mi && norm(mi.tekst).indexOf(q) >= 0)) return false;
     return ['type','sfeer','stanza'].every(function(as){ var act = Object.keys(fragFilter[as]); return !act.length || (x.tags[as] || []).some(function(t){ return fragFilter[as][t]; }); });
   });
-  if (!zicht.length) lijst.appendChild(el('div', { klasse: 'leeg', tekst: db.fragments.length ? 'Geen fragmenten met deze filters.' : 'Nog geen fragmenten. Tik op "+ Nieuw".' }));
+  if (!zicht.length) lijst.appendChild(el('div', { klasse: 'leeg', tekst: db.fragments.length ? 'Geen fragmenten met deze filters.' : 'Nog geen fragmenten. Tik op "+ Nieuw", of op 🎙 om een idee in te zingen.' }));
   zicht.forEach(function(x){
     var tg = el('div', { klasse: 'tg' });
     ['type','sfeer','stanza'].forEach(function(as){ (x.tags[as] || []).forEach(function(t){ tg.appendChild(el('span', { klasse: 'pil ' + as, tekst: t })); }); });
-    lijst.appendChild(el('div', { klasse: 'frag' }, [el('div', { klasse: 'tx', tekst: x.text }), tg, el('div', { klasse: 'ac' }, [
-      huidig() ? el('button', { tekst: '➕ In tekst', onclick: function(){ sluitLades(); zetModus('bewerk'); voegIn(x.text + '\n', true); } }) : null,
-      el('button', { tekst: '🕯️', title: 'Kopieer voor de muze', onclick: function(){ kopieer(fragMuse(x), 'Gekopieerd voor de muze'); } }),
+    lijst.appendChild(el('div', { klasse: 'frag' }, [
+      x.text ? el('div', { klasse: 'tx', tekst: x.text }) : null,
+      x.memo ? memoBlok(x) : null,
+      tg, el('div', { klasse: 'ac' }, [
+      huidig() && x.text ? el('button', { tekst: '➕ In tekst', onclick: function(){ sluitLades(); zetModus('bewerk'); voegIn(x.text + '\n', true); } }) : null,
+      x.text ? el('button', { tekst: '🕯️', title: 'Kopieer voor de muze', onclick: function(){ kopieer(fragMuse(x), 'Gekopieerd voor de muze'); } }) : null,
       el('button', { tekst: '✎', onclick: function(){ fragmentVel(x); } })])]));
   });
 }
-function fragmentVel(x){
+function fragmentVel(x, memo){
   var t = el('textarea', { rows: '4' }); t.value = x ? x.text : '';
-  var ty = el('input', { type: 'text', value: x ? x.tags.type.join(', ') : '', placeholder: 'bv. titel, beeld, refreinregel' });
+  var ty = el('input', { type: 'text', value: x ? x.tags.type.join(', ') : '', placeholder: 'bv. titel, beeld, refreinregel, melodie' });
   var sf = el('input', { type: 'text', value: x ? x.tags.sfeer.join(', ') : '', placeholder: 'bv. melancholisch, speels' });
   var st = el('input', { type: 'text', value: x ? x.tags.stanza.join(', ') : '', placeholder: 'bv. couplet, brug' });
+  var heeftMemo = (x && x.memo) || memo;
   openVel(x ? 'Fragment' : 'Nieuw fragment', [
+    heeftMemo ? el('p', { klasse: 'zacht klein', tekst: '🎙 Met voice memo' + (heeftMemo.duur ? ' (' + duurTekst(heeftMemo.duur) + ')' : '') + '. De tekst mag leeg blijven.' }) : null,
     el('label', { klasse: 'veld' }, [el('span', { tekst: 'Tekst' }), t]),
     el('label', { klasse: 'veld' }, [el('span', { tekst: 'Type' }), ty]),
     el('label', { klasse: 'veld' }, [el('span', { tekst: 'Sfeer' }), sf]),
     el('label', { klasse: 'veld' }, [el('span', { tekst: 'Stanza' }), st]),
     el('div', { klasse: 'knoppen' }, [el('button', { klasse: 'primair', tekst: 'Bewaren', onclick: function(){
-      if (!t.value.trim()) return;
-      var nieuw = x || { id: genId('frag'), created: Date.now() };
+      if (!t.value.trim() && !heeftMemo) return;
+      var nieuw = x || { id: (memo && memo.id) || genId('frag'), created: Date.now() };
       nieuw.text = t.value.trim(); nieuw.tags = { type: tags(ty.value), sfeer: tags(sf.value), stanza: tags(st.value) };
+      if (memo) { nieuw.memo = memo.info; }
       nieuw.updated = stempel(nieuw.updated);
       if (!x) db.fragments.unshift(nieuw);
       gewijzigd(); sluitVel(); renderFrag();
-    } }), x ? el('button', { klasse: 'gevaar', tekst: 'Verwijderen', onclick: function(){
-      if (!confirm('Dit fragment verwijderen?')) return;
+    } }),
+    !heeftMemo && x ? el('button', { tekst: '🎙 Memo toevoegen', onclick: function(){ sluitVel(); opnemen(x); } }) : null,
+    x ? el('button', { klasse: 'gevaar', tekst: 'Verwijderen', onclick: function(){
+      if (!confirm('Dit fragment verwijderen?' + (x.memo ? ' (Het geluidsbestand blijft bewaard in Dropbox › memos.)' : ''))) return;
       db.fragments = db.fragments.filter(function(f){ return f !== x; }); db.deleted[x.id] = Date.now();
       gewijzigd(); sluitVel(); renderFrag();
     } }) : null])]);
+}
+
+// ---------- voice memo's: opnemen, bewaren (ook offline), naar Dropbox, omgezet door de Studio ----------
+// Het geluid staat eerst in deze browser (IndexedDB) en gaat bij het synchroniseren naar Dropbox › memos/<id>.
+// De Studio op de laptop zet het om naar woorden en muziek en schrijft het resultaat in memos.json.
+var memoInfo = null, memoTransp = {};
+function duurTekst(s){ s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+function idb(){
+  return new Promise(function(ok, nok){
+    var r = indexedDB.open('songtool', 1);
+    r.onupgradeneeded = function(){ r.result.createObjectStore('memos'); };
+    r.onsuccess = function(){ ok(r.result); }; r.onerror = function(){ nok(r.error); };
+  });
+}
+function idbDoe(modus, actie){
+  return idb().then(function(d){ return new Promise(function(ok, nok){
+    var tx = d.transaction('memos', modus), st = tx.objectStore('memos'), r = actie(st);
+    tx.oncomplete = function(){ ok(r && r.result); }; tx.onerror = function(){ nok(tx.error); };
+  }); });
+}
+function memoBewaar(id, w){ return idbDoe('readwrite', function(st){ return st.put(w, id); }); }
+function memoHaal(id){ return idbDoe('readonly', function(st){ return st.get(id); }); }
+function memoAlle(){ return idbDoe('readonly', function(st){ return st.getAllKeys(); }); }
+function memoResultaat(x){ return memoInfo && memoInfo.memos ? memoInfo.memos[x.id] : null; }
+
+var opname = null;
+function opnemen(bestaand){
+  if (!window.MediaRecorder || !navigator.mediaDevices) { alert('Opnemen werkt niet in deze browser. Kies dan een bestaand geluidsbestand (bv. uit Dictafoon).'); return kiesMemoBestand(bestaand); }
+  var klok = el('div', { style: 'font-size:44px;text-align:center;font-family:var(--mono);margin:16px 0', tekst: '0:00' });
+  var info = el('p', { klasse: 'zacht klein', style: 'text-align:center', tekst: 'Toegang tot de microfoon vragen…' });
+  var stop = el('button', { klasse: 'primair', style: 'width:100%;padding:14px;font-size:18px', tekst: '■ Stop en bewaar', disabled: 'disabled' });
+  openVel('🎙 Voice memo', [klok, info, stop, el('div', { klasse: 'knoppen' }, [el('button', { tekst: 'Annuleren', onclick: function(){ if (opname) { opname.annuleer = true; opname.rec.stop(); } sluitVel(); } }),
+    el('button', { tekst: 'Of kies een bestand…', onclick: function(){ if (opname) { opname.annuleer = true; opname.rec.stop(); } sluitVel(); kiesMemoBestand(bestaand); } })])]);
+  navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } }).then(function(stream){
+    var type = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm'].filter(function(t){ return MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t); })[0] || '';
+    var rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined), stukken = [], t0 = Date.now();
+    opname = { rec: rec, annuleer: false };
+    rec.ondataavailable = function(e){ if (e.data && e.data.size) stukken.push(e.data); };
+    var timer = setInterval(function(){ klok.textContent = duurTekst((Date.now() - t0) / 1000); }, 250);
+    rec.onstop = function(){
+      clearInterval(timer); stream.getTracks().forEach(function(tr){ tr.stop(); });
+      var a = opname; opname = null;
+      if (a.annuleer) return;
+      var mime = rec.mimeType || type || 'audio/mp4';
+      bewaarMemo(new Blob(stukken, { type: mime }), mime, (Date.now() - t0) / 1000, bestaand);
+    };
+    rec.start(1000);
+    info.textContent = 'Opname loopt. Zing, speel of spreek je idee in.';
+    stop.removeAttribute('disabled');
+    stop.onclick = function(){ rec.stop(); sluitVel(); };
+  }, function(e){
+    info.textContent = 'Geen toegang tot de microfoon (' + (e && e.name || 'geweigerd') + '). Sta het toe in de instellingen van je browser, of kies een bestaand bestand.';
+  });
+}
+function kiesMemoBestand(bestaand){
+  var inp = el('input', { type: 'file', accept: 'audio/*,.m4a,.mp3,.wav,.aac,.caf' });
+  inp.addEventListener('change', function(){
+    var f = inp.files[0]; if (!f) return;
+    var a = new Audio(); a.preload = 'metadata';
+    a.onloadedmetadata = function(){ bewaarMemo(f, f.type || 'audio/mp4', isFinite(a.duration) ? a.duration : 0, bestaand, f.name); };
+    a.onerror = function(){ bewaarMemo(f, f.type || 'audio/mp4', 0, bestaand, f.name); };
+    a.src = URL.createObjectURL(f);
+  });
+  inp.click();
+}
+function extVoor(mime, naam){
+  var m = (naam || '').match(/\.(m4a|mp3|wav|aac|caf|webm|ogg|aiff?)$/i);
+  if (m) return m[1].toLowerCase();
+  return /webm/.test(mime) ? 'webm' : (/ogg/.test(mime) ? 'ogg' : (/wav/.test(mime) ? 'wav' : (/mpeg/.test(mime) ? 'mp3' : 'm4a')));
+}
+function bewaarMemo(blob, mime, duur, bestaand, naam){
+  var id = bestaand ? bestaand.id : genId('frag'), ext = extVoor(mime, naam);
+  var info = { pad: '/memos/' + id + '.' + ext, type: mime, duur: Math.round(duur * 10) / 10, opgenomen: Date.now() };
+  memoBewaar(id, { blob: blob, type: mime, geupload: false, pad: info.pad }).then(function(){
+    if (bestaand) { bestaand.memo = info; bestaand.updated = stempel(bestaand.updated); }
+    else db.fragments.unshift({ id: id, created: Date.now(), text: '', tags: { type: ['memo'], sfeer: [], stanza: [] }, memo: info, updated: Date.now() });
+    gewijzigd(); renderFrag();
+    toast(verbonden() ? 'Memo bewaard: de laptop zet het om naar woorden en muziek' : 'Memo bewaard op dit toestel');
+  }, function(){ alert('Bewaren in deze browser lukt niet (privévenster?).'); });
+}
+// in sync(): nog niet geüploade memo's naar Dropbox
+function uploadMemos(){
+  return memoAlle().then(function(ids){
+    var keten = Promise.resolve();
+    (ids || []).forEach(function(id){
+      keten = keten.then(function(){ return memoHaal(id); }).then(function(w){
+        if (!w || w.geupload) return;
+        return zetBestand(w.pad, w.blob, { '.tag': 'overwrite' }).then(function(){ w.geupload = true; return memoBewaar(id, w); });
+      });
+    });
+    return keten;
+  }).catch(function(e){ if (e && e.status) throw e; });   // geen IndexedDB: niets te doen
+}
+function noteTransp(n, st){
+  var m = n.match(/^([A-G][#b]?)(-?\d)$/); if (!m || !st) return n;
+  var i = NOOT[m[1]] + st, oct = parseInt(m[2], 10) + Math.floor(i / 12);
+  return transponeerNoot(m[1], st, m[1].length > 1 && m[1][1] === 'b') + oct;
+}
+function toonaardKort(t){ if (!t) return ''; var d = t.split(' '); return d[0] + (d[1] && d[1].indexOf('min') === 0 ? 'm' : ''); }
+function memoBlok(x){
+  var r = memoResultaat(x) || {}, st = memoTransp[x.id] || 0;
+  var blok = el('div', { klasse: 'memo' });
+  var speler = el('div');
+  var kop = el('div', { klasse: 'rij', style: 'display:flex;gap:8px;align-items:center' }, [
+    el('button', { tekst: '▶ ' + duurTekst(x.memo.duur), style: 'flex:none', onclick: function(){ speelMemo(x, speler); } }),
+    el('span', { klasse: 'zacht klein', style: 'flex:1', tekst: new Date(x.memo.opgenomen || x.created || Date.now()).toLocaleString('nl-BE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) })]);
+  blok.appendChild(kop); blok.appendChild(speler);
+  if (!r.status) {
+    var st2 = el('p', { klasse: 'zacht klein', tekst: verbonden() ? 'Wacht op de laptop (Songtool Studio) om het om te zetten naar woorden en muziek…' : 'Verbind met Dropbox (Menu › Synchronisatie) om het te laten omzetten naar woorden en muziek.' });
+    blok.appendChild(st2);
+    memoHaal(x.id).then(function(w){ if (w && !w.geupload) st2.textContent = 'Nog niet geüpload' + (navigator.onLine ? '…' : ' (offline): gebeurt zodra er internet is.'); }).catch(function(){});
+    return blok;
+  }
+  if (r.status === 'bezig') { blok.appendChild(el('p', { klasse: 'zacht klein', tekst: 'De laptop is het aan het omzetten…' })); return blok; }
+  if (r.status === 'mislukt' || r.fout) { blok.appendChild(el('p', { klasse: 'zacht klein', tekst: 'Omzetten lukte niet: ' + (r.fout || 'onbekende fout') })); return blok; }
+  var wat = [r.woorden ? 'woorden' : null, r.instrument ? 'akkoorden' : null, r.melodie && r.melodie.length ? 'melodie' : null].filter(Boolean);
+  blok.appendChild(el('div', { klasse: 'statuschips' }, [
+    r.toonaard ? el('span', { klasse: 'sc klaar', tekst: 'Toonaard ' + transponeer(toonaardKort(r.toonaard), st) }) : null,
+    r.tempo ? el('span', { klasse: 'sc', tekst: '± ' + r.tempo + ' BPM' }) : null,
+    el('span', { klasse: 'sc', tekst: wat.length ? wat.join(' + ') : 'niets herkend' }),
+    st ? el('span', { klasse: 'sc oud', tekst: 'getransponeerd ' + (st > 0 ? '+' : '') + st }) : null]));
+  var trans = function(d){ memoTransp[x.id] = (memoTransp[x.id] || 0) + d; renderFrag(); };
+  if (r.instrument || (r.melodie && r.melodie.length)) blok.appendChild(el('div', { klasse: 'knoppen', style: 'margin-top:0' }, [
+    el('button', { klasse: 'chip sectie', tekst: '− ½', onclick: function(){ trans(-1); } }),
+    el('span', { klasse: 'zacht klein', style: 'align-self:center', tekst: 'transponeer' }),
+    el('button', { klasse: 'chip sectie', tekst: '+ ½', onclick: function(){ trans(1); } })]));
+  if (r.blad) blok.appendChild(el('div', { klasse: 'mini-blad', html: bladHtml({ title: '', lyrics: r.blad }, st).replace(/<div class="info">[\s\S]*?<\/div><\/div>/, '') }));
+  if (r.melodie && r.melodie.length) {
+    var noten = r.melodie.map(function(n){ return noteTransp(n.noot, st); }), kort = noten.length > 24;
+    var mel = el('div', { klasse: 'melodie' }, [el('span', { klasse: 'zacht klein', tekst: 'Melodie (experimenteel): ' }), document.createTextNode(noten.slice(0, 24).join(' ') + (kort ? ' …' : ''))]);
+    if (kort) mel.appendChild(el('button', { klasse: 'plat klein', tekst: 'alles tonen', onclick: function(){ mel.lastChild.remove(); mel.lastChild.textContent = noten.join(' '); } }));
+    blok.appendChild(mel);
+  }
+  if (r.woorden && r.instrument) blok.appendChild(el('p', { klasse: 'zacht klein', tekst: 'Zang en instrument samen: de akkoorden zijn een schets (de stem kleurt mee). Met enkel gitaar of piano kloppen ze beter.' }));
+  blok.appendChild(el('div', { klasse: 'knoppen' }, [
+    r.tekst && !x.text ? el('button', { tekst: 'Tekst overnemen', onclick: function(){ x.text = r.tekst; x.updated = stempel(x.updated); gewijzigd(); renderFrag(); } }) : null,
+    huidig() && r.blad ? el('button', { tekst: '➕ In songtekst', onclick: function(){
+      var tekst = r.blad.replace(/\[([^\]]+)\]/g, function(m, a){ return '[' + transponeer(a, st) + ']'; });
+      sluitLades(); zetModus('bewerk'); voegIn(tekst.trim() + '\n', true); } }) : null]));
+  return blok;
+}
+function speelMemo(x, vak){
+  vak.innerHTML = '';
+  function speel(src){ var a = el('audio', { controls: 'controls', src: src, preload: 'auto' }); vak.appendChild(a); var p = a.play(); if (p && p.catch) p.catch(function(){}); }
+  memoHaal(x.id).then(function(w){
+    if (w && w.blob) return speel(URL.createObjectURL(w.blob));
+    if (!verbonden()) { vak.appendChild(el('p', { klasse: 'zacht klein', tekst: 'Dit memo staat op een ander toestel; verbind met Dropbox om het te beluisteren.' })); return; }
+    return rpc('files/get_temporary_link', { path: x.memo.pad }).then(function(d){ speel(d.link); });
+  }).catch(function(e){ vak.appendChild(el('p', { klasse: 'zacht klein', tekst: 'Afspelen lukt niet' + (e && e.message ? ': ' + e.message.slice(0, 80) : '') + '.' })); });
 }
 
 // ---------- muze, kopiëren, bestanden, afdrukken ----------
@@ -917,7 +1081,7 @@ function haalBestand(pad){
 }
 function zetBestand(pad, tekst, mode){
   return token().then(function(t){
-    return fetch('https://content.dropboxapi.com/2/files/upload', { method: 'POST', body: new Blob([tekst], { type: 'application/octet-stream' }),
+    return fetch('https://content.dropboxapi.com/2/files/upload', { method: 'POST', body: tekst instanceof Blob ? tekst : new Blob([tekst], { type: 'application/octet-stream' }),
       headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/octet-stream', 'Dropbox-API-Arg': argKop({ path: pad, mode: mode, mute: true, autorename: false }) } });
   }).then(function(r){ return r.text().then(function(x){ if (!r.ok) throw DbxFout(r.status, x.slice(0, 200)); return JSON.parse(x); }); });
 }
@@ -949,9 +1113,13 @@ function sync(){
       var studioKlaar = (st && st.rev !== meta.studioRev) ? haalBestand('/studio.json').then(function(x){
         try { studio = JSON.parse(x); lsSet(STUDIO_KEY, studio); meta.studioRev = st.rev; toonKop(); renderLib(); if (modus === 'weergave') toonBalk(); } catch (e) { /* half geschreven: volgende keer */ }
       }) : Promise.resolve();
-      var stap = Promise.resolve();
+      var mj = zoekIn(lijst, 'memos.json');
+      var memosKlaar = (mj && mj.rev !== meta.memosRev) ? haalBestand('/memos.json').then(function(x){
+        try { memoInfo = JSON.parse(x); lsSet(MEMO_KEY, memoInfo); meta.memosRev = mj.rev; if ($('frag').classList.contains('open')) renderFrag(); } catch (e) { /* half geschreven */ }
+      }) : Promise.resolve();
+      var stap = poging === 1 ? uploadMemos() : Promise.resolve();
       if (f && f.rev !== meta.rev) {
-        stap = haalBestand('/songtool.json').then(function(x){
+        stap = stap.then(function(){ return haalBestand('/songtool.json'); }).then(function(x){
           var ver = normaliseer(JSON.parse(x)), voor = canoniek(db), samen = voegSamen(db, ver, false);
           if (canoniek(samen) !== voor) pasToe(samen);
           meta.rev = f.rev;
@@ -959,7 +1127,7 @@ function sync(){
           else meta.dirty = false;
         });
       }
-      return Promise.all([studioKlaar, stap]).then(function(){
+      return Promise.all([studioKlaar, memosKlaar, stap]).then(function(){
         if (!meta.dirty && f) return true;
         var seq = meta.seq, inhoud = JSON.stringify(exportVorm(db));
         return zetBestand('/songtool.json', inhoud, f ? { '.tag': 'update', update: f.rev } : { '.tag': 'add' }).then(function(res){
@@ -1161,6 +1329,7 @@ meta = lsGet(META_KEY, {});
 auth = lsGet(AUTH_KEY, {});
 ui = lsGet(UI_KEY, {});
 studio = lsGet(STUDIO_KEY, null);
+memoInfo = lsGet(MEMO_KEY, null);
 if (ui.vastLib !== false && window.matchMedia('(min-width: 1100px)').matches) { document.body.classList.add('vast-lib'); $('lib').classList.add('open'); }
 pasAan();
 (function(){
