@@ -594,10 +594,10 @@ function loadTemplate(){
 function saveTemplate(t){ localStorage.setItem(LS_TEMPLATE_KEY, JSON.stringify(t)); }
 
 /* Stappen met "(klantbuild)" of "(prototype)" gelden enkel voor builds met een klant of met de prototype-vlag (Decision 023);
-   "(verkoop)" enkel voor builds zonder klant (Decision 024).
+   "(verkoop)" enkel voor builds zonder klant die geen prototype zijn (Decision 024).
    Geldt een stap: toevoegen als hij ontbreekt (op zijn plaats in de fase). Geldt hij niet meer: weg, tenzij al afgevinkt. */
 function syncConditionalSteps(b){
-  const applies = t => !((t.includes('(klantbuild)') && !b.client) || (t.includes('(verkoop)') && b.client) || (t.includes('(prototype)') && !b.prototype));
+  const applies = t => !((t.includes('(klantbuild)') && !b.client) || (t.includes('(verkoop)') && (b.client || b.prototype)) || (t.includes('(prototype)') && !b.prototype));
   for(const tph of loadTemplate()){
     const texts = tph.steps.map(s => typeof s === 'string' ? s : s.text);
     const cond = texts.filter(t => t.includes('(klantbuild)') || t.includes('(verkoop)') || t.includes('(prototype)'));
