@@ -129,6 +129,16 @@
   .link-hint{font-size:12px;color:var(--accent-2);margin-top:8px;}
 
   #focus-exit-bar{display:none;margin-bottom:14px;}
+  /* Klaar om te posten: wachtrij die Claude klaarzet (data/posts-queue.json) */
+  .ready-card{border-color:var(--accent);}
+  .ready-post{border-top:1px solid var(--line);padding-top:14px;margin-top:14px;}
+  .ready-post:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+  .ready-post h3{font-family:var(--serif);font-weight:400;font-size:17px;margin:0 0 4px;}
+  .ready-post .rp-meta{font-size:12px;color:var(--text-dim);margin-bottom:12px;}
+  .ready-post video{width:100%;max-height:420px;border-radius:8px;background:#000;margin-bottom:8px;}
+  .ready-post .rp-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .ready-post .rp-status button{flex:1;min-width:140px;}
+  .ready-post .rp-status button.done{border-color:#8fae6a;color:#8fae6a;}
 </style>
 </head>
 <body>
@@ -138,6 +148,11 @@
   <h1>Post Draft</h1>
   <p>Eén formulier, kies daarna wat je wil genereren. Schrijf de vrije velden bij voorkeur in het Engels &mdash; de tool structureert, jij blijft de stem.</p>
 </header>
+
+<div class="card ready-card" id="ready-card" style="display:none;">
+  <h2>Klaar om te posten</h2>
+  <div id="ready-list"></div>
+</div>
 
 <div class="card schedule-card" id="schedule-card">
   <h2>Postschema</h2>
@@ -1060,6 +1075,80 @@ document.getElementById('f-project').addEventListener('input', function(){
     hint.style.display = 'none';
   }
 });
+
+/* ---------- Klaar om te posten (wachtrij van Claude) ----------
+   Claude zet video + teksten klaar in data/posts-queue.json (video als GitHub release-bijlage).
+   Tom kopieert van hier en tikt "Gepost" aan; dat gaat terug naar de repo, zodat Claude het ziet.
+   Token: hetzelfde als in Sixto Builds (zelfde site, zelfde opslag). */
+const Q_OWNER = '666sixto666', Q_REPO = 'SixtoTools', Q_PATH = 'data/posts-queue.json';
+const Q_TOKEN_KEY = 'sixto_tools_gh_token';
+let readyQueue = null;
+
+async function loadReadyQueue(){
+  try{
+    const res = await fetch(`https://raw.githubusercontent.com/${Q_OWNER}/${Q_REPO}/main/${Q_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    if(!res.ok) return;
+    readyQueue = await res.json();
+    renderReadyQueue();
+  }catch(e){ /* offline: gewoon niets tonen */ }
+}
+
+function renderReadyQueue(){
+  const card = document.getElementById('ready-card');
+  const posts = ((readyQueue && readyQueue.posts) || []).filter(p => !(p.posted && p.posted.instagram && p.posted.youtube));
+  if(!posts.length){ card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  document.getElementById('ready-list').innerHTML = posts.map(p => {
+    const blocks = [
+      ['Instagram — caption', p.igCaption], ['Instagram — lange versie', p.igCaptionLong],
+      ['YouTube Short — titel', p.ytTitle], ['YouTube Short — beschrijving', p.ytDescription]
+    ].filter(b => b[1]);
+    const video = p.videoUrl ? `<video controls playsinline preload="metadata" src="${escHtml(p.videoUrl)}"></video>
+      <div class="quick-links" style="margin:0 0 12px;"><a class="btn-ghost" href="${escHtml(p.videoUrl)}" download>⬇ Video bewaren</a></div>` : '';
+    const st = p.posted || {};
+    return `<div class="ready-post" data-id="${escHtml(p.id)}">
+      <h3>${escHtml(p.title)}</h3>
+      <div class="rp-meta">${escHtml(p.note || '')}</div>
+      ${video}
+      ${blocks.map(b => `<div class="out-block">
+        <div class="out-head"><span>${escHtml(b[0])}</span><button class="btn-ghost" onclick="copyOutBlock(this)">Kopieer</button></div>
+        <div class="out-text">${escHtml(b[1])}</div></div>`).join('')}
+      <div class="rp-status">
+        <button class="btn-ghost ${st.instagram ? 'done' : ''}" onclick="markReadyPosted('${escHtml(p.id)}','instagram')">${st.instagram ? '✓ Op Instagram' : 'Gepost op Instagram'}</button>
+        <button class="btn-ghost ${st.youtube ? 'done' : ''}" onclick="markReadyPosted('${escHtml(p.id)}','youtube')">${st.youtube ? '✓ Op YouTube' : 'Gepost als Short'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>{ t.classList.remove('show'); t.textContent = 'Gekopieerd'; }, 2200);
+}
+
+async function markReadyPosted(id, platform){
+  const token = localStorage.getItem(Q_TOKEN_KEY) || '';
+  if(!token){ showToast('Geen token: zet het eerst in Sixto Builds › GitHub sync'); return; }
+  const api = `https://api.github.com/repos/${Q_OWNER}/${Q_REPO}/contents/${Q_PATH}`;
+  const h = { Authorization:'Bearer '+token, Accept:'application/vnd.github+json' };
+  try{
+    const cur = await (await fetch(api, {headers:h, cache:'no-store'})).json();
+    if(!cur.sha) throw new Error(cur.message || 'niet gevonden');
+    const data = JSON.parse(decodeURIComponent(escape(atob(cur.content.replace(/\n/g,'')))));
+    const post = (data.posts || []).find(p => p.id === id);
+    if(!post) throw new Error('post niet gevonden');
+    post.posted = post.posted || {};
+    post.posted[platform] = post.posted[platform] ? null : new Date().toISOString();
+    const body = { message: `Post ${id}: ${platform} ${post.posted[platform] ? 'gepost' : 'teruggezet'}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), sha: cur.sha, branch:'main' };
+    const put = await fetch(api, {method:'PUT', headers:{...h, 'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    if(!put.ok){ const j = await put.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+put.status)); }
+    readyQueue = data; renderReadyQueue();
+    showToast(post.posted[platform] ? 'Genoteerd ✓' : 'Teruggezet');
+  }catch(e){ showToast('Mislukt: ' + e.message); }
+}
+
+loadReadyQueue();
 
 refreshBuilds();
 renderLog();
