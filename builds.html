@@ -576,6 +576,9 @@ const DEFAULT_TEMPLATE = [
    "Eindreel / Short gepost",
    "Laatste schijf ontvangen (klantbuild)",
    "Overdracht aan de klant (klantbuild)",
+   "Verkoopprijs bepaald: netto na platformkosten (verkoop)",
+   "Te koop gezet: website, Reverb en 2dehands (verkoop)",
+   "Verkocht: overal offline gehaald, verzonden of afgehaald (verkoop)",
    "Build gearchiveerd in bibliotheek"
   ]
  }
@@ -590,13 +593,14 @@ function loadTemplate(){
 }
 function saveTemplate(t){ localStorage.setItem(LS_TEMPLATE_KEY, JSON.stringify(t)); }
 
-/* Stappen met "(klantbuild)" of "(prototype)" gelden enkel voor builds met een klant of met de prototype-vlag (Decision 023).
+/* Stappen met "(klantbuild)" of "(prototype)" gelden enkel voor builds met een klant of met de prototype-vlag (Decision 023);
+   "(verkoop)" enkel voor builds zonder klant (Decision 024).
    Geldt een stap: toevoegen als hij ontbreekt (op zijn plaats in de fase). Geldt hij niet meer: weg, tenzij al afgevinkt. */
 function syncConditionalSteps(b){
-  const applies = t => !((t.includes('(klantbuild)') && !b.client) || (t.includes('(prototype)') && !b.prototype));
+  const applies = t => !((t.includes('(klantbuild)') && !b.client) || (t.includes('(verkoop)') && b.client) || (t.includes('(prototype)') && !b.prototype));
   for(const tph of loadTemplate()){
     const texts = tph.steps.map(s => typeof s === 'string' ? s : s.text);
-    const cond = texts.filter(t => t.includes('(klantbuild)') || t.includes('(prototype)'));
+    const cond = texts.filter(t => t.includes('(klantbuild)') || t.includes('(verkoop)') || t.includes('(prototype)'));
     if(!cond.length) continue;
     let ph = b.checklist.find(p => p.phase === tph.phase);
     if(!ph){ if(!cond.some(applies)) continue; ph = {phase: tph.phase, steps: []}; b.checklist.push(ph); }
