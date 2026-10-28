@@ -1424,13 +1424,16 @@ function openMenu(){
     : (getGhToken() ? 'Nog niet gesynct.' : 'Sync uitgeschakeld op dit toestel.');
   const html = `
     <h2 class="section" style="margin-top:0;">GitHub sync</h2>
+    <form onsubmit="event.preventDefault();saveGhToken();" autocomplete="on">
     <label>Personal access token (blijft alleen op dit toestel)</label>
-    <input type="text" id="gh-token" placeholder="github_pat_..." value="${escAttr(getGhToken())}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:12.5px;">
-    <div class="small-note">Dit veld toont bewust gewone tekst, geen wachtwoordveld — zo probeert je iPhone niet per ongeluk een opgeslagen wachtwoord uit je sleutelhanger voor te stellen in plaats van je GitHub-token.</div>
-    <button class="btn secondary block" style="margin-top:8px;" onclick="saveGhToken()">Token opslaan</button>
+    <input type="text" name="username" value="github-token" autocomplete="username" readonly style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" tabindex="-1" aria-hidden="true">
+    <input type="password" name="password" id="gh-token" placeholder="github_pat_..." value="${escAttr(getGhToken())}" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-family:monospace;font-size:12.5px;">
+    <div class="small-note">Elk icoontje op je beginscherm heeft zijn eigen geheugen, op iPhone én iPad. Bewaar het token daarom één keer in de Wachtwoorden-app (website <b>666sixto666.github.io</b>, gebruiker <b>github-token</b>): dan stelt je toestel het hier vanzelf voor. Maak nooit een nieuw token omdat een toestel erom vraagt.</div>
+    <button type="submit" class="btn secondary block" style="margin-top:8px;">Token opslaan</button>
+    </form>
     ${getGhToken() ? '<button class="btn block" style="margin-top:8px;" onclick="manualSyncClick()">🔄 Sync nu</button>' : ''}
     <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''}</div>
-    <div class="small-note">Met een token gaat elke wijziging automatisch (na enkele seconden) naar je SixtoTools-repo, en wordt bij openen/elke 30s gecontroleerd op updates van je andere toestel. Zelfde token werkt ook in de songtool.</div>
+    <div class="small-note">Met een token gaat elke wijziging automatisch (na enkele seconden) naar je SixtoTools-repo, en wordt bij openen/elke 30s gecontroleerd op updates van je andere toestel.</div>
 
     <h2 class="section">Handmatige back-up</h2>
     <button class="btn secondary block" onclick="exportData()">⬇ Exporteer back-up (JSON)</button>
