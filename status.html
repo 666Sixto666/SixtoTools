@@ -40,15 +40,22 @@
   td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
   tr:last-child td{border-bottom:none;}
   .msg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;font-size:14px;line-height:1.5;color:var(--dim);}
+  .reqbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:-4px 2px 14px;}
+  .reqbar .note{font-size:12px;color:var(--dim);}
+  .live{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-left:6px;}
+  .proto{font-size:10px;border:1px solid var(--brass);color:var(--brass);border-radius:6px;padding:0 5px;margin-left:5px;}
+  td .sub{display:block;font-size:12px;color:var(--dim);margin-top:2px;}
   .btn{display:inline-block;margin-top:10px;font:600 13px var(--sans);border-radius:10px;padding:10px 14px;border:1px solid var(--line);background:transparent;color:var(--gold);cursor:pointer;}
+  a.home{color:var(--brass);text-decoration:none;display:block;}
 </style>
 </head>
 <body>
 <header>
   <a class="mark" href="./" title="Werkplaats">S</a>
-  <div><div class="eyebrow">Sixto Custom Guitars</div><h1>Status</h1></div>
+  <div><a class="eyebrow home" href="./">‹ Werkplaats</a><h1>Status</h1></div>
 </header>
 <div class="meta" id="meta"></div>
+<div class="reqbar"><button class="btn" id="reqbtn" onclick="requestUpdate()" style="margin-top:0;">🔄 Vraag CS om een nieuwe update</button><span class="note" id="reqnote"></span></div>
 <div id="doc"><div class="msg">Laden…</div></div>
 
 <script>
@@ -93,22 +100,76 @@ function render(md){
   return out.join('');
 }
 
+const api = (path, token, opts = {}) => fetch(`https://api.github.com/repos/${OWNER}/${path}`,
+  Object.assign({cache:'no-store'}, opts, {headers:Object.assign({Authorization:'Bearer ' + token, Accept:'application/vnd.github+json'}, opts.headers || {})}));
+const getToken = () => { try{ return localStorage.getItem(TOKEN_KEY) || ''; }catch(e){ return ''; } };
+const hhmm = iso => new Date(iso).toLocaleString('nl-BE', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+
+/* Builds live uit de syncfile van Builds: vinkjes en de volgende open stap zijn altijd actueel,
+   ook als CS de status nog niet herschreven heeft. De kolom "Stand" uit het rapport komt eronder. */
+async function liveBuilds(token, stand){
+  const res = await api('SixtoTools/contents/data/builds-sync.json?ref=main', token, {headers:{Accept:'application/vnd.github.raw'}});
+  if(!res.ok) return null;
+  const d = await res.json();
+  const rows = (d.builds || []).filter(b => b.status !== 'completed' && b.status !== 'archived').map(b => {
+    const steps = (b.checklist || []).flatMap(ph => (ph.steps || []).map(st => Object.assign({phase: ph.phase}, st)));
+    const done = steps.filter(st => st.checked).length;
+    const next = steps.find(st => !st.checked);
+    const last = steps.filter(st => st.checked && st.date).map(st => st.date).sort().pop();
+    return {b, done, total: steps.length, next, last};
+  }).sort((x, y) => (y.last || '').localeCompare(x.last || ''));
+  const cell = t => inline(t || '');
+  return '<div class="tbl"><table><tr><th>Build</th><th>Vinkjes</th><th>Volgende stap</th></tr>' + rows.map(r =>
+    `<tr><td><strong>${esc(r.b.name)}</strong>${r.b.prototype ? '<span class="proto">prototype</span>' : ''}${stand[r.b.name] ? `<span class="sub">${cell(stand[r.b.name])}</span>` : ''}</td>` +
+    `<td>${r.done}/${r.total}${r.last ? `<span class="sub">laatst ${esc(r.last.slice(8,10) + '/' + r.last.slice(5,7))}</span>` : ''}</td>` +
+    `<td>${r.next ? cell(r.next.text.replace(/\s*\((klantbuild|verkoop|prototype)\)/g, '')) + `<span class="sub">${esc(r.next.phase)}</span>` : 'alles afgevinkt'}</td></tr>`).join('') + '</table></div>';
+}
+
+/* "Vraag CS om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt CS elk halfuur
+   (07–22 u, als de pc en de Claude-app aanstaan) of er een verzoek ligt, herschrijft dan de status en wist het verzoek. */
+const REQ = 'sixto-private/contents/requests/update.json';
+async function showRequest(token){
+  const res = await api(REQ + '?ref=main', token);
+  const note = document.getElementById('reqnote'), btn = document.getElementById('reqbtn');
+  if(res.ok){
+    const j = await res.json(); let at = '';
+    try{ at = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))))).requestedAt; }catch(e){}
+    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. CS werkt de status bij binnen het halfuur (als de pc aanstaat).';
+    btn.disabled = true; btn.style.opacity = .5; return j.sha;
+  }
+  note.textContent = ''; btn.disabled = false; btn.style.opacity = 1; return null;
+}
+async function requestUpdate(){
+  const token = getToken(); if(!token) return;
+  const btn = document.getElementById('reqbtn'); btn.disabled = true;
+  const body = JSON.stringify({requestedAt: new Date().toISOString(), from: 'status'});
+  const sha = await showRequest(token);
+  const res = await api(REQ, token, {method:'PUT', body: JSON.stringify(Object.assign({message:'Tom vraagt een nieuwe statusupdate', content: btoa(body)}, sha ? {sha} : {}))});
+  if(!res.ok){ document.getElementById('reqnote').textContent = 'Verzoek mislukt (' + res.status + '). Heeft het token schrijfrechten op sixto-private?'; btn.disabled = false; return; }
+  await showRequest(token);
+}
+
 async function load(){
   const doc = document.getElementById('doc');
-  let token = ''; try{ token = localStorage.getItem(TOKEN_KEY) || ''; }catch(e){}
-  if(!token){ doc.innerHTML = '<div class="msg">Geen token op dit toestel. Zet het eerst in <a href="builds.html">Builds</a> › Instellingen › GitHub sync.</div>'; return; }
+  const token = getToken();
+  if(!token){ doc.innerHTML = '<div class="msg">Geen token op dit toestel. Zet het eerst in <a href="builds.html">Builds</a> › Instellingen › GitHub sync.</div>'; document.getElementById('reqbtn').style.display = 'none'; return; }
+  document.getElementById('reqbtn').style.display = '';
   try{
-    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}?ref=main`,
-      {headers:{Authorization:'Bearer ' + token, Accept:'application/vnd.github+json'}, cache:'no-store'});
+    const res = await api(`${REPO}/contents/${PATH}?ref=main`, token);
     if(res.status === 404 || res.status === 403){ doc.innerHTML = '<div class="msg">De status is nog niet beschikbaar: de privé-repo <code>sixto-private</code> bestaat nog niet, of het token heeft er geen toegang toe.</div>'; return; }
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const j = await res.json();
     const md = decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))));
     doc.innerHTML = render(md);
-    const commits = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${PATH}&per_page=1`,
-      {headers:{Authorization:'Bearer ' + token, Accept:'application/vnd.github+json'}, cache:'no-store'}).then(r => r.ok ? r.json() : []);
-    if(commits[0]) document.getElementById('meta').textContent = 'Bijgewerkt door Claude op ' +
-      new Date(commits[0].commit.author.date).toLocaleString('nl-BE', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'});
+    // Builds-kaart vervangen door de live versie
+    const stand = {};
+    md.split('\n').filter(l => /^\|/.test(l)).forEach(l => { const c = l.replace(/^\||\|$/g, '').split('|').map(x => x.trim()); if(c.length >= 3 && /^Sixto /.test(c[0])) stand[c[0]] = c[c.length - 1]; });
+    const h = [...doc.querySelectorAll('h2')].find(x => x.textContent.trim() === 'Builds');
+    if(h){ const live = await liveBuilds(token, stand).catch(() => null);
+      if(live){ h.innerHTML = 'Builds<span class="live">● live uit Builds</span>'; h.nextElementSibling.innerHTML = live; } }
+    const commits = await api(`${REPO}/commits?path=${PATH}&per_page=1`, token).then(r => r.ok ? r.json() : []);
+    if(commits[0]) document.getElementById('meta').textContent = 'Rapport van CS: ' + hhmm(commits[0].commit.author.date);
+    showRequest(token).catch(() => {});
   }catch(e){
     doc.innerHTML = `<div class="msg">Kon de status niet laden (${esc(e.message)}). Offline? <button class="btn" onclick="load()">Opnieuw</button></div>`;
   }
