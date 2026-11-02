@@ -113,9 +113,12 @@ textarea{resize:vertical;min-height:60px;}
 .tpl-step{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
   border-radius:10px;padding:8px 10px;margin-bottom:7px;}
 .tpl-step.dragging{opacity:.4;}
-.tpl-step .drag-handle{cursor:grab;color:var(--text-dim);font-size:15px;flex-shrink:0;}
+.drag-handle{cursor:grab;color:var(--text-dim);font-size:18px;flex-shrink:0;touch-action:none;user-select:none;-webkit-user-select:none;padding:6px 8px;margin:-6px 0 -6px -8px;}
+.step.dragging{opacity:.4;}
+.phase-list.sorting .phase > :not(.phase-head){display:none;}
+.step .drag-handle{align-self:flex-start;margin-top:-2px;}
 .phase.dragging{opacity:.4;}
-.phase-head .drag-handle{cursor:grab;color:var(--text-dim);font-size:15px;margin-right:6px;}
+.phase-head .drag-handle{margin-right:2px;}
 .tpl-photo-toggle{display:flex;align-items:center;gap:3px;font-size:14px;flex-shrink:0;cursor:pointer;}
 .tpl-photo-toggle input{width:auto;accent-color:var(--wood);}
 
@@ -373,13 +376,27 @@ async function applyRemotePayload(payload){
 async function pullFromGitHub(silent){
   if(dirty) return; // don't let a stale remote copy overwrite unsaved local changes
   try{
-    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    // Read via the API, never raw.githubusercontent.com: that CDN can serve a copy up to
+    // 5 minutes old, which used to wipe ticks made just before (2/11/2026).
+    const token = getGhToken();
+    let res;
+    if(token){
+      const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
+      const meta = await fetch(`${api}/contents/${GH_SYNC_PATH}?ref=main`, { cache:'no-store', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
+      if(meta.status === 404){ return; }
+      if(!meta.ok) throw new Error('HTTP '+meta.status);
+      const {sha} = await meta.json();
+      res = await fetch(`${api}/git/blobs/${sha}`, { cache:'no-store', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github.raw' }});
+    } else {
+      res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
+    }
     if(dirty) return; // re-check: the fetch above can take a moment, and a checkbox tap may have happened during it
     if(res.status === 404){ return; }
     if(!res.ok) throw new Error('HTTP '+res.status);
     const payload = await res.json();
     if(dirty) return; // re-check once more after parsing the response
-    if(payload.updatedAt && payload.updatedAt === syncState.lastSyncedAt) return;
+    // Same or older than what this device last saw/sent: never apply it over newer local data
+    if(payload.updatedAt && syncState.lastSyncedAt && payload.updatedAt <= syncState.lastSyncedAt) return;
     await applyRemotePayload(payload);
     if(dirty) return; // applyRemotePayload may have aborted internally; don't report a stale sync as successful
     syncState.lastSyncedAt = payload.updatedAt;
@@ -399,7 +416,7 @@ async function pushToGitHub(){
     const payload = await buildSyncPayload();
     const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_SYNC_PATH}`;
     let sha = null;
-    const getRes = await fetch(api, { headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
+    const getRes = await fetch(api+'?ref=main', { cache:'no-store', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
     if(getRes.ok){ const j = await getRes.json(); sha = j.sha; }
     const body = {
       message: 'Sync vanaf Sixto Builds',
@@ -671,17 +688,41 @@ function render(){
 function attachTemplateDragHandlers(){
   document.querySelectorAll('.tpl-steps').forEach(list=>{
     const pi = parseInt(list.dataset.phase,10);
-    list.querySelectorAll('.tpl-step').forEach(li=>{
-      li.addEventListener('dragstart', ()=>{ li.classList.add('dragging'); });
-      li.addEventListener('dragend', ()=>{ li.classList.remove('dragging'); commitTemplateOrder(pi, list); });
+    makeSortable(list, '.tpl-step', ()=>commitTemplateOrder(pi, list));
+  });
+}
+
+/* Drag to reorder with finger or mouse, via the ⠿ handle. Pointer events instead of
+   HTML5 drag-and-drop, which doesn't let you grab a row on iPhone. */
+function makeSortable(list, selector, onDone){
+  list.querySelectorAll(':scope > '+selector).forEach(el=>{
+    const handle = el.querySelector('.drag-handle');
+    if(!handle) return;
+    handle.addEventListener('pointerdown', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      handle.setPointerCapture(e.pointerId);
+      el.classList.add('dragging');
+      list.classList.add('sorting');
+      const move = (ev)=>{
+        ev.preventDefault();
+        const after = getDragAfterElementGeneric(list, ev.clientY, ':scope > '+selector);
+        if(after==null){ const items=list.querySelectorAll(':scope > '+selector); const last=items[items.length-1]; if(last!==el) last.after(el); }
+        else if(after!==el.nextElementSibling) list.insertBefore(el, after);
+        if(ev.clientY < 60) window.scrollBy(0,-12); else if(ev.clientY > window.innerHeight-60) window.scrollBy(0,12);
+      };
+      const end = ()=>{
+        handle.removeEventListener('pointermove', move);
+        handle.removeEventListener('pointerup', end);
+        handle.removeEventListener('pointercancel', end);
+        el.classList.remove('dragging');
+        list.classList.remove('sorting');
+        onDone();
+      };
+      handle.addEventListener('pointermove', move);
+      handle.addEventListener('pointerup', end);
+      handle.addEventListener('pointercancel', end);
     });
-    list.addEventListener('dragover', (e)=>{
-      e.preventDefault();
-      const dragging = list.querySelector('.tpl-step.dragging');
-      if(!dragging) return;
-      const after = getDragAfterElementGeneric(list, e.clientY, '.tpl-step');
-      if(after==null) list.appendChild(dragging); else list.insertBefore(dragging, after);
-    });
+    handle.addEventListener('click', (e)=>e.stopPropagation());
   });
 }
 
@@ -709,17 +750,22 @@ function commitTemplateOrder(pi, list){
 function attachBuildPhaseDragHandlers(buildId){
   const list = document.getElementById(`phaseList-${buildId}`);
   if(!list) return;
-  list.querySelectorAll('.phase').forEach(el=>{
-    el.addEventListener('dragstart', ()=>{ el.classList.add('dragging'); });
-    el.addEventListener('dragend', ()=>{ el.classList.remove('dragging'); commitBuildPhaseOrder(buildId, list); });
+  makeSortable(list, '.phase', ()=>commitBuildPhaseOrder(buildId, list));
+  list.querySelectorAll('.step-list').forEach(sl=>{
+    const pi = parseInt(sl.dataset.pi,10);
+    makeSortable(sl, '.step', ()=>commitBuildStepOrder(buildId, pi, sl));
   });
-  list.addEventListener('dragover', (e)=>{
-    e.preventDefault();
-    const dragging = list.querySelector('.phase.dragging');
-    if(!dragging) return;
-    const after = getDragAfterElementGeneric(list, e.clientY, '.phase');
-    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging, after);
-  });
+}
+
+function commitBuildStepOrder(buildId, pi, list){
+  const b = getBuild(buildId);
+  if(!b) return;
+  const domOrder = [...list.querySelectorAll(':scope > .step')].map(el=>parseInt(el.dataset.si,10));
+  const oldSteps = b.checklist[pi].steps;
+  if(!domOrder.some((oldIdx,newIdx)=>oldIdx!==newIdx)) return;
+  b.checklist[pi].steps = domOrder.map(oldIdx=>oldSteps[oldIdx]);
+  persist();
+  render();
 }
 
 function commitBuildPhaseOrder(buildId, list){
@@ -838,7 +884,7 @@ function renderTemplateEditor(){
       ${ph.steps.map((s,si)=>{
         const text = typeof s==='string'? s : s.text;
         const photoFlag = (typeof s==='object' && s!==null && s.photoPrompt) || false;
-        return `<li class="tpl-step" draggable="true" data-si="${si}">
+        return `<li class="tpl-step" data-si="${si}">
           <span class="drag-handle">⠿</span>
           <input type="text" value="${escAttr(text)}" onchange="templateEditStep(${pi},${si}, this.value)" style="background:transparent;border:none;color:var(--text);flex:1;padding:0;font-size:14px;">
           <label class="tpl-photo-toggle" title="Vraagt om foto bij afvinken">
@@ -905,22 +951,22 @@ function renderBuildDetail(b){
   html += `<h2 class="section">Checklist</h2>`;
   const canReorder = b.status === 'in_progress';
   if(canReorder){
-    html += `<div class="small-note" style="margin-bottom:8px;">Sleep aan ⠿ om de volgorde van de fases voor deze build aan te passen.</div>`;
+    html += `<div class="small-note" style="margin-bottom:8px;">Sleep aan ⠿ om de volgorde van fases of stappen voor deze build aan te passen.</div>`;
   }
   html += `<div class="phase-list" id="phaseList-${b.id}">`;
   b.checklist.forEach((ph, pi)=>{
     const total = ph.steps.length;
     const done = ph.steps.filter(s=>s.checked).length;
     const pct = total? Math.round(done/total*100):0;
-    html += `<div class="phase" data-pi="${pi}" ${canReorder?'draggable="true"':''}>
+    html += `<div class="phase" data-pi="${pi}">
       <div class="phase-head" onclick="togglePhase('${b.id}',${pi})">
-        ${canReorder?'<span class="drag-handle" onclick="event.stopPropagation()">⠿</span>':''}
+        ${canReorder?'<span class="drag-handle">⠿</span>':''}
         <div class="title">${done===total && total>0?'✅':'▫️'} ${esc(ph.phase)}</div>
         <div class="count">${done}/${total}</div>
       </div>
       <div class="phase-progress"><div style="width:${pct}%"></div></div>
       <div id="phase-body-${b.id}-${pi}" class="${b._collapsed && b._collapsed[pi] ? 'hidden':''}">
-        ${ph.steps.map((s,si)=>renderStep(b,pi,si,s)).join('')}
+        <div class="step-list" data-pi="${pi}">${ph.steps.map((s,si)=>renderStep(b,pi,si,s,canReorder)).join('')}</div>
         <div class="addstep">
           <input type="text" id="addstep-${b.id}-${pi}" placeholder="Extra stap toevoegen...">
           <button class="btn small secondary" onclick="addBuildStep('${b.id}',${pi})">+</button>
@@ -935,8 +981,9 @@ function renderBuildDetail(b){
   return html;
 }
 
-function renderStep(b,pi,si,s){
-  return `<div class="step ${s.checked?'checked':''}">
+function renderStep(b,pi,si,s,canReorder){
+  return `<div class="step ${s.checked?'checked':''}" data-si="${si}">
+    ${canReorder?'<span class="drag-handle">⠿</span>':''}
     <div class="box" onclick="toggleStep('${b.id}',${pi},${si})">${s.checked?'✓':''}</div>
     <div class="stext">
       ${esc(s.text)}${s.photoPrompt?' <span title="Vraagt om foto bij afvinken">📷</span>':''}
@@ -1434,7 +1481,7 @@ function openMenu(){
     <button type="submit" class="btn secondary block" style="margin-top:8px;">Token opslaan</button>
     </form>
     ${getGhToken() ? '<button class="btn block" style="margin-top:8px;" onclick="manualSyncClick()">🔄 Sync nu</button>' : ''}
-    <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''}</div>
+    <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''} · versie 2/11</div>
     <div class="small-note">Met een token gaat elke wijziging automatisch (na enkele seconden) naar je SixtoTools-repo, en wordt bij openen/elke 30s gecontroleerd op updates van je andere toestel.</div>
 
     <h2 class="section">Handmatige back-up</h2>
