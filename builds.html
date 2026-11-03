@@ -333,7 +333,7 @@ const GH_REPO = 'SixtoTools';
 const GH_SYNC_PATH = 'data/builds-sync.json';
 const GH_TOKEN_KEY = 'sixto_tools_gh_token';
 const GH_DIRTY_KEY = 'sixto_tools_dirty_v1';
-let syncState = { lastSyncedAt: null, syncing: false, lastError: null };
+let syncState = { lastSyncedAt: null, lastSha: null, syncing: false, lastError: null };
 let ghPushTimer = null;
 let dirty = localStorage.getItem(GH_DIRTY_KEY) === '1'; // survives reload: true = a change from a previous session may never have been pushed
 
@@ -379,13 +379,15 @@ async function pullFromGitHub(silent){
     // Read via the API, never raw.githubusercontent.com: that CDN can serve a copy up to
     // 5 minutes old, which used to wipe ticks made just before (2/11/2026).
     const token = getGhToken();
-    let res;
+    let res, remoteSha = null;
     if(token){
       const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
       const meta = await fetch(`${api}/contents/${GH_SYNC_PATH}?ref=main`, { cache:'no-store', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github+json' }});
       if(meta.status === 404){ return; }
       if(!meta.ok) throw new Error('HTTP '+meta.status);
       const {sha} = await meta.json();
+      remoteSha = sha;
+      if(sha === syncState.lastSha) return; // unchanged since last pull: skip the multi-MB download (3/11/2026)
       res = await fetch(`${api}/git/blobs/${sha}`, { cache:'no-store', headers:{ Authorization:'Bearer '+token, Accept:'application/vnd.github.raw' }});
     } else {
       res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_SYNC_PATH}?t=${Date.now()}`, {cache:'no-store'});
@@ -396,10 +398,11 @@ async function pullFromGitHub(silent){
     const payload = await res.json();
     if(dirty) return; // re-check once more after parsing the response
     // Same or older than what this device last saw/sent: never apply it over newer local data
-    if(payload.updatedAt && syncState.lastSyncedAt && payload.updatedAt <= syncState.lastSyncedAt) return;
+    if(payload.updatedAt && syncState.lastSyncedAt && payload.updatedAt <= syncState.lastSyncedAt){ syncState.lastSha = remoteSha; return; }
     await applyRemotePayload(payload);
     if(dirty) return; // applyRemotePayload may have aborted internally; don't report a stale sync as successful
     syncState.lastSyncedAt = payload.updatedAt;
+    syncState.lastSha = remoteSha;
     syncState.lastError = null;
     if(!silent){ render(); if(state.currentBuildId) loadPhotos(state.currentBuildId); }
   }catch(e){
@@ -1481,7 +1484,7 @@ function openMenu(){
     <button type="submit" class="btn secondary block" style="margin-top:8px;">Token opslaan</button>
     </form>
     ${getGhToken() ? '<button class="btn block" style="margin-top:8px;" onclick="manualSyncClick()">🔄 Sync nu</button>' : ''}
-    <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''} · versie 2/11</div>
+    <div class="small-note">${status}${syncState.lastError ? ' · Fout: '+esc(syncState.lastError) : ''} · versie 3/11</div>
     <div class="small-note">Met een token gaat elke wijziging automatisch (na enkele seconden) naar je SixtoTools-repo, en wordt bij openen/elke 30s gecontroleerd op updates van je andere toestel.</div>
 
     <h2 class="section">Handmatige back-up</h2>
