@@ -74,6 +74,18 @@ section h3{font-size:12.5px;margin:10px 0 4px;color:var(--ink)}
 .seam{border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
 .sug{font-size:12.5px;color:var(--muted)}
 body{touch-action:manipulation}
+.sum .big{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums}
+.sum .sub{color:var(--muted);font-size:13px;margin-top:2px}
+.checks .adv{color:#6b6257;font-size:12.5px;padding-top:4px}
+.btnl{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 10px;display:inline-block}
+@media (pointer:coarse){select,input{font-size:16px}}
+.feel{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+details{border-bottom:1px solid var(--line)}
+details>summary{padding:12px 14px;cursor:pointer;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);list-style:none}
+details>summary::before{content:'▸ ';}
+details[open]>summary::before{content:'▾ ';}
+details>summary::-webkit-details-marker{display:none}
+details section{border-bottom:0;padding-top:4px}
 /* ---------- telefoon / smal scherm ---------- */
 @media (max-width:760px){
   html,body{height:100%;overflow:hidden}
@@ -110,12 +122,9 @@ body{touch-action:manipulation}
   <select id="designSel" title="Kies ontwerp" style="max-width:240px"></select>
   <button data-act="new">Nieuw</button>
   <button data-act="dup">Dupliceer</button>
-  <button data-act="rename">Hernoem</button>
-  <button data-act="del">Verwijder</button>
+  <select id="more" title="Meer"><option value="">Meer…</option><option value="rename">Hernoemen</option><option value="del">Verwijderen</option><option value="saveFile">Back-up bewaren ↓</option><option value="openFile">Back-up inladen ↑</option></select>
   <div class="spacer"></div>
   <button class="primary" data-act="exportSvg" title="Alles op ware grootte (mm), elke laag apart: omtrek, frezingen, gaten, pickguard">SVG 1:1</button>
-  <button data-act="saveFile" title="Alle ontwerpen als back-upbestand">Back-up ↓</button>
-  <button data-act="openFile" title="Back-upbestand inladen">Back-up ↑</button>
   <input type="file" id="fileIn" accept=".json" hidden>
   <input type="file" id="imgIn" accept="image/*" hidden>
 </header>
@@ -157,6 +166,7 @@ body{touch-action:manipulation}
 <script>
 // ================= vaste gegevens =================
 const LS_KEY = 'sixto-vormontwerper-v1';
+var ENGINE_READY = false; // pas aan het einde van het script: de plaatsingsfuncties moeten eerst geladen zijn
 const WOODS = {
   els:['Els (alder)',0.45], essen:['Moeras-essen (swamp ash)',0.42], essen2:['Essen (hard)',0.65],
   mahonie:['Mahonie',0.56], okoume:['Okoumé',0.45], linde:['Linde (basswood)',0.42],
@@ -205,18 +215,20 @@ function defaultBody(){
       thick:45, wood:'els', dens:0.5},
     bg:null };
 }
-function defaultHead(){
+function defaultHead(noPosts){
   const P = [[0,170,1],[2.5,171.5,0],[8,172,0],[21.5,165,0],[38,164,1],[34,121.5,0],[32.5,81,0],[33.5,49.5,0],[35,37.5,0],[25,19.5,0],[21.25,0,1],[0,0,1]]; // afgeleid van een echte open-book kop
   const d = { id:uid(), type:'headstock', name:'Nieuwe headstock', sym:true, tension:1,
     pts:P.map(([x,y,c])=>({x,y,c:!!c})),
-    set:{strings:6, nutW:42.5, spNut:35, layout:'split', first:58.5, spacing:34.5, xoff:21, slant:0, pat:null,
+    set:{strings:6, nutW:42.5, spNut:35, layout:'split', auto:true, first:58.5, spacing:34.5, xoff:21, slant:0, pat:null,
       tuner:'grover', holeD:10, postD:6, housW:16, housL:32, minSp:30, rod:'head'},
     posts:[], bg:null };
-  placePosts(d); return d;
+  if (!noPosts) placePosts(d); return d;
 }
 function placePosts(d){
   const s = d.set, n = s.strings, posts = [];
   if (s.layout === 'custom' && s.pat && s.pat.length === n){ const xn=stringXsNut(s); d.posts=s.pat.map(([x,y],i)=>({x,y,side:x>=xn[i]?'L':'R'})); return; }
+  if (s.layout === 'custom'){ s.layout = n>=4 && d.posts && d.posts.length ? headFam(d) : 'split'; s.pat=null; s.auto=true; }
+  if (ENGINE_READY && d.pts && d.pts.length>2 && autoPosts(d)) return;
   if (s.layout === 'split'){
     const b = Math.ceil(n/2);
     for (let i=0;i<n;i++){
@@ -232,11 +244,11 @@ function applyTuner(d){ const t=TUN[d.set.tuner]; if(!t) return; Object.assign(d
 function mkBody(id,name,pts,sym,ov){ const d=defaultBody(); d.id='ref-'+id; d.name=name; d.ref=true; d.sym=!!sym; d.pts=pts.map(([x,y,c])=>({x,y,c:!!c})); Object.assign(d.set,clone(ov||{})); return d; }
 function mkHead(id,name,pts,sym,ov){ const d=defaultHead(); d.id='ref-'+id; d.name=name; d.ref=true; d.sym=!!sym; d.pts=pts.map(([x,y,c])=>({x,y,c:!!c})); if(ov&&ov.tuner){ d.set.tuner=ov.tuner; applyTuner(d); } Object.assign(d.set,ov||{}); placePosts(d); return d; }
 // echte kop uit HEAD_PTS, met het originele mechaniekpatroon (en benaderende parameters voor de andere patronen)
-function mkHeadR(key,name,tuner,ex){ const h=HEAD_PTS[key], P=h.posts, n=P.length, sp=(P[n-1].y-P[0].y)/(n-1);
+function mkHeadR(key,name,tuner,ex){ const h=HEAD_PTS[key], P=h.posts.map(([x,y])=>({x,y})), n=P.length, sp=(P[n-1].y-P[0].y)/(n-1);
   const split=P.slice(0,3).every(p=>p.x<0)&&P.slice(3).every(p=>p.x>0);
   const ov= split ? {first:Math.round(Math.min(...P.map(p=>p.y))*2)/2,spacing:Math.round(Math.abs(P[1].y-P[0].y)*2)/2,xoff:Math.round(P.reduce((s,p)=>s+Math.abs(p.x),0)/n*2)/2}
                   : {first:Math.round(P[0].y*2)/2,spacing:Math.round(sp*2)/2,xoff:Math.round(P[0].x*2)/2,slant:Math.round((P[n-1].x-P[0].x)/(n-1)*2)/2};
-  return mkHead('h-'+key,name,h.pts,false,{tuner,nutW:h.nut,spNut:Math.round((h.nut-7.5)*2)/2,...ov,layout:'custom',pat:P.map(p=>p.slice()),...(ex||{})}); }
+  return mkHead('h-'+key,name,h.pts,false,{tuner,nutW:h.nut,spNut:Math.round((h.nut-7.5)*2)/2,...ov,layout:'custom',pat:h.posts.map(p=>p.slice()),...(ex||{})}); }
 const GIB={scale:628,nutW:43,heelW:56,spBridge:52,bridge:'tom',pu1:{t:'HB',d:40,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'HB',d:145,a:0},ctrl:ctrlDef(4,'square','toggle3','side'),pg:pgDef('small')};
 const FEN={scale:648,pocket:76,nutW:42,heelW:56,spBridge:54,frets:21,bridge:'trem',pu1:{t:'SC',d:42,a:-10},pu2:{t:'SC',d:95,a:0},pu3:{t:'SC',d:160,a:0},ctrl:ctrlDef(3,'diag','blade5','top'),pg:pgDef('full',22,true)};
 const BASS={scale:864,frets:20,strings:4,nutW:41,heelW:62,spNut:30,spBridge:57,bridge:'bass',pocket:76};
@@ -261,6 +273,10 @@ const BODY_PTS={ // echte omtrekken, overgetekend uit gratis 1:1-plannen (Electr
   prs:[[-0.5,190],[25,190],[28,189,1],[29,184],[57.5,185.5],[69,189],[81,197.5],[98.5,216],[111,215],[119,208.5],[125,194.5],[122.5,174],[105,129.5],[101.5,112],[103,94],[114,69.5],[157,-4],[166.5,-47.5],[162.5,-87.5],[141.5,-127],[110.5,-153],[82,-166],[29.5,-176],[-55.5,-172.5],[-105,-156],[-132.5,-136],[-148,-117.5],[-158.5,-97.5],[-165.5,-59.5],[-163.5,-25.5],[-156.5,-1],[-145,22],[-125,53.5],[-104.5,96.5],[-102.5,141],[-127.5,219],[-124,250],[-112.5,267.5],[-102,272.5],[-88.5,268.5],[-82,236.5],[-74.5,221.5],[-58,204.5],[-31.5,191]],
   redspecial:[[0,209.5],[42,209.5],[49,204],[61.5,199.5],[108.5,210.5],[121,207],[127,200.5],[129.5,189],[117.5,158],[113.5,136.5],[123.5,110],[153,72],[178.5,31.5],[189.5,2],[193.5,-20],[191.5,-48.5],[183,-77],[171,-98],[154,-118.5],[130.5,-137.5],[83.5,-160],[41,-169.5],[4,-171],[-43.5,-163],[-75.5,-150.5],[-117,-123.5],[-137.5,-100],[-150.5,-78.5],[-158.5,-55.5],[-161.5,-23],[-155,11],[-146,33],[-135,52.5],[-86.5,119],[-81.5,136.5],[-84.5,154],[-101.5,195.5],[-106.5,223.5],[-98,237],[-85.5,240.5],[-77,237.5],[-49,206.5],[-37,200],[-19.5,202.5],[-11.5,209]],
   n4:[[0,237],[27,237,1],[28,236],[28,192.5,1],[45.5,179],[63.5,177],[80.5,191],[90.5,211],[94,231.5],[97.5,238],[105.5,241],[118.5,234.5],[127.5,203],[123,164.5],[108,120.5],[106,101],[109.5,80.5],[144.5,1],[151,-42],[147,-73],[136.5,-94.5],[115.5,-115.5],[92,-125.5],[32.5,-131.5],[-51,-130.5],[-79.5,-126],[-98.5,-117.5],[-126.5,-95],[-144,-67],[-150.5,-38],[-150.5,-15.5],[-141.5,19],[-120,63.5],[-106,104.5],[-106.5,146.5],[-112,177.5],[-129,228.5],[-140.5,289],[-135.5,312],[-127.5,326.5],[-120,331],[-106,328.5],[-92,286],[-75.5,263],[-57,253.5],[-48,252],[-28,236.5,1]],
+  tiger:[[0.0,197.5],[28.0,193.5,1],[28.0,167.5,1],[55.0,156.5],[80.0,167.5],[98.0,183.5],[108.5,190.0,1],[119.0,183.5],[126.0,160.0],[119.0,124.0],[108.5,92.0],[119.0,67.0],[144.0,41.0],[161.5,-13.0],[158.0,-62.5],[144.0,-99.5],[115.0,-127.5],[72.5,-143.5],[0.0,-148.0],[-72.5,-143.5],[-115.0,-127.5],[-144.0,-99.5],[-158.0,-62.5],[-161.5,-13.0],[-144.0,41.0],[-119.0,67.0],[-108.5,92.0],[-119.0,124.0],[-126.0,160.0],[-119.0,183.5],[-108.5,190.0,1],[-98.0,183.5],[-80.0,167.5],[-55.0,156.5],[-28.0,167.5,1],[-28.0,193.5,1]], // benaderd vanaf foto's
+  wolf:[[0.0,150.5],[28,150.5,1],[28,135.5,1],[62.0,142.0],[81.0,159.0],[109.5,162.0],[121.5,143.0],[112.0,104.5],[108.5,79.0],[113.5,37.0],[135.5,-1.0],[151.5,-28.0],[157.5,-80.0],[135.0,-130.5],[89.0,-164.0],[-39.5,-169.5],[-120.5,-146.0],[-148.0,-117.5],[-157.5,-80.0],[-153.5,-34.0],[-146.0,-3.5],[-132.0,47.5],[-118.5,82.5],[-114.0,108.0],[-117.5,129.0],[-128.5,156.0],[-131.0,182.5],[-124.5,202.5],[-108.0,212.5],[-99.0,194.5],[-80.5,161.5],[-70.5,150.5],[-28,145.0,1],[-28,150.5,1]], // benaderd vanaf foto's
+  asher:[[0,256.5],[28,256.5,1],[28,209.5,1],[29.5,205.5],[33.5,198.0],[40.0,191.5],[47.0,187.5],[56.5,185.0],[66.0,185.0],[73.0,186.5],[80.5,190.5],[87.0,196.0],[93.0,203.0],[97.5,211.0],[104.5,233.0],[111.0,239.0],[117.5,239.5],[123.0,237.0],[130.0,230.0],[134.5,222.0],[138.5,206.0],[137.5,193.0],[132.5,175.0],[122.0,151.0],[115.5,132.0],[112.5,118.0],[112.5,99.5],[117.5,80.5],[148.5,14.5],[160.0,-15.5],[164.0,-32.5],[167.0,-52.5],[167.0,-74.0],[159.0,-101.5],[150.0,-117.5],[139.5,-129.0],[129.5,-137.0],[118.0,-143.0],[99.0,-149.0],[85.0,-151.5],[65.5,-152.0],[28.5,-150.0],[-9.0,-145.5],[-51.0,-136.0],[-81.0,-126.0],[-112.5,-112.0],[-134.5,-99.5],[-150.0,-85.0],[-158.0,-71.0],[-163.0,-56.0],[-165.5,-41.0],[-165.0,-27.0],[-162.0,-13.0],[-148.5,19.0],[-117.5,78.0],[-112.5,91.5],[-109.5,104.5],[-109.5,117.5],[-111.5,130.0],[-130.5,184.0],[-134.5,201.0],[-135.5,213.0],[-135.0,225.0],[-130.5,238.5],[-123.5,249.0],[-115.5,256.5],[-28,256.5,1]], // benaderd vanaf foto's
+  styleo:[[0,272],[28,272,1],[40,281],[70,282],[90,289],[104,316,1],[121,312],[146,299],[156,286],[160,262],[155,243],[143,215],[133,195],[128,175],[132,152],[146,134],[162,117],[179,93],[193,60],[200,32],[201,8],[197,-20],[189,-46],[177,-72],[160,-96],[137,-119],[114,-136],[88,-150],[56,-161],[21,-167.5],[-10,-169.5],[-44,-167],[-76,-160],[-107,-147],[-132,-130],[-152,-110],[-165,-92],[-179,-62],[-188,-36],[-195,-10],[-197,14],[-193,46],[-185,68],[-172,90],[-146,126],[-118,157],[-108,176],[-108,192],[-114,214],[-125,240],[-140,262],[-148,284],[-146,306],[-136,328],[-119,345],[-99,356],[-72,352],[-48,344],[-30,331],[-20,314],[-21,298,1],[-31,292],[-36,281],[-30,272,1]], // benaderd vanaf foto's
   albertlee:[[-0.5,250],[26.5,250],[28,249,1],[28,181.5],[27,179],[27.5,178,1],[45.5,179.5],[91,214],[104,213],[111,202],[92.5,142],[86.5,123.5],[85,104],[98,63],[126,-13],[134.5,-41.5],[134,-65.5],[124.5,-92],[102.5,-116],[57.5,-131.5],[-25,-135],[-60.5,-130.5],[-103,-116.5],[-145.5,-94.5],[-171,-72],[-182,-50.5],[-186,-25.5],[-178.5,5],[-145.5,80.5],[-133.5,114],[-131.5,147],[-143,240.5],[-149.5,300],[-143.5,308],[-133,309],[-118.5,294.5],[-79.5,247.5],[-69.5,244],[-60.5,245],[-51.5,250]]
 };
 const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; posts in snaarvolgorde (laag E eerst)
@@ -277,6 +293,7 @@ const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; pos
   dano:{nut:42.6,pts:[[0,141.5],[11.5,137],[25.5,132,1],[26,127.5],[25,93],[30.5,33.5],[22,11],[21.5,0,1],[-21.5,0,1],[-22,10.5],[-30.5,34],[-28.5,65.5],[-25,95],[-26,131,1],[-23.5,133],[-12.5,136.5]],posts:[[-21.1,45.5],[-17.9,74.4],[-15.6,103.8],[15.5,103.8],[17.6,74.4],[21,45.5]]},
   dbz:{nut:40.7,pts:[[0,152],[15,157.5],[30.5,169.5],[33.5,170.5,1],[35,167],[31.5,141.5],[31,101],[36,70],[43.5,46],[48,36.5],[48,33.5,1],[27,17],[21.5,8],[20.5,0.5,1],[-21,0.5,1],[-26.5,15.5],[-40.5,24.5],[-42,26.5,1],[-30.5,56],[-25.5,82.5],[-23,115],[-23.5,136],[-22.5,139,1],[-9.5,143.5],[-2.5,148.5]],posts:[[-22.2,41.2],[-12.8,72.9],[-8.5,104.2],[15.4,117.9],[16.9,82.9],[24.7,50.1]]},
   rhoads:{nut:42.7,pts:[[0.5,113.5],[20.5,145],[32.5,162],[39.5,165],[81.5,185],[85.5,184.5,1],[86.5,180.5],[65,141],[44.5,96.5],[29,49.5],[24,26],[21.5,0.5,1],[-21.5,0,1],[-22.5,12],[-27.5,23],[-38,35],[-45.5,40.5],[-46,42,1]],posts:[[-29.9,44.6],[-17.1,64.5],[-4.2,84.4],[8.5,104.1],[21.4,124],[34.3,143.9]]},
+  tiger:{nut:43,pts:[[0,174.3],[13.1,171.2],[27.5,165],[39.4,158.4,1],[33.4,122.3],[31.5,81.1],[31,39.9],[25.1,19.3],[21.5,0,1],[-21.5,0,1],[-25.1,19.3],[-31,39.9],[-31.5,81.1],[-33.4,122.3],[-39.4,158.4,1],[-27.5,165],[-13.1,171.2]],posts:[[-20.3,51.5],[-19.1,87.6],[-20.3,126],[20.3,126],[19.1,87.6],[20.3,51.5]]}, // benaderd vanaf foto (Doug Irwin)
   c5150:{nut:45.8,pts:[[0.5,121],[28.5,158],[37.5,171.5],[40.5,173],[51.5,182.5],[71.5,188],[91.5,179.5],[94.5,165.5],[85.5,146.5],[70,122.5],[45,76.5],[28.5,33],[23,0.5,1],[-23,0,1],[-31,17.5],[-52,41],[-43,62.5],[-28,83]],posts:[[-32.4,52.6],[-17.2,73.1],[-2,93.6],[13.1,114.1],[28.2,134.6],[43.4,155.1]]}
 };
 const NOPU={t:'none',d:95,a:0}, PU=(t,d,a)=>({t,d,a:a||0});
@@ -302,6 +319,10 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('explorer','Explorer-type',B.explorer,false,{...GIB,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
   mkBody('v','Flying V-type',B.v,false,{...GIB,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'diag','toggle3','side'),pg:pgDef('none')}),
   mkBody('moderne','Moderne-type',B.moderne,false,{...GIB,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
+  mkBody('tiger','Tiger-type (Doug Irwin)',B.tiger,false,{...GIB,scale:635,frets:24,pocket:20,pu1:PU('HB',40),pu2:PU('SC',85),pu3:PU('HB',128),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
+  mkBody('wolf','Wolf-type (Doug Irwin, ruwe benadering)',B.wolf,false,{...FEN,scale:635,frets:24,pocket:20,bridge:'tom',pu1:PU('SC',42),pu2:PU('SC',80),pu3:PU('SC',117),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
+  mkBody('asher','T-Deluxe-type (Bill Asher, offset T)',B.asher,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'row','blade3','side'),pg:pgDef('none')}),
+  mkBody('styleo','Style O-type (Orville Gibson, archtop met krul)',B.styleo,false,{...GIB,scale:629,frets:20,pocket:40,bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side'),pg:pgDef('none')}),
   mkBody('pbass','P-bass-type',B.strat.map(([x,y,c])=>[x*1.02,y*1.2+50,c]),false,{...BASS,pu1:{t:'none',d:50,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'BASS',d:150,a:0},ctrl:ctrlDef(2,'row','none','top'),pg:pgDef('full',27)}),
   mkBody('jbass','J-bass-type',B.jm.map(([x,y,c])=>[x*0.95,y*1.12+70,c]),false,{...BASS,pu1:{t:'JB',d:45,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'JB',d:130,a:0},ctrl:ctrlDef(3,'row','none','top'),pg:pgDef('full',27)}),
   mkHeadR('strat','Strat-type kop (50s/60s)','kluson'),
@@ -318,6 +339,7 @@ function REFS(){ const B=BODY_PTS; return [
   mkHeadR('c5150','Superstrat-type kop (5150)','inline'),
   mkHeadR('firebird','Firebird-type kop (omgekeerd)','inline'),
   mkHeadR('n4','N4-type kop (Washburn, omgekeerd)','inline'),
+  mkHeadR('tiger','Tiger-type kop (Doug Irwin, 3+3)','grover'),
   mkHead('h-martin','Recht 3+3 (akoestisch-type, benadering)',[[0,190],[34,190],[38,182],[35,40],[24,6],[21.5,0,1],[0,0,1]],true,{tuner:'grover',nutW:43,layout:'split',first:45,spacing:45,xoff:22}),
   mkHead('h-bass','Bas-kop (4 op rij, benadering)',[[-20.5,0,1],[20.5,0,1],[28,25],[52,60],[48,100],[40,140],[48,190],[50,220],[35,240],[0,238],[-30,230],[-45,210],[-47,140],[-45,60],[-35,25]],false,{tuner:'bass',strings:4,nutW:41,spNut:30,layout:'inline',first:60,spacing:42,xoff:-14,slant:2}),
 ]; }
@@ -338,7 +360,7 @@ let lib = load();
 let saveT = null;
 function save(){
   clearTimeout(saveT);
-  saveT = setTimeout(()=>{ try { localStorage.setItem(LS_KEY, JSON.stringify(lib)); } catch(e){ toast('Automatisch bewaren lukt niet. Maak een back-up via "Back-up ↓".'); } },300);
+  saveT = setTimeout(()=>{ try { localStorage.setItem(LS_KEY, JSON.stringify(lib)); } catch(e){ toast('Automatisch bewaren lukt niet. Maak een back-up via Meer… → Back-up bewaren.'); } },300);
 }
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2800); }
 const D = () => lib.designs.find(d=>d.id===lib.active[lib.tab]);
@@ -576,10 +598,10 @@ function itemReason(ctx,items,i,pos){
   const c=ctx.s.ctrl, it=items[i], r=itemR(it,c), g=ctx.g, side=it.t==='jack'&&c.jack==='side';
   if (!side){
     if (!inside(g.poly,pos)) return 'ligt buiten de body';
-    const e=distToPoly(g.poly,pos), need=Math.max(r+3, it.t==='knob'?16:14);
+    const e=distToPoly(g.poly,pos), need=Math.max(r+3, it.t==='knob'?22:14);
     if (e<need) return `te dicht bij de rand (${fmt(e)} mm, min. ${fmt(need,0)})`;
   }
-  for (let j=0;j<items.length;j++){ if(j===i) continue; const o=items[j], need=r+itemR(o,c)+3, dd=Math.hypot(o.x-pos.x,o.y-pos.y); if(dd<need) return `te dicht bij ${itemName(items,j)} (${fmt(dd)} mm, min. ${fmt(need,0)})`; }
+  for (let j=0;j<items.length;j++){ if(j===i) continue; const o=items[j], need=r+itemR(o,c)+(it.t==='knob'&&o.t==='knob'?6:3), dd=Math.hypot(o.x-pos.x,o.y-pos.y); if(dd<need) return `te dicht bij ${itemName(items,j)} (${fmt(dd)} mm, min. ${fmt(need,0)})`; }
   if (!side){
     for (const p of ctx.pus) if (rectDist(pos,p.route)<r+3) return `te dicht bij de ${PUNAME[p.k]}pickup`;
     for (const b of ctx.br) if (shapeDist(pos,b)<r+2) return 'raakt de brug';
@@ -597,9 +619,46 @@ function puReason(ctx,k,R){
   for (let i=0;i<its.length;i++){ const it=its[i]; if(it.t==='jack'&&ctx.s.ctrl.jack==='side') continue; if (rectDist(it,R)<itemR(it,ctx.s.ctrl)+3) return `te dicht bij ${itemName(its,i)}`; }
   return '';
 }
+// Knoppen: gemeten op Les Paul, SG, Explorer, Ibanez JS, Melody Maker, PRS e.a.:
+// buitenste rij 35-41 mm van de rand en de rand volgend, 38-52 mm tussen knoppen,
+// achter de brug en ruim buiten de hoge E (ruimte voor de rechterhand).
+const KNOB_E=37, KNOB_ROW=40;
+function knobTrack(ctx,e){
+  const g=ctx.g, s=ctx.s, P=resampleClosed(g.poly,2), n=P.length; let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%n]; A+=p.x*q.y-q.x*p.y; }); const sg=A>0?1:-1;
+  const xMin=s.spBridge/2+36, yMax=s.ctrl.layout==='diag'?20:-5;   // Strat-achtig mag naast de brugpickup, anders achter de brug
+  const ok=P.map((p,i)=>{ const a=P[(i-1+n)%n], b=P[(i+1)%n], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1;
+    const c={x:p.x-ty/l*e*sg, y:p.y+tx/l*e*sg}; return (c.x>xMin && c.y<yMax && inside(g.poly,c) && distToPoly(g.poly,c)>e-1) ? c : null; });
+  let best=null, cur=[]; const start=ok.findIndex(c=>!c); if(start<0) return null;
+  for(let k=1;k<=n;k++){ const c=ok[(start+k)%n]; if(c) cur.push(c); else { if(cur.length&&(!best||cur.length>best.length)) best=cur; cur=[]; } }
+  if (!best||best.length<3) return null;
+  if (best[0].y<best[best.length-1].y) best.reverse();   // beginnen bij de brug
+  const sA=[0]; for(let i=1;i<best.length;i++) sA.push(sA[i-1]+Math.hypot(best[i].x-best[i-1].x,best[i].y-best[i-1].y));
+  return {P:best,s:sA,L:sA[sA.length-1]};
+}
+function placeKnobs(d,ctx){
+  const c=d.set.ctrl, n=Math.max(0,c.n); if(!n) return [];
+  const sp=Math.max(c.knobD+15,38), T=knobTrack(ctx,KNOB_E); if(!T) return null;
+  const nearest=(TT,p)=>TT.P.reduce((m,q)=>{ const dd=Math.hypot(q.x-p.x,q.y-p.y); return dd<m.d?{d:dd,q}:m; },{d:Infinity,q:null}).q;
+  const Ti = c.layout==='square' && n>1 ? knobTrack(ctx,KNOB_E+KNOB_ROW) : null;
+  for (let s0=0; s0<=T.L; s0+=3){
+    let ks=[];
+    if (c.layout==='square' && n>1){ if(!Ti) return null; const no=Math.ceil(n/2), ni=n-no; const st=sp*1.35;
+      if (s0+st*(no-1)>T.L) break;
+      for (let j=0;j<no;j++){ const o=trackAt(T,s0+j*st); ks.push(o); if(j<ni){ const q=nearest(Ti,trackAt(T,Math.min(T.L,s0+(j+0.5)*st))); if(q) ks.push(q); } } }
+    else if (c.layout==='diag'){ if (s0+sp*0.6>T.L) break; const p0=trackAt(T,s0), p1=trackAt(T,Math.min(T.L,s0+sp*0.6));
+      let dx=p1.x-p0.x, dy=p1.y-p0.y; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l; const a=-0.45, rx=dx*Math.cos(a)-dy*Math.sin(a), ry=dx*Math.sin(a)+dy*Math.cos(a);
+      for (let j=0;j<n;j++) ks.push({x:p0.x+rx*sp*0.95*j, y:p0.y+ry*sp*0.95*j}); }
+    else { if (s0+sp*(n-1)>T.L) break; for (let j=0;j<n;j++) ks.push(trackAt(T,s0+j*sp)); }
+    const tmp=ks.map(p=>({t:'knob',x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2}));
+    if (tmp.every((it,i)=>!itemReason(ctx,tmp,i,it))) return tmp;
+  }
+  return null;
+}
 function autoControls(d,ctx){
   const c=d.set.ctrl, g=ctx.g, items=[];
-  const sp=c.knobD+5;
+  const sp=c.knobD+9;
+  const kn=placeKnobs(d,ctx);
+  if (kn) items.push(...kn); else {
   const shapes={diag:i=>[i*sp*0.45,-i*sp*0.89], row:i=>[i*sp*0.3,-i*sp*0.95], square:i=>[(i%2)*sp+Math.floor(i/2)*sp*0.25, -(i%2)*sp*0.25-Math.floor(i/2)*sp]};
   const offs=[...Array(Math.max(0,c.n))].map((_,i)=>(shapes[c.layout]||shapes.diag)(i));
   const yRef=g.minY*0.5, xs=hits(g.poly,yRef), xr=xs.length?xs[xs.length-1]:120;
@@ -609,7 +668,7 @@ function autoControls(d,ctx){
     const mk=p=>offs.map(o=>({t:'knob',x:p.x+o[0],y:p.y+o[1]}));
     const ok=p=>{ const tmp=mk(p); return tmp.every((it,i)=>!itemReason(ctx,tmp,i,it)); };
     const A=spiral(pref,ok,140,5)||pref; items.push(...mk(A));
-  }
+  } }
   if (c.sw!=='none'){
     let pref;
     if (c.sw==='toggle3'){ const y=ctx.topY-35, hx=hits(g.poly,y); pref = hx.length && hx[0] < -d.set.heelW/2-30 ? {x:(hx[0]-d.set.heelW/2)/2,y} : null; }
@@ -625,7 +684,7 @@ function autoControls(d,ctx){
     const cands=g.poly.filter(p=>p.x>10).map(p=>({x:p.x,y:p.y,d:Math.hypot(p.x-xJ,p.y-yJ)})).sort((a,b)=>a.d-b.d);
     const p=cands.find(q=>!itemReason(ctx,items,ji,q))||cands[0]; if(p){ jack.x=p.x; jack.y=p.y; }
   } else { const pref={x:xJ-24,y:yJ}; const p=spiral(pref,q=>!itemReason(ctx,items,ji,q),120,5)||pref; jack.x=p.x; jack.y=p.y; }
-  items.forEach(it=>{ it.x=Math.round(it.x*2)/2; it.y=Math.round(it.y*2)/2; });
+  items.forEach(it=>{ it.x=Math.round(it.x*10)/10; it.y=Math.round(it.y*10)/10; });
   c.items=items;
 }
 function autoPG(d,ctx){
@@ -659,6 +718,7 @@ function autoPG(d,ctx){
   pg.pts=P;
 }
 function refreshAuto(d,light){
+  if (d.type==='headstock'){ if(!light && !d.ref && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); return; }
   if (d.type!=='body') return;
   const s=d.set, c=s.ctrl;
   let ctx=bodyCtx(d);
@@ -711,6 +771,68 @@ function housing(d,g,p){
   if (xs.length>=2){ const xl=xs[0], xr=xs[xs.length-1]; dir=(p.x-xl)<(xr-p.x)?-1:1; edge=dir<0?xl:xr; }
   const end=p.x+dir*s.housL;
   return {dir,edge,end,rect:{cx:p.x+dir*s.housL/2,cy:p.y,w:s.housL,h:s.housW,a:0},covered:isFinite(edge)&&(dir<0?end>edge+2:end<edge-2)};
+}
+// ---------- mechanieken automatisch plaatsen ----------
+// Regels nagemeten op 14 echte koppen: alle gaten op dezelfde afstand van de rand (11-14 mm),
+// snaar zo recht mogelijk van nut naar post (Fender ±0°, Gibson tot ±7°), geen snaar tegen een andere post.
+const TUN_E={grover:13,kluson:11.5,inline:12.5,locking:13,mini:11,bass:17};   // gat tot rand
+const TUN_SP={grover:34,kluson:30,inline:24.5,locking:25,mini:24,bass:45};    // gangbare steek
+function edgeTrack(g,side,e){
+  const P=resampleClosed(g.poly,1.5), n=P.length; let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%n]; A+=p.x*q.y-q.x*p.y; }); const sg=A>0?1:-1;
+  const ok=P.map((p,i)=>{ const a=P[(i-1+n)%n], b=P[(i+1)%n], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1, ix=-ty/l*sg, iy=tx/l*sg;
+    const c={x:p.x+ix*e,y:p.y+iy*e}; return (-ix*side>0.5 && c.y>28 && inside(g.poly,c) && distToPoly(g.poly,c)>e-0.8) ? c : null; });
+  // langste aaneengesloten stuk
+  let best=null, cur=[]; const start=ok.findIndex(c=>!c); if(start<0) return null;
+  for(let k=1;k<=n;k++){ const c=ok[(start+k)%n]; if(c) cur.push(c); else { if(cur.length&&(!best||cur.length>best.length)) best=cur; cur=[]; } }
+  if (!best||best.length<4) return null;
+  if (best[0].y>best[best.length-1].y) best.reverse();
+  const s=[0]; for(let i=1;i<best.length;i++) s.push(s[i-1]+Math.hypot(best[i].x-best[i-1].x,best[i].y-best[i-1].y));
+  return {P:best,s,L:s[s.length-1]};
+}
+function trackAt(T,t){ const s=T.s; let lo=0,hi=s.length-1; while(hi-lo>1){ const m=(lo+hi)>>1; if(s[m]<=t) lo=m; else hi=m; } const u=(t-s[lo])/((s[hi]-s[lo])||1); return lerpP(T.P[lo],T.P[hi],Math.max(0,Math.min(1,u))); }
+function pullAngle(p,xs,r){ const tx=p.x+(p.x<xs?r:-r); return Math.atan2(tx-xs,p.y)*180/Math.PI; }
+function placeSide(d,g,strs,side,xn){
+  const s=d.set, k=strs.length, r=s.postD/2, mn=s.minSp, ideal=Math.max(mn,TUN_SP[s.tuner]||mn), e0=s.edge||TUN_E[s.tuner]||12.5;
+  const yMin=s.rod==='head'?44:34, rr=rodRect(d); let cands=[];
+  for (const e of [e0,e0+1.5,e0-1]){
+    const T=edgeTrack(g,side,e); if(!T) continue;
+    const dsHi=k>1?Math.min(ideal*1.45,T.L/(k-1)):mn+1;
+    for (let ds=mn+1; ds<=Math.max(mn+1,dsHi)+1e-6; ds+=0.5) for (let s0=0; s0+ds*(k-1)<=T.L+1e-6; s0+=1){
+      const ps=strs.map((_,j)=>trackAt(T,s0+j*ds)); let c=2*(e-e0)**2+0.06*(ds-ideal)**2+0.004*s0;
+      if (ps[0].y<yMin) c+=40*(yMin-ps[0].y)**2;
+      for (let j=1;j<k;j++){ const dd=Math.hypot(ps[j].x-ps[j-1].x,ps[j].y-ps[j-1].y); if(dd<mn+0.3) c+=200*(mn+0.3-dd)**2; }
+      for (let j=0;j<k;j++){ const p=ps[j], xs=xn[strs[j]], a=pullAngle(p,xs,r), A=Math.abs(a);
+        c+=a*a; if(A>9) c+=40*(A-9)**2;
+        if (rr && rectDist(p,rr)<s.holeD/2+3) c+=1e4;
+        const tp={x:p.x+(p.x<xs?r:-r),y:p.y}, a0={x:xs,y:0};
+        for (let m=0;m<k;m++){ if(m===j) continue; const q=ps[m]; if(q.y>p.y+r) continue; const cl=segDist(q,a0,tp)-r; if(cl<2.5) c+=120*(2.5-cl)**2; } }
+      cands.push({c,ps});
+    }
+  }
+  if (!cands.length) return null;
+  cands.sort((a,b)=>a.c-b.c);
+  // behuizing en knop pas controleren voor de beste kandidaten (duurder)
+  const tmp={...d,posts:[]};
+  for (const cd of cands.slice(0,12)){ let pen=0; for(let i=0;i<k;i++){ const h=housing(tmp,g,cd.ps[i]); if(h.covered) pen+=1e3; for(let j=i+1;j<k;j++){ const h2=housing(tmp,g,cd.ps[j]); if(h.dir===h2.dir&&rectGap(h.rect,h2.rect)<1) pen+=500; } } cd.c+=pen; }
+  const best=cands.slice(0,12).sort((a,b)=>a.c-b.c)[0];
+  return strs.map((si,j)=>({si,p:best.ps[j]}));
+}
+function postGroups(s){ const n=s.strings, all=[...Array(n).keys()];
+  if (s.layout==='split'){ const b=Math.ceil(n/2); return [[all.slice(0,b),-1],[all.slice(b).reverse(),1]]; }
+  if (s.layout==='rev') return [[all.slice().reverse(),1]];
+  return [[all,-1]]; }
+function autoPosts(d){
+  const s=d.set, n=s.strings, g=geom(d), xn=stringXsNut(s), out=Array(n);
+  for (const [strs,side] of postGroups(s)){ if(!strs.length) continue; const r=placeSide(d,g,strs,side,xn); if(!r) return false; r.forEach(({si,p})=>out[si]=p); }
+  d.posts=out.map((p,i)=>({x:Math.round(p.x*10)/10,y:Math.round(p.y*10)/10,side:p.x>=xn[i]?'L':'R'}));
+  return true;
+}
+// hoe recht lopen de snaren? (voor de beoordeling in het paneel)
+function pullInfo(d){
+  const s=d.set, g=geom(d), xn=stringXsNut(s); let worst=0; const edges=[];
+  d.posts.forEach((p,i)=>{ if(xn[i]!=null) worst=Math.max(worst,Math.abs(pullAngle(p,xn[i],s.postD/2))); edges.push(inside(g.poly,p)?distToPoly(g.poly,p):0); });
+  const word = worst<=4?'recht':worst<=8?'goed':worst<=12?'matig':'slecht';
+  return {worst,word,eMin:Math.min(...edges),eMax:Math.max(...edges)};
 }
 function headChecks(d){
   const g=geom(d), s=d.set, out=[];
@@ -795,7 +917,7 @@ function render(){
   const mh=$('#modeHint');
   mh.className = blockMsg ? 'bad' : '';
   mh.textContent = blockMsg ? '⛔ '+blockMsg : calib ? 'Kalibreren: klik 2 punten op de afbeelding waarvan je de afstand kent' : mode==='measure' ? 'Meten: sleep van punt A naar punt B' : mode==='bg' ? 'Achtergrond: sleep om de afbeelding te verplaatsen' : tgt.isPG ? 'Je bewerkt de pickguard' : '';
-  $('#help').textContent = mode==='edit' ? 'Sleep punten (buren schuiven mee) · blauwe bolletjes = richting en ronding · dubbelklik op de lijn = punt erbij · Delete = punt weg · pickups, knoppen en posts zijn ook versleepbaar' : 'Esc = terug naar bewerken';
+  $('#help').textContent = mode==='edit' ? 'Sleep de punten · dubbelklik op de lijn = punt erbij · alles op de tekening is versleepbaar' : 'Esc = terug naar bewerken';
   const showTgt = d.type==='body' && d.set.pg.style!=='none' && d.set.pg.pts && !d.ref;
   $('#tgtGrp').style.display = showTgt ? 'flex' : 'none';
   document.querySelector('[data-act=tgtBody]').classList.toggle('on',!tgt.isPG);
@@ -890,7 +1012,7 @@ function dimsOverlay(d,g){
   const a=toS(xL,g.maxY),b=toS(xL,y0);
   o+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="1.2" marker-start="url(#ar)" marker-end="url(#ar)"/>`;
   o+=label(a[0],(a[1]+b[1])/2,`${d.type==='headstock'?'lengte vanaf nut':'lengte'} ${fmt(g.maxY-y0)}`,col);
-  if (d.type==='body'){ const bt=bouts(g); if (bt) [['onderbout',bt.lower],['taille',bt.waist],['bovenbout',bt.upper]].forEach(([n,r])=>{ if(r) o+=hDim(r.y,r.l,r.r,`${n} ${fmt(r.w)}`,'#7a5a3a'); }); }
+  if (d.type==='body' && lib.view.tech){ const bt=bouts(g); if (bt) [['onderbout',bt.lower],['taille',bt.waist],['bovenbout',bt.upper]].forEach(([n,r])=>{ if(r) o+=hDim(r.y,r.l,r.r,`${n} ${fmt(r.w)}`,'#7a5a3a'); }); }
   return o;
 }
 
@@ -904,74 +1026,126 @@ function optionsFor(type,excl,selId){
   const o=x=>`<option value="${x.id}" ${x.id===selId?'selected':''}>${esc(x.name)}</option>`;
   return `<optgroup label="Mijn ontwerpen">${own.map(o).join('')}</optgroup><optgroup label="Referentievormen">${refs.map(o).join('')}</optgroup>`;
 }
+const PRESETS={
+  gib:['Twee humbuckers, 4 knoppen (Gibson-stijl)',{bridge:'tom',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
+  fen:['Drie single coils, 3 knoppen (Fender-stijl)',{bridge:'trem',pu1:PU('SC',42,-10),pu2:PU('SC',95),pu3:PU('SC',160),ctrl:ctrlDef(3,'diag','blade5','top')}],
+  tele:['Twee single coils, Tele-stijl',{bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'row','blade3','side')}],
+  p90:['Twee P90’s, 4 knoppen',{bridge:'tom',pu1:PU('P90',42),pu2:NOPU,pu3:PU('P90',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
+  hss:['Humbucker + 2 single coils (modern)',{bridge:'trem',pu1:PU('HB',40),pu2:PU('SC',95),pu3:PU('SC',145),ctrl:ctrlDef(2,'diag','blade5','side')}],
+  hb1:['Eén humbucker, 1 knop (strak)',{bridge:'hard',pu1:PU('HB',40),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(1,'row','none','side')}],
+  none:['Alleen de vorm (geen hardware)',{bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side')}]
+};
+const REF_FOTO=['tiger','wolf','asher','styleo','h-tiger'];
+function refNote(d){ const k=d.id.slice(4);
+  if (REF_FOTO.includes(k)) return 'Omtrek benaderd vanaf foto’s en geschaald op de gekende maten (± 5 à 10 mm). ';
+  if (d.type==='body'&&!/bass/.test(d.id)) return 'Omtrek overgetekend uit een gratis 1:1-plan (nauwkeurig tot ±1 mm). ';
+  if (d.type==='headstock'&&HEAD_PTS[d.id.slice(6)]) return 'Omtrek en mechaniekgaten overgetekend uit een gratis 1:1-plan (nauwkeurig tot ±1 mm). ';
+  return 'Een benadering van een bekende vorm. '; }
 function buildPanel(){
-  const d=D(); let h='';
-  if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${d.type==='body'&&!/bass/.test(d.id)?'Omtrek overgetekend uit een gratis 1:1-plan (nauwkeurig tot ±1 mm). ':d.type==='headstock'&&HEAD_PTS[d.id.slice(6)]?'Omtrek en mechaniekgaten overgetekend uit een gratis 1:1-plan (nauwkeurig tot ±1 mm). ':'Een benadering van een bekende vorm. '}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
-  h+=`<section><h2>Maten &amp; controle</h2><div class="info" id="info"></div><div class="checks" id="checks"></div>
-    <p class="hint">Oranje velden kun je aanpassen: de vorm schaalt of schuift mee.</p></section>`;
+  const d=D(), v=lib.view; let h='';
+  if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
+  h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section>`;
   h+=`<section><h2>Vorm</h2>
-    ${chk('sym','Symmetrisch (je tekent de rechterhelft, links spiegelt mee)')}
-    <div class="row"><label>Rondheid van de lijn</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
-    <div class="row"><label>Buren schuiven mee binnen</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:100px"><span class="u" id="softLbl" style="width:44px"></span></div>
-    ${chk('view.snap','Punten op hele mm vastklikken')}
+    <div class="feel"><button data-act="feel" data-k="w-">↔ Smaller</button><button data-act="feel" data-k="w+">↔ Breder</button><button data-act="feel" data-k="l-">↕ Korter</button><button data-act="feel" data-k="l+">↕ Langer</button></div>
+    <div class="row"><label>Lijn: strak ↔ rond</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
+    ${chk('sym','Symmetrisch')}
     <div class="btns"><button data-act="fair" title="Haalt bultjes en deukjes uit de lijn">Gladstrijken</button></div>
     <div id="ptBox"></div></section>`;
   if (d.type==='body'){
-    h+=`<section><h2>Hals &amp; snaren</h2>
+    h+=`<section><h2>Hardware</h2>
+      <div class="row"><label>Opbouw</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
+      ${sel_('set.ctrl.layout','Knoppen',{row:'Op een rij, langs de rand',square:'In een blok (2 rijen)',diag:'Schuin (Strat-achtig)'},'data-after="ctrl"')}
+      <div class="btns"><button data-act="autoCtrl">Knoppen opnieuw plaatsen</button></div>
+      <p class="hint" id="ctrlState"></p></section>`;
+    h+=`<details id="techBox" ${v.tech?'open':''}><summary>Technische details</summary>
+      <section><h2>Maten</h2><div class="info" id="info"></div><p class="hint">Oranje velden kun je aanpassen: de vorm schaalt of schuift mee.</p></section>
+      <section><h2>Hals &amp; snaren</h2>
       ${num('set.scale','Mensuur')}${num('set.frets','Aantal frets','',1)}${num('set.strings','Aantal snaren','',1,'min="1" max="12"')}
       ${num('set.nutW','Halsbreedte bij nut')}${num('set.heelW','Halsbreedte bij laatste fret')}${num('set.pocket','Halsvoet in de body')}
       ${num('set.spNut','Snaarafstand nut (buitenste)')}${num('set.spBridge','Snaarafstand brug (buitenste)')}
-      <p class="hint">Nulpunt (y = 0) is de zadellijn van de brug.</p></section>`;
-    h+=`<section><h2>Brug &amp; pickups</h2>
+      <p class="hint">Nulpunt (y = 0) is de zadellijn van de brug.</p></section>
+      <section><h2>Brug &amp; pickups</h2>
       ${sel_('set.bridge','Brug',BRIDGES)}
       <table class="tbl"><tr><th></th><th>type</th><th>afstand</th><th>hoek</th></tr>
       ${['pu3:Hals','pu2:Midden','pu1:Brug'].map(x=>{ const [k,n]=x.split(':'); return `<tr><td>${n}</td><td><select data-bind="set.${k}.t">${Object.entries(PUS).map(([a,b])=>`<option value="${a}">${b[0]}</option>`).join('')}</select></td><td><input type="number" step="0.5" data-bind="set.${k}.d"></td><td><input type="number" step="1" data-bind="set.${k}.a" style="width:50px"></td></tr>`; }).join('')}</table>
-      <p class="hint">Afstand = midden pickup tot zadel (mm), hoek in graden. Pickups sleep je ook op de tekening; ze stoppen vanzelf waar ze te dicht bij iets komen.</p></section>`;
-    h+=`<section><h2>Bediening</h2>
+      <p class="hint">Afstand = midden pickup tot zadel (mm), hoek in graden. Pickups sleep je ook op de tekening.</p></section>
+      <section><h2>Bediening</h2>
       ${num('set.ctrl.n','Aantal knoppen','',1,'min="0" max="6" data-after="ctrl"')}
-      ${sel_('set.ctrl.layout','Opstelling',{diag:'Schuin (Strat-achtig)',row:'Op een rij (Tele-achtig)',square:'Blok (Les Paul-achtig)'},'data-after="ctrl"')}
       ${sel_('set.ctrl.sw','Schakelaar',{none:'Geen',toggle3:'3-weg toggle',blade3:'3-weg schuif',blade5:'5-weg schuif'},'data-after="ctrl"')}
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
       ${num('set.ctrl.knobD','Knopdiameter','mm',0.5,'data-after="ctrl"')}
-      <div class="btns"><button data-act="autoCtrl">Automatisch plaatsen</button></div>
-      <p class="hint" id="ctrlState"></p></section>`;
-    h+=`<section><h2>Pickguard</h2>
+      <p class="hint">Regels (nagemeten op echte plannen): buitenste knoppen ± 37 mm van de rand en de rand volgend, ± 40 mm tussen knoppen, achter de brug en ruim buiten de hoge E.</p></section>
+      <section><h2>Pickguard</h2>
       ${sel_('set.pg.style','Pickguard',{none:'Geen',full:'Groot (rond de pickups)',small:'Klein (diskant-zijde)'},'data-after="pg"')}
       <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}
       <div class="btns"><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
-      <p class="hint" id="pgState"></p></div></section>`;
-    h+=`<section><h2>Hout &amp; gewicht</h2>${num('set.thick','Dikte body')}${sel_('set.wood','Houtsoort',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}
-      <p class="hint">Schatting van de massieve blank, zonder frezingen.</p></section>`;
+      <p class="hint" id="pgState"></p></div></section>
+      <section><h2>Hout &amp; gewicht</h2>${num('set.thick','Dikte body')}${sel_('set.wood','Houtsoort',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}
+      <p class="hint">Schatting van de massieve blank, zonder frezingen.</p></section></details>`;
   } else {
-    h+=`<section><h2>Hals bij de nut</h2>
-      ${num('set.strings','Aantal snaren','',1,'min="1" max="12" data-after="layout"')}${num('set.nutW','Halsbreedte bij nut')}${num('set.spNut','Snaarafstand nut (buitenste)')}
-      <p class="hint">Nulpunt (y = 0) is de nut. De kop loopt naar boven.</p></section>`;
-    h+=`<section><h2>Stemmechanieken</h2>
+    h+=`<section><h2>Mechanieken</h2>
+      ${sel_('set.layout','Patroon',{split:'Verdeeld (3 + 3)',inline:'Op één rij (bas-kant)',rev:'Op één rij, omgekeerd (diskant-kant)',...(d.set.pat&&d.set.pat.length===d.set.strings?{custom:'Zoals het origineel'}:{})},'data-after="layout"')}
       ${sel_('set.tuner','Type',TUN,'data-after="tuner"')}
-      ${sel_('set.layout','Patroon',{split:'Verdeeld (bv. 3 + 3)',inline:'Op één rij (bv. 6 inline)',...(d.set.pat&&d.set.pat.length===d.set.strings?{custom:'Zoals het origineel'}:{})},'data-after="layout"')}
-      ${num('set.first','Eerste post: afstand tot nut','mm',0.5,'data-after="layout"')}
-      ${num('set.spacing','Afstand tussen posts (lengte)','mm',0.5,'data-after="layout"')}
-      <div id="xoffRow"></div>
-      <h3>Maten van dit type</h3>
+      <div class="btns"><button data-act="resetPosts">Mechanieken opnieuw plaatsen</button></div>
+      <p class="hint" id="postState"></p></section>
+      <details id="techBox" ${v.tech?'open':''}><summary>Technische details</summary>
+      <section><h2>Maten</h2><div class="info" id="info"></div></section>
+      <section><h2>Hals bij de nut</h2>
+      ${num('set.strings','Aantal snaren','',1,'min="1" max="12" data-after="layout"')}${num('set.nutW','Halsbreedte bij nut')}${num('set.spNut','Snaarafstand nut (buitenste)')}
+      <p class="hint">Nulpunt (y = 0) is de nut. De kop loopt naar boven.</p></section>
+      <section><h2>Maten van dit mechaniektype</h2>
+      ${num('set.edge','Gat tot rand','mm',0.5,'data-after="layout" placeholder="auto"')}
       ${num('set.holeD','Diameter boorgat')}${num('set.postD','Diameter post (as)')}${num('set.minSp','Min. afstand tussen posts')}
       ${num('set.housW','Behuizing: breedte')}${num('set.housL','Behuizing: lengte tot knop')}
-      <p class="hint">Posts sleep je ook op de tekening. Ze kunnen niet dichter bij elkaar dan de minimumafstand, en niet te dicht bij de rand. Grijs gestippeld = behuizing achteraan.</p>
-      <div class="btns"><button data-act="fitPosts">Posts inpassen</button><button data-act="resetPosts">Terug naar patroon</button></div>
-      <table class="tbl"><thead><tr><th>#</th><th>x</th><th>y</th><th>snaar langs</th></tr></thead><tbody id="postRows"></tbody></table></section>`;
-    h+=`<section><h2>Spanstaaf</h2>${sel_('set.rod','Afstellen langs',{head:'De kop (achter de nut)',heel:'De hiel (body-kant)'})}</section>`;
+      <p class="hint">Regels (nagemeten op 14 echte koppen): alle gaten even ver van de rand (11 à 14 mm), snaar zo recht mogelijk van nut naar post, geen snaar tegen een andere post. Grijs gestippeld = behuizing achteraan.</p>
+      <table class="tbl"><thead><tr><th>#</th><th>x</th><th>y</th><th>snaar langs</th></tr></thead><tbody id="postRows"></tbody></table></section>
+      <section><h2>Spanstaaf</h2>${sel_('set.rod','Afstellen langs',{head:'De kop (achter de nut)',heel:'De hiel (body-kant)'},'data-after="layout"')}</section></details>`;
   }
-  h+=`<section><h2>Weergave</h2>
-    ${chk('view.grid','Raster')}${chk('view.dims','Maatlijnen')}${chk('view.hw','Hardware (brug, pickups, knoppen, mechanieken)')}${chk('view.routes','Frezingen en kanalen')}
+  h+=`<details id="viewBox" ${v.vw?'open':''}><summary>Weergave, achtergrond &amp; back-up</summary><section>
+    ${chk('view.grid','Raster')}${chk('view.dims','Maatlijnen')}${chk('view.hw','Hardware')}${chk('view.routes','Frezingen en kanalen')}
     ${d.type==='body'?chk('view.pgShow','Pickguard')+chk('view.neck','Hals met frets'):''}
     ${chk('view.strings','Snaren')}${chk('view.wline','Breedte meten onder de muis')}
-    <div class="row"><label>Vergelijk met</label><select data-bind="view.ghost" id="ghostSel" style="max-width:190px"></select></div></section>`;
-  h+=`<section><h2>Achtergrond (schets of foto)</h2><div id="bgBox"></div></section>`;
+    <div class="row"><label>Buren schuiven mee binnen</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:100px"><span class="u" id="softLbl" style="width:44px"></span></div>
+    ${chk('view.snap','Punten op hele mm vastklikken')}
+    <div class="row"><label>Vergelijk met</label><select data-bind="view.ghost" id="ghostSel" style="max-width:190px"></select></div></section>
+    <section><h2>Achtergrond (schets of foto)</h2><div id="bgBox"></div></section>
+    <section><h2>Back-up</h2><div class="btns"><button data-act="saveFile">Bewaren ↓</button><label for="fileIn" class="btnl">Inladen ↑</label></div>
+    <p class="hint">Om ontwerpen van je laptop naar je iPhone te brengen: bewaar hier een back-up en laad die op het andere toestel in.</p></section></details>`;
   P.innerHTML=h;
+  P.querySelectorAll('details').forEach(el=>el.addEventListener('toggle',()=>{ lib.view[el.id==='techBox'?'tech':'vw']=el.open; save(); }));
   $('#ghostSel').innerHTML=`<option value="">— niets —</option>`+optionsFor(d.type,d.id);
   if (lib.view.ghost && !lib.designs.some(x=>x.id===lib.view.ghost&&x.type===d.type&&x.id!==d.id)) lib.view.ghost='';
   panelKey=''; applyLock();
 }
-function applyLock(){ if(!locked()) return; P.querySelectorAll('[data-bind]:not([data-bind^="view."]),[data-dim],[data-act=bgLoad],[data-act=delPt],[data-act=fair],[data-act=autoCtrl],[data-act=pgRegen],[data-act=tgtPG],[data-act=fitPosts],[data-act=resetPosts]').forEach(el=>el.disabled=true); }
+// korte samenvatting bovenaan: enkel wat je nodig hebt om te voelen of het klopt
+function sumHTML(d,g){
+  const L=d.type==='body'?g.maxY-g.minY:g.maxY, B=g.maxX-g.minX;
+  let h=`<div class="big">${fmt(L,0)} × ${fmt(B,0)} mm</div>`;
+  if (d.type==='body'){ const s=d.set, dens=s.wood==='ander'?s.dens:WOODS[s.wood][1];
+    h+=`<div class="sub">± ${fmt(g.area*s.thick/1000*dens/1000,1)} kg blank · hals sluit aan bij fret ${fmt(yToFret(s,topOf(g)),0)}</div>`; }
+  else { const pi=pullInfo(d), lay={split:'3 + 3',inline:'6 op rij',rev:'6 op rij omgekeerd',custom:'zoals het origineel'}[d.set.layout]||'';
+    const n=d.set.strings, lb=d.set.layout==='split'?`${Math.ceil(n/2)} + ${Math.floor(n/2)}`:d.set.layout==='custom'?lay:`${n} op rij${d.set.layout==='rev'?' (omgekeerd)':''}`;
+    h+=`<div class="sub">${lb} · snaren lopen <b class="${pi.worst<=8?'good':pi.worst<=12?'':'warn'}">${pi.word}</b> naar de mechanieken</div>`; }
+  return h;
+}
+// zachte adviezen (geen fouten, wel dingen die een bouwer zou opmerken)
+function bodyAdvice(d){
+  const g=geom(d), s=d.set, out=[]; let best={w:0,y:0};
+  for (let y=g.minY+5;y<Math.min(60,g.maxY);y+=2){ const w=widthAt(g.poly,y); if(w&&w.w>best.w) best={w:w.w,y}; }
+  if (best.y>25) out.push('De brug staat achter het breedste punt van de onderbout: de arm ligt minder goed en de gitaar wordt kopzwaarder.');
+  if (best.y<-120) out.push('Veel body achter de brug: de gitaar wordt lang en zwaar aan de onderkant.');
+  if (-g.minY<105) out.push(`Weinig hout achter de brug (${fmt(-g.minY,0)} mm; echte gitaren 130 à 250 mm).`);
+  const f=yToFret(s,topOf(g)); if (f!=null && f<14) out.push(`De hals sluit aan bij fret ${fmt(f,0)}: de hoge frets zijn moeilijk bereikbaar (meestal 16 à 19).`);
+  return out;
+}
+function headAdvice(d){
+  if (!d.posts.length) return [];
+  const pi=pullInfo(d), out=[];
+  if (pi.worst>10) out.push(`Snaren lopen schuin naar hun post (tot ${fmt(pi.worst,0)}°): kans op haperen in de nut. Een smallere kop aan de nut-kant of mechanieken op één rij helpt.`);
+  if (pi.eMax-pi.eMin>3 && !d.ref) out.push(`De gaten staan niet even ver van de rand (${fmt(pi.eMin,0)} tot ${fmt(pi.eMax,0)} mm). "Mechanieken opnieuw plaatsen" zet ze gelijk.`);
+  return out;
+}
+function applyLock(){ if(!locked()) return; P.querySelectorAll('[data-bind]:not([data-bind^="view."]),[data-dim],[data-act=bgLoad],[data-act=delPt],[data-act=fair],[data-act=autoCtrl],[data-act=pgRegen],[data-act=tgtPG],[data-act=resetPosts],[data-act=feel],#hwPreset').forEach(el=>el.disabled=true); }
 let panelKey='';
 function bindRoot(path){ if(path.startsWith('view.')) return [lib.view,path.slice(5)]; if(path.startsWith('pt.')) return [T().pts[sel],path.slice(3)]; if(path.startsWith('bg.')) return [D().bg,path.slice(3)]; return [D(),path]; }
 const getP=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
@@ -990,7 +1164,6 @@ function syncPanel(){
         <div class="btns"><button data-act="resetH">Automatische ronding</button><button data-act="delPt">Punt verwijderen</button><button data-act="desel">Klaar</button></div></div>`;
     } else pb.innerHTML=`<p class="hint">Klik een punt aan om het exact in te stellen of de ronding te sturen met de blauwe handgrepen. Dubbelklik op de lijn om een punt toe te voegen.</p>`;
     if (d.type==='headstock'){
-      $('#xoffRow').innerHTML = d.set.layout==='custom' ? '<p class="hint">Posts staan zoals op het plan of de ouder-vorm. Kies een ander patroon om ze met de getallen hierboven te zetten.</p>' : d.set.layout==='split' ? num('set.xoff','Afstand post tot middellijn','mm',0.5,'data-after="layout"') : num('set.xoff','x van eerste post','mm',0.5,'data-after="layout"')+num('set.slant','x-verloop per post','mm',0.5,'data-after="layout"');
       $('#postRows').innerHTML=d.posts.map((p,i)=>`<tr><td><b>${i+1}</b></td><td><input type="number" step="0.5" data-bind="posts.${i}.x"></td><td><input type="number" step="0.5" data-bind="posts.${i}.y"></td><td><select data-bind="posts.${i}.side"><option value="L">links</option><option value="R">rechts</option></select></td></tr>`).join('');
     }
     if (d.type==='body'){ const r=P.querySelector('[data-bind="set.dens"]'); if(r) r.closest('.row').style.display = d.set.wood==='ander'?'':'none';
@@ -1012,11 +1185,13 @@ function syncPanel(){
     else el.value = v==null?'':v;
   });
   const sl=$('#softLbl'); if (sl) sl.textContent = lib.view.soft ? lib.view.soft+' mm' : 'uit';
-  $('#info').innerHTML = infoHTML(d,g);
-  const ch = d.type==='body' ? bodyChecks(d) : headChecks(d);
-  $('#checks').innerHTML = ch.length ? ch.map(t=>`<div class="warn">⚠ ${esc(t)}</div>`).join('') : `<div class="good">✔ Alles past: geen botsingen, genoeg hout rond gaten en frezingen.</div>`;
+  $('#info').innerHTML = infoHTML(d,g); $('#sum').innerHTML = sumHTML(d,g);
+  const ch = d.type==='body' ? bodyChecks(d) : headChecks(d), adv = d.type==='body' ? bodyAdvice(d) : headAdvice(d);
+  $('#checks').innerHTML = (ch.length ? ch.map(t=>`<div class="warn">⚠ ${esc(t)}</div>`).join('') : `<div class="good">✔ Bouwbaar: niets botst, genoeg hout rond gaten en frezingen.</div>`)
+    + adv.map(t=>`<div class="adv">ℹ ${esc(t)}</div>`).join('');
+  const ps=$('#postState'); if (ps) ps.textContent = d.ref ? '' : d.set.layout==='custom' ? 'Posts staan zoals op het plan.' : d.set.auto===false ? 'Je hebt posts zelf versleept. "Opnieuw plaatsen" zet ze terug op de ideale plek.' : 'Worden automatisch geplaatst en volgen je vorm: rechte snaartrek, gelijke afstand tot de rand.';
   if (d.type==='body'){
-    $('#ctrlState').textContent = d.set.ctrl.edited ? 'Je hebt de bediening zelf verplaatst. "Automatisch plaatsen" zet alles terug.' : 'Wordt automatisch geplaatst en volgt je vorm. Versleep iets om het vast te zetten.';
+    $('#ctrlState').textContent = d.set.ctrl.edited ? 'Je hebt de bediening zelf verplaatst. "Opnieuw plaatsen" zet alles terug.' : 'Knoppen volgen je vorm automatisch. Versleep er één om ze vast te zetten.';
     const ps=$('#pgState'); if (ps) ps.textContent = d.set.pg.edited ? 'Zelf aangepast: volgt de body niet meer automatisch.' : 'Volgt de body automatisch tot je de vorm aanpast.';
   }
   $('#designSel').innerHTML = optionsFor(lib.tab,null,d.id);
@@ -1066,18 +1241,18 @@ P.addEventListener('input',e=>{
   if (b==='sym'){ toggleSym(el.checked); buildPanel(); update(); return; }
   const [o,p]=bindRoot(b); if(!o) return;
   let v = el.type==='checkbox' ? el.checked : (el.type==='number'||el.type==='range') ? parseFloat(el.value) : el.value;
+  if (b==='set.edge' && el.value===''){ delete D().set.edge; D().set.auto=true; update(); return; }
   if ((el.type==='number'||el.type==='range') && !isFinite(v)) return;
   if (b==='set.strings') v=Math.max(1,Math.min(12,Math.round(v)));
   if (b==='set.ctrl.n') v=Math.max(0,Math.min(6,Math.round(v)));
   setP(o,p,v);
   if (b==='view.ghost'||b==='set.wood') panelKey='';
   const af=el.dataset.after;
-  if (af==='layout'){ placePosts(d); panelKey=''; }
-  if (af==='tuner'){ applyTuner(d); }
+  if (af==='layout'||af==='tuner'){ if(af==='tuner') applyTuner(d); d.set.auto=true; panelKey=''; }
   if (af==='ctrl'){ d.set.ctrl.edited=false; }
   if (af==='pg'){ d.set.pg.edited=false; if(d.set.pg.style==='none') editPG=false; panelKey=''; }
   if (b.startsWith('pt.') && T().isPG) d.set.pg.edited=true;
-  update();
+  update(b.startsWith('view.') || (el.type==='range' && e.type==='input'));
 });
 P.addEventListener('change',e=>{
   const el=e.target, dim=el.dataset.dim; if(!dim||locked()) return;
@@ -1091,6 +1266,15 @@ P.addEventListener('change',e=>{
   d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
   el.blur(); update();
 });
+function feel(d,k){
+  const f=k.endsWith('+')?1.03:1/1.03;
+  if (k[0]==='w') d.pts.forEach(p=>{ const g=d.type==='headstock'?Math.min(1,Math.max(0,p.y)/45):1; p.x*=1+(f-1)*g; });
+  else d.pts.forEach(p=>{ p.y*= (d.type==='body' && p.y>0) ? 1+(f-1)*0.6 : f; });   // body: vooral achter de brug langer/korter, de halsaansluiting schuift mee
+  d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
+  if (d.type==='headstock' && d.set.auto===false) d.posts.forEach(p=>{ if(k[0]==='l') p.y*=f; else p.x*=1+(f-1)*Math.min(1,Math.max(0,p.y)/45); });
+}
+P.addEventListener('change',e=>{ if(e.target.type==='range'&&e.target.dataset.bind&&!e.target.dataset.bind.startsWith('view.')){ update(); return; } if(e.target.id!=='hwPreset') return; const k=e.target.value; e.target.value=''; const d=D(); if(!k||!PRESETS[k]||locked()) return;
+  pushUndo(); const ps=clone(PRESETS[k][1]); ps.ctrl.knobD=d.set.ctrl.knobD||25; Object.assign(d.set,ps); d.set.pg.edited=false; d.set.pg.pts=null; fitPickups(d); panelKey=''; buildPanel(); update(); toast('Opbouw: '+PRESETS[k][0]); });
 function toggleSym(on){
   const d=D(); if (on===d.sym) return;
   if (!on){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:p.c,ang:p.ang,k:p.k})); d.sym=false; sel=-1; return; }
@@ -1201,7 +1385,7 @@ svg.addEventListener('pointermove',e=>{
     const g=geom(d), p=d.posts[drag.i], cand={x:snapV(w.x),y:snapV(w.y)}, ok=q=>!postReason(d,g,drag.i,q);
     const np = drag.bad ? cand : constrain(drag.last,cand,ok);
     blockMsg = !drag.bad && Math.hypot(np.x-cand.x,np.y-cand.y)>1 ? postReason(d,g,drag.i,cand) : '';
-    p.x=Math.round(np.x*2)/2; p.y=Math.round(np.y*2)/2; drag.last={x:p.x,y:p.y}; if (ok(p)) drag.bad=false;
+    p.x=Math.round(np.x*2)/2; p.y=Math.round(np.y*2)/2; drag.last={x:p.x,y:p.y}; if (ok(p)) drag.bad=false; d.set.auto=false;
     update(true); return;
   }
 });
@@ -1255,7 +1439,10 @@ document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act],[data-tab],[data-mode]'); if(!t || t.closest('#modal')) return;
   if (t.dataset.tab){ lib.tab=t.dataset.tab; switchDesign(); return; }
   if (t.dataset.mode){ mode=t.dataset.mode; calib=null; if(mode!=='measure') measure=null; if(mode==='bg'&&!D().bg) toast('Laad eerst een achtergrondafbeelding (paneel rechts, onderaan)'); render(); return; }
-  const a=t.dataset.act, d=D();
+  runAct(t.dataset.act,t);
+});
+$('#more').addEventListener('change',e=>{ const a=e.target.value; e.target.value=''; if(a) runAct(a,null); });
+function runAct(a,t){ const d=D();
   switch(a){
     case 'new': { const n=lib.tab==='body'?defaultBody():defaultHead(); const nm=prompt('Naam van het nieuwe ontwerp:', n.name); if(nm===null) return; n.name=nm||n.name; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); break; }
     case 'dup': { const n=clone(d); n.id=uid(); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : d.name+' (kopie)'; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
@@ -1284,14 +1471,15 @@ document.addEventListener('click',e=>{
     case 'bgMove': mode='bg'; render(); break;
     case 'calib': calib=[]; mode='edit'; render(); break;
     case 'fitPosts': { pushUndo(); const n=fitPosts(d); update(); toast(n?`${n} post(s) verschoven naar de dichtstbijzijnde plek die past`:'Alle posts passen al'); break; }
-    case 'resetPosts': pushUndo(); placePosts(d); update(); break;
+    case 'resetPosts': pushUndo(); d.set.auto=true; if(d.set.layout==='custom') d.set.layout=headFam(d); placePosts(d); update(); toast('Mechanieken opnieuw geplaatst: rechte snaartrek, gelijke afstand tot de rand'); break;
     case 'insp': openInsp(); break;
     case 'mash': openMash(); break;
     case 'exportSvg': exportSvg(d,false); break;
     case 'saveFile': download(`Sixto_vormen_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({...lib,designs:lib.designs.filter(x=>!x.ref)},null,1), 'application/json'); break;
     case 'openFile': $('#fileIn').click(); break;
+    case 'feel': { if(locked()){ lockMsg(); return; } pushUndo(); feel(d,t.dataset.k); update(); break; }
   }
-});
+}
 $('#designSel').addEventListener('change',e=>{ lib.active[lib.tab]=e.target.value; switchDesign(); });
 $('#imgIn').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return; const r=new FileReader();
@@ -1354,8 +1542,8 @@ function exportSvg(d,pgOnly){
 
 // ================= inspirator =================
 const rnd01=()=>Math.random()*2-1, pick=a=>a[Math.floor(Math.random()*a.length)];
-const GEN_POOL=['strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee'];
-const GEN_WILD=['explorer','moderne','n4'];
+const GEN_POOL=['strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
+const GEN_WILD=['explorer','moderne','n4','wolf','styleo'];
 let VECS=null;
 function refVecs(){ if(VECS) return VECS; VECS={}; lib.designs.filter(d=>d.ref&&d.type==='body').forEach(d=>{ try{ VECS[d.id.slice(4)]=shapeVec(geom(d).poly); }catch(e){} }); return VECS; }
 const refName=k=>{ const r=lib.designs.find(d=>d.id==='ref-'+k); return r?r.name.replace(/ \(.*\)$/,'').replace(/-type.*$/,''):k; };
@@ -1379,10 +1567,10 @@ function genBody(w){
   return bodyFromPoly(g.poly,main.set,'Inspiratie '+nm);
 }
 // ---- koppen: mengsels van echte koppen (zelfde familie: 3+3, op rij, omgekeerd) ----
-const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz'],inline:['tele','strat','strat70','explorer','rhoads','c5150'],rev:['firebird','n4']};
+const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz','tiger'],inline:['tele','strat','strat70','explorer','rhoads','c5150'],rev:['firebird','n4']};
 let HVECS=null;
 function headFam(d){ const P=d.posts, n=P.length; if(n<2) return 'inline'; const h=Math.ceil(n/2);
-  if (P.slice(0,h).every(p=>p.x<0)&&P.slice(h).every(p=>p.x>0)) return 'split'; return P[0].y<=P[n-1].y?'inline':'rev'; }
+  if (P.slice(0,h).every(p=>p.x<0)&&P.slice(h).every(p=>p.x>0)&&P[h].y>P[n-1].y) return 'split'; return P[0].y<=P[n-1].y?'inline':'rev'; }
 // omtrek van diskanthoek over de top naar bashoek, met de top als herkenningspunt
 function headVec(d){
   let P=geom(d).poly.map(p=>({x:p.x,y:p.y})); let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%P.length]; A+=p.x*q.y-q.x*p.y; }); if(A<0) P.reverse();
@@ -1405,17 +1593,18 @@ function blendHead(list,amt,rnd){
 }
 // omtrek -> kop met ankerpunten, nutlijn exact op y = 0
 function headFromPoly(poly,set,name,posts,nut){
-  const d=defaultHead(); d.name=name; d.sym=false; d.set=clone(set); if(nut) d.set.nutW=Math.round(nut*10)/10;
+  const d=defaultHead(true); d.name=name; d.sym=false; d.set=clone(set); d.set.auto=true; if(nut) d.set.nutW=Math.round(nut*10)/10;
   const nw=d.set.nutW; let A=fitAnchors(poly.map(p=>({x:p.x,y:Math.max(0,p.y)})),{tol:0.8}).filter(p=>p.y>0.6);
   let k=0,bv=Infinity; for(let i=0;i<A.length;i++){ const a=A[i],b=A[(i+1)%A.length]; if(Math.sign(a.x)!==Math.sign(b.x)&&a.y+b.y<bv){ bv=a.y+b.y; k=i; } }
   const c1={x:Math.sign(A[k].x)*nw/2,y:0,c:true}, c2={x:-c1.x,y:0,c:true};
   d.pts=A.slice(0,k+1).concat([c1,c2],A.slice(k+1)).map(p=>({x:p.x,y:p.y,c:!!p.c}));
-  if (posts&&posts.length===d.set.strings){ d.set.layout='custom'; d.set.pat=posts.map(p=>[Math.round(p.x*10)/10,Math.round(p.y*10)/10]); }
-  else if (d.set.layout==='custom') d.set.layout='inline';
-  placePosts(d); fitPosts(d); if (d.set.layout==='custom') d.set.pat=d.posts.map(p=>[p.x,p.y]);
+  // mechanieken: zelfde patroon als de oudervorm, maar opnieuw geplaatst volgens snaarlijn en rand
+  if (posts&&posts.length===d.set.strings) d.set.layout=headFam({posts});
+  else if (d.set.layout==='custom') d.set.layout=headFam({posts:d.posts||[]});
+  d.set.pat=null; placePosts(d); if (headChecks(d).length) fitPosts(d);
   return d;
 }
-function genHead(w){ let d; for(let i=0;i<5;i++){ d=genHead1(w); if(!headChecks(d).length) break; } return d; }
+function genHead(w){ let d; for(let i=0;i<6;i++){ d=genHead1(w); if(!headChecks(d).length && pullInfo(d).worst<=11) break; } return d; }
 function genHead1(w){
   const V=headVecs(), r=Math.random(), fam=r<0.45?'split':r<0.85?'inline':'rev', keys=HEAD_FAM[fam].filter(k=>V[k]);
   if (!keys.length) return defaultHead();
@@ -1433,7 +1622,7 @@ function vary(src,w){
   }
   const V=headVecs(), me=headVec(src), keys=(HEAD_FAM[me.fam]||HEAD_FAM.inline).filter(k=>V[k]); let d;
   for(let i=0;i<5;i++){ const g=blendHead(keys.length?[[me,1],[V[pick(keys)],0.05+0.35*w*Math.random()]]:[[me,1]],0.2+w*0.8,Math.random);
-    d=headFromPoly(g.poly,src.set,'Variatie op '+src.name,g.posts,src.set.nutW); if(!headChecks(d).length) break; }
+    d=headFromPoly(g.poly,src.set,'Variatie op '+src.name,g.posts,src.set.nutW); if(!headChecks(d).length && pullInfo(d).worst<=Math.max(11,pullInfo(src).worst+2)) break; }
   return d;
 }
 function fitMap(gs,w,h,pad){
@@ -1513,14 +1702,14 @@ function computeMash(m){
   return {pts,S,sugL,sugR,misL:Math.abs(lA-lB),misR:Math.abs(rA-rB),misT:Math.abs(topOf(S.ul.g)-topOf(S.ur.g)),misB:Math.abs(botOf(S.ll.g)-botOf(S.lr.g))};
 }
 function mashDesign(m){
-  const r=computeMash(m), d = m.type==='body' ? defaultBody() : defaultHead();
+  const r=computeMash(m), d = m.type==='body' ? defaultBody() : defaultHead(true);
   d.set=clone(r.S.ul.d.set); d.sym=false;
   d.pts=r.pts.map(p=>({x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2,c:!!p.c}));
   if (d.type==='body'){ const P=smoothZones(geom({pts:d.pts,sym:false,tension:1}).poly,[{y:m.yL,s:-1},{y:m.yR,s:1},{bot:botOf(geom({pts:d.pts,sym:false,tension:1}))}],m.soft*3+12); d.pts=fitAnchors(P,{tol:0.8}); fitPickups(d); }
   if (d.type==='body'){ d.set.ctrl.edited=false; d.set.pg.edited=false; d.set.pg.pts=null; }
   else { d.set.nutW=Math.round((r.S.ll.d.set.nutW+r.S.lr.d.set.nutW)*5)/10; const P=smoothZones(geom({pts:d.pts,sym:false,tension:1}).poly,[{y:m.yL,s:-1},{y:m.yR,s:1}],m.soft*3+10); d.pts=headFromPoly(P,d.set,'',null,null).pts;
     // mechanieken: patroon van linksboven, anders dat van een andere bronvorm die beter past
-    let best=null; for (const k of QK){ const t=clone(d); t.set=clone(r.S[k].d.set); t.set.nutW=d.set.nutW; placePosts(t); fitPosts(t); const n=headChecks(t).length; if(!best||n<best.n) best={n,set:t.set,posts:t.posts}; if(!n) break; }
+    let best=null; for (const k of QK){ const t=clone(d); t.set=clone(r.S[k].d.set); t.set.nutW=d.set.nutW; if(t.set.layout==='custom') t.set.layout=headFam(r.S[k].d); t.set.pat=null; placePosts(t); if(headChecks(t).length) fitPosts(t); const n=headChecks(t).length*20+pullInfo(t).worst; if(!best||n<best.n) best={n,set:t.set,posts:t.posts}; if(n<8) break; }
     d.set=best.set; d.posts=best.posts; }
   const nm=[...new Set(QK.map(k=>r.S[k].d.name.replace(/ \(.*\)$/,'').replace(/-type.*$/,'').replace(/ kop$/,'')))];
   d.name='Mashup '+nm.join(' × '); return d;
@@ -1605,6 +1794,7 @@ function switchDesign(){
 }
 function update(light){ refreshAuto(D(),light||!!drag); render(); syncPanel(); save(); }
 let lastSz=null; window.addEventListener('resize',()=>{ const r=svg.getBoundingClientRect(); if(lastSz&&(Math.abs(r.width-lastSz.w)>lastSz.w*0.25||Math.abs(r.height-lastSz.h)>lastSz.h*0.25)) fit(); else render(); lastSz={w:r.width,h:r.height}; });
+ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); });
 switchDesign();
 </script>
 </body>
