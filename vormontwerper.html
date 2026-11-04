@@ -79,7 +79,25 @@ body{touch-action:manipulation}
 .checks .adv{color:#6b6257;font-size:12.5px;padding-top:4px}
 .btnl{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 10px;display:inline-block}
 @media (pointer:coarse){select,input{font-size:16px}}
-.feel{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.feel{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-bottom:8px}
+.fr{display:flex;align-items:center;gap:4px}.fr span{flex:1;text-align:center;font-size:13px;white-space:nowrap}
+.fr button{width:38px;height:38px;padding:0;font-size:18px;line-height:1;flex:none;touch-action:none;-webkit-user-select:none;user-select:none}
+.fr1{max-width:220px;margin:0 auto 8px}
+.ideas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.idea{padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;line-height:1.15;min-height:122px}
+.idea svg{width:100%;height:92px}.idea.on{background:#fff7ef;border-color:var(--accent);border-width:2px;color:var(--ink)}
+.idea:disabled svg{opacity:.3}
+select.nat{display:none}
+.pick{text-align:left;padding:6px 26px 6px 10px;min-height:34px;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6' fill='%236b6257'/%3E%3C/svg%3E") no-repeat right 9px center}
+@media (pointer:coarse){.pick{min-height:40px}#tools button{min-height:38px}}
+.row .pick{flex:0 1 auto}.tbl .pick{max-width:120px;padding-right:22px}
+#sheet{position:fixed;inset:0;z-index:30;background:rgba(30,25,20,.12)}
+#sheet .list{position:absolute;overflow:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 34px rgba(0,0,0,.24);padding:6px}
+#sheet.low{background:rgba(30,25,20,.35)}
+#sheet.low .list{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));max-height:62%}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;min-height:44px;padding:4px 10px;border-radius:8px}
+.opt.on{background:#fff0e4;font-weight:600}.opt:hover{background:#f7f4ef}
+.ogrp{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 10px 4px}
 details{border-bottom:1px solid var(--line)}
 details>summary{padding:12px 14px;cursor:pointer;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);list-style:none}
 details>summary::before{content:'▸ ';}
@@ -87,7 +105,7 @@ details[open]>summary::before{content:'▾ ';}
 details>summary::-webkit-details-marker{display:none}
 details section{border-bottom:0;padding-top:4px}
 /* ---------- telefoon / smal scherm ---------- */
-@media (max-width:760px){
+@media (max-width:900px){
   html,body{height:100%;overflow:hidden}
   body{display:flex;flex-direction:column;height:100dvh;padding:env(safe-area-inset-top) 0 0}
   header{height:auto;flex:none;overflow-x:auto;padding:6px 8px;gap:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -299,7 +317,7 @@ const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; pos
 const NOPU={t:'none',d:95,a:0}, PU=(t,d,a)=>({t,d,a:a||0});
 function REFS(){ const B=BODY_PTS; return [
   mkBody('strat','Strat-type',B.strat,false,{...FEN,pocket:76}),
-  mkBody('tele','Tele-type',B.tele,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'row','blade3','side'),pg:pgDef('full',76)}),
+  mkBody('tele','Tele-type',B.tele,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'plate','blade3','side'),pg:pgDef('full',76)}),
   mkBody('lp','Les Paul-type',B.lp,false,{...GIB,pocket:60}),
   mkBody('lpjdc','LP Junior DC-type',B.lpjdc,false,{...GIB,pocket:30,bridge:'wrap',pu1:PU('P90',38),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(2,'row','none','side'),pg:pgDef('small')}),
   mkBody('sg','SG-type',B.sg,false,{...GIB,pocket:10,pg:pgDef('full',10)}),
@@ -317,11 +335,11 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('mosrite','Mosrite-type',B.mosrite,false,{...FEN,pu1:PU('SC',40,-6),pu2:NOPU,pu3:PU('SC',150),ctrl:ctrlDef(2,'row','toggle3','top'),pg:pgDef('full',22)}),
   mkBody('redspecial','Red Special-type',B.redspecial,false,{...FEN,scale:610,frets:24,pocket:20,pu1:PU('SC',40),pu2:PU('SC',90),pu3:PU('SC',138),ctrl:ctrlDef(2,'row','none','side'),pg:pgDef('full',20)}),
   mkBody('explorer','Explorer-type',B.explorer,false,{...GIB,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
-  mkBody('v','Flying V-type',B.v,false,{...GIB,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'diag','toggle3','side'),pg:pgDef('none')}),
+  mkBody('v','Flying V-type',B.v,false,{...GIB,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'tri','toggle3','side'),pg:pgDef('none')}),
   mkBody('moderne','Moderne-type',B.moderne,false,{...GIB,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
   mkBody('tiger','Tiger-type (Doug Irwin)',B.tiger,false,{...GIB,scale:635,frets:24,pocket:20,pu1:PU('HB',40),pu2:PU('SC',85),pu3:PU('HB',128),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
   mkBody('wolf','Wolf-type (Doug Irwin, ruwe benadering)',B.wolf,false,{...FEN,scale:635,frets:24,pocket:20,bridge:'tom',pu1:PU('SC',42),pu2:PU('SC',80),pu3:PU('SC',117),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
-  mkBody('asher','T-Deluxe-type (Bill Asher, offset T)',B.asher,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'row','blade3','side'),pg:pgDef('none')}),
+  mkBody('asher','T-Deluxe-type (Bill Asher, offset T)',B.asher,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'plate','blade3','side'),pg:pgDef('none')}),
   mkBody('styleo','Style O-type (Orville Gibson, archtop met krul)',B.styleo,false,{...GIB,scale:629,frets:20,pocket:40,bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side'),pg:pgDef('none')}),
   mkBody('pbass','P-bass-type',B.strat.map(([x,y,c])=>[x*1.02,y*1.2+50,c]),false,{...BASS,pu1:{t:'none',d:50,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'BASS',d:150,a:0},ctrl:ctrlDef(2,'row','none','top'),pg:pgDef('full',27)}),
   mkBody('jbass','J-bass-type',B.jm.map(([x,y,c])=>[x*0.95,y*1.12+70,c]),false,{...BASS,pu1:{t:'JB',d:45,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'JB',d:130,a:0},ctrl:ctrlDef(3,'row','none','top'),pg:pgDef('full',27)}),
@@ -355,7 +373,7 @@ function load(){
   const b = defaultBody(), h = defaultHead();
   return { designs:[b,h,...REFS()], active:{body:b.id, headstock:h.id}, tab:'body', view:defView() };
 }
-function defView(){ return {grid:true,dims:true,neck:true,strings:true,hw:true,routes:true,pgShow:true,wline:true,ghost:'',snap:false,soft:30}; }
+function defView(){ return {grid:true,dims:true,neck:true,strings:true,hw:true,routes:true,pgShow:true,wline:true,ghost:'',snap:false,soft:60}; }
 let lib = load();
 let saveT = null;
 function save(){
@@ -619,13 +637,24 @@ function puReason(ctx,k,R){
   for (let i=0;i<its.length;i++){ const it=its[i]; if(it.t==='jack'&&ctx.s.ctrl.jack==='side') continue; if (rectDist(it,R)<itemR(it,ctx.s.ctrl)+3) return `te dicht bij ${itemName(its,i)}`; }
   return '';
 }
-// Knoppen: gemeten op Les Paul, SG, Explorer, Ibanez JS, Melody Maker, PRS e.a.:
-// buitenste rij 35-41 mm van de rand en de rand volgend, 38-52 mm tussen knoppen,
-// achter de brug en ruim buiten de hoge E (ruimte voor de rechterhand).
-const KNOB_E=37, KNOB_ROW=40;
-function knobTrack(ctx,e){
-  const g=ctx.g, s=ctx.s, P=resampleClosed(g.poly,2), n=P.length; let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%n]; A+=p.x*q.y-q.x*p.y; }); const sg=A>0?1:-1;
-  const xMin=s.spBridge/2+36, yMax=s.ctrl.layout==='diag'?20:-5;   // Strat-achtig mag naast de brugpickup, anders achter de brug
+// Knoppen. Nagemeten op de 1:1-plannen (zadel = y 0, x vanaf de middellijn, in mm):
+//   Stratocaster V(83,75) T(108,42) T(126,-11): een boog langs de rand, die vooraan naast de pickups begint.
+//   Les Paul V(78,-47) (122,-21) T(78,-107) (119,-83): twee rijen, 60 tussen knoppen, 44 tussen rijen, half versprongen.
+//   ES-335 zelfde blok, 63 x 63, gedraaid mee met de rand.
+// De knop die het dichtst bij de hand zit staat 70 à 94 mm van het hoge-E-zadel. Waarom: zie Vormontwerper_Kennisboek.md.
+const KNOB_E=37, KNOB_ROW=44;
+const KNOB_IDEAS={
+  hand:{n:'Bij de hand',min:1,from:'Stratocaster',why:'Volume vooraan bij de aanslaghand, de rest in een boog langs de rand. Goed om te zwellen, maar je kunt hem raken als je hard aanslaat.'},
+  block:{n:'Blok',min:2,from:'Les Paul, ES-335',why:'Twee rijen achter de brug, uit de weg van de aanslaghand. Elke pickup kan zijn eigen volume en toon hebben.'},
+  row:{n:'Langs de rand',min:1,from:'Explorer',why:'Eén rij die de rand volgt, achter de brug. Rustig beeld, de lijn van de body loopt door in de knoppen.'},
+  plate:{n:'Plaat',min:1,from:'Telecaster',why:'Rechte lijn naast de snaren, alles op één plaat die je langs boven kunt losmaken. Geen frezing langs de rug.'},
+  split:{n:'Volume apart',min:2,from:'gedachte van de ES-150',why:'Wat je veel draait staat vooraan, de toon ver weg. Minder kans dat je per ongeluk de toon verdraait.'},
+  tri:{n:'Compact',min:3,from:'latere Flying V',why:'Dicht op elkaar, alles met één handbeweging bereikbaar. Eén kleine frezing, handig op smalle vormen.'}
+};
+const KNOB_ALIAS={diag:'hand',square:'block'};
+const ideaOf=c=>{ const k=KNOB_ALIAS[c.layout]||c.layout; return KNOB_IDEAS[k]?k:'row'; };
+function knobTrack(ctx,e,xMin,yMax){
+  const g=ctx.g, P=resampleClosed(g.poly,2), n=P.length; let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%n]; A+=p.x*q.y-q.x*p.y; }); const sg=A>0?1:-1;
   const ok=P.map((p,i)=>{ const a=P[(i-1+n)%n], b=P[(i+1)%n], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1;
     const c={x:p.x-ty/l*e*sg, y:p.y+tx/l*e*sg}; return (c.x>xMin && c.y<yMax && inside(g.poly,c) && distToPoly(g.poly,c)>e-1) ? c : null; });
   let best=null, cur=[]; const start=ok.findIndex(c=>!c); if(start<0) return null;
@@ -635,24 +664,33 @@ function knobTrack(ctx,e){
   const sA=[0]; for(let i=1;i<best.length;i++) sA.push(sA[i-1]+Math.hypot(best[i].x-best[i-1].x,best[i].y-best[i-1].y));
   return {P:best,s:sA,L:sA[sA.length-1]};
 }
+function knobLayout(d,ctx,idea,vr){
+  const c=d.set.ctrl, n=Math.max(0,c.n), xb=d.set.spBridge/2, k=vr?vr.k:1, E=KNOB_E+(vr?vr.e:0), s1=vr?vr.s:0;
+  const test=ks=>{ const tmp=ks.map(p=>({t:'knob',x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2})); return tmp.every((it,i)=>!itemReason(ctx,tmp,i,it))?tmp:null; };
+  if (idea==='block'||idea==='tri'){
+    const st=(idea==='tri'?Math.max(c.knobD+20,46):Math.max(c.knobD+35,60))*k, T=knobTrack(ctx,E,xb+36,-15), rw=idea==='tri'?36:KNOB_ROW;
+    if(!T) return null; const no=Math.ceil(n/2), ni=n-no;
+    // een echt parallellogram zoals op LP, SG en ES-335: twee rechte rijen, de tweede half versprongen naar de snaren toe
+    for (let s0=s1; s0<=T.L; s0+=3){ const a=trackAt(T,s0), b=trackAt(T,Math.min(T.L,s0+st)), l=Math.hypot(b.x-a.x,b.y-a.y); if(l<st*0.6) break;
+      const ux=(b.x-a.x)/l, uy=(b.y-a.y)/l; let nx=-uy, ny=ux; if(nx>0){ nx=-nx; ny=-ny; }
+      const ks=[]; for (let j=0;j<no;j++){ ks.push({x:a.x+ux*st*j,y:a.y+uy*st*j}); if(j<ni) ks.push({x:a.x+ux*st*(j+0.45)+nx*rw,y:a.y+uy*st*(j+0.45)+ny*rw}); }
+      const r=test(ks); if(r) return r; }
+    return null;
+  }
+  if (idea==='plate'){ const a=vr?vr.rot:0, st=38*Math.max(1,k), head=c.sw!=='none';
+    for (let x=xb+34; x<=xb+80; x+=2) for (let y0=25; y0>=-90; y0-=4){ const ks=[]; for(let j=0;j<n;j++) ks.push({x:x+j*st*Math.sin(a),y:y0-j*st*Math.cos(a)});
+      const r=test(ks); if(!r) continue; if(head){ const h={x:x-st*Math.sin(a),y:y0+st*Math.cos(a)}; if(itemReason(ctx,[...r,{t:'sw',...h}],n,h)) continue; } return r; }
+    return null;
+  }
+  const hand=idea==='hand'||idea==='split', T=knobTrack(ctx,hand?E-8:E,xb+(hand?45:36),hand?80:-5); if(!T) return null;   // Strat-boog loopt dichter bij de rand (27-36 mm)
+  const sp=(hand?Math.max(c.knobD+23,48):Math.max(c.knobD+15,38))*k, gap=idea==='split'?Math.max(85*k,sp*1.6):sp;
+  for (let s0=s1; s0+(n>1?gap+sp*(n-2):0)<=T.L; s0+=3){ const ks=[]; for(let j=0;j<n;j++) ks.push(trackAt(T,s0+(j?gap+(j-1)*sp:0))); const r=test(ks); if(r) return r; }
+  return null;
+}
 function placeKnobs(d,ctx){
   const c=d.set.ctrl, n=Math.max(0,c.n); if(!n) return [];
-  const sp=Math.max(c.knobD+15,38), T=knobTrack(ctx,KNOB_E); if(!T) return null;
-  const nearest=(TT,p)=>TT.P.reduce((m,q)=>{ const dd=Math.hypot(q.x-p.x,q.y-p.y); return dd<m.d?{d:dd,q}:m; },{d:Infinity,q:null}).q;
-  const Ti = c.layout==='square' && n>1 ? knobTrack(ctx,KNOB_E+KNOB_ROW) : null;
-  for (let s0=0; s0<=T.L; s0+=3){
-    let ks=[];
-    if (c.layout==='square' && n>1){ if(!Ti) return null; const no=Math.ceil(n/2), ni=n-no; const st=sp*1.35;
-      if (s0+st*(no-1)>T.L) break;
-      for (let j=0;j<no;j++){ const o=trackAt(T,s0+j*st); ks.push(o); if(j<ni){ const q=nearest(Ti,trackAt(T,Math.min(T.L,s0+(j+0.5)*st))); if(q) ks.push(q); } } }
-    else if (c.layout==='diag'){ if (s0+sp*0.6>T.L) break; const p0=trackAt(T,s0), p1=trackAt(T,Math.min(T.L,s0+sp*0.6));
-      let dx=p1.x-p0.x, dy=p1.y-p0.y; const l=Math.hypot(dx,dy)||1; dx/=l; dy/=l; const a=-0.45, rx=dx*Math.cos(a)-dy*Math.sin(a), ry=dx*Math.sin(a)+dy*Math.cos(a);
-      for (let j=0;j<n;j++) ks.push({x:p0.x+rx*sp*0.95*j, y:p0.y+ry*sp*0.95*j}); }
-    else { if (s0+sp*(n-1)>T.L) break; for (let j=0;j<n;j++) ks.push(trackAt(T,s0+j*sp)); }
-    const tmp=ks.map(p=>({t:'knob',x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2}));
-    if (tmp.every((it,i)=>!itemReason(ctx,tmp,i,it))) return tmp;
-  }
-  return null;
+  let idea=ideaOf(c); if(n<KNOB_IDEAS[idea].min) idea=KNOB_IDEAS.block.min<=n&&idea==='tri'?'block':'row';
+  return (c.vr&&knobLayout(d,ctx,idea,c.vr))||knobLayout(d,ctx,idea,null)||knobLayout(d,ctx,idea,{k:1,e:-8,s:0,rot:0})||knobLayout(d,ctx,idea,{k:0.88,e:-10,s:0,rot:0});
 }
 function autoControls(d,ctx){
   const c=d.set.ctrl, g=ctx.g, items=[];
@@ -660,7 +698,7 @@ function autoControls(d,ctx){
   const kn=placeKnobs(d,ctx);
   if (kn) items.push(...kn); else {
   const shapes={diag:i=>[i*sp*0.45,-i*sp*0.89], row:i=>[i*sp*0.3,-i*sp*0.95], square:i=>[(i%2)*sp+Math.floor(i/2)*sp*0.25, -(i%2)*sp*0.25-Math.floor(i/2)*sp]};
-  const offs=[...Array(Math.max(0,c.n))].map((_,i)=>(shapes[c.layout]||shapes.diag)(i));
+  const idea=ideaOf(c), offs=[...Array(Math.max(0,c.n))].map((_,i)=>shapes[idea==='block'||idea==='tri'?'square':idea==='hand'?'diag':'row'](i));
   const yRef=g.minY*0.5, xs=hits(g.poly,yRef), xr=xs.length?xs[xs.length-1]:120;
   if (offs.length){
     const cx=offs.reduce((s,o)=>s+o[0],0)/offs.length, cy=offs.reduce((s,o)=>s+o[1],0)/offs.length;
@@ -671,7 +709,8 @@ function autoControls(d,ctx){
   } }
   if (c.sw!=='none'){
     let pref;
-    if (c.sw==='toggle3'){ const y=ctx.topY-35, hx=hits(g.poly,y); pref = hx.length && hx[0] < -d.set.heelW/2-30 ? {x:(hx[0]-d.set.heelW/2)/2,y} : null; }
+    if (ideaOf(c)==='plate' && kn && kn.length){ const a=kn[1]?Math.atan2(kn[0].x-kn[1].x,kn[0].y-kn[1].y):0; pref={x:kn[0].x+38*Math.sin(a),y:kn[0].y+38*Math.cos(a)}; }
+    else if (c.sw==='toggle3'){ const y=ctx.topY-35, hx=hits(g.poly,y); pref = hx.length && hx[0] < -d.set.heelW/2-30 ? {x:(hx[0]-d.set.heelW/2)/2,y} : null; }
     else { const p1=d.set.pu1, p2=d.set.pu2, pw=Math.max(0,...ctx.pus.map(p=>p.cover.w/2)); pref={x:pw+16,y:(PUS[p2.t][1]?(p1.d+p2.d)/2:p1.d+30)}; }
     if (!pref){ const last=items[items.length-1]; pref=last?{x:last.x+sp*0.4,y:last.y-sp*0.9}:{x:xr*0.6,y:yRef}; }
     const it={t:'sw',x:pref.x,y:pref.y}; items.push(it);
@@ -970,9 +1009,14 @@ function bodyOverlay(d,g){
 function bodyItems(d,g){
   if (!lib.view.hw) return '';
   const s=d.set, c=s.ctrl, ctx=bodyCtx(d), its=c.items||[]; let o='';
-  its.forEach((it,i)=>{
-    const bad=itemReason(ctx,its,i,it), st=bad?'stroke="#c0392b" stroke-width="2.5"':'stroke="#fff" stroke-width="1.5"', p=toS(it.x,it.y);
-    if (it.t==='knob'){ o+=circSVG(it.x,it.y,c.knobD/2,`fill="#2b2b2b" fill-opacity=".82" ${st}`)+circSVG(it.x,it.y,3,'fill="#ddd"'); o+=`<text x="${p[0]}" y="${p[1]-c.knobD/2*view.s-4}" font-size="11" text-anchor="middle" fill="#1f1c18">${its.slice(0,i+1).filter(x=>x.t==='knob').length}</text>`; }
+  const kns=its.filter(x=>x.t==='knob'), idea=ideaOf(c);
+  if (idea==='plate' && kns.length && !c.edited){ const sw=its.find(x=>x.t==='sw'), ends=[glidePos(kns[kns.length-1],its.indexOf(kns[kns.length-1])),sw||kns[0]], a=toS(ends[0].x,ends[0].y), b=toS(ends[1].x,ends[1].y);
+    o+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#cfc9bf" stroke-opacity=".55" stroke-width="${36*view.s}" stroke-linecap="round"/>`; }
+  if (kns.length>1 && !c.loose && !d.ref && idea!=='block' && idea!=='tri'){ o+=`<polyline points="${kns.map(k=>{ const q=glidePos(k,its.indexOf(k)); return toS(q.x,q.y).join(','); }).join(' ')}" fill="none" stroke="#b5541c" stroke-opacity=".4" stroke-width="1.5" stroke-dasharray="2 5"/>`; }
+  its.forEach((it0,i)=>{
+    const it=glidePos(it0,i), bad=itemReason(ctx,its,i,it0), st=bad?'stroke="#c0392b" stroke-width="2.5"':'stroke="#fff" stroke-width="1.5"', p=toS(it.x,it.y);
+    if (it.t==='knob'){ o+=circSVG(it.x,it.y,c.knobD/2,`fill="#2b2b2b" fill-opacity=".82" ${st}`)+circSVG(it.x,it.y,3,'fill="#ddd"'); o+=`<text x="${p[0]}" y="${p[1]-c.knobD/2*view.s-4}" font-size="11" text-anchor="middle" fill="#1f1c18" font-weight="600">${knobLabel(its.slice(0,i).filter(x=>x.t==='knob').length,kns.length)}</text>`;
+      if (kns.length>1 && !c.loose && !d.ref && it0===kns[kns.length-1]) o+=circSVG(it.x,it.y,c.knobD/2+5,'fill="none" stroke="#b5541c" stroke-opacity=".6" stroke-dasharray="3 4" stroke-width="1.5"'); }
     else if (it.t==='sw'){ if (c.sw==='toggle3') o+=circSVG(it.x,it.y,8,`fill="#666" ${st}`)+circSVG(it.x,it.y,2.5,'fill="#eee"');
       else { o+=circSVG(it.x,it.y,10,`fill="#666" fill-opacity=".25" ${st}`)+rectSVG({cx:it.x,cy:it.y,w:5,h:24,a:-30},'fill="#333"'); } }
     else { o+=circSVG(it.x,it.y,11,`fill="#888" fill-opacity=".5" ${st}`)+circSVG(it.x,it.y,4.5,'fill="#333"'); o+=`<text x="${p[0]+12*view.s+3}" y="${p[1]+4}" font-size="11" fill="#1f1c18">jack</text>`; }
@@ -1020,6 +1064,11 @@ function dimsOverlay(d,g){
 const P = document.getElementById('panel');
 function num(bind,lab,unit='mm',step=0.5,extra=''){ return `<div class="row"><label>${lab}</label><input type="number" step="${step}" data-bind="${bind}" ${extra}><span class="u">${unit}</span></div>`; }
 function chk(bind,lab,extra=''){ return `<div class="row"><label><input type="checkbox" data-bind="${bind}" ${extra}> ${lab}</label></div>`; }
+const knobLabel=(k,n)=>n===4?(k<2?'V':'T'):(k===0?'V':'T');
+let glideA=null;
+function glidePos(it,i){ if(!glideA||!glideA.from[i]||glideA.from[i].t!==it.t) return it; const u=glideA.u, e=u*u*(3-2*u), f=glideA.from[i]; return {...it,x:f.x+(it.x-f.x)*e,y:f.y+(it.y-f.y)*e}; }
+function glide(from){ if(!from||!from.length) return; const t0=performance.now(); glideA={from,u:0};
+  const step=t=>{ if(!glideA) return; glideA.u=Math.min(1,(t-t0)/260); render(); if(glideA.u<1) requestAnimationFrame(step); else { glideA=null; render(); } }; requestAnimationFrame(step); }
 function sel_(bind,lab,opts,extra=''){ return `<div class="row"><label>${lab}</label><select data-bind="${bind}" ${extra}>${Object.entries(opts).map(([k,v])=>`<option value="${k}">${Array.isArray(v)?v[0]:(v&&v.n)?v.n:v}</option>`).join('')}</select></div>`; }
 function optionsFor(type,excl,selId){
   const own=lib.designs.filter(x=>x.type===type&&!x.ref&&x.id!==excl), refs=lib.designs.filter(x=>x.type===type&&x.ref&&x.id!==excl);
@@ -1029,7 +1078,7 @@ function optionsFor(type,excl,selId){
 const PRESETS={
   gib:['Twee humbuckers, 4 knoppen (Gibson-stijl)',{bridge:'tom',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
   fen:['Drie single coils, 3 knoppen (Fender-stijl)',{bridge:'trem',pu1:PU('SC',42,-10),pu2:PU('SC',95),pu3:PU('SC',160),ctrl:ctrlDef(3,'diag','blade5','top')}],
-  tele:['Twee single coils, Tele-stijl',{bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'row','blade3','side')}],
+  tele:['Twee single coils, Tele-stijl',{bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'plate','blade3','side')}],
   p90:['Twee P90’s, 4 knoppen',{bridge:'tom',pu1:PU('P90',42),pu2:NOPU,pu3:PU('P90',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
   hss:['Humbucker + 2 single coils (modern)',{bridge:'trem',pu1:PU('HB',40),pu2:PU('SC',95),pu3:PU('SC',145),ctrl:ctrlDef(2,'diag','blade5','side')}],
   hb1:['Eén humbucker, 1 knop (strak)',{bridge:'hard',pu1:PU('HB',40),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(1,'row','none','side')}],
@@ -1046,17 +1095,21 @@ function buildPanel(){
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
   h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section>`;
   h+=`<section><h2>Vorm</h2>
-    <div class="feel"><button data-act="feel" data-k="w-">↔ Smaller</button><button data-act="feel" data-k="w+">↔ Breder</button><button data-act="feel" data-k="l-">↕ Korter</button><button data-act="feel" data-k="l+">↕ Langer</button></div>
+    <div class="feel">${(d.type==='body'?[['lo','Onderbout'],['wa','Taille'],['up','Bovenbout'],['w','Breedte'],['l','Lengte']]:[['mi','Midden'],['to','Top'],['w','Breedte'],['l','Lengte']]).map(([k,n])=>`<div class="fr"><button data-act="feel" data-k="${k}-" aria-label="${n} kleiner">−</button><span>${n}</span><button data-act="feel" data-k="${k}+" aria-label="${n} groter">+</button></div>`).join('')}</div>
     <div class="row"><label>Lijn: strak ↔ rond</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
+    <div class="row"><label>Slepen: punt ↔ klei</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:130px"></div>
     ${chk('sym','Symmetrisch')}
     <div class="btns"><button data-act="fair" title="Haalt bultjes en deukjes uit de lijn">Gladstrijken</button></div>
     <div id="ptBox"></div></section>`;
   if (d.type==='body'){
     h+=`<section><h2>Hardware</h2>
       <div class="row"><label>Opbouw</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
-      ${sel_('set.ctrl.layout','Knoppen',{row:'Op een rij, langs de rand',square:'In een blok (2 rijen)',diag:'Schuin (Strat-achtig)'},'data-after="ctrl"')}
-      <div class="btns"><button data-act="autoCtrl">Knoppen opnieuw plaatsen</button></div>
-      <p class="hint" id="ctrlState"></p></section>`;
+      </section><section><h2>Knoppen</h2>
+      <div class="fr fr1"><button data-act="knobN" data-k="-1" aria-label="Minder knoppen">−</button><span id="knobCount"></span><button data-act="knobN" data-k="1" aria-label="Meer knoppen">+</button></div>
+      <div class="ideas" id="ideas"></div>
+      <div class="btns"><button data-act="knobSurprise">✨ Nog een idee</button><button data-act="autoCtrl" id="knobBack">Terug naar het idee</button></div>
+      <p class="hint" id="ctrlState"></p>
+      ${chk('set.ctrl.loose','Elke knop apart slepen')}</section>`;
     h+=`<details id="techBox" ${v.tech?'open':''}><summary>Technische details</summary>
       <section><h2>Maten</h2><div class="info" id="info"></div><p class="hint">Oranje velden kun je aanpassen: de vorm schaalt of schuift mee.</p></section>
       <section><h2>Hals &amp; snaren</h2>
@@ -1074,7 +1127,7 @@ function buildPanel(){
       ${sel_('set.ctrl.sw','Schakelaar',{none:'Geen',toggle3:'3-weg toggle',blade3:'3-weg schuif',blade5:'5-weg schuif'},'data-after="ctrl"')}
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
       ${num('set.ctrl.knobD','Knopdiameter','mm',0.5,'data-after="ctrl"')}
-      <p class="hint">Regels (nagemeten op echte plannen): buitenste knoppen ± 37 mm van de rand en de rand volgend, ± 40 mm tussen knoppen, achter de brug en ruim buiten de hoge E.</p></section>
+      </section>
       <section><h2>Pickguard</h2>
       ${sel_('set.pg.style','Pickguard',{none:'Geen',full:'Groot (rond de pickups)',small:'Klein (diskant-zijde)'},'data-after="pg"')}
       <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}
@@ -1105,7 +1158,6 @@ function buildPanel(){
     ${chk('view.grid','Raster')}${chk('view.dims','Maatlijnen')}${chk('view.hw','Hardware')}${chk('view.routes','Frezingen en kanalen')}
     ${d.type==='body'?chk('view.pgShow','Pickguard')+chk('view.neck','Hals met frets'):''}
     ${chk('view.strings','Snaren')}${chk('view.wline','Breedte meten onder de muis')}
-    <div class="row"><label>Buren schuiven mee binnen</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:100px"><span class="u" id="softLbl" style="width:44px"></span></div>
     ${chk('view.snap','Punten op hele mm vastklikken')}
     <div class="row"><label>Vergelijk met</label><select data-bind="view.ghost" id="ghostSel" style="max-width:190px"></select></div></section>
     <section><h2>Achtergrond (schets of foto)</h2><div id="bgBox"></div></section>
@@ -1145,7 +1197,7 @@ function headAdvice(d){
   if (pi.eMax-pi.eMin>3 && !d.ref) out.push(`De gaten staan niet even ver van de rand (${fmt(pi.eMin,0)} tot ${fmt(pi.eMax,0)} mm). "Mechanieken opnieuw plaatsen" zet ze gelijk.`);
   return out;
 }
-function applyLock(){ if(!locked()) return; P.querySelectorAll('[data-bind]:not([data-bind^="view."]),[data-dim],[data-act=bgLoad],[data-act=delPt],[data-act=fair],[data-act=autoCtrl],[data-act=pgRegen],[data-act=tgtPG],[data-act=resetPosts],[data-act=feel],#hwPreset').forEach(el=>el.disabled=true); }
+function applyLock(){ if(!locked()) return; P.querySelectorAll('[data-bind]:not([data-bind^="view."]),[data-dim],[data-act=bgLoad],[data-act=delPt],[data-act=fair],[data-act=autoCtrl],[data-act=pgRegen],[data-act=tgtPG],[data-act=resetPosts],[data-act=feel],[data-act=knobN],[data-act=knobSurprise],[data-act=idea],#hwPreset').forEach(el=>el.disabled=true); }
 let panelKey='';
 function bindRoot(path){ if(path.startsWith('view.')) return [lib.view,path.slice(5)]; if(path.startsWith('pt.')) return [T().pts[sel],path.slice(3)]; if(path.startsWith('bg.')) return [D().bg,path.slice(3)]; return [D(),path]; }
 const getP=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
@@ -1184,18 +1236,42 @@ function syncPanel(){
     else if (el.type==='number') el.value = v==null?'':Math.round(v*10000)/10000;
     else el.value = v==null?'':v;
   });
-  const sl=$('#softLbl'); if (sl) sl.textContent = lib.view.soft ? lib.view.soft+' mm' : 'uit';
   $('#info').innerHTML = infoHTML(d,g); $('#sum').innerHTML = sumHTML(d,g);
   const ch = d.type==='body' ? bodyChecks(d) : headChecks(d), adv = d.type==='body' ? bodyAdvice(d) : headAdvice(d);
   $('#checks').innerHTML = (ch.length ? ch.map(t=>`<div class="warn">⚠ ${esc(t)}</div>`).join('') : `<div class="good">✔ Bouwbaar: niets botst, genoeg hout rond gaten en frezingen.</div>`)
     + adv.map(t=>`<div class="adv">ℹ ${esc(t)}</div>`).join('');
   const ps=$('#postState'); if (ps) ps.textContent = d.ref ? '' : d.set.layout==='custom' ? 'Posts staan zoals op het plan.' : d.set.auto===false ? 'Je hebt posts zelf versleept. "Opnieuw plaatsen" zet ze terug op de ideale plek.' : 'Worden automatisch geplaatst en volgen je vorm: rechte snaartrek, gelijke afstand tot de rand.';
   if (d.type==='body'){
-    $('#ctrlState').textContent = d.set.ctrl.edited ? 'Je hebt de bediening zelf verplaatst. "Opnieuw plaatsen" zet alles terug.' : 'Knoppen volgen je vorm automatisch. Versleep er één om ze vast te zetten.';
+    syncIdeas(d);
     const ps=$('#pgState'); if (ps) ps.textContent = d.set.pg.edited ? 'Zelf aangepast: volgt de body niet meer automatisch.' : 'Volgt de body automatisch tot je de vorm aanpast.';
   }
   $('#designSel').innerHTML = optionsFor(lib.tab,null,d.id);
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===lib.tab));
+  enhanceSelects();
+}
+// galerij: elk idee getekend op de vorm die nu op het scherm staat
+let ideasKey='';
+function syncIdeas(d){
+  const c=d.set.ctrl, box=$('#ideas'); if(!box) return;
+  $('#knobCount').textContent=c.n===0?'Geen knoppen':c.n===1?'1 knop':c.n+' knoppen';
+  const cur=ideaOf(c), I=KNOB_IDEAS[cur], kn=(c.items||[]).filter(x=>x.t==='knob'), xb=d.set.spBridge/2;
+  const reach=kn.length?Math.min(...kn.map(k=>Math.hypot(k.x-xb,k.y))):0, word=reach<75?'dicht bij de hand':reach<110?'goed bereikbaar':'ver van de hand';
+  $('#ctrlState').innerHTML=!kn.length?'':c.edited?`Zelf geschikt, volume ${word}. Sleep een knop en het groepje schuift mee. Sleep de omcirkelde en het groepje draait en spreidt.`:`<b>${I.n}</b> (${I.from}). ${I.why} Volume ${word}.`;
+  $('#knobBack').style.display=c.edited?'':'none';
+  if (drag) return;
+  clearTimeout(ideasT); ideasT=setTimeout(()=>{ if(D()===d) drawIdeas(d); },box.firstChild?160:0);
+}
+let ideasT=null;
+function drawIdeas(d){
+  const c=d.set.ctrl, box=$('#ideas'), cur=ideaOf(c); if(!box||drag) return;
+  const key=[d.id,JSON.stringify(d.pts),d.sym,c.n,c.knobD,c.sw,d.set.pu1.t,d.set.pu1.d,d.set.pu2.t,d.set.pu2.d,d.set.pu3.t,d.set.pu3.d,d.set.bridge,cur,c.edited].join('|');
+  if (key===ideasKey && box.firstChild) return; ideasKey=key;
+  const ctx=bodyCtx(d), g=ctx.g, sc=88/(g.maxY-g.minY), X=x=>((x-g.minX)*sc+4).toFixed(1), Y=y=>((g.maxY-y)*sc+4).toFixed(1), w=(g.maxX-g.minX)*sc+8, h=96;
+  const body=g.poly.filter((_,i)=>i%3===0).map(p=>X(p.x)+','+Y(p.y)).join(' ');
+  const hw=ctx.pus.map(p=>{ const r=p.route; return `<rect x="${X(r.cx-r.w/2)}" y="${Y(r.cy+r.h/2)}" width="${(r.w*sc).toFixed(1)}" height="${(r.h*sc).toFixed(1)}" fill="#bdb6aa"/>`; }).join('');
+  box.innerHTML=Object.entries(KNOB_IDEAS).filter(([,v])=>c.n>=v.min).map(([id,v])=>{ const ks=c.n?knobLayout(d,ctx,id,null):[];
+    return `<button class="idea ${id===cur&&!c.edited?'on':''}" data-act="idea" data-k="${id}" ${ks?'':'disabled'}><svg viewBox="0 0 ${w.toFixed(0)} ${h}" aria-hidden="true"><polygon points="${body}" fill="#f4efe7" stroke="#6b6257"/>${hw}${(ks||[]).map(k=>`<circle cx="${X(k.x)}" cy="${Y(k.y)}" r="${Math.max(2.6,c.knobD/2*sc).toFixed(1)}" fill="#b5541c"/>`).join('')}</svg><span>${ks?v.n:v.n+': past hier niet'}</span></button>`; }).join('');
+  applyLock();
 }
 function row(l,v,cls=''){ return `<div class="row"><label>${l}</label><span class="v ${cls}">${v}</span></div>`; }
 function erow(l,dim,v){ return `<div class="row"><label>${l}</label><span><input type="number" step="0.5" class="edit" data-dim="${dim}" value="${Math.round(v*10)/10}"> <span class="u">mm</span></span></div>`; }
@@ -1248,7 +1324,7 @@ P.addEventListener('input',e=>{
   setP(o,p,v);
   if (b==='view.ghost'||b==='set.wood') panelKey='';
   const af=el.dataset.after;
-  if (af==='layout'||af==='tuner'){ if(af==='tuner') applyTuner(d); d.set.auto=true; panelKey=''; }
+  if (af==='layout'||af==='tuner'){ if(af==='tuner') applyTuner(d); d.set.auto=true; panelKey=''; if(growHead(d)){ toast('De kop is langer geworden zodat alle mechanieken passen. Ongedaan maken kan met ↶.'); fit(); } }
   if (af==='ctrl'){ d.set.ctrl.edited=false; }
   if (af==='pg'){ d.set.pg.edited=false; if(d.set.pg.style==='none') editPG=false; panelKey=''; }
   if (b.startsWith('pt.') && T().isPG) d.set.pg.edited=true;
@@ -1266,13 +1342,23 @@ P.addEventListener('change',e=>{
   d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
   el.blur(); update();
 });
-function feel(d,k){
-  const f=k.endsWith('+')?1.03:1/1.03;
-  if (k[0]==='w') d.pts.forEach(p=>{ const g=d.type==='headstock'?Math.min(1,Math.max(0,p.y)/45):1; p.x*=1+(f-1)*g; });
-  else d.pts.forEach(p=>{ p.y*= (d.type==='body' && p.y>0) ? 1+(f-1)*0.6 : f; });   // body: vooral achter de brug langer/korter, de halsaansluiting schuift mee
+function feel(d,k,hold){
+  const st=hold?1.006:1.02, f=k.endsWith('+')?st:1/st, a=k.slice(0,-1);
+  if (a==='w') d.pts.forEach(p=>{ const g=d.type==='headstock'?Math.min(1,Math.max(0,p.y)/45):1; p.x*=1+(f-1)*g; });
+  else if (a==='l') d.pts.forEach(p=>{ p.y*= (d.type==='body' && p.y>0) ? 1+(f-1)*0.6 : f; });   // body: vooral achter de brug langer/korter, de halsaansluiting schuift mee
+  else { const g=geom(d); let yc, sig;   // één zone voller of slanker, zacht uitlopend naar de buren
+    if (d.type==='body'){ const b=bouts(g); if(!b) return; yc=a==='lo'?b.lower.y:a==='up'?b.upper.y:(b.waist?b.waist.y:(b.lower.y+b.upper.y)/2); sig=(g.maxY-g.minY)*0.16; }
+    else { yc=g.maxY*(a==='mi'?0.45:0.85); sig=g.maxY*0.24; }
+    d.pts.forEach(p=>{ if(d.type==='headstock'&&p.y<=0.5) return; p.x*=1+(f-1)*Math.exp(-(((p.y-yc)/sig)**2)); }); }
   d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
-  if (d.type==='headstock' && d.set.auto===false) d.posts.forEach(p=>{ if(k[0]==='l') p.y*=f; else p.x*=1+(f-1)*Math.min(1,Math.max(0,p.y)/45); });
+  if (d.type==='headstock' && d.set.auto===false && (a==='w'||a==='l')) d.posts.forEach(p=>{ if(a==='l') p.y*=f; else p.x*=1+(f-1)*Math.min(1,Math.max(0,p.y)/45); });
 }
+// ingedrukt houden = blijven boetseren
+let holdFired=false, holdT=null;
+P.addEventListener('pointerdown',e=>{ const t=e.target.closest('[data-act=feel]'); if(!t||t.disabled||locked()) return; holdFired=false; clearInterval(holdT);
+  const t0=Date.now(); holdT=setInterval(()=>{ if(Date.now()-t0<350) return; if(!holdFired){ holdFired=true; pushUndo(); } feel(D(),t.dataset.k,true); update(true); },90); });
+const holdEnd=()=>{ if(holdT){ clearInterval(holdT); holdT=null; if(holdFired) update(); } };
+window.addEventListener('pointerup',holdEnd); window.addEventListener('pointercancel',holdEnd);
 P.addEventListener('change',e=>{ if(e.target.type==='range'&&e.target.dataset.bind&&!e.target.dataset.bind.startsWith('view.')){ update(); return; } if(e.target.id!=='hwPreset') return; const k=e.target.value; e.target.value=''; const d=D(); if(!k||!PRESETS[k]||locked()) return;
   pushUndo(); const ps=clone(PRESETS[k][1]); ps.ctrl.knobD=d.set.ctrl.knobD||25; Object.assign(d.set,ps); d.set.pg.edited=false; d.set.pg.pts=null; fitPickups(d); panelKey=''; buildPanel(); update(); toast('Opbouw: '+PRESETS[k][0]); });
 function toggleSym(on){
@@ -1321,6 +1407,8 @@ svg.addEventListener('pointerdown',e=>{
     if (d.type==='body' && lib.view.hw && !tgt.isPG){
       const ctx=bodyCtx(d), its=d.set.ctrl.items||[];
       const ii=its.findIndex(it=>near(it.x,it.y,Math.max(9,itemR(it,d.set.ctrl)*view.s)));
+      const kIdx=its.map((x,i)=>x.t==='knob'?i:-1).filter(i=>i>=0);
+      if (ii>=0 && its[ii].t==='knob' && kIdx.length>1 && !d.set.ctrl.loose){ pushUndo(); drag={kind:'group',swing:ii===kIdx[kIdx.length-1],idx:kIdx,w0:{x:w.x,y:w.y},orig:kIdx.map(i=>({x:its[i].x,y:its[i].y})),bad:kIdx.some(i=>itemReason(ctx,its,i,its[i]))}; return; }
       if (ii>=0){ pushUndo(); const it=its[ii]; drag={kind:'item',i:ii,last:{x:it.x,y:it.y},bad:!!itemReason(ctx,its,ii,it)}; return; }
       const pu=ctx.pus.find(p=>rectDist(w,p.route)<3/view.s);
       if (pu){ pushUndo(); drag={kind:'pu',k:pu.k,lastY:d.set[pu.k].d,bad:!!puReason(ctx,pu.k)}; return; }
@@ -1371,6 +1459,19 @@ svg.addEventListener('pointermove',e=>{
     if (side){ const q=nearestOnPoly(ctx.g.poly,np); np={x:q.x,y:q.y}; if(!drag.bad && !ok(np)) np=drag.last; }
     blockMsg = !drag.bad && (Math.hypot(np.x-cand.x,np.y-cand.y)>1) ? itemReason(ctx,its,drag.i,cand) : '';
     it.x=np.x; it.y=np.y; drag.last={...np}; if (ok(np)) drag.bad=false;
+    c.edited=true; update(true); return;
+  }
+  if (drag.kind==='group'){
+    const c=d.set.ctrl, its=c.items, ctx=bodyCtx(d), O=drag.orig, I=drag.idx;
+    const at=fn=>{ const test=its.map(x=>({...x})); I.forEach((ii,j)=>{ const q=fn(O[j]); test[ii].x=Math.round(q.x*2)/2; test[ii].y=Math.round(q.y*2)/2; }); return test; };
+    const why=t=>{ for(const ii of I){ const r=itemReason(ctx,t,ii,t[ii]); if(r) return r; } return ''; };
+    let t;
+    if (drag.swing){ const pv=O[0], L=O[O.length-1], a0=Math.atan2(L.y-pv.y,L.x-pv.x), a1=Math.atan2(w.y-pv.y,w.x-pv.x), r=Math.max(0.65,Math.min(1.9,Math.hypot(w.x-pv.x,w.y-pv.y)/(Math.hypot(L.x-pv.x,L.y-pv.y)||1))), cs=Math.cos(a1-a0)*r, sn=Math.sin(a1-a0)*r;
+      t=[at(p=>({x:pv.x+(p.x-pv.x)*cs-(p.y-pv.y)*sn,y:pv.y+(p.x-pv.x)*sn+(p.y-pv.y)*cs}))]; }
+    else { const dx=w.x-drag.w0.x, dy=w.y-drag.w0.y; t=[at(p=>({x:p.x+dx,y:p.y+dy})),at(p=>({x:p.x+dx,y:drag.lastY!=null?p.y+drag.lastY:p.y})),at(p=>({x:drag.lastX!=null?p.x+drag.lastX:p.x,y:p.y+dy}))]; }
+    const good=drag.bad?t[0]:t.find(x=>!why(x));
+    blockMsg=good===t[0]?'':why(t[0]);
+    if (good){ I.forEach(ii=>{ its[ii].x=good[ii].x; its[ii].y=good[ii].y; }); if(!drag.swing){ drag.lastX=its[I[0]].x-O[0].x; drag.lastY=its[I[0]].y-O[0].y; } if(!why(good)) drag.bad=false; }
     c.edited=true; update(true); return;
   }
   if (drag.kind==='pu'){
@@ -1461,7 +1562,14 @@ function runAct(a,t){ const d=D();
     case 'desel': sel=-1; update(); break;
     case 'resetH': { const p=T().pts[sel]; if(p){ pushUndo(); delete p.ang; delete p.k; update(); } break; }
     case 'fair': { if(locked()) return; pushUndo(); const tg=T(); fairObj(tg,1,d.type==='headstock'&&!tg.isPG); if(tg.isPG) d.set.pg.edited=true; update(); toast('Lijn gladgestreken'); break; }
-    case 'autoCtrl': pushUndo(); d.set.ctrl.edited=false; update(); toast('Bediening opnieuw automatisch geplaatst'); break;
+    case 'autoCtrl': { const old=clone(d.set.ctrl.items||[]); pushUndo(); d.set.ctrl.edited=false; update(); glide(old); break; }
+    case 'idea': { if(locked()){ lockMsg(); return; } const c=d.set.ctrl, old=clone(c.items||[]); pushUndo(); c.layout=t.dataset.k; c.vr=null; c.edited=false; update(); glide(old); break; }
+    case 'knobN': { if(locked()){ lockMsg(); return; } const c=d.set.ctrl; pushUndo(); c.n=Math.max(0,Math.min(6,c.n+ +t.dataset.k)); c.edited=false; update(); break; }
+    case 'knobSurprise': { if(locked()){ lockMsg(); return; } const c=d.set.ctrl; if(!c.n) { toast('Voeg eerst een knop toe'); return; }
+      const ctx=bodyCtx(d), ids=Object.keys(KNOB_IDEAS).filter(k=>c.n>=KNOB_IDEAS[k].min), old=clone(c.items||[]), rnd=(a,b)=>a+Math.random()*(b-a);
+      for (let i=0;i<24;i++){ const id=ids[Math.floor(Math.random()*ids.length)], vr={k:rnd(0.92,1.3),e:rnd(-2,9),s:rnd(0,30),rot:rnd(-0.28,0.28)};
+        if (knobLayout(d,ctx,id,vr)){ pushUndo(); c.layout=id; c.vr=vr; c.edited=false; update(); glide(old); return; } }
+      toast('Op deze vorm vind ik geen ander idee dat past'); break; }
     case 'pgRegen': pushUndo(); d.set.pg.edited=false; editPG=false; sel=-1; buildPanel(); update(); break;
     case 'tgtPG': if(!d.set.pg.pts){ toast('Er is nog geen pickguard'); return; } editPG=true; sel=-1; panelKey=''; update(); break;
     case 'tgtBody': editPG=false; sel=-1; panelKey=''; update(); break;
@@ -1477,7 +1585,7 @@ function runAct(a,t){ const d=D();
     case 'exportSvg': exportSvg(d,false); break;
     case 'saveFile': download(`Sixto_vormen_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({...lib,designs:lib.designs.filter(x=>!x.ref)},null,1), 'application/json'); break;
     case 'openFile': $('#fileIn').click(); break;
-    case 'feel': { if(locked()){ lockMsg(); return; } pushUndo(); feel(d,t.dataset.k); update(); break; }
+    case 'feel': { if(locked()){ lockMsg(); return; } if(holdFired){ holdFired=false; return; } pushUndo(); feel(d,t.dataset.k); update(); break; }
   }
 }
 $('#designSel').addEventListener('change',e=>{ lib.active[lib.tab]=e.target.value; switchDesign(); });
@@ -1569,6 +1677,14 @@ function genBody(w){
 // ---- koppen: mengsels van echte koppen (zelfde familie: 3+3, op rij, omgekeerd) ----
 const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz','tiger'],inline:['tele','strat','strat70','explorer','rhoads','c5150'],rev:['firebird','n4']};
 let HVECS=null;
+// denkt mee: past het gekozen patroon niet in deze kop, dan rekt de kop tot het wel past (of blijft hij zoals hij was)
+function growHead(d){
+  if (d.type!=='headstock'||d.ref||d.set.layout==='custom') return false;
+  placePosts(d); if(!headChecks(d).length) return false;
+  const O=d.pts.map(p=>p.y);
+  for (let i=1;i<=16;i++){ d.pts.forEach((p,j)=>{ if(O[j]>0.5) p.y=Math.round(O[j]*Math.pow(1.04,i)*100)/100; }); placePosts(d); if(!headChecks(d).length) return true; }
+  d.pts.forEach((p,j)=>{ p.y=O[j]; }); placePosts(d); return false;
+}
 function headFam(d){ const P=d.posts, n=P.length; if(n<2) return 'inline'; const h=Math.ceil(n/2);
   if (P.slice(0,h).every(p=>p.x<0)&&P.slice(h).every(p=>p.x>0)&&P[h].y>P[n-1].y) return 'split'; return P[0].y<=P[n-1].y?'inline':'rev'; }
 // omtrek van diskanthoek over de top naar bashoek, met de top als herkenningspunt
@@ -1785,6 +1901,34 @@ $('#modal').addEventListener('input',e=>{
 });
 $('#modal').addEventListener('change',e=>{ if(e.target.dataset.m==='wild') rollInsp(); });
 
+// ================= kiezer (vervangt de systeem-dropdowns, zelfde gedrag op iPad, iPhone en laptop) =================
+const isDesignSel=sel=>sel.id==='designSel'||sel.id==='ghostSel'||sel.dataset.m==='src';
+function enhanceSelects(){
+  document.querySelectorAll('select').forEach(sel=>{
+    let b=sel.nextElementSibling;
+    if (!b||!b.classList.contains('pick')){ b=document.createElement('button'); b.type='button'; b.className='pick'; if(sel.style.maxWidth) b.style.maxWidth=sel.style.maxWidth; if(sel.title) b.title=sel.title; sel.classList.add('nat'); sel.after(b); b.addEventListener('click',()=>openPicker(sel,b)); }
+    const o=sel.options[sel.selectedIndex], tx=o?o.textContent:'—'; if(b.textContent!==tx) b.textContent=tx; if(b.disabled!==sel.disabled) b.disabled=sel.disabled;
+  });
+}
+new MutationObserver(enhanceSelects).observe(document.body,{childList:true,subtree:true});
+function miniShape(id){ const x=lib.designs.find(q=>q.id===id); if(!x) return ''; const g=geom(x), S=Math.max(g.maxX-g.minX,g.maxY-g.minY)||1, pts=g.poly.filter((_,i)=>i%4===0).map(p=>((p.x-g.minX)/S*34+3).toFixed(1)+','+((g.maxY-p.y)/S*34+3).toFixed(1)).join(' ');
+  return `<svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><polygon points="${pts}" fill="#f4efe7" stroke="#6b6257"/></svg>`; }
+function closePicker(){ const s=$('#sheet'); if(s) s.remove(); }
+function openPicker(sel,btn){
+  closePicker(); const thumbs=isDesignSel(sel);
+  const item=o=>`<button type="button" class="opt ${o.value===sel.value?'on':''}" data-v="${esc(o.value)}" ${o.disabled?'disabled':''}>${thumbs&&o.value?miniShape(o.value):''}<span>${esc(o.textContent)}</span></button>`;
+  let h=''; [...sel.children].forEach(c=>{ if(c.tagName==='OPTGROUP'){ if(c.children.length) h+=`<div class="ogrp">${esc(c.label)}</div>`+[...c.children].map(item).join(''); } else h+=item(c); });
+  const wrap=document.createElement('div'); wrap.id='sheet'; wrap.innerHTML=`<div class="list">${h}</div>`; document.body.appendChild(wrap);
+  const L=wrap.firstChild, r=btn.getBoundingClientRect();
+  if (innerWidth>900){ const w=Math.max(r.width,260), mh=Math.min(460,innerHeight-24); L.style.width=w+'px'; L.style.maxHeight=mh+'px'; L.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px'; const hh=Math.min(L.scrollHeight,mh); L.style.top=(r.bottom+hh+8<innerHeight?r.bottom+4:Math.max(8,r.top-hh-4))+'px'; }
+  else wrap.classList.add('low');
+  const on=L.querySelector('.opt.on'); if(on) on.scrollIntoView({block:'center'});
+  wrap.addEventListener('click',e=>{ const t=e.target.closest('.opt'); if(!t){ if(e.target===wrap) closePicker(); return; } if(t.disabled) return; closePicker();
+    if (t.dataset.v===sel.value && !sel.id.match(/more|hwPreset/)) return;
+    sel.dispatchEvent(new Event('focusin',{bubbles:true})); sel.value=t.dataset.v; sel.dispatchEvent(new Event('input',{bubbles:true})); sel.dispatchEvent(new Event('change',{bubbles:true})); enhanceSelects(); });
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePicker(); });
+
 // ================= start =================
 function switchDesign(){
   if (!lib.designs.some(x=>x.type===lib.tab)) lib.designs.push(lib.tab==='body'?defaultBody():defaultHead());
@@ -1794,6 +1938,7 @@ function switchDesign(){
 }
 function update(light){ refreshAuto(D(),light||!!drag); render(); syncPanel(); save(); }
 let lastSz=null; window.addEventListener('resize',()=>{ const r=svg.getBoundingClientRect(); if(lastSz&&(Math.abs(r.width-lastSz.w)>lastSz.w*0.25||Math.abs(r.height-lastSz.h)>lastSz.h*0.25)) fit(); else render(); lastSz={w:r.width,h:r.height}; });
+if (lib.view.soft===30) lib.view.soft=60;
 ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); });
 switchDesign();
 </script>
