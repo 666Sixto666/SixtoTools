@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "fret-slots",
+      "title": "Fret slots (Horreum)",
+      "note": "Gepland vr 6/11",
+      "readyAt": "2026-11-04T22:03:17+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-fret-slots/sixto_reel_fret-slots.mp4",
+      "igCaption": "The fret slots are in. Horreum's ebony fretboard, sawn by hand in my jig, one slot at a time.\n\nNext up: sanding the radius true.\n\nBy hand or by machine: which would you trust with your fretboard?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarBuilding #ReclaimedWood #OneOfOne #WorkshopLife #Ebony #Fretboard",
+      "igCaptionLong": "The fret slots are in. Horreum's ebony fretboard, sawn by hand in my jig, one slot at a time.\n\nNext up: sanding the radius true.\n\nBy hand or by machine: which would you trust with your fretboard?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarBuilding #ReclaimedWood #OneOfOne #WorkshopLife #Ebony #Fretboard",
+      "ytTitle": "Sawing fret slots by hand in ebony | Sixto Custom Guitars",
+      "ytDescription": "The ebony fretboard for Sixto Horreum gets its fret slots: sawn by hand in my jig, one at a time. Next up: sanding the radius true.\n\nWebsite: https://666sixto666.github.io/SixtoTools/site/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #ebony #fretboard",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "inside-the-body",
       "title": "What's inside the body (Solum)",
       "note": "Gepland ma 9/11",
