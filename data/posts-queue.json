@@ -2,8 +2,8 @@
   "posts": [
     {
       "id": "casula-herringbone",
-      "title": "Casula: herringbone to relic",
-      "note": "Gepland wo 11/11",
+      "title": "Casula: herringbone to relic (carrousel)",
+      "note": "Gepland wo 11/11. Instagram: carrousel van 5 foto's. YouTube: Short met de video.",
       "readyAt": "2026-11-06T20:41:28+00:00",
       "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/sixto_reel_casula-herringbone.mp4",
       "igCaption": "Sixto Casula started as a herringbone of narrow slats, from the wood of the garden house that became my workshop. Then came the sunburst, the dark edges and the wear.\n\nLook near the knobs: the herringbone still shows through.\n\nCasula is Latin for a little house.\n\nWould you have left the wood bare?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarBuilding #ReclaimedWood #OneOfOne #WorkshopLife #WoodWithAPast #Relic",
@@ -13,7 +13,14 @@
       "posted": {
         "instagram": null,
         "youtube": null
-      }
+      },
+      "carousel": [
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/casula_01.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/casula_02.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/casula_03.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/casula_04.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-casula-herringbone/casula_05.jpg"
+      ]
     },
     {
       "id": "one-plank",
