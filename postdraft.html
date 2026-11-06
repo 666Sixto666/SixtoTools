@@ -168,6 +168,9 @@ function renderReady(p){
     <div class="meta">${esc(p.note || '')}</div>
     ${p.videoUrl ? `<a class="btn primary" style="width:100%" href="${esc(p.videoUrl)}" download>⬇ Video bewaren</a>
       <div class="hint">iPhone: tik › Download › open in Bestanden › Deel › Bewaar video. Daarna staat hij in Foto's.</div>` : ''}
+    ${(p.carousel && p.carousel.length) ? `<div class="block"><div class="block-head"><span>Instagram: carrousel, in deze volgorde</span></div>
+      ${p.carousel.map((u,i) => `<a class="btn" style="width:100%;margin-top:6px" href="${esc(u)}" download>⬇ Foto ${i+1} van ${p.carousel.length}</a>`).join('')}
+      <div class="hint">Instagram krijgt de foto's; de video hierboven is enkel voor de YouTube Short.</div></div>` : ''}
     ${block('Instagram', p.igCaption)}
     ${p.igCaptionLong ? `<details><summary>Langere versie</summary>${block('Instagram, lang', p.igCaptionLong)}</details>` : ''}
     ${block('YouTube Short: titel', p.ytTitle)}
