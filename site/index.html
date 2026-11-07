@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var L=localStorage.getItem('sixto-lang');if(L!=='en'&&(L==='nl'||/^nl/i.test(navigator.language||''))&&!/[?&]en\b/.test(location.search)){location.replace('nl/'+location.hash);}}catch(x){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sixto Custom Guitars — Handbuilt Electric Guitars, Made to Measure</title>
 <meta name="description" content="One-of-one electric guitars, built by hand from reclaimed wood in Blaasveld, Belgium. Designed together with you, around the way you play.">
@@ -370,6 +371,13 @@
   .contact-form input::placeholder, .contact-form textarea::placeholder{ color:var(--cream-dim); opacity:0.75; }
   .contact-form input:focus, .contact-form textarea:focus{ border-color:var(--plum-soft); }
   .contact-form .cta-btn{ margin-top:4px; align-self:flex-start; }
+  .cf-fallback{ max-width:520px; margin:18px auto 0; padding:18px; border:1px solid rgba(243,234,217,0.25); border-radius:12px; font-size:14px; color:var(--cream); text-align:left; }
+  .cf-fallback[hidden]{ display:none; }
+  .cf-fallback p{ margin:0 0 12px; }
+  .cf-fallback p:last-child{ margin:12px 0 0; font-size:13px; color:var(--cream-dim); }
+  .cf-fb-btns{ display:flex; flex-wrap:wrap; gap:10px; }
+  .cf-fb-btns .ghost-btn{ background:none; cursor:pointer; padding:12px 20px; }
+  header nav a.lang{ border:1px solid rgba(243,234,217,0.45); border-radius:100px; padding:6px 10px; }
   .form-note{ max-width:520px; margin:16px auto 0; font-size:13px; color:var(--cream-dim); opacity:0.85; }
   .contact-alt{ margin-top:26px; font-size:14px; color:var(--cream-dim); }
   .contact-alt a{ color:var(--plum-soft); text-decoration:none; border-bottom:1px solid rgba(201,163,192,0.4); }
@@ -408,7 +416,7 @@
   }
   /* phones */
   @media (max-width:640px){
-    header nav a:not(:last-child){ display:none; }
+    header nav a:not(.lang):not(:nth-last-child(2)){ display:none; }
     .wordmark{ font-size:13px; letter-spacing:0.12em; }
     .hero-content{ padding-top:96px; }
     .hero-cta .cta-btn, .hero-cta .ghost-btn{ width:100%; text-align:center; }
@@ -439,6 +447,7 @@
     <a href="#process">How it works</a>
     <a href="#story">About</a>
     <a href="#contact">Talk</a>
+    <a class="lang" href="nl/" hreflang="nl" onclick="try{localStorage.setItem('sixto-lang','nl')}catch(x){}">NL</a>
   </nav>
 </header>
 
@@ -606,6 +615,14 @@
     <button type="submit" class="cta-btn">Send message</button>
   </form>
   <p class="form-note">Opens your email app with everything filled in. Nothing is sent automatically; you stay in control until you press send.</p>
+  <div id="cf-fallback" class="cf-fallback" hidden>
+    <p>Didn't your mail app open, or did your text disappear? Your message is saved. Send it like this:</p>
+    <div class="cf-fb-btns">
+      <a id="cf-gmail" class="ghost-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=sixtocustomguitars@gmail.com" target="_blank" rel="noopener">Send via Gmail</a>
+      <button type="button" class="ghost-btn" onclick="sixtoCopy(this)">Copy message</button>
+    </div>
+    <p>Or paste it into an email to sixtocustomguitars@gmail.com, or a DM on Instagram.</p>
+  </div>
 
   <div class="contact-alt">Prefer Instagram? DM <a href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener">@sixtocustomguitars</a></div>
   <div class="contact-alt" style="margin-top:8px;">Or write to <a href="mailto:sixtocustomguitars@gmail.com" style="overflow-wrap:anywhere;">sixtocustomguitars@gmail.com</a></div>
@@ -616,16 +633,43 @@
 </section>
 
 <script>
-function sixtoSendMail(e){
-  e.preventDefault();
+function sixtoMsg(){
   var name = document.getElementById('cf-name').value;
   var email = document.getElementById('cf-email').value;
   var message = document.getElementById('cf-message').value;
-  var subject = encodeURIComponent('New build inquiry — ' + name);
-  var body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message);
-  window.location.href = 'mailto:sixtocustomguitars@gmail.com?subject=' + subject + '&body=' + body;
+  try{ localStorage.setItem('sixto-cf', JSON.stringify({n:name, m:email, t:message})); }catch(x){}
+  return {subject: 'New build inquiry — ' + name, body: 'Name: ' + name + '\nEmail: ' + email + '\n\n' + message};
+}
+function sixtoSendMail(e){
+  e.preventDefault();
+  var m = sixtoMsg();
+  var g = document.getElementById('cf-gmail');
+  if(g) g.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=sixtocustomguitars@gmail.com&su=' + encodeURIComponent(m.subject) + '&body=' + encodeURIComponent(m.body);
+  var fb = document.getElementById('cf-fallback');
+  if(fb) fb.hidden = false;
+  window.location.href = 'mailto:sixtocustomguitars@gmail.com?subject=' + encodeURIComponent(m.subject) + '&body=' + encodeURIComponent(m.body);
   return false;
 }
+function sixtoCopy(btn){
+  var m = sixtoMsg();
+  var txt = m.subject + '\n\n' + m.body;
+  var done = function(){ btn.textContent = 'Copied'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, function(){ sixtoCopyOld(txt); done(); });
+  } else { sixtoCopyOld(txt); done(); }
+}
+function sixtoCopyOld(txt){
+  var ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(x){} document.body.removeChild(ta);
+}
+(function(){
+  try{
+    var d = JSON.parse(localStorage.getItem('sixto-cf') || 'null');
+    if(!d) return;
+    var f = function(id, v){ var el = document.getElementById(id); if(el && !el.value && v) el.value = v; };
+    f('cf-name', d.n); f('cf-email', d.m); f('cf-message', d.t);
+  }catch(x){}
+})();
 (function(){
   try{
     document.querySelectorAll('img[data-copy]').forEach(function(el){
