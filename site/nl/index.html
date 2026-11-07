@@ -370,6 +370,13 @@
   .contact-form input::placeholder, .contact-form textarea::placeholder{ color:var(--cream-dim); opacity:0.75; }
   .contact-form input:focus, .contact-form textarea:focus{ border-color:var(--plum-soft); }
   .contact-form .cta-btn{ margin-top:4px; align-self:flex-start; }
+  .cf-fallback{ max-width:520px; margin:18px auto 0; padding:18px; border:1px solid rgba(243,234,217,0.25); border-radius:12px; font-size:14px; color:var(--cream); text-align:left; }
+  .cf-fallback[hidden]{ display:none; }
+  .cf-fallback p{ margin:0 0 12px; }
+  .cf-fallback p:last-child{ margin:12px 0 0; font-size:13px; color:var(--cream-dim); }
+  .cf-fb-btns{ display:flex; flex-wrap:wrap; gap:10px; }
+  .cf-fb-btns .ghost-btn{ background:none; cursor:pointer; padding:12px 20px; }
+  header nav a.lang{ border:1px solid rgba(243,234,217,0.45); border-radius:100px; padding:6px 10px; }
   .form-note{ max-width:520px; margin:16px auto 0; font-size:13px; color:var(--cream-dim); opacity:0.85; }
   .contact-alt{ margin-top:26px; font-size:14px; color:var(--cream-dim); }
   .contact-alt a{ color:var(--plum-soft); text-decoration:none; border-bottom:1px solid rgba(201,163,192,0.4); }
@@ -408,7 +415,7 @@
   }
   /* phones */
   @media (max-width:640px){
-    header nav a:not(:last-child){ display:none; }
+    header nav a:not(.lang):not(:nth-last-child(2)){ display:none; }
     .wordmark{ font-size:13px; letter-spacing:0.12em; }
     .hero-content{ padding-top:96px; }
     .hero-cta .cta-btn, .hero-cta .ghost-btn{ width:100%; text-align:center; }
@@ -439,6 +446,7 @@
     <a href="#process">Werkwijze</a>
     <a href="#story">Over mij</a>
     <a href="#contact">Gesprek</a>
+    <a class="lang" href="../" hreflang="en" onclick="try{localStorage.setItem('sixto-lang','en')}catch(x){}">EN</a>
   </nav>
 </header>
 
@@ -604,7 +612,15 @@
     <textarea id="cf-message" rows="6" placeholder="Hoe speel je? Wat mist je huidige gitaar? Heb je al een vorm, houtsoort of kleur in gedachten? Ruwe ideeën zijn prima." required></textarea>
     <button type="submit" class="cta-btn">Verstuur bericht</button>
   </form>
-  <p class="form-note">Je mailprogramma opent met je bericht al ingevuld. Het vertrekt pas als jij op verzenden drukt.</p>
+  <p class="form-note">Je mailprogramma opent met je bericht al ingevuld. Het vertrekt pas als jij op verzenden drukt. Je tekst blijft op dit toestel bewaard, dus je verliest niets.</p>
+  <div id="cf-fallback" class="cf-fallback" hidden>
+    <p>Ging er geen mailprogramma open, of was je tekst weg? Je bericht is bewaard. Verstuur het zo:</p>
+    <div class="cf-fb-btns">
+      <a id="cf-gmail" class="ghost-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=sixtocustomguitars@gmail.com" target="_blank" rel="noopener">Versturen via Gmail</a>
+      <button type="button" class="ghost-btn" onclick="sixtoCopy(this)">Kopieer bericht</button>
+    </div>
+    <p>Of plak het in een mail naar sixtocustomguitars@gmail.com, of in een DM op Instagram.</p>
+  </div>
 
   <div class="contact-alt">Liever Instagram? DM <a href="https://www.instagram.com/sixtocustomguitars/" target="_blank" rel="noopener">@sixtocustomguitars</a></div>
   <div class="contact-alt" style="margin-top:8px;">Of mail naar <a href="mailto:sixtocustomguitars@gmail.com" style="overflow-wrap:anywhere;">sixtocustomguitars@gmail.com</a></div>
@@ -615,16 +631,43 @@
 </section>
 
 <script>
-function sixtoSendMail(e){
-  e.preventDefault();
+function sixtoMsg(){
   var name = document.getElementById('cf-name').value;
   var email = document.getElementById('cf-email').value;
   var message = document.getElementById('cf-message').value;
-  var subject = encodeURIComponent('Nieuwe aanvraag — ' + name);
-  var body = encodeURIComponent('Naam: ' + name + '\nE-mail: ' + email + '\n\n' + message);
-  window.location.href = 'mailto:sixtocustomguitars@gmail.com?subject=' + subject + '&body=' + body;
+  try{ localStorage.setItem('sixto-cf', JSON.stringify({n:name, m:email, t:message})); }catch(x){}
+  return {subject: 'Nieuwe aanvraag — ' + name, body: 'Naam: ' + name + '\nE-mail: ' + email + '\n\n' + message};
+}
+function sixtoSendMail(e){
+  e.preventDefault();
+  var m = sixtoMsg();
+  var g = document.getElementById('cf-gmail');
+  if(g) g.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=sixtocustomguitars@gmail.com&su=' + encodeURIComponent(m.subject) + '&body=' + encodeURIComponent(m.body);
+  var fb = document.getElementById('cf-fallback');
+  if(fb) fb.hidden = false;
+  window.location.href = 'mailto:sixtocustomguitars@gmail.com?subject=' + encodeURIComponent(m.subject) + '&body=' + encodeURIComponent(m.body);
   return false;
 }
+function sixtoCopy(btn){
+  var m = sixtoMsg();
+  var txt = m.subject + '\n\n' + m.body;
+  var done = function(){ btn.textContent = 'Gekopieerd'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, function(){ sixtoCopyOld(txt); done(); });
+  } else { sixtoCopyOld(txt); done(); }
+}
+function sixtoCopyOld(txt){
+  var ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(x){} document.body.removeChild(ta);
+}
+(function(){
+  try{
+    var d = JSON.parse(localStorage.getItem('sixto-cf') || 'null');
+    if(!d) return;
+    var f = function(id, v){ var el = document.getElementById(id); if(el && !el.value && v) el.value = v; };
+    f('cf-name', d.n); f('cf-email', d.m); f('cf-message', d.t);
+  }catch(x){}
+})();
 (function(){
   try{
     document.querySelectorAll('img[data-copy]').forEach(function(el){
