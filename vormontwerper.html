@@ -63,6 +63,8 @@ section h3{font-size:12.5px;margin:10px 0 4px;color:var(--ink)}
 .opt small{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}.opt.fut{opacity:.6}
 #toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
 #toast.show{opacity:1}
+#modal .rnd{display:flex;gap:16px;align-items:flex-start;margin-top:10px}#modal .rimg{flex:1.4;min-width:0;height:min(70vh,760px);border-radius:10px;overflow:hidden;background:#f3ede3}#modal .ropt{flex:1;min-width:240px}
+@media (max-width:760px){#modal .rnd{flex-direction:column}#modal .rimg{width:100%;height:55vh}#modal .ropt{width:100%;min-width:0}}
 #modal{position:fixed;inset:0;background:rgba(30,25,20,.45);display:none;align-items:center;justify-content:center;z-index:8}
 #modal .box{background:#fff;border-radius:12px;max-width:1060px;width:calc(100% - 40px);max-height:calc(100% - 30px);overflow:auto;padding:16px 18px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .mhead{display:flex;justify-content:space-between;align-items:center}.mhead h2{margin:0;font-size:17px}
@@ -174,6 +176,8 @@ details section{border-bottom:0;padding-top:4px}
   <button data-act="dup">Dupliceer</button>
   <select id="more" title="Meer"><option value="">Meer…</option><option value="rename">Hernoemen</option><option value="del">Verwijderen</option><option value="saveFile">Back-up bewaren ↓</option><option value="openFile">Back-up inladen ↑</option></select>
   <div class="spacer"></div>
+  <button data-act="render" title="Een beeld van de hele gitaar, met de gekoppelde kop">🎨 Render</button>
+  <button data-act="print3d" title="Mallen als STL, in stukken voor je printerbed">🖨 3D-print</button>
   <button class="primary" data-act="exportSvg" title="Alles op ware grootte (mm), elke laag apart: omtrek, frezingen, gaten, pickguard">SVG 1:1</button>
   <input type="file" id="fileIn" accept=".json" hidden>
   <input type="file" id="imgIn" accept="image/*" hidden>
@@ -1014,6 +1018,7 @@ function fit(){
   resize(); if (W<200||H<200){ requestAnimationFrame(fit); return; }
   const g=geom(D()); let {minX,maxX,minY,maxY}=g;
   if (D().type==='headstock') minY=Math.min(minY,-30);
+  if (D().type==='body'&&lib.view.whole&&lib.view.neck){ const hd=partnerHead(D()); maxY=Math.max(maxY,D().set.scale+(hd?geom(hd).maxY:40)); }
   const w=maxX-minX, h=maxY-minY;
   const cmp=CMP.matches; view.s=Math.max(0.2,Math.min((W-(cmp?36:90))/w,(H-(cmp?176:150))/h)); view.cx=(minX+maxX)/2; view.cy=(minY+maxY)/2 + (cmp?-24:16)/view.s;
   render();
@@ -1125,6 +1130,7 @@ function bodyOverlay(d,g){
       o+=L_(-hw,y,hw,y,`stroke="${onBody?'#b5541c':'#9b8b78'}" stroke-width="${onBody?1.6:1}"`);
       if ([3,5,7,9,12,15,17,19,21,24].includes(n)||n===s.frets){ const p=toS(hw,y); o+=`<text x="${p[0]+6}" y="${p[1]+4}" font-size="11" fill="#7a5a3a">${n}</text>`; } }
     o+=L_(-s.nutW/2-4,s.scale,s.nutW/2+4,s.scale,'stroke="#1f1c18" stroke-width="3"');
+    const hd=v.whole&&partnerHead(d); if(hd){ const hg=geom(hd), mp=(x,y)=>toS(x,y+s.scale); o+=`<path d="${pathD(hg.segs,mp)}" fill="#7a5a3a" fill-opacity=".12" stroke="#7a5a3a" stroke-width="1.4"/>`; hd.posts.forEach(p=>{ const c=toS(p.x,p.y+s.scale); o+=`<circle cx="${c[0]}" cy="${c[1]}" r="${Math.max(1.5,hd.set.holeD/2*view.s)}" fill="#c8ccd0" stroke="#7d858b"/>`; }); }
   }
   o+=L_(-s.spBridge/2-12,0,s.spBridge/2+12,0,'stroke="#2f6f8f" stroke-width="2.5"');
   const p0=toS(s.spBridge/2+14,0); if(!CMP.matches) o+=`<text x="${p0[0]}" y="${p0[1]+4}" font-size="11" fill="#2f6f8f">zadel</text>`;
@@ -1241,6 +1247,8 @@ function buildPanel(){
     <div id="ptBox"></div></section>`;
   if (d.type==='body'){
     h+=`<section><h2>Hardware</h2>
+      <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock').sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="btns" style="margin:-2px 0 8px"><button data-act="editHead">Bewerk deze kop</button><button data-act="render">🎨 Render</button></div>
       <div class="row"><label>Opbouw</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
       </section>${bouwHTML()}<section><h2>Knoppen</h2>
       <div class="fr fr1"><button data-act="knobN" data-k="-1" aria-label="Minder knoppen">−</button><span id="knobCount"></span><button data-act="knobN" data-k="1" aria-label="Meer knoppen">+</button></div>
@@ -1294,7 +1302,7 @@ function buildPanel(){
   }
   h+=`<details id="viewBox" ${v.vw?'open':''}><summary>Weergave, achtergrond &amp; back-up</summary><section>
     ${chk('view.grid','Raster')}${chk('view.dims','Maatlijnen')}${chk('view.hw','Hardware')}${chk('view.routes','Frezingen en kanalen')}
-    ${d.type==='body'?chk('view.pgShow','Pickguard')+chk('view.neck','Hals met frets'):''}
+    ${d.type==='body'?chk('view.pgShow','Pickguard')+chk('view.neck','Hals met frets')+chk('view.whole','Hele gitaar (met kop)','data-after="fit"'):''}
     ${chk('view.strings','Snaren')}${chk('view.wline','Breedte meten onder de muis')}
     ${chk('view.snap','Punten op hele mm vastklikken')}
     <div class="row"><label>Vergelijk met</label><select data-bind="view.ghost" id="ghostSel" style="max-width:190px"></select></div></section>
@@ -1322,7 +1330,9 @@ function sumHTML(d,g){
 const TUN_G={grover:58,kluson:32,inline:45,locking:50,mini:30,bass:130};   // gram per mechaniek (richtwaarden)
 const HW_G={tom:190,wrap:120,trem:380,tele:170,hard:170,none:0};
 const pitchOf=d=>d.set.pitch!=null?+d.set.pitch:/h-prs/.test(d.id)?10:/h-firebird/.test(d.id)?14:(d.set.layout==='split'||d.set.layout==='custom'&&headFam(d)==='split')?14:0;
-function partnerHead(){ return lib.designs.find(x=>x.id===lib.active.headstock&&x.type==='headstock')||lib.designs.find(x=>x.type==='headstock'); }
+function partnerHead(b){ if(!b){ const c=typeof lib!=='undefined'&&lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); b=c||null; }
+  if(b&&b.set&&b.set.head){ const h=lib.designs.find(x=>x.id===b.set.head&&x.type==='headstock'); if(h) return h; }
+  return lib.designs.find(x=>x.id===lib.active.headstock&&x.type==='headstock')||lib.designs.find(x=>x.type==='headstock'); }
 function headMass(h){ const g=geom(h), wood=g.area*(pitchOf(h)?15:14)/1000*0.62/1000*1000, n=h.posts.length, tg=(TUN_G[h.set.tuner]||45)*n;
   let cy=0,A=0; g.poly.forEach((p,i)=>{ const q=g.poly[(i+1)%g.poly.length], c=p.x*q.y-q.x*p.y; A+=c; cy+=(p.y+q.y)*c; }); cy=A?cy/(3*A):g.maxY/2;
   const ty=n?h.posts.reduce((a,p)=>a+p.y,0)/n:cy;
@@ -1356,7 +1366,7 @@ function seatInfo(g,C){ const S=[]; for(let y=g.minY+6;y<g.maxY-4;y+=4){ const x
   const after=S.slice(wi).reduce((m,p)=>Math.max(m,p.x),0), depth=Math.min(S[iL].x,after)-S[wi].x; return {depth:Math.max(0,depth),y:S[wi].y,lever:C.y-S[wi].y}; }
 function hornInfo(g,s){ let min=1e9; [1,-1].forEach(sd=>{ let tip=null; g.poly.forEach(p=>{ if(sd*p.x>neckHW(s,p.y)+12&&(!tip||p.y>tip.y)) tip=p; }); if(!tip) return; const y=tip.y-35, xs=hits(g.poly,y).filter(x=>sd*x>0).sort((a,b)=>sd*(a-b)); if(!xs.length) return; const hw=neckHW(s,y), inner=xs.length>=2?sd*xs[xs.length-2]:hw; const w=sd*xs[xs.length-1]-Math.max(inner,hw); if(w>0&&w<min) min=w; }); return min===1e9?99:min; }
 function bodyPhysics(d,h){
-  const g=geom(d), s=d.set, parts=[]; h=h||partnerHead();
+  const g=geom(d), s=d.set, parts=[]; h=h||partnerHead(d);
   const cells=bodyCells(g,s); parts.push({m:cells.m,x:cells.x,y:cells.y});
   const topY=topOf(g), L=Math.max(50,s.scale-topY), nw=(s.nutW+s.heelW)/2; parts.push({m:L*nw*22/1000*0.7,x:0,y:topY+L/2});   // hals: vaste schatting, hout maakt voor de balans weinig uit
   if (HW_G[s.bridge]) parts.push({m:HW_G[s.bridge],x:0,y:-5});
@@ -1387,7 +1397,7 @@ function ownRow(d){ const w=ownInfo(d), n=ownName(w.o); return w.v<OWN_LO?playRo
 const WORST=rows=>rows.some(r=>r.cls==='b')?'b':rows.some(r=>r.cls==='m')?'m':'g';
 // enkel wat de tool echt uit de tekening haalt: vorm, maten, riemknoppen, snaarpad. Klank en stijfheid kan hij niet weten.
 function queeste(d){ const out=(k,rows)=>({k,rows,dot:WORST(rows),line:(rows.find(r=>r.cls==='b')||rows.find(r=>r.cls==='m')||rows[0]).word});
-  if (d.type==='body'){ const f=bodyPhysics(d), s=d.set, h=partnerHead(), g=geom(d);
+  if (d.type==='body'){ const f=bodyPhysics(d), s=d.set, h=partnerHead(d), g=geom(d);
     const stab=[]; stab.push(s.pocket>=45?playRow('g','Halsverbinding',`${fmt(s.pocket,0)} mm in de body`):s.pocket>=30?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body`,'Weinig lijm- of schroefvlak, zoals een SG. Dat is de plek die het eerst werkt onder snaartrek.'));
     if(f.horn<35) stab.push(playRow(f.horn<25?'b':'m','Hoorn',`${fmt(f.horn,0)} mm breed`,'Smalle hoorn: de houtdraad loopt er dwars op, dus kwetsbaar als de gitaar valt.'));
     if(h&&h.posts&&h.posts.length){ const hp=headPhysics(h), pi=pullInfo(h), w=pi.worst; stab.push(playRow(w>12||hp.pitch>=17?'m':'g','Stemmen',`${esc(ownName(h)||h.name)}: trek tot ${fmt(w,0)}°${hp.pitch?`, ${hp.pitch}° kop`:hp.trees?`, ${hp.trees} snaarboom`:''}`,hp.pitch>=17?'Stevige druk op de nut, maar een schuine kop breekt sneller: reken op een las.':w>12?'Open de kop om de snaartrek te verbeteren.':'')); }
@@ -1557,9 +1567,11 @@ P.addEventListener('input',e=>{
   if (b==='set.ctrl.n') v=Math.max(0,Math.min(6,Math.round(v)));
   setP(o,p,v);
   if (b==='view.ghost'||b==='set.wood') panelKey='';
+  if (b==='set.head'&&lib.view.whole) requestAnimationFrame(fit);
   const af=el.dataset.after;
   if (af==='layout'||af==='tuner'){ if(af==='tuner') applyTuner(d); d.set.auto=true; panelKey=''; if(growHead(d)){ toast('De kop is langer geworden zodat alle mechanieken passen. Ongedaan maken kan met ↶.'); fit(); } }
   if (af==='ctrl'){ d.set.ctrl.edited=false; }
+  if (af==='fit') requestAnimationFrame(fit);
   if (af==='pg'){ d.set.pg.edited=false; if(d.set.pg.style==='none') editPG=false; panelKey=''; }
   if (b.startsWith('pt.') && T().isPG) d.set.pg.edited=true;
   update(b.startsWith('view.') || (el.type==='range' && e.type==='input'));
@@ -1786,7 +1798,7 @@ $('#more').addEventListener('change',e=>{ const a=e.target.value; e.target.value
 function runAct(a,t){ const d=D();
   switch(a){
     case 'new': { const n=lib.tab==='body'?defaultBody():defaultHead(); const nm=prompt('Naam van het nieuwe ontwerp:', n.name); if(nm===null) return; n.name=nm||n.name; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); break; }
-    case 'dup': { const n=clone(d); n.id=uid(); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : d.name+' (kopie)'; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
+    case 'dup': { const n=clone(d); n.id=uid(); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : d.name+' (kopie)'; lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
     case 'rename': { if(d.ref){ lockMsg(); return; } const nm=prompt('Nieuwe naam:', d.name); if(nm){ d.name=nm; buildPanel(); update(); } break; }
     case 'del': {
       if (d.ref){ toast('Referentievormen blijven altijd in de bibliotheek'); return; }
@@ -1831,6 +1843,9 @@ function runAct(a,t){ const d=D();
     case 'insp': openInsp(); break;
     case 'mash': openMash(); break;
     case 'exportSvg': exportSvg(d,false); break;
+    case 'render': setMenu(false); openRender(); break;
+    case 'print3d': setMenu(false); openPrint(); break;
+    case 'editHead': { const h=partnerHead(d); if(!h) return; lib.active.headstock=h.id; lib.tab='headstock'; switchDesign(); toast(h.ref?'Referentiekop: tik op Gebruik als startpunt om hem aan te passen':'Je bewerkt de kop van '+d.name); break; }
     case 'saveFile': download(`Sixto_vormen_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({...lib,designs:lib.designs.filter(x=>!x.ref)},null,1), 'application/json'); break;
     case 'openFile': $('#fileIn').click(); break;
     case 'feel': { if(locked()){ lockMsg(); return; } if(holdFired){ holdFired=false; return; } pushUndo(); feel(d,t.dataset.k); update(); break; }
@@ -2222,8 +2237,228 @@ $('#modal').addEventListener('input',e=>{
 });
 $('#modal').addEventListener('change',e=>{ if(e.target.dataset.m==='wild') rollInsp(); });
 
+
+// ================= render: de hele gitaar als beeld =================
+const WOOD_COL={els:'#d6ab7f',essen:'#d9bd8f',essen2:'#d2b385',mahonie:'#8e4c2b',okoume:'#b47e58',linde:'#e4cca2',walnoot:'#674530',esdoorn:'#e6cb98',paulownia:'#dbc199',ander:'#c49c6c'};
+const FINISH={hout:['Hout naturel'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
+const BOARD={pal:['Palissander','#4a2c1e'],ebben:['Ebben','#1c1714'],esdoorn:['Esdoorn','#e2c48e']};
+const NECKC={esdoorn:['Esdoorn','#e2c48e'],mahonie:['Mahonie','#8e4c2b'],roast:['Geroosterde esdoorn','#b9814a']};
+const METAL={chroom:['Chroom',['#f4f6f7','#9aa2a8','#5d656b']],zwart:['Zwart',['#6a6a6a','#2a2a2a','#111']],goud:['Goud',['#fff1b8','#c9a24a','#7a5a1c']]};
+function rndOpt(){ const r=lib.view.rnd||(lib.view.rnd={}); return Object.assign({fin:'hout',board:'pal',neck:'esdoorn',metal:'chroom'},r); }
+function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(b), hg=h?geom(h):null, sc=s.scale;
+  const minX=Math.min(g.minX,hg?hg.minX:0)-30, maxX=Math.max(g.maxX,hg?hg.maxX:0)+30, minY=g.minY-30, maxY=(hg?sc+hg.maxY:sc+40)+30, W=maxX-minX, H=maxY-minY;
+  const X=x=>(x-minX).toFixed(2), Y=y=>(maxY-y).toFixed(2), P=(x,y)=>X(x)+','+Y(y);
+  const pth=(segs,dy=0)=>{ let p=''; segs.forEach((q,i)=>{ if(!i) p+=`M${P(q[0].x,q[0].y+dy)}`; p+=`C${P(q[1].x,q[1].y+dy)} ${P(q[2].x,q[2].y+dy)} ${P(q[3].x,q[3].y+dy)}`; }); return p+'Z'; };
+  const poly=pts=>pts.map(p=>P(p.x,p.y)).join(' '), rc=(R,st)=>`<polygon points="${poly(rectCorners(R))}" ${st}/>`;
+  const M=(METAL[o.metal]||METAL.chroom)[1], wood=WOOD_COL[s.wood]||WOOD_COL.ander, fin=FINISH[o.fin]||FINISH.hout, solid=fin[1];
+  const neckC=(NECKC[o.neck]||NECKC.esdoorn)[1], boardC=(BOARD[o.board]||BOARD.pal)[1];
+  let d=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" width="${W.toFixed(0)}" height="${H.toFixed(0)}">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f3ec"/><stop offset="1" stop-color="#e9e1d4"/></linearGradient>
+ <radialGradient id="fin" cx=".5" cy=".42" r=".62">${o.fin==='burst'?'<stop offset="0" stop-color="#f0b84a"/><stop offset=".45" stop-color="#c9761f"/><stop offset=".75" stop-color="#5a2a10"/><stop offset="1" stop-color="#1e0f08"/>':solid?`<stop offset="0" stop-color="${solid}"/><stop offset="1" stop-color="${solid}"/>`:`<stop offset="0" stop-color="${wood}"/><stop offset="1" stop-color="${wood}"/>`}</radialGradient>
+ <radialGradient id="gloss" cx=".38" cy=".3" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".5" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient>
+ <linearGradient id="met" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[1]}"/><stop offset="1" stop-color="${M[2]}"/></linearGradient>
+ <linearGradient id="nk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>
+ <filter id="sh" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="7"/><feOffset dx="6" dy="9"/><feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="bev"><feGaussianBlur stdDeviation="4"/></filter>
+ <clipPath id="cb"><path d="${pth(g.segs)}"/></clipPath>${hg?`<clipPath id="ch"><path d="${pth(hg.segs,sc)}"/></clipPath>`:''}
+</defs><rect width="100%" height="100%" fill="url(#bg)"/>`;
+  // nerf: zachte golvende lijnen, enkel als het hout zichtbaar is
+  const grain=(x0,x1,y0,y1,col,clip)=>{ let q=''; const n=Math.round((x1-x0)/4); for(let i=0;i<n;i++){ const x=x0+(i+Math.random())*(x1-x0)/n, a=1+Math.random()*3, f=0.004+Math.random()*0.006, ph=Math.random()*6; let pp=`M${P(x,y0)}`; for(let y=y0;y<=y1;y+=12) pp+=` L${P(x+a*Math.sin(y*f+ph),y)}`; q+=`<path d="${pp}" fill="none" stroke="${col}" stroke-width="${(0.4+Math.random()*0.8).toFixed(2)}" stroke-opacity="${(0.08+Math.random()*0.12).toFixed(2)}"/>`; } return `<g clip-path="url(#${clip})">${q}</g>`; };
+  const topY=ctx.topY, heelY=ctx.pocketEnd, nhw=y=>neckHW(s,y), fbEnd=fretY(s,s.frets)-6;
+  // hals onder de body tekenen is niet nodig; eerst body met schaduw
+  d+=`<g filter="url(#sh)"><path d="${pth(g.segs)}" fill="url(#fin)"/></g>`;
+  if(!solid||o.fin==='goud') d+=grain(g.minX,g.maxX,g.minY,g.maxY,o.fin==='burst'?'#2a1408':'#5a3a20','cb');
+  if(s.inside==='semi'&&false) d+='';
+  d+=`<g clip-path="url(#cb)"><path d="${pth(g.segs)}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="16" filter="url(#bev)"/></g><path d="${pth(g.segs)}" fill="url(#gloss)"/>`;
+  // pickguard
+  if (s.pg.style!=='none'&&s.pg.pts){ const pgg=geom(pgObj(b)); d+=`<path d="${pth(pgg.segs)}" fill="${(PG_COL[s.pg.color]||PG_COL.wit)[1]}" stroke="#000" stroke-opacity=".25" stroke-width="1.2"/>`; if(s.pg.color==='schildpad') d+=`<clipPath id="cpg"><path d="${pth(pgg.segs)}"/></clipPath><g clip-path="url(#cpg)" opacity=".35">${[...Array(40)].map(()=>{ const x=pgg.minX+Math.random()*(pgg.maxX-pgg.minX), y=pgg.minY+Math.random()*(pgg.maxY-pgg.minY); return `<ellipse cx="${X(x)}" cy="${Y(y)}" rx="${(4+Math.random()*12).toFixed(1)}" ry="${(2+Math.random()*5).toFixed(1)}" fill="#2a1206"/>`; }).join('')}</g>`;
+    pgScrews(b,pgg).forEach(q=>d+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="1.8" fill="url(#met)"/>`); }
+  // hals en toets
+  const yN=sc, neckPts=[{x:-nhw(yN),y:yN},{x:nhw(yN),y:yN},{x:nhw(heelY),y:heelY},{x:-nhw(heelY),y:heelY}];
+  d+=`<polygon points="${poly(neckPts)}" fill="${neckC}"/>`;
+  const fb=[{x:-nhw(yN),y:yN},{x:nhw(yN),y:yN},{x:nhw(fbEnd),y:fbEnd},{x:-nhw(fbEnd),y:fbEnd}];
+  d+=`<polygon points="${poly(fb)}" fill="${boardC}"/>`;
+  for(let n=1;n<=s.frets;n++){ const y=fretY(s,n), w=nhw(y); d+=`<line x1="${X(-w)}" y1="${Y(y)}" x2="${X(w)}" y2="${Y(y)}" stroke="${M[1]}" stroke-width="1.8"/><line x1="${X(-w)}" y1="${(+Y(y)-0.5).toFixed(2)}" x2="${X(w)}" y2="${(+Y(y)-0.5).toFixed(2)}" stroke="${M[0]}" stroke-width=".6"/>`; }
+  const dot=(x,y)=>`<circle cx="${X(x)}" cy="${Y(y)}" r="3" fill="${o.board==='esdoorn'?'#1c1714':'#efe8d8'}"/>`;
+  [3,5,7,9,15,17,19,21].filter(n=>n<=s.frets).forEach(n=>{ d+=dot(0,(fretY(s,n)+fretY(s,n-1))/2); });
+  [12,24].filter(n=>n<=s.frets).forEach(n=>{ const y=(fretY(s,n)+fretY(s,n-1))/2, w=nhw(y)*0.45; d+=dot(-w,y)+dot(w,y); });
+  d+=`<polygon points="${poly(neckPts)}" fill="url(#nk)"/>`;
+  d+=`<rect x="${X(-s.nutW/2-0.5)}" y="${Y(yN+3)}" width="${(s.nutW+1).toFixed(1)}" height="3" fill="#efe8d8"/>`;
+  // kop
+  if (hg){ d+=`<g filter="url(#sh)"><path d="${pth(hg.segs,sc)}" fill="${o.fin==='zwart'||o.fin==='wit'||o.fin==='rood'||o.fin==='blauw'||o.fin==='groen'?solid:neckC}"/></g>`+grain(hg.minX,hg.maxX,sc,sc+hg.maxY,'#5a3a20','ch')+`<g clip-path="url(#ch)"><path d="${pth(hg.segs,sc)}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bev)"/></g><path d="${pth(hg.segs,sc)}" fill="url(#gloss)"/>`;
+    h.posts.forEach(p=>{ const hs=housing(h,hg,p); d+=`<rect x="${X(hs.end+hs.dir*7-7)}" y="${Y(sc+p.y+h.set.housW/2+2)}" width="14" height="${(h.set.housW+4).toFixed(1)}" rx="4" fill="url(#met)" opacity=".95"/>`; d+=`<circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.holeD/2+2).toFixed(1)}" fill="url(#met)"/><circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.postD/2).toFixed(1)}" fill="${M[2]}"/>`; }); }
+  // hardware
+  ctx.br.forEach(q=>{ d+= q.r!=null?`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="${q.r}" fill="url(#met)"/>`:rc(q,'fill="url(#met)" stroke="#000" stroke-opacity=".3" stroke-width=".6"'); });
+  ctx.pus.forEach(p=>{ const t=s[p.k].t; if(t==='HBR') d+=`<circle cx="${X(0)}" cy="${Y(p.route.cy)}" r="${RH_R}" fill="#111" opacity=".85"/>`;
+    d+=rc(p.cover,`fill="${/^HB|MINI/.test(t)?'#1a1a1a':'#f1ece0'}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`);
+    const n=s.strings, sp=Math.min(p.cover.w-14,s.spBridge); for(let i=0;i<n;i++){ const x=-sp/2+i*sp/(n-1||1), a=(p.cover.a||0)*Math.PI/180, yy=p.cover.cy+x*Math.sin(a); d+=`<circle cx="${X(x*Math.cos(a))}" cy="${Y(yy)}" r="1.6" fill="url(#met)"/>`; } });
+  (s.ctrl.items||[]).forEach(it=>{ if(it.t==='knob') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="${(s.ctrl.knobD/2-2).toFixed(1)}" fill="${o.metal==='goud'?'url(#met)':'#1d1b1a'}" stroke="#000" stroke-opacity=".5"/><circle cx="${X(it.x-2)}" cy="${Y(it.y+2)}" r="${(s.ctrl.knobD/4).toFixed(1)}" fill="#fff" opacity=".12"/>`;
+    else if(it.t==='sw') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="6" fill="url(#met)"/><circle cx="${X(it.x)}" cy="${Y(it.y)}" r="3" fill="#f1ece0"/>`;
+    else if(s.ctrl.jack==='top') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="9" fill="url(#met)"/><circle cx="${X(it.x)}" cy="${Y(it.y)}" r="4" fill="#111"/>`; });
+  // snaren
+  const xn=stringXsNut(s), n=s.strings, xh=h?stringXsNut(h.set):xn; xn.forEach((x,i)=>{ const xb=n>1?-s.spBridge/2+i*s.spBridge/(n-1):0; d+=`<line x1="${X(xb)}" y1="${Y(0)}" x2="${X(x)}" y2="${Y(yN)}" stroke="#d9dcde" stroke-width="${(0.5+0.12*(n-1-i)).toFixed(2)}"/>`;
+    const p=h&&h.posts[i]; if(p) d+=`<line x1="${X(x)}" y1="${Y(yN)}" x2="${X(p.x+(p.side==='L'?-1:1)*h.set.postD/2)}" y2="${Y(sc+p.y)}" stroke="#d9dcde" stroke-width="${(0.5+0.12*(n-1-i)).toFixed(2)}"/>`; });
+  const sp=strapPins(b,g); [sp.F,sp.R].forEach(q=>d+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="4" fill="url(#met)"/>`);
+  d+=`<text x="${(W/2).toFixed(1)}" y="${(H-10).toFixed(1)}" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#8a7e6e">${esc(b.name)}${h?' · '+esc(h.name):''}</text></svg>`;
+  return {svg:d,W,H}; }
+function svgToPng(svg,W,H,px,cb){ const k=px/Math.max(W,H), c=document.createElement('canvas'); c.width=Math.round(W*k); c.height=Math.round(H*k); const img=new Image();
+  img.onload=()=>{ const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); c.toBlob(bl=>cb(bl),'image/png'); }; img.onerror=()=>cb(null);
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
+let rndBlob=null;
+function openRender(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b){ toast('Maak eerst een body'); return; }
+  const h=partnerHead(b), o=rndOpt(), r=guitarSVG(b,h,o), opt=(k,obj)=>`<select data-r="${k}">${Object.entries(obj).map(([a,v])=>`<option value="${a}" ${o[k]===a?'selected':''}>${v[0]}</option>`).join('')}</select>`;
+  MB.innerHTML=`<div class="mhead"><h2>🎨 Render · ${esc(b.name)}</h2><button data-m="close">✕</button></div>
+  <div class="rnd"><div class="rimg">${r.svg.replace('<svg ','<svg style="width:100%;height:100%" ')}</div>
+  <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div><div class="row"><label>Hals</label>${opt('neck',NECKC)}</div><div class="row"><label>Hardware</label>${opt('metal',METAL)}</div>
+  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Kies hem bij Hardware → Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
+  openModal(); rndBlob=null; svgToPng(r.svg,r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
+MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; save(); openRender(); });
+MB.addEventListener('click',e=>{ const t=e.target.closest('[data-r=save]'); if(t&&rndBlob){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); shareFile(rndBlob,fileSafe(b?b.name:'gitaar')+'_render.png'); }
+  const p=e.target.closest('[data-p]'); if(p) printAct(p.dataset.p); });
+const fileSafe=n=>n.replace(/[^\w\- ]+/g,'_').trim().replace(/ +/g,'_');
+function shareFile(blob,name){ const f=new File([blob],name,{type:blob.type||'application/octet-stream'});
+  if (matchMedia('(pointer:coarse)').matches && navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f],title:name}).catch(()=>{}); return; }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Gedownload: '+name); }
+
+// ================= 3D-print: mallen in stukken met zwaluwstaarten =================
+const ringArea=r=>{ let a=0; r.forEach((p,i)=>{ const q=r[(i+1)%r.length]; a+=p.x*q.y-q.x*p.y; }); return a/2; };
+const ringBox=r=>{ let a={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9}; r.forEach(p=>{ a.x0=Math.min(a.x0,p.x); a.y0=Math.min(a.y0,p.y); a.x1=Math.max(a.x1,p.x); a.y1=Math.max(a.y1,p.y); }); return a; };
+function simplifyRing(r,tol){ if(r.length<8) return r; let f=0, md=0; r.forEach((p,i)=>{ const d=(p.x-r[0].x)**2+(p.y-r[0].y)**2; if(d>md){ md=d; f=i; } });
+  const dp=pts=>{ const keep=new Uint8Array(pts.length); keep[0]=keep[pts.length-1]=1; const st=[[0,pts.length-1]];
+    while(st.length){ const [a,b]=st.pop(); let m=0,mi=-1; const A=pts[a],B=pts[b], dx=B.x-A.x, dy=B.y-A.y, L=Math.hypot(dx,dy)||1e-9; for(let i=a+1;i<b;i++){ const dd=Math.abs((pts[i].x-A.x)*dy-(pts[i].y-A.y)*dx)/L; if(dd>m){ m=dd; mi=i; } } if(m>tol){ keep[mi]=1; st.push([a,mi],[mi,b]); } }
+    return pts.filter((_,i)=>keep[i]); };
+  const a=dp(r.slice(0,f+1)), b=dp(r.slice(f).concat([r[0]])); return a.concat(b.slice(1,-1)); }
+// Greiner-Hormann: doorsnede ('and') of verschil ('diff') van twee eenvoudige veelhoeken
+function ghClip(sub,clp,op){
+  const mk=pts=>{ const vs=pts.map(p=>({x:p.x,y:p.y,inter:false,entry:false,nb:null,al:0,vis:false})); vs.forEach((v,i)=>{ v.next=vs[(i+1)%vs.length]; v.prev=vs[(i-1+vs.length)%vs.length]; }); return vs[0]; };
+  const S=mk(sub), C=mk(clp), nxt=v=>{ let c=v; while(c.inter) c=c.next; return c; };
+  const ins=(v,a,b)=>{ let c=a.next; while(c!==b&&c.al<v.al) c=c.next; v.next=c; v.prev=c.prev; c.prev.next=v; c.prev=v; };
+  let found=false, s=S;
+  do { if(!s.inter){ const s2=nxt(s.next); let c=C; do { if(!c.inter){ const c2=nxt(c.next);
+          const d=(s2.x-s.x)*(c2.y-c.y)-(s2.y-s.y)*(c2.x-c.x); if(Math.abs(d)>1e-12){ const t=((c.x-s.x)*(c2.y-c.y)-(c.y-s.y)*(c2.x-c.x))/d, u=((c.x-s.x)*(s2.y-s.y)-(c.y-s.y)*(s2.x-s.x))/d;
+            if(t>0&&t<1&&u>0&&u<1){ found=true; const x=s.x+t*(s2.x-s.x), y=s.y+t*(s2.y-s.y), i1={x,y,inter:true,al:t,vis:false}, i2={x,y,inter:true,al:u,vis:false}; i1.nb=i2; i2.nb=i1; ins(i1,s,s2); ins(i2,c,c2); } } }
+        c=c.next; } while(c!==C); }
+    s=s.next; } while(s!==S);
+  if(!found){ const sIn=inside(clp,sub[0]), cIn=inside(sub,clp[0]);
+    if(op==='and') return sIn?[sub]:cIn?[clp]:[];
+    return sIn?[]:cIn?'hole':[sub]; }
+  let sInC=op==='and'?!inside(clp,S):inside(clp,S), cInS=!inside(sub,C);   // Greiner-Hormann: 'and' loopt beide vooruit, 'diff' keert het onderwerp om
+  s=S; do { if(s.inter){ s.entry=sInC; sInC=!sInC; } s=s.next; } while(s!==S);
+  let c=C; do { if(c.inter){ c.entry=cInS; cInS=!cInS; } c=c.next; } while(c!==C);
+  const out=[]; for(;;){ let st=S, f=null; do { if(st.inter&&!st.vis){ f=st; break; } st=st.next; } while(st!==S); if(!f) break;
+    const r=[{x:f.x,y:f.y}]; let cur=f, g=0;
+    do { cur.vis=true; cur.nb.vis=true; if(cur.entry){ do { cur=cur.next; r.push({x:cur.x,y:cur.y}); } while(!cur.inter&&g++<1e6); } else { do { cur=cur.prev; r.push({x:cur.x,y:cur.y}); } while(!cur.inter&&g++<1e6); } cur=cur.nb; } while(!cur.vis&&g++<1e6);
+    const L=r[r.length-1]; if(Math.hypot(L.x-r[0].x,L.y-r[0].y)<1e-9) r.pop(); if(r.length>=3&&Math.abs(ringArea(r))>1) out.push(r); }
+  return out; }
+function tabP(len){ const depth=Math.max(5,Math.min(7,len*0.05)), base=Math.max(5,Math.min(10,len*0.10)); return {depth,base,tip:base*1.45}; }
+// tabs langs een snijlijn: één per vak tussen de andere snijlijnen, midden op het langste stuk materiaal
+function cutLine(poly,horiz,c,cross,lo,hi){ const spans=[], xs=horiz?hits(poly,c):vhits(poly,c).sort((a,b)=>a-b); for(let i=0;i+1<xs.length;i+=2) spans.push([xs[i],xs[i+1]]);
+  const bounds=[-1e9,...cross,1e9], tabs=[];
+  for(let k=0;k+1<bounds.length;k++){ let best=null; spans.forEach(([a,b])=>{ const A=Math.max(a,bounds[k]), B=Math.min(b,bounds[k+1]); if(B-A>(best?best[1]-best[0]:0)) best=[A,B]; });
+    if(!best) continue; const T=tabP(best[1]-best[0]); if(best[1]-best[0]<2*T.tip+8) continue; tabs.push({m:(best[0]+best[1])/2,...T}); }
+  const pts=[[lo,0]]; tabs.forEach(t=>{ pts.push([t.m-t.base,0],[t.m-t.tip,t.depth],[t.m+t.tip,t.depth],[t.m+t.base,0]); }); pts.push([hi,0]);
+  return pts.map(([u,v])=>horiz?{x:u,y:c+v}:{x:c+v,y:u}); }
+function regionOf(line,horiz,side,far,sh){ const L=line.map(p=>horiz?{x:p.x,y:p.y+sh}:{x:p.x+sh,y:p.y}), a=L[0], b=L[L.length-1];
+  return horiz ? L.concat([{x:b.x,y:side*far},{x:a.x,y:side*far}]) : L.concat([{x:side*far,y:b.y},{x:side*far,y:a.y}]); }
+function splitParts(outer,holes,bedX,bedY,gap){
+  const B=ringBox(outer), Wd=B.x1-B.x0, Ht=B.y1-B.y0, far=1e4, fits=r=>{ const b=ringBox(r), w=b.x1-b.x0, h=b.y1-b.y0; return (w<=bedX&&h<=bedY)||(w<=bedY&&h<=bedX); };
+  const tries=[]; for(let nx=1;nx<=5;nx++) for(let ny=1;ny<=6;ny++) tries.push([nx,ny]); tries.sort((a,b)=>a[0]*a[1]-b[0]*b[1]||Math.abs(a[0]-a[1])-Math.abs(b[0]-b[1]));
+  for(const [nx,ny] of tries){ if(Wd/nx>Math.max(bedX,bedY)+1||Ht/ny>Math.max(bedX,bedY)+1) continue;
+    const cx=[...Array(nx-1)].map((_,i)=>B.x0+Wd*(i+1)/nx+0.0137), cy=[...Array(ny-1)].map((_,i)=>B.y0+Ht*(i+1)/ny+0.0119);
+    // een naad niet door een frezing: schuif hem ernaast
+    const avoid=holes.map(ringBox).filter(b=>b.x1-b.x0>15).map(b=>[b.y0-9,b.y1+9]); for(let k=0;k<cy.length;k++) for(let r=0;r<3;r++) avoid.forEach(([a,b])=>{ if(cy[k]>a&&cy[k]<b) cy[k]=(cy[k]-a<b-cy[k]?a:b)+0.0119; });
+    let parts=[outer], ok=true;
+    for(const c of cy){ const ln=cutLine(outer,true,c,cx,B.x0-50,B.x1+50), dn=regionOf(ln,true,-1,far,-gap/2), up=regionOf(ln,true,1,far,gap/2).reverse(); const np=[];
+      parts.forEach(p=>{ const b=ringBox(p); if(b.y1<c-8||b.y0>c+8){ np.push(p); return; } const A=ghClip(p,dn,'and'), U=ghClip(p,up,'and'); if(A==='hole'||U==='hole'){ ok=false; return; } np.push(...A,...U); }); parts=np; }
+    for(const c of cx){ const ln=cutLine(outer,false,c,cy,B.y0-50,B.y1+50), lf=regionOf(ln,false,-1,far,-gap/2).reverse(), rt=regionOf(ln,false,1,far,gap/2); const np=[];
+      parts.forEach(p=>{ const b=ringBox(p); if(b.x1<c-8||b.x0>c+8){ np.push(p); return; } const A=ghClip(p,lf,'and'), R=ghClip(p,rt,'and'); np.push(...A,...R); }); parts=np; }
+    if(!ok) continue; let P=parts.map(r=>({outer:ringArea(r)<0?r.slice().reverse():r,holes:[]}));
+    holes.forEach(h0=>{ const h=ringArea(h0)>0?h0.slice().reverse():h0, hb=ringBox(h), np=[]; P.forEach(pc=>{ const b=ringBox(pc.outer); if(hb.x0>b.x1||hb.x1<b.x0||hb.y0>b.y1||hb.y1<b.y0){ np.push(pc); return; } const r=ghClip(pc.outer,h,'diff'); if(r==='hole'){ pc.holes.push(h); np.push(pc); } else r.forEach(o=>np.push({outer:ringArea(o)<0?o.slice().reverse():o,holes:pc.holes.filter(q=>inside(o,q[0]))})); }); P=np; });
+    P=P.filter(p=>Math.abs(ringArea(p.outer))>40);   // kruimels weg
+    if(P.every(p=>fits(p.outer))) return {parts:P,nx,ny,cx,cy}; }
+  return null; }
+// driehoeken: gaten via een brug aan de buitenrand, dan oren knippen
+function bridgeHole(ring,hole,all){ let hi=0; hole.forEach((p,i)=>{ if(p.x>hole[hi].x) hi=i; }); const hp=hole[hi];
+  const segX=(a,b,c,d)=>{ const d1=(b.x-a.x)*(d.y-c.y)-(b.y-a.y)*(d.x-c.x); if(Math.abs(d1)<1e-12) return false; const t=((c.x-a.x)*(d.y-c.y)-(c.y-a.y)*(d.x-c.x))/d1, u=((c.x-a.x)*(b.y-a.y)-(c.y-a.y)*(b.x-a.x))/d1; return t>1e-9&&t<1-1e-9&&u>1e-9&&u<1-1e-9; };
+  const cand=ring.map((p,i)=>({i,d:(p.x-hp.x)**2+(p.y-hp.y)**2})).sort((a,b)=>a.d-b.d).slice(0,300);
+  for(const c of cand){ const v=ring[c.i]; let bad=false; for(const R of [ring,...all]){ for(let k=0;k<R.length&&!bad;k++){ const a=R[k], b=R[(k+1)%R.length]; if(segX(hp,v,a,b)) bad=true; } if(bad) break; } if(bad) continue;
+    const hr=hole.slice(hi).concat(hole.slice(0,hi)); return ring.slice(0,c.i+1).concat(hr,[{x:hp.x,y:hp.y},{x:v.x,y:v.y}],ring.slice(c.i+1)); }
+  return ring; }
+function earclip(P){ const n=P.length, prev=new Int32Array(n), next=new Int32Array(n), tris=[]; for(let i=0;i<n;i++){ prev[i]=(i-1+n)%n; next[i]=(i+1)%n; }
+  const cr=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x), same=(p,q)=>Math.abs(p.x-q.x)<1e-9&&Math.abs(p.y-q.y)<1e-9;
+  const ear=i=>{ const a=P[prev[i]], b=P[i], c=P[next[i]]; if(cr(a,b,c)<=1e-10) return false; const x0=Math.min(a.x,b.x,c.x), x1=Math.max(a.x,b.x,c.x), y0=Math.min(a.y,b.y,c.y), y1=Math.max(a.y,b.y,c.y);
+    for(let j=next[next[i]];j!==prev[i];j=next[j]){ const p=P[j]; if(p.x<x0||p.x>x1||p.y<y0||p.y>y1) continue; if(same(p,a)||same(p,b)||same(p,c)) continue; if(cr(a,b,p)>=0&&cr(b,c,p)>=0&&cr(c,a,p)>=0) return false; } return true; };
+  let cnt=n, i=0, stall=0; while(cnt>3){ if(ear(i)){ tris.push([P[prev[i]],P[i],P[next[i]]]); next[prev[i]]=next[i]; prev[next[i]]=prev[i]; cnt--; i=prev[i]; stall=0; } else { i=next[i]; if(++stall>cnt*2){ // vastgelopen: knip het minst slechte oor
+        tris.push([P[prev[i]],P[i],P[next[i]]]); next[prev[i]]=next[i]; prev[next[i]]=prev[i]; cnt--; i=prev[i]; stall=0; } } }
+  tris.push([P[prev[i]],P[i],P[next[i]]]); return tris; }
+function extrude(part,t){ const outer=part.outer, holes=part.holes; let ring=outer.slice(); holes.slice().sort((a,b)=>Math.max(...b.map(p=>p.x))-Math.max(...a.map(p=>p.x))).forEach((h,k,A)=>{ ring=bridgeHole(ring,h,A); });
+  const cap=earclip(ring), T=[]; cap.forEach(([a,b,c])=>{ T.push([[a.x,a.y,t],[b.x,b.y,t],[c.x,c.y,t]],[[a.x,a.y,0],[c.x,c.y,0],[b.x,b.y,0]]); });
+  [outer,...holes].forEach(r=>r.forEach((p,i)=>{ const q=r[(i+1)%r.length]; T.push([[p.x,p.y,0],[q.x,q.y,0],[q.x,q.y,t]],[[p.x,p.y,0],[q.x,q.y,t],[p.x,p.y,t]]); })); return T; }
+function stlBin(T,name){ const buf=new ArrayBuffer(84+T.length*50), dv=new DataView(buf), hd=('Sixto Vormontwerper '+name).slice(0,79); for(let i=0;i<hd.length;i++) dv.setUint8(i,hd.charCodeAt(i)&127); dv.setUint32(80,T.length,true); let o=84;
+  T.forEach(([a,b,c])=>{ const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2]; let nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx; const l=Math.hypot(nx,ny,nz)||1; [nx/l,ny/l,nz/l,...a,...b,...c].forEach((v,k)=>dv.setFloat32(o+k*4,v,true)); dv.setUint16(o+48,0,true); o+=50; }); return new Uint8Array(buf); }
+const CRC=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(u){ let c=0xFFFFFFFF; for(let i=0;i<u.length;i++) c=CRC[(c^u[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zipBlob(files){ const enc=new TextEncoder(), chunks=[], cen=[]; let off=0; const now=new Date(), tm=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1), dt=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+  files.forEach(f=>{ const nm=enc.encode(f.name), data=typeof f.data==='string'?enc.encode(f.data):f.data, crc=crc32(data), h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true); h.setUint16(4,20,true); h.setUint16(6,0x0800,true); h.setUint16(8,0,true); h.setUint16(10,tm,true); h.setUint16(12,dt,true); h.setUint32(14,crc,true); h.setUint32(18,data.length,true); h.setUint32(22,data.length,true); h.setUint16(26,nm.length,true); h.setUint16(28,0,true);
+    chunks.push(new Uint8Array(h.buffer),nm,data); const c=new DataView(new ArrayBuffer(46)); c.setUint32(0,0x02014b50,true); c.setUint16(4,20,true); c.setUint16(6,20,true); c.setUint16(8,0x0800,true); c.setUint16(10,0,true); c.setUint16(12,tm,true); c.setUint16(14,dt,true); c.setUint32(16,crc,true); c.setUint32(20,data.length,true); c.setUint32(24,data.length,true); c.setUint16(28,nm.length,true); c.setUint32(42,off,true);
+    cen.push(new Uint8Array(c.buffer),nm); off+=30+nm.length+data.length; });
+  const cs=cen.reduce((a,u)=>a+u.length,0), e=new DataView(new ArrayBuffer(22)); e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,cs,true); e.setUint32(16,off,true);
+  return new Blob([...chunks,...cen,new Uint8Array(e.buffer)],{type:'application/zip'}); }
+const circRing=(x,y,r,n=48)=>[...Array(n)].map((_,i)=>({x:x+r*Math.cos(-2*Math.PI*i/n),y:y+r*Math.sin(-2*Math.PI*i/n)}));
+const rectRing=R=>{ const c=rectCorners(R); return ringArea(c)>0?c.reverse():c; };
+function prOpt(){ return Object.assign({body:true,head:true,t:10,bx:220,by:220,margin:10,gap:0.1,tuners:true,center:true,pus:false},lib.view.prt||{}); }
+// wat er op de mal komt, in mm, y naar boven
+function templateShapes(o){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'), h=b?partnerHead(b):(D().type==='headstock'?D():null), out=[];
+  if(b&&o.body){ const g=geom(b), s=b.set, ctx=bodyCtx(b), holes=[];
+    if(o.center){ const tY=ctx.topY, bY=botOf(g); [bY+25,(tY+bY)/2,tY-25].forEach(y=>{ if(!ctx.pus.some(p=>Math.abs(y-p.route.cy)<p.route.h/2+6)) holes.push(circRing(0.01,y,1.5,24)); }); }
+    if(o.pus) ctx.pus.forEach(p=>holes.push(rectRing(p.route)));
+    out.push({key:'body',name:b.name,outer:simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03),holes}); }
+  if(h&&o.head){ const g=geom(h), holes=o.tuners?h.posts.map(p=>circRing(p.x,p.y,h.set.holeD/2)):[]; out.push({key:'kop',name:h.name,outer:simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03),holes}); }
+  return out; }
+let prt=null;
+function buildPrint(){ const o=prOpt(), bx=o.bx-o.margin, by=o.by-o.margin, res=[];
+  templateShapes(o).forEach(sh=>{ let outer=ringArea(sh.outer)<0?sh.outer.slice().reverse():sh.outer; const r=splitParts(outer,sh.holes,bx,by,o.gap); if(!r){ res.push({...sh,err:'Te groot om op te delen'}); return; }
+    const rows=r.ny, cols=r.nx, RN=rows===1?['']:rows===2?['boven','onder']:rows===3?['boven','midden','onder']:[...Array(rows)].map((_,i)=>'rij'+(i+1)), CN=cols===1?['']:cols===2?['links','rechts']:cols===3?['links','midden','rechts']:[...Array(cols)].map((_,i)=>'kol'+(i+1));
+    const seen={}; r.parts.forEach(p=>{ const bb=ringBox(p.outer), mx=(bb.x0+bb.x1)/2, my=(bb.y0+bb.y1)/2, ci=r.cx.filter(c=>mx>c).length, ri=rows-1-r.cy.filter(c=>my>c).length; let nm=[RN[ri],CN[ci]].filter(Boolean).join('-')||'heel'; seen[nm]=(seen[nm]||0)+1; if(seen[nm]>1) nm+=String.fromCharCode(96+seen[nm]); p.label=nm; p.w=bb.x1-bb.x0; p.h=bb.y1-bb.y0; });
+    res.push({...sh,parts:r.parts,nx:cols,ny:rows}); });
+  prt={o,res}; return prt; }
+function printPreview(P){ let all=[]; P.res.forEach(r=>(r.parts||[]).forEach(p=>all.push(p))); if(!all.length) return '<p class="hint">Niets om te tonen.</p>';
+  const COL=['#d98c5f','#6b9ac4','#8fbf7f','#c9a14a','#b77fb5','#5fb3a8','#e07b7b','#9c8f7a']; let x0=0, items='', H=0;
+  P.res.forEach(r=>{ if(!r.parts) return; const B=r.parts.reduce((a,p)=>{ const b=ringBox(p.outer); return {x0:Math.min(a.x0,b.x0),y0:Math.min(a.y0,b.y0),x1:Math.max(a.x1,b.x1),y1:Math.max(a.y1,b.y1)}; },{x0:1e9,y0:1e9,x1:-1e9,y1:-1e9}), sp=12;
+    r.parts.forEach((p,i)=>{ const bb=ringBox(p.outer), ex=((bb.x0+bb.x1)/2-(B.x0+B.x1)/2)*0.08*0, ox=x0-B.x0+ex, Y=y=>B.y1-y+20;
+      const d=r=>r.map((q,k)=>(k?'L':'M')+(q.x+ox+(p.col||0)).toFixed(1)+','+Y(q.y).toFixed(1)).join('')+'Z';
+      items+=`<path d="${d(p.outer)}${p.holes.map(d).join('')}" fill="${COL[i%COL.length]}" fill-opacity=".55" fill-rule="evenodd" stroke="#3a332b" stroke-width="1"/><text x="${((bb.x0+bb.x1)/2+ox).toFixed(1)}" y="${Y((bb.y0+bb.y1)/2).toFixed(1)}" font-size="13" text-anchor="middle" fill="#1f1c18">${p.label}</text>`; });
+    items+=`<text x="${(x0+(B.x1-B.x0)/2).toFixed(1)}" y="12" font-size="14" text-anchor="middle" font-weight="600" fill="#6b6257">${r.key}</text>`; x0+=B.x1-B.x0+40; H=Math.max(H,B.y1-B.y0+40); });
+  const bed=`<rect x="${x0}" y="20" width="${P.o.bx}" height="${P.o.by}" fill="none" stroke="#b5541c" stroke-dasharray="6 4"/><text x="${x0+P.o.bx/2}" y="12" font-size="14" text-anchor="middle" fill="#b5541c">bed ${P.o.bx}×${P.o.by}</text>`;
+  return `<svg viewBox="-10 0 ${x0+P.o.bx+20} ${Math.max(H,P.o.by+30)}" style="width:100%;max-height:52vh">${items}${bed}</svg>`; }
+let prtZip=null;
+function openPrint(){ const o=prOpt(); prtZip=null; const P=buildPrint(); let info='';
+  P.res.forEach(r=>{ info+= r.err?`<p><b>${r.key}</b>: ${r.err}</p>`:`<p><b>${r.key==='body'?'Body':'Kop'}</b> · ${esc(r.name)}: ${r.parts.length} ${r.parts.length>1?'stukken':'stuk'}${r.parts.length>1?` (${r.nx}×${r.ny})`:''}, grootste ${fmt(Math.max(...r.parts.map(p=>Math.max(p.w,p.h))),0)} mm${r.parts.some(p=>Math.abs(ringArea(p.outer))<400)?' · <span style="color:#b5541c">let op: een heel klein stukje</span>':''}</p>`; });
+  const num=(k,l,u,st)=>`<div class="row"><label>${l}</label><input type="number" data-p-in="${k}" value="${o[k]}" step="${st||1}"><span class="u">${u}</span></div>`, ck=(k,l)=>`<div class="row"><label><input type="checkbox" data-p-in="${k}" ${o[k]?'checked':''}> ${l}</label></div>`;
+  MB.innerHTML=`<div class="mhead"><h2>🖨 3D-print mallen</h2><button data-m="close">✕</button></div>
+  <div class="rnd"><div class="rimg" style="background:#faf7f2">${printPreview(P)}</div><div class="ropt">${info}
+  ${ck('body','Body')}${ck('head','Kop'+(templateShapes({...o,body:false,head:true})[0]?' ('+esc(templateShapes({...o,body:false,head:true})[0].name)+')':''))}
+  ${num('t','Dikte van de mal','mm',0.5)}${num('bx','Bed breed','mm')}${num('by','Bed diep','mm')}${num('margin','Marge op het bed','mm')}${num('gap','Speling per kant','mm',0.05)}
+  ${ck('tuners','Mechaniekgaten in de kop')}${ck('center','Merkgaatjes op de middenlijn')}${ck('pus','Pickupfrezingen als gat')}
+  <p class="hint">Standaard voor je FlashForge AD5M (220 × 220). Stukken zijn verbonden met zwaluwstaarten: lijmen en ze liggen vanzelf juist.</p>
+  <div class="btns"><button class="primary" data-p="make">Maak STL-bestanden</button><button data-p="share" ${prtZip?'':'disabled'}>Bewaar zip</button></div><p class="hint" id="prtMsg"></p></div></div>`;
+  openModal(); }
+MB.addEventListener('change',e=>{ const k=e.target.dataset.pIn; if(!k) return; const o=lib.view.prt||(lib.view.prt={}); o[k]=e.target.type==='checkbox'?e.target.checked:parseFloat(e.target.value); if(e.target.type!=='checkbox'&&!isFinite(o[k])) delete o[k]; save(); openPrint(); });
+function printAct(a){
+  if(a==='make'){ const msg=$('#prtMsg'); try{ const P=prt||buildPrint(), files=[], o=P.o; let n=0;
+      P.res.forEach(r=>(r.parts||[]).forEach(p=>{ const bb=ringBox(p.outer), sh=q=>q.map(v=>({x:v.x-bb.x0,y:v.y-bb.y0})), part={outer:sh(p.outer),holes:p.holes.map(sh)}; const nm=`${r.key}_${p.label}.stl`; files.push({name:nm,data:stlBin(extrude(part,o.t),nm)}); n++; }));
+      const map=printPreview(P).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace(/style="[^"]*"/,'');
+      files.push({name:'overzicht.svg',data:map});
+      files.push({name:'LEESMIJ.txt',data:`Sixto Vormontwerper - 3D-print mallen\n${new Date().toLocaleString('nl-BE')}\n\n`+P.res.map(r=>r.err?`${r.key}: ${r.err}`:`${r.key} (${r.name}): ${r.parts.length} stuk(ken)\n`+r.parts.map(p=>`  ${r.key}_${p.label}.stl  ${fmt(p.w,0)} x ${fmt(p.h,0)} mm`).join('\n')).join('\n\n')+`\n\nDikte ${o.t} mm, bed ${o.bx} x ${o.by} mm, marge ${o.margin} mm, speling ${o.gap} mm per kant.\nMaten in mm, ware grootte. Zwaluwstaarten: eerst droog passen, dan lijmen op een vlakke plaat.\nZie overzicht.svg voor hoe de stukken samen gaan.\n`});
+      const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); prtZip={blob:zipBlob(files),name:fileSafe(b?b.name:'mallen')+'_STL.zip'};
+      const bt=MB.querySelector('[data-p=share]'); if(bt) bt.disabled=false; if(msg) msg.textContent=`${n} STL-bestanden klaar. Tik op "Bewaar zip": kies Dropbox, dan staat hij op je laptop.`;
+    }catch(err){ if(msg) msg.textContent='Er ging iets mis: '+err.message; } }
+  if(a==='share'&&prtZip) shareFile(prtZip.blob,prtZip.name); }
+
 // ================= kiezer (vervangt de systeem-dropdowns, zelfde gedrag op iPad, iPhone en laptop) =================
-const isDesignSel=sel=>sel.id==='designSel'||sel.id==='ghostSel'||sel.dataset.m==='src';
+const isDesignSel=sel=>sel.id==='designSel'||sel.id==='headSel'||sel.id==='ghostSel'||sel.dataset.m==='src';
 function enhanceSelects(){
   document.querySelectorAll('select').forEach(sel=>{
     let b=sel.nextElementSibling;
