@@ -83,7 +83,7 @@ body{touch-action:manipulation}
 .sum .sub{color:var(--muted);font-size:13px;margin-top:2px}
 .checks .adv{color:#6b6257;font-size:12.5px;padding-top:4px}
 .q{border:0;margin:0 0 2px}.q>summary{display:grid;grid-template-columns:14px auto 1fr;gap:0 7px;align-items:baseline;padding:6px 0;font-size:14px;list-style:none;text-transform:none;letter-spacing:0;color:var(--ink)}details.q>summary::before{content:none;display:none}.q>summary b{font-weight:600}.q .ql{color:var(--muted);font-size:13px;text-align:right}.q[open] .ql{visibility:hidden}.q .pl{padding-left:21px}.q>summary::-webkit-details-marker{display:none}
-.ideas.bouw .idea{min-height:0;padding:4px 2px 6px}.ideas.bouw svg{height:44px}
+.ideas.bouw .idea{min-height:0;padding:4px 2px 6px}.ideas.bouw svg{height:44px}.ideas.sh{grid-template-columns:repeat(4,1fr)}.ideas.sh svg{height:40px}
 #qdots{display:none}
 .pl{display:grid;grid-template-columns:14px auto 1fr;gap:0 7px;align-items:baseline;padding:3px 0;font-size:13.5px}.pl b{font-weight:600}.pl p{grid-column:2/4;margin:1px 0 3px;color:var(--muted);font-size:12.5px}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block}.dot.g{background:var(--ok)}.dot.m{background:#d59a2b}.dot.b{background:var(--warn)}
@@ -299,6 +299,8 @@ function placePosts(d){
 function applyTuner(d){ const t=TUN[d.set.tuner]; if(!t) return; Object.assign(d.set,{holeD:t[1],postD:t[2],housW:t[3],housL:t[4],minSp:t[5]}); }
 
 // ================= referentievormen =================
+// natuur en architectuur: een halve omtrek (vanaf de hals naar beneden), de andere helft gespiegeld of eigen
+function natB(t,b,bot){ const B=b||t; return [[0,250,0],...t,bot,...B.slice().reverse().map(([x,y,c])=>[-x,y,c])]; }
 function mkBody(id,name,pts,sym,ov){ const d=defaultBody(); d.id='ref-'+id; d.name=name; d.ref=true; d.sym=!!sym; d.pts=pts.map(([x,y,c])=>({x,y,c:!!c})); Object.assign(d.set,clone(ov||{})); return d; }
 function mkHead(id,name,pts,sym,ov){ const d=defaultHead(); d.id='ref-'+id; d.name=name; d.ref=true; d.sym=!!sym; d.pts=pts.map(([x,y,c])=>({x,y,c:!!c})); if(ov&&ov.tuner){ d.set.tuner=ov.tuner; applyTuner(d); } Object.assign(d.set,ov||{}); placePosts(d); return d; }
 // echte kop uit HEAD_PTS, met het originele mechaniekpatroon (en benaderende parameters voor de andere patronen)
@@ -404,6 +406,29 @@ function REFS(){ const B=BODY_PTS; return [
   mkHeadR('tiger','Tiger-type kop (Doug Irwin, 3+3)','grover'),
   mkHead('h-martin','Recht 3+3 (akoestisch-type, benadering)',[[0,190],[34,190],[38,182],[35,40],[24,6],[21.5,0,1],[0,0,1]],true,{tuner:'grover',nutW:43,layout:'split',first:45,spacing:45,xoff:22}),
   mkHead('h-bass','Bas-kop (4 op rij, benadering)',[[-20.5,0,1],[20.5,0,1],[28,25],[52,60],[48,100],[40,140],[48,190],[50,220],[35,240],[0,238],[-30,230],[-45,210],[-47,140],[-45,60],[-35,25]],false,{tuner:'bass',strings:4,nutW:41,spNut:30,layout:'inline',first:60,spacing:42,xoff:-14,slant:2}),
+  mkBody('n-peer','Peer (natuur)',natB([[30,250,1],[55,245,0],[80,230,0],[98,205,0],[104,172,0],[100,138,0],[108,100,0],[130,58,0],[152,12,0],[160,-35,0],[153,-85,0],[130,-127,0],[92,-157,0],[45,-171,0]],null,[[0,-174,0]][0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-blad','Blad (natuur)',natB([[30,250,1],[52,240,0],[76,222,0],[96,200,0],[110,176,0],[116,148,0],[122,112,0],[140,66,0],[154,18,0],[154,-36,0],[138,-86,0],[108,-130,0],[68,-168,0],[30,-196,0]],[[30,250,1],[60,248,0],[92,236,0],[112,210,0],[118,172,0],[112,132,0],[120,92,0],[142,48,0],[160,2,0],[163,-48,0],[150,-96,0],[124,-138,0],[84,-172,0],[44,-196,0]],[[-6,-214,1]][0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-vleugel','Vleugel (natuur)',natB([[30,250,1],[36,226,0],[50,206,0],[72,190,0],[98,176,0],[118,158,0],[128,130,0],[132,96,0],[148,52,0],[158,0,0],[154,-50,0],[136,-98,0],[102,-138,0],[52,-164,0]],[[30,250,1],[34,282,0],[44,312,0],[60,334,0],[78,342,0],[94,336,0],[104,318,0],[110,288,0],[110,250,0],[106,205,0],[112,160,0],[132,108,0],[154,55,0],[164,0,0],[160,-52,0],[140,-100,0],[104,-140,0],[55,-165,0]],[[0,-170,0]][0]),false,{...FEN}),
+  mkBody('n-schelp','Schelp (natuur)',natB([[30,250,1],[96,226,1],[108,200,0],[112,160,0],[118,115,0],[130,65,0],[148,15,0],[164,-40,0],[166,-80,0],[150,-122,0],[118,-152,0],[66,-170,0]],null,[[0,-175,0]][0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-kiezel','Kiezel (natuur)',natB([[30,250,1],[52,248,0],[76,238,0],[96,220,0],[108,194,0],[114,160,0],[120,120,0],[132,75,0],[146,25,0],[152,-30,0],[144,-82,0],[118,-128,0],[76,-158,0]],[[30,250,1],[56,248,0],[84,240,0],[108,222,0],[124,194,0],[134,158,0],[144,115,0],[156,65,0],[164,15,0],[164,-40,0],[152,-90,0],[126,-132,0],[84,-160,0]],[[6,-170,0]][0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-zandloper','Zandloper (natuur)',natB([[30,250,1],[64,247,0],[104,232,0],[134,200,0],[146,160,0],[136,118,0],[106,86,0],[96,60,0],[112,28,0],[146,-6,0],[160,-48,0],[152,-96,0],[124,-138,0],[80,-165,0],[38,-174,0]],null,[[0,-177,0]][0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-golf','Golf (natuur)',natB([[30,250,1],[38,226,0],[52,208,0],[70,204,0],[88,214,0],[102,236,0],[112,262,0],[122,276,0],[134,272,0],[140,252,0],[138,220,0],[130,184,0],[126,148,0],[132,110,0],[148,62,0],[156,8,0],[150,-50,0],[132,-96,0],[100,-132,0],[56,-156,0]],[[30,250,1],[36,276,0],[48,300,0],[64,312,0],[80,310,0],[92,294,0],[100,268,0],[104,236,0],[106,200,0],[114,160,0],[134,112,0],[154,62,0],[166,8,0],[164,-46,0],[146,-96,0],[112,-136,0],[64,-160,0]],[[8,-166,0]][0]),false,{...FEN}),
+  mkBody('n-gotisch','Gotische boog (architectuur)',natB([[30,250,1],[34,226,0],[42,210,0],[56,204,0],[70,212,0],[82,232,0],[92,262,0],[98,292,1],[112,262,0],[124,222,0],[128,178,0],[124,136,0],[130,95,0],[146,50,0],[156,5,0],[156,-45,0],[146,-92,0],[124,-132,0],[88,-160,0],[44,-172,0]],null,[[0,-175,0]][0]),false,{...GIB}),
+  mkBody('n-romaans','Romaanse boog (architectuur)',natB([[30,250,1],[34,226,0],[44,208,0],[60,200,0],[78,206,0],[92,224,0],[100,248,0],[110,270,0],[126,280,0],[142,272,0],[150,250,0],[150,220,0],[140,185,0],[130,150,0],[134,112,0],[150,68,0],[162,18,0],[162,-38,0],[150,-92,0],[124,-134,0],[86,-162,0],[44,-174,0]],null,[[0,-177,0]][0]),false,{...GIB}),
+  mkBody('n-deco','Art deco (architectuur)',natB([[30,250,1],[70,250,1],[104,222,1],[110,178,1],[100,140,1],[112,110,1],[150,60,1],[162,10,1],[162,-60,1],[140,-118,1],[96,-156,1],[40,-170,1]],null,[[0,-170,1]][0]),false,{...FEN,pg:pgDef('none')}),
+  mkHead('h-n-gotisch','Gotische boog kop (architectuur, 3+3)',[[0,214,1],[20,200,0],[34,182,0],[41,156,0],[41,110,0],[37,70,0],[30,40,0],[23,16,0],[21.5,0,1],[-21.5,0,1],[-23,16,0],[-30,40,0],[-37,70,0],[-41,110,0],[-41,156,0],[-34,182,0],[-20,200,0]],false,{tuner:'grover',layout:'split',auto:false,first:52,spacing:36,xoff:21}),
+  mkHead('h-n-tulp','Tulp kop (natuur, 3+3)',[[0,192,1],[10,178,0],[18,172,0],[28,178,0],[38,188,1],[44,168,0],[43,130,0],[40,96,0],[34,62,0],[27,34,0],[22,14,0],[21.5,0,1],[-21.5,0,1],[-22,14,0],[-27,34,0],[-34,62,0],[-40,96,0],[-43,130,0],[-44,168,0],[-38,188,1],[-28,178,0],[-18,172,0],[-10,178,0]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-deco','Art deco kop (architectuur, 3+3)',[[0,184,0],[18,184,1],[18,176,1],[32,176,1],[32,168,1],[43,168,1],[43,120,0],[40,80,0],[32,48,1],[24,24,0],[21.5,0,1],[-21.5,0,1],[-24,24,0],[-32,48,1],[-40,80,0],[-43,120,0],[-43,168,1],[-32,168,1],[-32,176,1],[-18,176,1],[-18,184,1]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-waaier','Waaier kop (natuur, 3+3)',[[0,182,0],[24,181,0],[46,174,1],[44,140,0],[38,100,0],[31,62,0],[25,30,0],[22,12,0],[21.5,0,1],[-21.5,0,1],[-22,12,0],[-25,30,0],[-31,62,0],[-38,100,0],[-44,140,0],[-46,174,1],[-24,181,0]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-ui','Uikoepel kop (architectuur, 3+3)',[[0,220,1],[8,211,0],[20,202,0],[34,190,0],[41,172,0],[40,154,0],[34,142,1],[38,124,0],[39,86,0],[33,52,0],[26,26,0],[22,10,0],[21.5,0,1],[-21.5,0,1],[-22,10,0],[-26,26,0],[-33,52,0],[-39,86,0],[-38,124,0],[-34,142,1],[-40,154,0],[-41,172,0],[-34,190,0],[-20,202,0],[-8,211,0]],false,{tuner:'grover',layout:'split',auto:false,first:52,spacing:36,xoff:21}),
+  mkHead('h-n-blad','Blad kop (natuur, 3+3)',[[18,200,1],[34,184,0],[42,158,0],[44,122,0],[40,88,0],[33,58,0],[26,36,0],[22.5,18,0],[21.5,0,1],[-21.5,0,1],[-22.5,18,0],[-28,40,0],[-37,68,0],[-43,104,0],[-44,142,0],[-38,172,0],[-22,192,0],[0,199,0]],false,{tuner:'kluson',layout:'split'}),
+  mkHead('h-n-vlam','Vlam kop (natuur, 3+3)',[[-34,200,1],[-14,186,0],[10,175,0],[31,158,0],[41,132,0],[41,100,0],[35,70,0],[27,42,0],[22.5,18,0],[21.5,0,1],[-21.5,0,1],[-22.5,18,0],[-27,42,0],[-35,70,0],[-41,102,0],[-42,138,0],[-40,170,0],[-37,190,0]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-schelp','Schelp kop (natuur, 3+3)',[[0,174,1],[15,184,0],[32,180,0],[42,162,0],[43,126,0],[38,88,0],[30,52,0],[24,24,0],[21.5,0,1],[-21.5,0,1],[-24,24,0],[-30,52,0],[-38,88,0],[-43,126,0],[-42,162,0],[-32,180,0],[-15,184,0]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-zeis','Zeis kop (natuur, 3+3)',[[30,190,1],[40,170,0],[42,130,0],[38,90,0],[31,56,0],[25,28,0],[21.5,0,1],[-21.5,0,1],[-24,26,0],[-31,56,0],[-39,92,0],[-43,128,0],[-42,152,0],[-34,160,0],[-20,166,0],[0,176,0],[16,185,0]],false,{tuner:'grover',layout:'split'}),
+  mkHead('h-n-veer','Veer kop (natuur, 6 op rij)',[[30,200,1],[44,185,0],[50,160,0],[50,120,0],[46,80,0],[40,48,0],[30,25,0],[22,10,0],[21,0,1],[-21,0,1],[-24,14,0],[-33,24,1],[-33,32,0],[-18,90,0],[-4,140,0],[10,180,0]],false,{tuner:'kluson',layout:'inline'}),
+  mkHead('h-n-golfkam','Golfkam kop (natuur, 6 op rij)',[[0,150,0],[8,172,0],[26,188,0],[46,188,0],[62,174,0],[66,154,0],[58,140,0],[46,138,1],[42,128,0],[44,100,0],[46,70,0],[44,48,1],[34,34,0],[24,16,0],[21,0,1],[-21,0,1],[-23,14,0],[-33,22,1],[-34,30,0],[-18,88,0]],false,{tuner:'kluson',layout:'inline'}),
+  mkHead('h-n-zwaan','Zwaan kop (natuur, 6 op rij)',[[-22,196,1],[-2,190,0],[20,178,0],[36,156,0],[42,120,0],[42,80,0],[36,44,0],[26,20,0],[21,0,1],[-21,0,1],[-26,16,0],[-34,26,1],[-32,40,0],[-20,90,0],[-12,130,0],[-18,160,0],[-30,182,0]],false,{tuner:'kluson',layout:'inline'}),
+  mkHead('h-n-spits','Spits kop (architectuur, 6 op rij)',[[14,206,1],[34,170,0],[46,120,0],[46,70,0],[38,40,1],[28,22,0],[21,0,1],[-21,0,1],[-24,14,0],[-33,24,1],[-30,60,0],[-16,120,0],[0,170,0]],false,{tuner:'kluson',layout:'inline'}),
 ]; }
 
 // ================= opslag =================
@@ -451,7 +476,7 @@ function histOf(d){ return hist[d.id]||(hist[d.id]={u:[],r:[],cur:snap(d)}); }
 function diffLabel(a,b){ try { const A=JSON.parse(a), B=JSON.parse(b), same=k=>JSON.stringify(A[k])===JSON.stringify(B[k]), S=k=>JSON.stringify((A.set||{})[k])===JSON.stringify((B.set||{})[k]);
     if(!same('name')) return 'Naam'; if(!same('pts')||!same('tension')||!same('sym')) return 'Vorm'; if(!same('posts')) return 'Mechanieken'; if(!same('bg')) return 'Achtergrond';
     if(!S('strapF')) return 'Riemknop'; if(!S('pu1')||!S('pu2')||!S('pu3')) return 'Elementen'; if(!S('bridge')) return 'Brug'; if(!S('wood')||!S('dens')) return 'Hout'; if(!S('thick')) return 'Dikte';
-    if(['scale','frets','fbFret','strings','nutW','heelW','pocket','spNut','spBridge'].some(k=>!S(k))) return 'Hals en snaren'; if(!S('inside')) return 'Kamers'; if(!S('ctrl')) return 'Knoppen'; if(!S('pg')) return 'Pickguard';
+    if(['scale','frets','fbFret','strings','nutW','heelW','pocket','spNut','spBridge'].some(k=>!S(k))) return 'Hals en snaren'; if(!S('inside')) return 'Kamers'; if(!S('sh')) return 'Klankgaten'; if(!S('neckWood')) return 'Halshout'; if(!S('ctrl')) return 'Knoppen'; if(!S('pg')) return 'Pickguard';
   } catch(e){} return 'Aanpassing'; }
 function histCommit(d){ if(d.ref) return; const h=histOf(d), s=snap(d); if(s===h.cur) return; h.u.push({s:h.cur,t:diffLabel(h.cur,s),at:Date.now()}); if(h.u.length>HIST_MAX) h.u.shift(); h.r=[]; h.cur=s; histUI(); histSave(); }
 function histFlush(){ if(!histT) return; clearTimeout(histT); histT=null; const x=lib.designs.find(q=>q.id===histPend); if(x) histCommit(x); }
@@ -882,6 +907,7 @@ function refreshAuto(d,light){
     else if (c.jack==='side') c.items.forEach(it=>{ if(it.t==='jack'){ const q=nearestOnPoly(ctx.g.poly,it); it.x=q.x; it.y=q.y; } });
   }
   if (!s.pg.edited) autoPG(d,ctx);
+  if (!s.sh) s.sh=shDef();
 }
 const PG_COL={wit:['Wit','#fbfbf8'],zwart:['Zwart','#2a2826'],creme:['Crème','#efe6cf'],mint:['Mint','#e6ecdc'],schildpad:['Schildpad','#7b3f1e'],parel:['Parelmoer','#e9e7e2'],alu:['Aluminium','#c8ccd0'],hout:['Hout','#c79a63']};
 // schroeven: ± 5 mm van de rand, om de ± 75 mm (aanname, zie Kennisboek), niet in een frezing of knopgat
@@ -922,6 +948,7 @@ function bodyChecks(d){
   { const s=d.set, fb=fbFret(s); if (fb<s.frets) out.push(`Fret ${fb+1}${s.frets>fb+1?' tot '+s.frets:''} ${s.frets>fb+1?'liggen':'ligt'} voorbij de toets: laat de toets verder lopen of neem minder frets`); }
   if (ctx.br.some(b=>b.r!=null?!(inside(ctx.g.poly,{x:b.x,y:b.y})&&distToPoly(ctx.g.poly,{x:b.x,y:b.y})>=b.r+4):!rectInBody(b,ctx.g.poly,4))) out.push('De brug valt (bijna) buiten de body (min. 4 mm hout rondom)');
   if (d.set.pocket<0) out.push('De hals stopt voor de body begint');
+  out.push(...holeChecks(d));
   return out;
 }
 // ---------- headstock ----------
@@ -1118,6 +1145,7 @@ function bodyOverlay(d,g){
     if (cc.ground) o+=polySVG(cc.ground,'stroke="#6b8fa3" stroke-width="1.2" stroke-dasharray="3 3"');
     if (cc.chain.length) o+=thick(cc.chain.length>1?cc.chain:[cc.chain[0],cc.chain[0]],28,'#6b8fa3','#d9e6ec');
   }
+  holePolys(d).forEach(h=>h.rings.forEach(r=>{ o+=`<polygon points="${r.map(p=>toS(p.x,p.y).join(',')).join(' ')}" fill="#2a2420" fill-opacity=".85" stroke="${h.fit?'#2a2420':'#c0392b'}" stroke-width="${h.fit?1:2}"/>`; }));
   if (v.pgShow && s.pg.style!=='none' && s.pg.pts){
     const pgg=geom(pgObj(d));
     o+=`<path d="${pathD(pgg.segs)}" fill="${(PG_COL[s.pg.color]||PG_COL.wit)[1]}" fill-opacity=".93" stroke="#8c8c84" stroke-width="1.4"/>`;
@@ -1218,7 +1246,8 @@ function sel_(bind,lab,opts,extra=''){ return `<div class="row"><label>${lab}</l
 function optionsFor(type,excl,selId){
   const own=lib.designs.filter(x=>x.type===type&&!x.ref&&x.id!==excl), refs=lib.designs.filter(x=>x.type===type&&x.ref&&x.id!==excl);
   const o=x=>`<option value="${x.id}" ${x.id===selId?'selected':''}>${esc(x.name)}</option>`;
-  return `<optgroup label="Mijn ontwerpen">${own.map(o).join('')}</optgroup><optgroup label="Referentievormen">${refs.map(o).join('')}</optgroup>`;
+  const nat=refs.filter(x=>/^ref-(h-)?n-/.test(x.id)), cls=refs.filter(x=>!/^ref-(h-)?n-/.test(x.id));
+  return `<optgroup label="Mijn ontwerpen">${own.map(o).join('')}</optgroup><optgroup label="Klassiekers (referentie)">${cls.map(o).join('')}</optgroup>${nat.length?`<optgroup label="Natuur &amp; architectuur">${nat.map(o).join('')}</optgroup>`:''}`;
 }
 const PRESETS={
   turner:['Eén draaibare humbucker, 4 knoppen (Turner)',{bridge:'tom',pu1:PU('none',40),pu2:NOPU,pu3:PU('HBR',103,-6),ctrl:ctrlDef(4,'fan','none','side')}],
@@ -1232,7 +1261,7 @@ const PRESETS={
 };
 const REF_FOTO=['tiger','wolf','asher','styleo','turner','h-tiger','h-turner'];
 const REF_WHY={turner:'Rick Turner tekende de Model 1 klein en rond, met één humbucker in een ronde opening. De hals gaat vroeg in de body (rond fret 16), zodat je hoog bij de frets kunt. '};
-function refNote(d){ const k=d.id.slice(4);
+function refNote(d){ const k=d.id.slice(4); if(/^(h-)?n-/.test(k)) return 'Eigen vorm uit de natuur of de architectuur, geen bestaand model. Eenvoudig gehouden: één duidelijk gebaar, hals in het midden. ';
   if (REF_WHY[k]) return REF_WHY[k]+'Omtrek van een foto, geschaald op de mensuur (± 5 à 10 mm). ';
   if (REF_FOTO.includes(k)) return 'Omtrek benaderd vanaf foto’s en geschaald op de gekende maten (± 5 à 10 mm). ';
   if (d.type==='body'&&!/bass/.test(d.id)) return 'Omtrek overgetekend uit een gratis 1:1-plan (nauwkeurig tot ±1 mm). ';
@@ -1241,6 +1270,88 @@ function refNote(d){ const k=d.id.slice(4);
 const PG_STYLES={none:['Geen','Zonder pickguard'],full:['Groot','Rond de pickups, zoals een Strat'],small:['Diskant','Klein blad aan de diskantkant'],bass:['Baskant','Klein blad aan de baskant'],band:['Strook','Smalle strook rond de pickups, tot tegen de hals'],drop:['Los blad','Los blad naast de pickups, zoals een Les Paul']};
 function pgPic(k){ const pg={full:'M22 17H38C46 22 49 33 44 39H16C11 33 14 22 22 17Z',small:'M34 19C42 21 48 29 46 36H34Z',bass:'M26 19C18 21 12 29 14 36H26Z',band:'M24 11H36V40H24Z',drop:'M34 15C42 16 46 25 41 39C38 35 34 30 34 15Z'}[k];
   return `<svg viewBox="0 0 60 50"><path d="M27 0H33V12H27Z" fill="#e8e2d8" stroke="#6b6257"/><path d="M30 6C44 4 47 13 44 20C53 24 56 35 50 43C44 49 16 49 10 43C4 35 7 24 16 20C13 13 16 4 30 6Z" fill="#f4efe7" stroke="#6b6257"/>${pg?`<path d="${pg}" fill="#fff" stroke="#6b6257"/>`:''}<path d="M24 44H36" stroke="#6b6257" stroke-width="2"/></svg>`; }
+
+// ================= klankgaten =================
+// Elke vorm is een middenlijn met een breedte langs die lijn (t van onder 0 naar boven 1, maten als deel van de lengte L).
+// Zo blijven de lijnen vloeiend en kan elke vorm schalen, kantelen en spiegelen.
+const SH_TYPES={
+  f:{n:'f-gat',L:130,c:t=>0.055*Math.sin(2*Math.PI*t),w:t=>Math.max(0.021*(1-0.35*Math.abs(2*t-1)),eye(t,0.045,0.055),eye(t,0.955,0.045))},
+  s:{n:'s-gat',L:120,c:t=>0.085*Math.sin(2*Math.PI*t),w:t=>0.05*Math.pow(Math.sin(Math.PI*t),0.7)},
+  oog:{n:'Oog',L:95,c:t=>0,w:t=>0.13*Math.pow(Math.sin(Math.PI*t),0.9)},
+  druppel:{n:'Druppel',L:75,c:t=>0,w:t=>0.19*Math.pow(Math.sin(Math.PI*t),0.5+t*0.9)},
+  maan:{n:'Maan',L:95,c:t=>0.17*Math.sin(Math.PI*t),w:t=>0.075*Math.pow(Math.sin(Math.PI*t),0.8)},
+  golf:{n:'Golf',L:140,c:t=>0.06*Math.sin(3*Math.PI*t),w:t=>0.028*Math.pow(Math.sin(Math.PI*t),0.25)},
+  ruit:{n:'Ruit',L:90,multi:(L)=>[[{x:0,y:-L/2},{x:L*0.21,y:0},{x:0,y:L/2},{x:-L*0.21,y:0}]].map(r=>roundRing(r,L*0.025))},
+  ruiten:{n:'Ruiten',L:120,multi:(L)=>{ const out=[]; let y=-L/2; [0.42,0.33,0.25].forEach(f=>{ const h=L*f, w=h*0.42; out.push(roundRing([{x:0,y},{x:w,y:y+h/2},{x:0,y:y+h},{x:-w,y:y+h/2}],L*0.015)); y+=h+L*0.07; }); const sc=L/(y-L*0.07+L/2); return out.map(r=>r.map(p=>({x:p.x*sc,y:(p.y+L/2)*sc-L/2}))); }},
+  morse:{n:'Morse',L:150,multi:(L,txt)=>morseRings(L,txt)},
+  vlam:{n:'Vlam',L:115,c:t=>0.09*Math.sin(1.4*Math.PI*t)*t,w:t=>0.085*Math.pow(Math.sin(Math.PI*Math.pow(t,0.8)),0.55)*(1-0.55*t)} };
+const MORSE={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',0:'-----',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.'};
+// morse: punten (rond) en strepen (sleuf) onder elkaar, van boven naar beneden te lezen; de hele reeks is L lang
+function morseRings(L,txt){ const code=String(txt||'SCG').toUpperCase().split('').filter(c=>MORSE[c]).map(c=>MORSE[c]); if(!code.length) return [];
+  let u=0; code.forEach((c,i)=>{ c.split('').forEach((s,j)=>{ u+=(s==='.'?1:3)+(j<c.length-1?1:0); }); if(i<code.length-1) u+=2.5; }); const k=L/u, w=Math.min(k*0.9,14), out=[]; let y=L/2;
+  code.forEach((c,i)=>{ c.split('').forEach((s,j)=>{ const len=(s==='.'?1:3)*k, cy=y-len/2; out.push(s==='.'?circRing(0,cy,Math.min(w,k)/2,28):slotRing(0,cy,w,len)); y-=len+(j<c.length-1?k:0); }); y-=2.5*k; });
+  return out; }
+function slotRing(cx,cy,w,len){ const r=w/2, h=Math.max(0,len/2-r), o=[]; for(let i=0;i<=14;i++){ const a=Math.PI*i/14; o.push({x:cx+r*Math.cos(a),y:cy+h+r*Math.sin(a)}); } for(let i=0;i<=14;i++){ const a=Math.PI+Math.PI*i/14; o.push({x:cx+r*Math.cos(a),y:cy-h+r*Math.sin(a)}); } return o; }
+function roundRing(P,r){ const out=[], n=P.length; P.forEach((p,i)=>{ const a=P[(i-1+n)%n], b=P[(i+1)%n], da=Math.hypot(a.x-p.x,a.y-p.y), db=Math.hypot(b.x-p.x,b.y-p.y), k=Math.min(r,da/3,db/3), A={x:p.x+(a.x-p.x)*k/da,y:p.y+(a.y-p.y)*k/da}, B={x:p.x+(b.x-p.x)*k/db,y:p.y+(b.y-p.y)*k/db}; for(let s=0;s<=6;s++){ const t=s/6; out.push({x:(1-t)*(1-t)*A.x+2*(1-t)*t*p.x+t*t*B.x,y:(1-t)*(1-t)*A.y+2*(1-t)*t*p.y+t*t*B.y}); } }); return out; }
+function eye(t,t0,r){ const d=Math.abs(t-t0); return d<r?Math.sqrt(r*r-d*d):0; }
+// de omtrek van één klankgat, rond (0,0), lengte L, rechtop
+function shRings(type,L,txt){ const S=SH_TYPES[type]; if(!S) return []; return S.multi?S.multi(L,txt):[shRing(type,L)]; }
+function shRing(type,L,N=72){ const S=SH_TYPES[type]; if(!S||S.multi) return []; const C=[], out=[], back=[];
+  for(let i=0;i<=N;i++){ const t=i/N; C.push({x:S.c(t)*L,y:(t-0.5)*L,w:S.w(t)*L}); }
+  C.forEach((p,i)=>{ const a=C[Math.max(0,i-1)], b=C[Math.min(N,i+1)], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1, nx=-ty/l, ny=tx/l; out.push({x:p.x+nx*p.w,y:p.y+ny*p.w}); back.push({x:p.x-nx*p.w,y:p.y-ny*p.w}); });
+  return out.concat(back.reverse()).filter((p,i,A)=>i===0||Math.hypot(p.x-A[i-1].x,p.y-A[i-1].y)>0.05); }
+const shDef=()=>({type:'none',size:null,ang:6,side:'both',dx:0,dy:0,text:'SCG',pos:'auto'});
+// plaats: in de kamer van elke vleugel, in de gekozen zone (naast de pickups, bovenbout of onderbout).
+// De tool zoekt zelf de plek die het dichtst bij die zone ligt en vrij blijft van pickups, knoppen, brug en pickguard. Te groot? Dan wordt het kleiner tot het past.
+const SH_POS={auto:'Automatisch (naast de pickups, vrij van alles)',pu:'Naast de pickups',upper:'Bovenbout',lower:'Onderbout'};
+let SH_CACHE={k:'',v:null};
+function shConflicts(d,ctx,pg,rs){ const s=d.set, pts=[].concat(...rs); let n=0;
+  if(ctx.pus.some(p=>pts.some(q=>rectDist(q,p.route)<5))) n++;
+  if((s.ctrl.items||[]).some(it=>pts.some(q=>Math.hypot(q.x-it.x,q.y-it.y)<itemR(it,s.ctrl)+6))) n++;
+  if(ctx.br.some(b=>pts.some(q=>b.r!=null?Math.hypot(q.x-b.x,q.y-b.y)<b.r+5:rectDist(q,b)<5))) n++;
+  if(pg&&pts.some(q=>inside(pg,q))) n++; return n; }
+function holePolys(d){ const s=d.set, h=s.sh; if(!h||h.type==='none'||!SH_TYPES[h.type]) return [];
+  const key=JSON.stringify([d.pts,d.sym,d.tension,h,s.inside,s.pu1,s.pu2,s.pu3,s.bridge,s.ctrl.items,s.pg.pts,s.pg.style]); if(SH_CACHE.k===key) return SH_CACHE.v; if(typeof drag!=='undefined'&&drag&&SH_CACHE.v&&SH_CACHE.id===d.id) return SH_CACHE.v;   // tijdens slepen niet zoeken: na het loslaten wel
+  const g=geom(d), real=s.inside&&s.inside!=='solid', ch=real?chamberPolys(d):chamberPolys({...d,set:{...s,inside:'semi'}}), L0=h.size||SH_TYPES[h.type].L, out=[], ctx=bodyCtx(d), pg=s.pg.style!=='none'&&s.pg.pts?geom(pgObj(d)).poly:null;
+  const yPU=ctx.pus.length?ctx.pus.reduce((a,p)=>a+p.route.cy,0)/ctx.pus.length:60, pos=h.pos||'auto';
+  // symmetrie eerst: één plek die gespiegeld aan beide kanten past, zelfde hoogte en grootte. Lukt dat niet zonder botsing, dan één klankgat aan de vrije kant.
+  const sideInfo=side=>{ const C=ch.find(c=>Math.sign(c.reduce((a,p)=>a+p.x,0))===side), room=C||offsetPoly(g.poly,15), a=side*(h.ang||0)*Math.PI/180;
+    const base=k=>shRings(h.type,L0*k,h.text).map(R=>R.map(p=>{ const x=p.x*side, y=p.y; return {x:x*Math.cos(a)-y*Math.sin(a), y:x*Math.sin(a)+y*Math.cos(a)}; }));
+    const fits=rs=>rs.length&&rs.every(r=>r.every(p=>inside(room,p)&&distToPoly(room,p)>=(C?6:0))); return {side,C,room,base,fits}; };
+  const at=(R,cx,cy)=>R.map(r=>r.map(p=>({x:p.x+cx,y:p.y+cy}))), S={1:sideInfo(1),'-1':sideInfo(-1)};
+  const want=h.side==='bass'?[-1]:h.side==='treble'?[1]:[1,-1];
+  // zoek met x als afstand tot de middellijn (u > 0); bij twee kanten moet elke kant passen
+  const search=(sides,useConf)=>{ let best=null; const R0=S[sides[0]].room, ys=R0.map(p=>p.y), Y0=Math.min(...ys), Y1=Math.max(...ys), yT=pos==='upper'?Y1-L0*0.55:pos==='lower'?Y0+L0*0.55:yPU;
+    for(let k=1;k>0.44&&!best;k-=0.05){ const B={}; sides.forEach(sd=>{ B[sd]=S[sd].base(k).map(r=>r.filter((_,i)=>i%3===0)); });
+      for(let cy=Y0;cy<=Y1;cy+=8){ const xs=hits(R0,cy).map(x=>x*sides[0]).filter(x=>x>0).sort((a,b)=>a-b); if(xs.length<2) continue; const um=(xs[0]+xs[xs.length-1])/2;
+        for(let u=xs[0];u<=xs[xs.length-1];u+=8){ let ok=true, cf=0; for(const sd of sides){ const rs=at(B[sd],sd*u,cy); if(!S[sd].fits(rs)){ ok=false; break; } if(useConf) cf+=shConflicts(d,ctx,pg,rs); } if(!ok) continue;
+          const cost=Math.abs(cy-yT)+0.4*Math.abs(u-um)+cf*400; if(!best||cost<best.cost) best={cost,u,cy,k,cf}; } } }
+    return best; };
+  const useConf=pos!=='pu'; let plan=null, single=false;
+  if(want.length===2){ const both=search([1,-1],useConf); if(both&&(both.cf===0||!useConf)) plan={sides:[1,-1],b:both};
+    else { const one=[-1,1].map(sd=>({sd,b:search([sd],useConf)})).filter(o=>o.b&&o.b.cf===0).sort((a,b)=>a.b.cost-b.b.cost)[0]; if(one){ plan={sides:[one.sd],b:one.b}; single=true; } else if(both) plan={sides:[1,-1],b:both}; } }
+  else { const b=search(want,useConf); if(b) plan={sides:want,b}; }
+  if(plan){ const {u,cy,k}=plan.b; plan.sides.forEach(sd=>{ const rings=at(S[sd].base(k),sd*(u+(h.dx||0)),cy+(h.dy||0)); out.push({side:sd,rings,ring:[].concat(...rings),k,fit:S[sd].fits(rings),L:L0*k,overChamber:real,single}); }); }
+  else want.forEach(sd=>{ const rings=at(S[sd].base(1),sd*((g.maxX-g.minX)/4+(h.dx||0)),yPU+(h.dy||0)); out.push({side:sd,rings,ring:[].concat(...rings),k:1,fit:false,L:L0,overChamber:real,single:false}); });
+  SH_CACHE={k:key,v:out,id:d.id}; return out; }
+function holeChecks(d){ const H=holePolys(d), out=[]; if(!H.length) return out; const s=d.set, ctx=bodyCtx(d), nm=SH_TYPES[s.sh.type].n;
+  if(!s.inside||s.inside==='solid') out.push(`${nm[0].toUpperCase()+nm.slice(1)} boven massief hout: kies lichtkamers of semi-hollow, anders is het enkel versiering`);
+  H.forEach(h=>{ const w=h.side>0?'diskant':'bas'; if(!h.fit) out.push(`${nm} (${w}) past niet boven de kamer, ook niet kleiner`);
+    if(ctx.pus.some(p=>h.ring.some(q=>rectDist(q,p.route)<5))) out.push(`${nm} (${w}) zit te dicht bij een pickup (min. 5 mm)`);
+    if((s.ctrl.items||[]).some(it=>h.ring.some(q=>Math.hypot(q.x-it.x,q.y-it.y)<itemR(it,s.ctrl)+6))) out.push(`${nm} (${w}) zit te dicht bij een knop of de jack`);
+    if(ctx.br.some(b=>h.ring.some(q=>b.r!=null?Math.hypot(q.x-b.x,q.y-b.y)<b.r+5:rectDist(q,b)<5))) out.push(`${nm} (${w}) zit te dicht bij de brug`);
+    if(s.pg.style!=='none'&&s.pg.pts){ const pg=geom(pgObj(d)).poly; if(h.ring.some(q=>inside(pg,q))) out.push(`${nm} (${w}) loopt onder de pickguard`); } });
+  return out; }
+function shPic(k){ if(k==='none') return '<svg viewBox="0 0 40 50"><path d="M8 8L32 42M32 8L8 42" stroke="#c9bfb2" stroke-width="2"/></svg>'; const R=shRings(k,40,'SCG'); return `<svg viewBox="-20 -25 40 50"><path d="${R.map(r=>'M'+r.map(p=>p.x.toFixed(1)+','+(-p.y).toFixed(1)).join('L')+'Z').join('')}" fill="#2a2420" transform="rotate(-6)"/></svg>`; }
+function pgHTML(){ return `<section><h2>Pickguard</h2>
+      <div class="ideas bouw">${Object.entries(PG_STYLES).map(([k,v])=>`<button class="idea" data-act="pgStyle" data-k="${k}" title="${v[1]}">${pgPic(k)}${v[0]}</button>`).join('')}</div>
+      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
+      <div class="btns"><button data-act="pgVary">🎲 Variatie</button><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
+      <p class="hint" id="pgState"></p></div></section>`; }
+function holesHTML(){ return `<section><h2>Klankgaten</h2><div class="ideas bouw sh">${['none',...Object.keys(SH_TYPES)].map(k=>`<button class="idea" data-act="shType" data-k="${k}">${shPic(k)}${k==='none'?'Geen':SH_TYPES[k].n}</button>`).join('')}</div>
+  <div id="shOpts" style="margin-top:8px">${num('set.sh.size','Lengte','mm',1)}<div class="row" id="shTxtRow"><label>Tekst in morse</label><input type="text" data-bind="set.sh.text" maxlength="12" style="width:110px;text-transform:uppercase"></div>${num('set.sh.ang','Kanteling','°',1)}${sel_('set.sh.side','Waar',{both:'Beide kanten',bass:'Alleen baskant',treble:'Alleen diskantkant'})}${sel_('set.sh.pos','Zone',SH_POS)}${num('set.sh.dx','Naar buiten (+) of binnen','mm',1)}${num('set.sh.dy','Omhoog (+) of omlaag','mm',1)}<p class="hint" id="shState"></p></div></section>`; }
+function shState(d){ const H=holePolys(d); if(!H.length) return ''; const k=Math.min(...H.map(h=>h.k)); return (H.some(h=>h.single)?`Maar één klankgat (${H[0].side>0?'diskant':'bas'}kant): gespiegeld was er aan de andere kant geen vrije plek. `:'')+(k<0.999?`Kleiner gemaakt tot ${fmt(H[0].L,0)} mm om boven de kamer te passen. `:'')+(d.set.inside&&d.set.inside!=='solid'?'Staat boven de kamer, vrij van pickups, knoppen, brug en pickguard waar dat kan. Verschuiven blijft mogelijk.':'Geplaatst waar de kamers bij semi-hollow zouden zitten.'); }
+
 // halsverbinding, gelijmd: de lijm (Titebond Original) is sterker dan het hout, dus het zwakste hout van de naad telt.
 // Afschuifsterkte langs de draad, droog (MPa), uit de tabellen van de Wood Handbook (via Engineers Edge). Hout zonder nagekeken waarde: gerekend als els.
 const WOOD_SHEAR={els:7.4,vuren:7.9,grenen:6.2,essen2:13.2,linde:6.8};
@@ -1269,7 +1380,7 @@ function buildPanel(){
       <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock').sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
       <div class="btns" style="margin:-2px 0 8px"><button data-act="editHead">Bewerk deze kop</button><button data-act="render">🎨 Render</button></div>
       <div class="row"><label>Opbouw</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
-      </section>${bouwHTML()}<section><h2>Knoppen</h2>
+      </section>${pgHTML()}${bouwHTML()}${holesHTML()}<section><h2>Knoppen</h2>
       <div class="fr fr1"><button data-act="knobN" data-k="-1" aria-label="Minder knoppen">−</button><span id="knobCount"></span><button data-act="knobN" data-k="1" aria-label="Meer knoppen">+</button></div>
       <div class="ideas" id="ideas"></div>
       <div class="btns"><button data-act="knobSurprise">✨ Nog een idee</button><button data-act="autoCtrl" id="knobBack">Terug naar het idee</button></div>
@@ -1293,11 +1404,7 @@ function buildPanel(){
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
       ${num('set.ctrl.knobD','Knopdiameter','mm',0.5,'data-after="ctrl"')}
       </section>
-      <section><h2>Pickguard</h2>
-      <div class="ideas bouw">${Object.entries(PG_STYLES).map(([k,v])=>`<button class="idea" data-act="pgStyle" data-k="${k}" title="${v[1]}">${pgPic(k)}${v[0]}</button>`).join('')}</div>
-      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
-      <div class="btns"><button data-act="pgVary">🎲 Variatie</button><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
-      <p class="hint" id="pgState"></p></div></section>
+
 </details>`;
   } else {
     h+=`<section><h2>Mechanieken</h2>
@@ -1515,6 +1622,7 @@ function syncPanel(){
 // galerij: elk idee getekend op de vorm die nu op het scherm staat
 let ideasKey='';
 function syncIdeas(d){
+  document.querySelectorAll('[data-act=shType]').forEach(b=>b.classList.toggle('on',b.dataset.k===((d.set.sh||{}).type||'none'))); { const o=$('#shOpts'); if(o) o.style.display=(d.set.sh||{}).type&&d.set.sh.type!=='none'?'':'none'; const tr=$('#shTxtRow'); if(tr) tr.style.display=(d.set.sh||{}).type==='morse'?'':'none'; const st=$('#shState'); if(st) st.textContent=shState(d); }
   document.querySelectorAll('[data-act=pgStyle]').forEach(b=>b.classList.toggle('on',b.dataset.k===d.set.pg.style)); document.querySelectorAll('[data-act=inside]').forEach(b=>b.classList.toggle('on',b.dataset.k===(d.set.inside||'solid')));
   const c=d.set.ctrl, box=$('#ideas'); if(!box) return;
   $('#knobCount').textContent=c.n===0?'Geen knoppen':c.n===1?'1 knop':c.n+' knoppen';
@@ -1855,6 +1963,7 @@ function runAct(a,t){ const d=D();
       for (let i=0;i<24;i++){ const id=ids[Math.floor(Math.random()*ids.length)], vr={k:rnd(0.92,1.3),e:rnd(-2,9),s:rnd(0,30),rot:rnd(-0.28,0.28)};
         if (knobLayout(d,ctx,id,vr)){ pushUndo(); c.layout=id; c.vr=vr; c.edited=false; update(); glide(old); return; } }
       toast('Op deze vorm vind ik geen ander idee dat past'); break; }
+    case 'shType': { if(locked()){ lockMsg(); return; } const k=t.dataset.k; d.set.sh=Object.assign(d.set.sh||shDef(),{type:k,size:k==='none'?null:SH_TYPES[k].L}); panelKey=''; update(); break; }
     case 'pgStyle': { if(locked()){ lockMsg(); return; } d.set.pg.style=t.dataset.k; d.set.pg.edited=false; d.set.pg.pts=null; editPG=false; sel=-1; panelKey=''; update(); if(d.set.pg.style!=='none'&&!d.set.pg.pts) toast('Past niet met deze body en pickups'); break; }
     case 'pgVary': { if(locked()){ lockMsg(); return; } if(d.set.pg.style==='none'){ toast('Kies eerst een pickguard'); return; } const w=pgVary(d); editPG=false; sel=-1; panelKey=''; update(); toast(d.set.pg.pts?'Variatie: '+w:'Geen variatie die past'); break; }
     case 'pgRegen': pushUndo(); Object.assign(d.set.pg,{tilt:0,curve:0,inset:0}); d.set.pg.edited=false; editPG=false; sel=-1; buildPanel(); update(); break;
@@ -1926,6 +2035,7 @@ function exportSvg(d,pgOnly){
   } else {
     const ctx=bodyCtx(d), cc=cavityChain(ctx);
     out+=`<g id="halspocket">${rectP({cx:0,cy:(ctx.pocketEnd+ctx.topY)/2,w:s.heelW,h:ctx.topY-ctx.pocketEnd,a:0})}</g>\n`;
+    { const H=holePolys(d); if(H.length) out+=`<g id="klankgaten">${H.map(h=>h.rings.map(r=>`<polygon points="${r.map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#000" stroke-width="0.3"/>`).join('')).join('')}</g>\n`; }
     if (ctx.fbEnd<ctx.topY){ const a=ctx.fbEnd, b=ctx.topY; out+=`<g id="toets-op-body"><polygon points="${[[-neckHW(s,b),b],[neckHW(s,b),b],[neckHW(s,a),a],[-neckHW(s,a),a]].map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="#7a5a3a" stroke-width="0.3" stroke-dasharray="2 1"/></g>\n`; }
     { const ch=chamberPolys(d); if(ch.length) out+=`<g id="kamers">${ch.map(c=>`<polygon points="${c.map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#0066cc" stroke-width="0.2"/>`).join('')}</g>\n`; }
     out+=`<g id="pickup-frezingen">${ctx.pus.map(p=>rectP(p.route)).join('')}</g>\n`;
@@ -1943,7 +2053,7 @@ function exportSvg(d,pgOnly){
 
 // ================= inspirator =================
 const rnd01=()=>Math.random()*2-1, pick=a=>a[Math.floor(Math.random()*a.length)];
-const GEN_POOL=['strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
+const GEN_POOL=['n-peer','n-blad','n-vleugel','n-schelp','n-kiezel','n-zandloper','n-golf','n-gotisch','n-romaans','strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
 const GEN_WILD=['explorer','moderne','n4','wolf','styleo'];
 let VECS=null;
 function refVecs(){ if(VECS) return VECS; VECS={}; lib.designs.filter(d=>d.ref&&d.type==='body').forEach(d=>{ try{ VECS[d.id.slice(4)]=shapeVec(geom(d).poly); }catch(e){} }); return VECS; }
@@ -1961,7 +2071,7 @@ function fitPickups(d){
 }
 // nieuwe body: mengsel van echte vormen (per helft andere ouders), met zachte vervorming
 // ---- koppen: mengsels van echte koppen (zelfde familie: 3+3, op rij, omgekeerd) ----
-const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz','tiger'],inline:['tele','strat','strat70','explorer','rhoads','c5150'],rev:['firebird','n4']};
+const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz','tiger','n-gotisch','n-tulp','n-deco','n-waaier','n-ui','n-blad','n-vlam','n-schelp','n-zeis'],inline:['tele','strat','strat70','explorer','rhoads','c5150','n-veer','n-golfkam','n-zwaan','n-spits'],rev:['firebird','n4']};
 let HVECS=null;
 // denkt mee: past het gekozen patroon niet in deze kop, dan rekt de kop tot het wel past (of blijft hij zoals hij was)
 function growHead(d){
@@ -2078,7 +2188,10 @@ function headMoves(d){ const g=geom(d), sd=x=>g.poly.filter(p=>Math.sign(p.x)===
 function applyMove(d,m,mm){ if(d.type==='headstock'){ d.pts.forEach(p=>{ if(p.y<=0.5) return; const q=Math.hypot(p.x-m.cx,p.y-m.cy)/m.r; if(q>=1) return; const f=Math.pow(1-q*q,2); if(!d.sym||p.x>0) p.x=Math.round((p.x+(d.sym&&m.cx<0?-m.ux:m.ux)*mm*f)*10)/10; p.y=Math.round((p.y+m.uy*mm*f)*10)/10; }); return; }
   const h=d.set.heelW/2+1, top=topOf(geom(d)), dx=m.ux*mm, dy=m.uy*mm, sym=d.sym, cx=sym?Math.abs(m.cx):m.cx, ux=sym&&m.cx<0?-dx:dx;
   d.pts.forEach((p,i)=>{ if(Math.abs(p.x)<=h&&p.y>top-20) return; const q=Math.hypot(p.x-cx,p.y-m.cy)/m.r; if(q>=1) return; const f=Math.pow(1-q*q,2); let x=p.x+ux*f; if(sym) x=(i===0||i===d.pts.length-1)?0:Math.max(0,x); p.x=Math.round(x*10)/10; p.y=Math.round((p.y+dy*f)*10)/10; }); }
-function moveCandidate(src,w){ const d=clone(src); delete d.sig; const head=d.type==='headstock', M=head?headMoves(d):bodyMoves(d), n=1+Math.floor(Math.random()*3), used=new Set(), txt=[];
+function moveCandidate(src,w){ const d=clone(src); delete d.sig; const head=d.type==='headstock';
+  // koppen: dezelfde bewuste ingrepen als bij genereren (langer, kroon kantelen, schouder, flank, zwaai…), hoeken blijven hoeken
+  if(head){ delete d.ref; if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } const txt=headTransform(d,0.15+0.5*w); if(!headOK(d,lobeInfo(geom(src).poly).lobes+1)) return null; seatPosts(d); d.moves=txt; return d; }
+  const M=bodyMoves(d), n=1+Math.floor(Math.random()*3), used=new Set(), txt=[];
   for(let k=0;k<n&&M.length;k++){ const m=M[Math.floor(Math.random()*M.length)], id=m.n+m.pos; if(used.has(id)) continue; used.add(id); const sc=0.5+w, mm=Math.round((m.a+Math.random()*(m.b-m.a))*sc); if(Math.abs(mm)<3) continue; applyMove(d,m,mm); txt.push(`${m.n} ${Math.abs(mm)} mm ${mm>0?m.pos:m.neg}`); }
   if(!txt.length) return null; d.moves=txt; if(head){ if(d.set.layout==='custom') d.set.layout=headFam(d); d.set.pat=null; d.set.auto=true; placePosts(d); } return d; }
 function searchGoal(){
@@ -2179,6 +2292,10 @@ function organicFlow(poly,amt,rnd){ const P=resampleClosed(poly,3), ys=P.map(p=>
     return {x,y}; });
   return smoothZones(Q,[{bot:y0+L*2}],1e4,4); }
 function genBody(w){ const V=refVecs(), pool=GEN_POOL.filter(k=>V[k]).concat(Math.random()<w*0.6?GEN_WILD.filter(k=>V[k]):[]); let best=null;
+  // de helft van de keren: één vorm nemen (ook uit natuur en architectuur) en hem bewust bijsturen, zoals een ontwerper; anders twee vormen per helft mengen
+  if(Math.random()<0.45){ for(let i=0;i<10;i++){ const k=pick(pool.concat(['n-deco'])), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
+      const m=moveCandidate(src,0.35+w*0.9)||clone(src); let poly=geom(m).poly; const org=Math.random()<0.2+0.4*w; if(org) poly=organicFlow(poly,0.4+0.6*w,Math.random);
+      const ok=finishBody(poly,L0); if(ok) return bodyFromPoly(ok,src.set,(org?'Organisch naar ':'Naar ')+refName(k)); } }
   for(let i=0;i<14;i++){ const pT=pickHalf(V,pool,'t',Math.random), pB=Math.random()<0.45?pT.map(x=>[...x]):pickHalf(V,pool,'b',Math.random);
     const g=blendBody(V,pool,Math.random,{amt:0.35+w*1.1,pT,pB}); let poly=g.poly, org=Math.random()<0.25+0.35*w; if(org) poly=organicFlow(poly,0.6+w*0.8,Math.random);
     const ok=finishBody(poly,w>0.7?10:MAX_LOBES); if(!ok) continue;
@@ -2188,12 +2305,7 @@ function genBody(w){ const V=refVecs(), pool=GEN_POOL.filter(k=>V[k]).concat(Mat
 
 // ---- koppen: niet middelen (dat geeft blobben), maar een strakke kop nemen en hem bewust bijsturen ----
 // organische vormen erbij: blad, kiezel, golf, vlam, kling, druppel. Zelfde volgorde als de referenties: top, diskantkant naar de nut, baskant terug omhoog.
-const HEAD_ORG={split:{
-    Blad:[[18,200,1],[34,184,0],[42,158,0],[44,122,0],[40,88,0],[33,58,0],[26,36,0],[22.5,18,0],[21.5,0,1],[-21.5,0,1],[-22.5,18,0],[-28,40,0],[-37,68,0],[-43,104,0],[-44,142,0],[-38,172,0],[-22,192,0],[0,199,0]],
-    Vlam:[[-34,200,1],[-14,186,0],[10,175,0],[31,158,0],[41,132,0],[41,100,0],[35,70,0],[27,42,0],[22.5,18,0],[21.5,0,1],[-21.5,0,1],[-22.5,18,0],[-27,42,0],[-35,70,0],[-41,102,0],[-42,138,0],[-40,170,0],[-37,190,0]],
-    Schelp:[[0,174,1],[15,184,0],[32,180,0],[42,162,0],[43,126,0],[38,88,0],[30,52,0],[24,24,0],[21.5,0,1],[-21.5,0,1],[-24,24,0],[-30,52,0],[-38,88,0],[-43,126,0],[-42,162,0],[-32,180,0],[-15,184,0]],
-    Zeis:[[30,190,1],[40,170,0],[42,130,0],[38,90,0],[31,56,0],[25,28,0],[21.5,0,1],[-21.5,0,1],[-24,26,0],[-31,56,0],[-39,92,0],[-43,128,0],[-42,152,0],[-34,160,0],[-20,166,0],[0,176,0],[16,185,0]]},
-  inline:{}};
+const HEAD_ORG={split:{},inline:{}};   // de organische koppen staan nu als referenties in de database (natuur en architectuur)
 function headSkeleton(fam,w){ const refs=HEAD_FAM[fam].map(k=>lib.designs.find(d=>d.id==='ref-h-'+k)).filter(Boolean); if(!refs.length) return null;
   const org=Object.entries(HEAD_ORG[fam]||{}), useOrg=org.length&&Math.random()<0.25+0.25*w; let d, nm;
   if(useOrg){ const [n,pts]=pick(org), base=fam==='split'?(lib.designs.find(x=>x.id==='ref-h-lp')||refs[0]):(lib.designs.find(x=>x.id==='ref-h-strat')||refs[0]); d=clone(base); const k=d.set.nutW/43; d.pts=pts.map(([x,y,c])=>({x:x*k,y,c:!!c})); d.sym=false; d.tension=1; nm='Organisch: '+n; }
@@ -2384,6 +2496,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   if(!solid||o.fin==='goud') d+=grain(g.minX,g.maxX,g.minY,g.maxY,o.fin==='burst'?'#2a1408':'#5a3a20','cb');
   if(s.inside==='semi'&&false) d+='';
   d+=`<g clip-path="url(#cb)"><path d="${pth(g.segs)}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="16" filter="url(#bev)"/></g><path d="${pth(g.segs)}" fill="url(#gloss)"/>`;
+  holePolys(b).forEach(h=>h.rings.forEach(r=>{ d+=`<polygon points="${poly(r)}" fill="#120c08" stroke="#000" stroke-opacity=".5" stroke-width=".8"/><polygon points="${poly(r.map(p=>({x:p.x+0.8,y:p.y-0.8})))}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width=".8"/>`; }));
   // pickguard
   if (s.pg.style!=='none'&&s.pg.pts){ const pgg=geom(pgObj(b)); d+=`<path d="${pth(pgg.segs)}" fill="${(PG_COL[s.pg.color]||PG_COL.wit)[1]}" stroke="#000" stroke-opacity=".25" stroke-width="1.2"/>`; if(s.pg.color==='schildpad') d+=`<clipPath id="cpg"><path d="${pth(pgg.segs)}"/></clipPath><g clip-path="url(#cpg)" opacity=".35">${[...Array(40)].map(()=>{ const x=pgg.minX+Math.random()*(pgg.maxX-pgg.minX), y=pgg.minY+Math.random()*(pgg.maxY-pgg.minY); return `<ellipse cx="${X(x)}" cy="${Y(y)}" rx="${(4+Math.random()*12).toFixed(1)}" ry="${(2+Math.random()*5).toFixed(1)}" fill="#2a1206"/>`; }).join('')}</g>`;
     pgScrews(b,pgg).forEach(q=>d+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="1.8" fill="url(#met)"/>`); }
@@ -2521,12 +2634,13 @@ function zipBlob(files){ const enc=new TextEncoder(), chunks=[], cen=[]; let off
   return new Blob([...chunks,...cen,new Uint8Array(e.buffer)],{type:'application/zip'}); }
 const circRing=(x,y,r,n=48)=>[...Array(n)].map((_,i)=>({x:x+r*Math.cos(-2*Math.PI*i/n),y:y+r*Math.sin(-2*Math.PI*i/n)}));
 const rectRing=R=>{ const c=rectCorners(R); return ringArea(c)>0?c.reverse():c; };
-function prOpt(){ return Object.assign({body:true,head:true,t:10,bx:220,by:220,margin:10,gap:0.1,tuners:true,center:true,pus:false},lib.view.prt||{}); }
+function prOpt(){ return Object.assign({body:true,head:true,t:10,bx:220,by:220,margin:10,gap:0.1,tuners:true,center:true,pus:false,sh:true},lib.view.prt||{}); }
 // wat er op de mal komt, in mm, y naar boven
 function templateShapes(o){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'), h=b?partnerHead(b):(D().type==='headstock'?D():null), out=[];
   if(b&&o.body){ const g=geom(b), s=b.set, ctx=bodyCtx(b), holes=[];
     if(o.center){ const tY=ctx.topY, bY=botOf(g); [bY+25,(tY+bY)/2,tY-25].forEach(y=>{ if(!ctx.pus.some(p=>Math.abs(y-p.route.cy)<p.route.h/2+6)) holes.push(circRing(0.01,y,1.5,24)); }); }
     if(o.pus) ctx.pus.forEach(p=>holes.push(rectRing(p.route)));
+    if(o.sh) holePolys(b).forEach(h=>h.rings.forEach(r0=>{ const r=simplifyRing(r0,0.03); holes.push(ringArea(r)>0?r.slice().reverse():r); }));
     out.push({key:'body',name:b.name,outer:simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03),holes}); }
   if(h&&o.head){ const g=geom(h), holes=o.tuners?h.posts.map(p=>circRing(p.x,p.y,h.set.holeD/2)):[]; out.push({key:'kop',name:h.name,outer:simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03),holes}); }
   return out; }
@@ -2554,7 +2668,7 @@ function openPrint(){ const o=prOpt(); prtZip=null; const P=buildPrint(); let in
   <div class="rnd"><div class="rimg" style="background:#faf7f2">${printPreview(P)}</div><div class="ropt">${info}
   ${ck('body','Body')}${ck('head','Kop'+(templateShapes({...o,body:false,head:true})[0]?' ('+esc(templateShapes({...o,body:false,head:true})[0].name)+')':''))}
   ${num('t','Dikte van de mal','mm',0.5)}${num('bx','Bed breed','mm')}${num('by','Bed diep','mm')}${num('margin','Marge op het bed','mm')}${num('gap','Speling per kant','mm',0.05)}
-  ${ck('tuners','Mechaniekgaten in de kop')}${ck('center','Merkgaatjes op de middenlijn')}${ck('pus','Pickupfrezingen als gat')}
+  ${ck('tuners','Mechaniekgaten in de kop')}${ck('center','Merkgaatjes op de middenlijn')}${ck('pus','Pickupfrezingen als gat')}${ck('sh','Klankgaten als gat')}
   <p class="hint">Standaard voor je FlashForge AD5M (220 × 220). Stukken zijn verbonden met zwaluwstaarten: lijmen en ze liggen vanzelf juist.</p>
   <div class="btns"><button class="primary" data-p="make">Maak STL-bestanden</button><button data-p="share" ${prtZip?'':'disabled'}>Bewaar zip</button></div><p class="hint" id="prtMsg"></p></div></div>`;
   openModal(); }
@@ -2615,7 +2729,7 @@ const leaving=()=>{ histFlush(); if(saveT) saveNow(); if(histW) histWrite(); };
 window.addEventListener('pagehide',leaving); document.addEventListener('visibilitychange',()=>{ if(document.hidden) leaving(); });
 let lastSz=null; window.addEventListener('resize',()=>{ const r=svg.getBoundingClientRect(); if(lastSz&&(Math.abs(r.width-lastSz.w)>lastSz.w*0.25||Math.abs(r.height-lastSz.h)>lastSz.h*0.25)) fit(); else render(); lastSz={w:r.width,h:r.height}; });
 if (lib.view.soft===30) lib.view.soft=60;
-ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); });
+ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false){ placePosts(d); if(d.ref&&headChecks(d).length) fitPosts(d); } });
 switchDesign();
 </script>
 </body>
