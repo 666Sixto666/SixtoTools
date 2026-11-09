@@ -228,6 +228,7 @@ const WOODS = {
   els:['Els (alder)',0.45], essen:['Moeras-essen (swamp ash)',0.42], essen2:['Essen (hard)',0.65],
   mahonie:['Mahonie',0.56], okoume:['Okoumé',0.45], linde:['Linde (basswood)',0.42],
   walnoot:['Walnoot',0.62], esdoorn:['Esdoorn (maple)',0.70], paulownia:['Paulownia',0.30],
+  vuren:['Vuren (spruce)',0.45], grenen:['Grenen (pine)',0.52],
   ander:['Ander (eigen waarde)',0]
 };
 // naam, kap b×h, frezing b×h (mm)
@@ -1240,9 +1241,18 @@ function refNote(d){ const k=d.id.slice(4);
 const PG_STYLES={none:['Geen','Zonder pickguard'],full:['Groot','Rond de pickups, zoals een Strat'],small:['Diskant','Klein blad aan de diskantkant'],bass:['Baskant','Klein blad aan de baskant'],band:['Strook','Smalle strook rond de pickups, tot tegen de hals'],drop:['Los blad','Los blad naast de pickups, zoals een Les Paul']};
 function pgPic(k){ const pg={full:'M22 17H38C46 22 49 33 44 39H16C11 33 14 22 22 17Z',small:'M34 19C42 21 48 29 46 36H34Z',bass:'M26 19C18 21 12 29 14 36H26Z',band:'M24 11H36V40H24Z',drop:'M34 15C42 16 46 25 41 39C38 35 34 30 34 15Z'}[k];
   return `<svg viewBox="0 0 60 50"><path d="M27 0H33V12H27Z" fill="#e8e2d8" stroke="#6b6257"/><path d="M30 6C44 4 47 13 44 20C53 24 56 35 50 43C44 49 16 49 10 43C4 35 7 24 16 20C13 13 16 4 30 6Z" fill="#f4efe7" stroke="#6b6257"/>${pg?`<path d="${pg}" fill="#fff" stroke="#6b6257"/>`:''}<path d="M24 44H36" stroke="#6b6257" stroke-width="2"/></svg>`; }
+// halsverbinding, gelijmd: de lijm (Titebond Original) is sterker dan het hout, dus het zwakste hout van de naad telt.
+// Afschuifsterkte langs de draad, droog (MPa), uit de tabellen van de Wood Handbook (via Engineers Edge). Hout zonder nagekeken waarde: gerekend als els.
+const WOOD_SHEAR={els:7.4,vuren:7.9,grenen:6.2,essen2:13.2,linde:6.8};
+const NECK_WOOD={same:'Zelfde als de body',mlam:'Multi-lam vuren / grenen / els',vuren:'Vuren',grenen:'Grenen',els:'Els',esdoorn:'Esdoorn',mahonie:'Mahonie'};
+function jointNeed(s){ const bw=s.wood, nw=s.neckWood&&s.neckWood!=='same'?s.neckWood:bw, tau=k=>k==='mlam'?Math.min(WOOD_SHEAR.vuren,WOOD_SHEAR.grenen,WOOD_SHEAR.els):WOOD_SHEAR[k];
+  const tb=tau(bw), tn=tau(nw), known=tb!=null&&tn!=null, t=Math.min(tb!=null?tb:7.4,tn!=null?tn:7.4), weak=(tn!=null&&tn<(tb!=null?tb:7.4))?nw:bw;
+  const k=(7.4/t)*(56/Math.max(30,s.heelW||56));   // richtwaarden 45/30 mm golden voor els en een hals van 56 mm breed; zwakker hout of smallere hals vraagt meer lengte
+  const nm=weak==='mlam'?'je multi-lam (zwakste laag)':((WOODS[weak]||[NECK_WOOD[weak]||'dit hout'])[0]||'dit hout').toLowerCase().replace(/ \(.*$/,'');
+  return {g:45*k,m:30*k,name:known?nm:nm+', gerekend als els',tip:known?'':'Voor dit hout heb ik geen nagekeken sterkte: gerekend als els.'}; }
 function bouwHTML(){ const ins=k=>`<svg viewBox="0 0 60 50"><path d="M4 12H56V38H4Z" fill="#f4efe7" stroke="#6b6257"/>${k==='semi'?'<path d="M10 16H22V34H10ZM38 16H50V34H38Z" fill="#fff" stroke="#6b6257"/>':k==='light'?'<path d="M9 20H19V30H9ZM41 20H51V30H41Z" fill="#fff" stroke="#6b6257"/>':''}</svg>`;
   return `<section><h2>Hout en kamers</h2><p class="hint">Voor het gewicht en de balans. De kamers worden getekend en gaan mee in het freesplan.</p><div class="ideas bouw">${Object.entries(INSIDES).map(([k,v])=>`<button class="idea" data-act="inside" data-k="${k}" title="${v[1]}">${ins(k)}${v[0]}</button>`).join('')}</div>
-    <div style="margin-top:8px">${num('set.thick','Dikte')}${sel_('set.wood','Bodyhout',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}</div></section>`; }
+    <div style="margin-top:8px">${num('set.thick','Dikte')}${sel_('set.wood','Bodyhout',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}${sel_('set.neckWood','Halshout (voor de lijmnaad)',NECK_WOOD)}</div></section>`; }
 function buildPanel(){
   const d=D(), v=lib.view; let h='';
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
@@ -1407,7 +1417,8 @@ const WORST=rows=>rows.some(r=>r.cls==='b')?'b':rows.some(r=>r.cls==='m')?'m':'g
 // enkel wat de tool echt uit de tekening haalt: vorm, maten, riemknoppen, snaarpad. Klank en stijfheid kan hij niet weten.
 function queeste(d){ const out=(k,rows)=>({k,rows,dot:WORST(rows),line:(rows.find(r=>r.cls==='b')||rows.find(r=>r.cls==='m')||rows[0]).word});
   if (d.type==='body'){ const f=bodyPhysics(d), s=d.set, h=partnerHead(d), g=geom(d);
-    const stab=[]; stab.push(s.pocket>=45?playRow('g','Halsverbinding',`${fmt(s.pocket,0)} mm in de body`):s.pocket>=30?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body`,'Weinig lijm- of schroefvlak, zoals een SG. Dat is de plek die het eerst werkt onder snaartrek.'));
+    const J=jointNeed(s), jw=J.name;
+    const stab=[]; stab.push(s.pocket>=J.g?playRow('g','Halsverbinding',`${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,J.tip):s.pocket>=J.m?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body, ± ${fmt(J.g,0)} aangeraden in ${jw}`,`Gelijmd met Titebond Original is de lijm sterker dan het hout: het zwakste hout van de naad bepaalt het. ${J.tip}`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,`Weinig lijmvlak, zoals een SG. Dat is de plek die het eerst werkt. ${J.tip}`));
     if(f.horn<35) stab.push(playRow(f.horn<25?'b':'m','Hoorn',`${fmt(f.horn,0)} mm breed`,'Smalle hoorn: de houtdraad loopt er dwars op, dus kwetsbaar als de gitaar valt.'));
     if(h&&h.posts&&h.posts.length){ const hp=headPhysics(h), pi=pullInfo(h), w=pi.worst; stab.push(playRow(w>12||hp.pitch>=17?'m':'g','Stemmen',`${esc(ownName(h)||h.name)}: trek tot ${fmt(w,0)}°${hp.pitch?`, ${hp.pitch}° kop`:hp.trees?`, ${hp.trees} snaarboom`:''}`,hp.pitch>=17?'Stevige druk op de nut, maar een schuine kop breekt sneller: reken op een las.':w>12?'Open de kop om de snaartrek te verbeteren.':'')); }
     const pl=[], fh=f.fretHand; pl.push(fh>=20?playRow('g','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`):fh>=17.5?playRow('m','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant, of laat de hals vroeger in de body gaan.'):playRow('b','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant.'));
@@ -2341,7 +2352,7 @@ $('#modal').addEventListener('change',e=>{ if(e.target.dataset.m==='wild') rollI
 
 
 // ================= render: de hele gitaar als beeld =================
-const WOOD_COL={els:'#d6ab7f',essen:'#d9bd8f',essen2:'#d2b385',mahonie:'#8e4c2b',okoume:'#b47e58',linde:'#e4cca2',walnoot:'#674530',esdoorn:'#e6cb98',paulownia:'#dbc199',ander:'#c49c6c'};
+const WOOD_COL={vuren:'#e3c9a0',grenen:'#dcb27a',els:'#d6ab7f',essen:'#d9bd8f',essen2:'#d2b385',mahonie:'#8e4c2b',okoume:'#b47e58',linde:'#e4cca2',walnoot:'#674530',esdoorn:'#e6cb98',paulownia:'#dbc199',ander:'#c49c6c'};
 const FINISH={hout:['Hout naturel'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
 const BOARD={pal:['Palissander','#4a2c1e'],ebben:['Ebben','#1c1714'],esdoorn:['Esdoorn','#e2c48e']};
 const NECKC={esdoorn:['Esdoorn','#e2c48e'],mahonie:['Mahonie','#8e4c2b'],roast:['Geroosterde esdoorn','#b9814a']};
