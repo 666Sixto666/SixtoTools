@@ -422,10 +422,10 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('v','Flying V-type',B.v,false,{...GIB,thick:35,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'tri','toggle3','side'),pg:pgDef('none')}),
   mkBody('moderne','Moderne-type',B.moderne,false,{...GIB,thick:35,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
   mkBody('turner','Model 1-type (Rick Turner)',B.turner,false,{...GIB,scale:629,frets:24,thick:55,heelW:53,spBridge:52.5,pocket:50,bridge:'tom',pu1:NOPU,pu2:NOPU,pu3:PU('HBR',103,-6),ctrl:ctrlDef(4,'fan','none','side'),pg:pgDef('none')}),
-  mkBody('tiger','Tiger-type (Doug Irwin)',B.tiger,false,{...GIB,scale:635,frets:24,pocket:20,pu1:PU('HB',40),pu2:PU('SC',85),pu3:PU('HB',128),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
+  mkBody('tiger','Tiger-type (Doug Irwin, ruwe benadering)',B.tiger,false,{...GIB,scale:635,frets:24,pocket:20,pu1:PU('HB',40),pu2:PU('SC',85),pu3:PU('HB',128),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
   mkBody('wolf','Wolf-type (Doug Irwin, ruwe benadering)',B.wolf,false,{...FEN,scale:635,frets:24,pocket:20,bridge:'tom',pu1:PU('SC',42),pu2:PU('SC',80),pu3:PU('SC',117),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
   mkBody('asher','T-Deluxe-type (Bill Asher, offset T)',B.asher,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'plate','blade3','side'),pg:pgDef('none')}),
-  mkBody('styleo','Style O-type (Orville Gibson, archtop met krul)',B.styleo,false,{...GIB,scale:629,frets:20,pocket:40,bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side'),pg:pgDef('none')}),
+  mkBody('styleo','Style O-type (Orville Gibson, ruwe benadering)',B.styleo,false,{...GIB,scale:629,frets:20,pocket:40,bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side'),pg:pgDef('none')}),
   mkBody('firebird','Firebird-type (Gibson, doorlopende hals)',BODY_PTS2.firebird,false,{...GIB,scale:628.7,frets:22,pocket:40,pu1:PU('MINI',35),pu2:NOPU,pu3:PU('MINI',148),pg:pgDef('none')}),
   mkBody('iceman','Iceman-type (Ibanez)',BODY_PTS2.iceman,false,{...GIB,scale:628,frets:22,pocket:30,pu1:PU('HB',41),pu2:NOPU,pu3:PU('HB',143),pg:pgDef('none')}),
   mkBody('revstar','Revstar-type (Yamaha)',BODY_PTS2.revstar,false,{...GIB,scale:628.6,frets:22,pocket:45,pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',140),pg:pgDef('small')}),
@@ -1324,8 +1324,8 @@ function sel_(bind,lab,opts,extra=''){ return `<div class="row"><label>${lab}</l
 function optionsFor(type,excl,selId){
   const own=lib.designs.filter(x=>x.type===type&&!x.ref&&x.id!==excl), refs=lib.designs.filter(x=>x.type===type&&x.ref&&x.id!==excl);
   const o=x=>`<option value="${x.id}" ${x.id===selId?'selected':''}>${esc(x.name)}</option>`;
-  const nat=refs.filter(x=>/^ref-(h-)?n-/.test(x.id)), cls=refs.filter(x=>!/^ref-(h-)?n-/.test(x.id));
-  return `<optgroup label="Mijn ontwerpen">${own.map(o).join('')}</optgroup><optgroup label="Klassiekers (referentie)">${cls.map(o).join('')}</optgroup>${nat.length?`<optgroup label="Natuur &amp; architectuur">${nat.map(o).join('')}</optgroup>`:''}`;
+  const isR=x=>REF_ROUGH.includes(x.id.slice(4)), nat=refs.filter(x=>/^ref-(h-)?n-/.test(x.id)), rough=refs.filter(isR), cls=refs.filter(x=>!/^ref-(h-)?n-/.test(x.id)&&!isR(x));
+  return `<optgroup label="Mijn ontwerpen">${own.map(o).join('')}</optgroup><optgroup label="Klassiekers (referentie)">${cls.map(o).join('')}</optgroup>${nat.length?`<optgroup label="Natuur &amp; architectuur">${nat.map(o).join('')}</optgroup>`:''}${rough.length?`<optgroup label="Ruwe benaderingen (van foto)">${rough.map(o).join('')}</optgroup>`:''}`;
 }
 const PRESETS={
   turner:['Eén draaibare humbucker, 4 knoppen (Turner)',{bridge:'tom',pu1:PU('none',40),pu2:NOPU,pu3:PU('HBR',103,-6),ctrl:ctrlDef(4,'fan','none','side')}],
@@ -2185,7 +2185,9 @@ function exportSvg(d,pgOnly){
 // ================= inspirator =================
 const rnd01=()=>Math.random()*2-1, pick=a=>a[Math.floor(Math.random()*a.length)];
 const GEN_POOL=['i5t','revstar','stingray','l5','n-peer','n-blad','n-vleugel','n-schelp','n-kiezel','n-zandloper','n-golf','n-gotisch','n-romaans','strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
-const GEN_WILD=['iceman','firebird','explorer','moderne','n4','wolf','styleo'];
+const GEN_WILD=['iceman','firebird','explorer','moderne','n4'];
+// van een foto overgetekend en te veel een karikatuur van het origineel: apart, en standaard niet mee in het genereren
+const REF_ROUGH=['tiger','wolf','styleo','h-tiger'];
 let VECS=null;
 function refVecs(){ if(VECS) return VECS; VECS={}; lib.designs.filter(d=>d.ref&&d.type==='body').forEach(d=>{ try{ VECS[d.id.slice(4)]=shapeVec(geom(d).poly); }catch(e){} }); return VECS; }
 const refName=k=>{ const r=lib.designs.find(d=>d.id==='ref-'+k); return r?r.name.replace(/ \(.*\)$/,'').replace(/-type.*$/,''):k; };
@@ -2248,7 +2250,7 @@ function headFromPoly(poly,set,name,posts,nut){
   return d;
 }
 function vary(src,w){
-  if (src.type==='body'){ const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
+  if (src.type==='body'){ const L0=lobeInfo(geom(src).poly).lobes+(w>0.8?1:0);
     // variëren zoals een ontwerper: benoemde ingrepen, soms een organische zwaai; nooit mengen met een willekeurige andere vorm
     const d=moveCandidate(src,0.3+w*0.9); if(!d) return null; let poly=geom(d).poly; const org=insp.org!==false&&Math.random()<0.2+0.4*w; if(org) poly=organicFlow(poly,0.3+0.5*w,Math.random);
     const ok=finishBody(poly,L0); if(!ok) return null; const n=bodyFromPoly(ok,src.set,(org?'Organische variatie op ':'Variatie op ')+src.name.replace(/^(Organische )?[Vv]ariatie op /,'')); n.moves=(d.moves||[]).concat(org?['organische zwaai']:[]); return n; }
@@ -2271,7 +2273,7 @@ function thumbSVG(d,w,h,ghost){
 }
 const MB=$('#mbox');
 let insp={mode:'free',wild:0.5,items:[],pick:-1,goals:{bal:1,seat:1,reach:1,high:1,own:1,pull:1,short:1},run:0};
-insp.src=Object.assign({klas:1,nat:1,arch:1,wild:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!==false; if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
+insp.src=Object.assign({klas:1,nat:1,arch:1,wild:0,ruw:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!==false; if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
 const GOALS={body:[['bal','Staand'],['seat','Zittend'],['reach','Nut dichterbij'],['high','Hoge frets'],['own','Licht eigen'],['light','Lichter']],headstock:[['pull','Rechte trek'],['short','Korte snaar'],['lightH','Lichte kop'],['tree','Zonder snaarboom']]};
 const clamp01=v=>Math.max(0,Math.min(1,v));
 function goalVals(d){ refreshAuto(d);
@@ -2362,7 +2364,7 @@ const MODE_TXT={free:'Nieuwe vormen uit de bronnen die je aanzet: één bestaand
   vary:'Je eigen ontwerp blijft het vertrekpunt. De tool doet benoemde ingrepen (taille, hoorn, staart, schouder…) en zet erbij wat hij veranderde.',
   mash:'Twee tot vier vormen, elk voor een hoek van de body of kop, met vloeiende naden. Wildheid speelt hier niet mee, de bronnen wel.',
   goal:'Zoekt kleine aanpassingen die je ontwerp echt beter maken op wat je aanvinkt, zonder dat iets anders achteruit gaat.'};
-const SRC_TXT={klas:'Strat, Les Paul, SG…',nat:'peer, blad, schelp, golf…',arch:'gotische en Romaanse boog, art deco…',wild:'Explorer, Firebird, Iceman…'};
+const SRC_TXT={ruw:'van een foto overgetekend, minder juist: Tiger, Wolf, Style O',klas:'Strat, Les Paul, SG…',nat:'peer, blad, schelp, golf…',arch:'gotische en Romaanse boog, art deco…',wild:'Explorer, Firebird, Iceman…'};
 const GOAL_TXT={bal:'Staand: hangt hij aan de riem, dan zakt de kop niet. Het zwaartepunt komt verder van de hals.',
   seat:'Zittend: hij blijft rustig op je been liggen. De taille ligt dieper en dichter bij het zwaartepunt.',
   reach:'Nut dichterbij: je linkerhand hoeft minder ver te reiken naar de eerste frets.',
@@ -2438,7 +2440,17 @@ function polishBody(poly){ const H=halves(poly);
 const MAX_LOBES=9;
 function bodyOK(poly,maxL){ const L=lobeInfo(poly); return simplePoly(poly)&&L.lobes<=(maxL||MAX_LOBES); }
 // van een ruwe vorm naar een toonbare: bijwerken, keuren, of afwijzen (null)
-function finishBody(poly,maxL){ const p=polishBody(poly); return bodyOK(p,maxL)?p:null; }
+// gladstrijken zoals met een lange lat: kleine deukjes en bultjes eruit, de grote lijn blijft (Taubin: krimpt niet). De halsaansluiting blijft staan.
+function fairBody(poly,it){ let P=resampleClosed(poly,2.5); const n=P.length, ys=P.map(p=>p.y), top=Math.max(...ys);
+  const fix=P.map(p=>Math.abs(p.x)<POCKET_HW+14&&p.y>top-30);
+  const step=k=>{ const Q=P.map((p,i)=>{ if(fix[i]) return p; const a=P[(i-1+n)%n], b=P[(i+1)%n]; return {x:p.x+k*((a.x+b.x)/2-p.x),y:p.y+k*((a.y+b.y)/2-p.y)}; }); P=Q; };
+  for(let r=0;r<(it||30);r++){ step(0.5); step(-0.53); } return P; }
+// onrust van de lijn: hoe sterk de kromming schommelt op korte afstand (buiten de halsaansluiting). Rustige klassiekers: onder 6.
+function lineJitter(poly){ const P=resampleClosed(poly,3), n=P.length, ys=P.map(p=>p.y), top=Math.max(...ys), a=[];
+  for(let i=0;i<n;i++){ const A=P[(i+n-1)%n],B=P[i],C=P[(i+1)%n]; let t=Math.atan2(C.y-B.y,C.x-B.x)-Math.atan2(B.y-A.y,B.x-A.x); while(t>Math.PI)t-=2*Math.PI; while(t<-Math.PI)t+=2*Math.PI; a.push(t); }
+  let J=0,m=0; for(let i=0;i<n;i++){ if(Math.abs(P[i].x)<POCKET_HW+16&&P[i].y>top-35) continue; const d2=a[(i+1)%n]-2*a[i]+a[(i+n-1)%n]; if(Math.abs(a[i])<0.4){ J+=d2*d2; m++; } } return m?J*1000/m:0; }
+const JIT_MAX=6;
+function finishBody(poly,maxL){ const p0=polishBody(poly); if(!bodyOK(p0,maxL)) return null; let p=fairBody(p0,60); if(!bodyOK(p,maxL)) p=p0; return lineJitter(p)<=JIT_MAX?p:null; }
 // helften met en zonder hoorn niet door elkaar mengen: dat geeft halve hoorns en golvende flanken
 const hornOf=h=>h[28].y-h[0].y;
 function pickHalf(V,keys,side,rnd){ const k0=keys[Math.floor(rnd()*keys.length)], cls=hornOf(V[k0][side])>12, same=keys.filter(k=>k!==k0&&(hornOf(V[k][side])>12)===cls), out=[[k0,1]], n=rnd()<0.6?1:2;
@@ -2454,8 +2466,8 @@ function organicFlow(poly,amt,rnd){ const P=resampleClosed(poly,3), ys=P.map(p=>
     return {x,y}; });
   return smoothZones(Q,[{bot:y0+L*2}],1e4,4); }
 // bronnen voor genereren: klassiekers, natuur, architectuur, uitgesproken vormen. Je kiest zelf welke meedoen.
-const SRC_CATS=[['klas','Klassiekers'],['nat','Natuur'],['arch','Architectuur'],['wild','Uitgesproken']];
-function srcCat(id){ const k=id.replace(/^ref-(h-)?/,''), r=lib.designs.find(d=>d.id===id); const nm=r?r.name:''; if(/architectuur/.test(nm)) return 'arch'; if(/natuur/.test(nm)) return 'nat'; if(GEN_WILD.includes(k)||/^(iceman|firebird|explorer|moderne|n4|wolf|styleo|rhoads|c5150)$/.test(k)) return 'wild'; return 'klas'; }
+const SRC_CATS=[['klas','Klassiekers'],['nat','Natuur'],['arch','Architectuur'],['wild','Uitgesproken'],['ruw','Ruwe benaderingen']];
+function srcCat(id){ const k=id.replace(/^ref-(h-)?/,''), r=lib.designs.find(d=>d.id===id); const nm=r?r.name:''; if(REF_ROUGH.includes(id.replace(/^ref-/,''))) return 'ruw'; if(/architectuur/.test(nm)) return 'arch'; if(/natuur/.test(nm)) return 'nat'; if(GEN_WILD.includes(k)||/^(iceman|firebird|explorer|moderne|n4|wolf|styleo|rhoads|c5150)$/.test(k)) return 'wild'; return 'klas'; }
 function srcOn(id){ const S=insp.src||{}; return !!S[srcCat(id)]; }
 function bodyPool(){ return [...new Set(GEN_POOL.concat(GEN_WILD,['n-deco'],lib.designs.filter(d=>d.ref&&d.type==='body'&&/^ref-n-/.test(d.id)).map(d=>d.id.slice(4))))].filter(k=>refVecs()[k]&&srcOn('ref-'+k)); }
 // wildheid: hoe ver een voorstel van elke bestaande vorm mag liggen (gemeten op de omtrek). Elke trap heeft een eigen band.
@@ -2465,6 +2477,10 @@ const WILD_LV=[{w:0.1,n:'Dicht bij de bron',lo:0,hi:0.011,amp:0.2,txt:'Herkenbaa
   {w:1,n:'Wild',lo:0.029,hi:1,amp:2.4,txt:'Ver van alles wat bestaat. Elke vorm blijft gekeurd: bouwbaar en een schone lijn.'}];
 const wildLv=w=>WILD_LV.reduce((b,l)=>Math.abs(l.w-w)<Math.abs(b.w-w)?l:b,WILD_LV[0]);
 let REFSIG=null;
+const FAIRS={}; function refFair(k){ if(!FAIRS[k]){ const r=lib.designs.find(d=>d.id==='ref-'+k); FAIRS[k]=r?shapeFair(geom(r)):{E:3,flips:8}; } return FAIRS[k]; }
+// rustig als de bron: niet meer keren dat de lijn van richting wisselt, en niet meer onrust dan de bronnen hebben
+function calmAs(poly,keys,extra){ const f=shapeFair({poly}), P=keys.map(refFair); return f.flips<=Math.max(...P.map(x=>x.flips))+(extra?1:0)&&f.E<=Math.max(...P.map(x=>x.E))*(extra?1.35:1.15); }
+const LOBES={}; function refLobes(k){ if(LOBES[k]==null){ const r=lib.designs.find(d=>d.id==='ref-'+k); LOBES[k]=r?lobeInfo(geom(r).poly).lobes:MAX_LOBES; } return LOBES[k]; }
 // wat je al te zien kreeg, per tab en soort (en per ontwerp bij variaties en verbeteringen): een nieuwe reeks toont eerst verse vormen
 const SEEN={};
 function seenKey(){ return lib.tab+':'+insp.mode+(insp.mode==='vary'||insp.mode==='goal'?':'+D().id:''); }
@@ -2474,14 +2490,15 @@ function novelty(d){ if(!REFSIG) REFSIG=lib.designs.filter(x=>x.ref&&x.type===d.
 function genBody(w,amp){ const V=refVecs(), pool=bodyPool(), org0=insp.org===false?0:1; if(!pool.length) return null; if(amp==null) amp=w;
   const single=Math.random()<Math.max(0.15,0.85-amp*0.35);
   // één vorm nemen (ook uit natuur en architectuur) en hem bewust bijsturen, zoals een ontwerper; hoe wilder, hoe meer ingrepen na elkaar
-  if(single){ for(let i=0;i<10;i++){ const k=pick(pool), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
+  if(single){ for(let i=0;i<10;i++){ const k=pick(pool), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=refLobes(k)+(amp>1.5?1:0), K=[k];
       let m=clone(src); const rounds=1+Math.floor(amp*1.2+Math.random()*amp); for(let r=0;r<rounds;r++){ const q=moveCandidate(m,Math.min(1.6,0.25+amp*0.6)); if(q) m=q; }
       let poly=geom(m).poly; const org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2,0.3+0.6*amp),Math.random);
-      const ok=finishBody(poly,L0); if(ok) return bodyFromPoly(ok,src.set,refName(k)+(org?', organisch':', bijgestuurd')); } }
+      const ok=finishBody(poly,L0); if(ok&&calmAs(ok,K,amp>1.5)) return bodyFromPoly(ok,src.set,refName(k)+(org?', organisch':', bijgestuurd')); } }
   if(pool.length<2) return null;
-  for(let i=0;i<14;i++){ const pT=pickHalf(V,pool,'t',Math.random), pB=Math.random()<0.45?pT.map(x=>[...x]):pickHalf(V,pool,'b',Math.random);
-    const g=blendBody(V,pool,Math.random,{amt:Math.min(2.6,0.3+amp*1.0),pT,pB}); let poly=g.poly, org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2.2,0.5+amp*0.7),Math.random);
-    const ok=finishBody(poly,amp>1.2?10:MAX_LOBES); if(!ok) continue;
+  const fam=k=>{ const c=srcCat('ref-'+k); return c==='nat'||c==='arch'?'org':c; };
+  for(let i=0;i<14;i++){ const k0=pick(pool), sub=pool.filter(k=>fam(k)===fam(k0)), use=sub.length>=2?sub:pool; const pT=pickHalf(V,use,'t',Math.random), pB=Math.random()<(amp>1.2?0.5:0.7)?pT.map(x=>[...x]):pickHalf(V,use,'b',Math.random);
+    const g=blendBody(V,use,Math.random,{amt:Math.min(2.6,0.3+amp*1.0),pT,pB}); let poly=g.poly, org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2.2,0.5+amp*0.7),Math.random);
+    const PK=[...new Set(g.parents.t.concat(g.parents.b))], ok=finishBody(poly,Math.max(...PK.map(refLobes))+(amp>1.5?1:0)); if(!ok||!calmAs(ok,PK,amp>1.5)) continue;
     const main=lib.designs.find(d=>d.id==='ref-'+g.parents.t[0])||defaultBody(), nm=[...new Set(g.parents.t.concat(g.parents.b))].slice(0,3).map(refName).join(' × ');
     return bodyFromPoly(ok,main.set,nm+(org?', organisch':'')); }
   return null; }
