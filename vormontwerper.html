@@ -2526,7 +2526,7 @@ $('#modal').addEventListener('change',e=>{ if(e.target.dataset.m==='wild') rollI
 
 // ================= render: de hele gitaar als beeld =================
 const WOOD_COL={vuren:'#e3c9a0',grenen:'#dcb27a',els:'#d6ab7f',essen:'#d9bd8f',essen2:'#d2b385',mahonie:'#8e4c2b',okoume:'#b47e58',linde:'#e4cca2',walnoot:'#674530',esdoorn:'#e6cb98',paulownia:'#dbc199',ander:'#c49c6c'};
-const FINISH={hout:['Hout naturel'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
+const FINISH={hout:['Hout naturel'],noten:['Notelaar (walnoot)'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
 const BOARD={pal:['Palissander','#4a2c1e'],ebben:['Ebben','#1c1714'],esdoorn:['Esdoorn','#e2c48e']};
 const NECKC={esdoorn:['Esdoorn','#e2c48e'],mahonie:['Mahonie','#8e4c2b'],roast:['Geroosterde esdoorn','#b9814a']};
 const PUCOL={zwart:['Zwart','#1a1a1a'],creme:['Crème','#efe6cf'],wit:['Wit','#f6f5f0'],metaal:['Metaal (zoals de hardware)']};
@@ -2537,7 +2537,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   const X=x=>(x-minX).toFixed(2), Y=y=>(maxY-y).toFixed(2), P=(x,y)=>X(x)+','+Y(y);
   const pth=(segs,dy=0)=>{ let p=''; segs.forEach((q,i)=>{ if(!i) p+=`M${P(q[0].x,q[0].y+dy)}`; p+=`C${P(q[1].x,q[1].y+dy)} ${P(q[2].x,q[2].y+dy)} ${P(q[3].x,q[3].y+dy)}`; }); return p+'Z'; };
   const poly=pts=>pts.map(p=>P(p.x,p.y)).join(' '), rc=(R,st)=>`<polygon points="${poly(rectCorners(R))}" ${st}/>`;
-  const M=(METAL[o.metal]||METAL.chroom)[1], wood=WOOD_COL[s.wood]||WOOD_COL.ander, fin=FINISH[o.fin]||FINISH.hout, solid=fin[1];
+  const M=(METAL[o.metal]||METAL.chroom)[1], wood=o.fin==='noten'?WOOD_COL.walnoot:(WOOD_COL[s.wood]||WOOD_COL.ander), fin=FINISH[o.fin]||FINISH.hout, solid=fin[1];
   const neckC=(NECKC[o.neck]||NECKC.esdoorn)[1], boardC=(BOARD[o.board]||BOARD.pal)[1];
   let d=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" width="${W.toFixed(0)}" height="${H.toFixed(0)}">
 <defs>
@@ -2555,7 +2555,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   const topY=ctx.topY, heelY=ctx.pocketEnd, nhw=y=>neckHW(s,y), fbEnd=ctx.fbEnd;
   // hals onder de body tekenen is niet nodig; eerst body met schaduw
   d+=`<g filter="url(#sh)"><path d="${pth(g.segs)}" fill="url(#fin)"/></g>`;
-  if(!solid||o.fin==='goud') d+=grain(g.minX,g.maxX,g.minY,g.maxY,o.fin==='burst'?'#2a1408':'#5a3a20','cb');
+  if(!solid||o.fin==='goud') d+=grain(g.minX,g.maxX,g.minY,g.maxY,o.fin==='burst'||o.fin==='noten'?'#2a1408':'#5a3a20','cb');
   if(s.inside==='semi'&&false) d+='';
   d+=`<g clip-path="url(#cb)"><path d="${pth(g.segs)}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="16" filter="url(#bev)"/></g><path d="${pth(g.segs)}" fill="url(#gloss)"/>`;
   holePolys(b).forEach(h=>h.rings.forEach(r=>{ d+=`<polygon points="${poly(r)}" fill="#120c08" stroke="#000" stroke-opacity=".5" stroke-width=".8"/><polygon points="${poly(r.map(p=>({x:p.x+0.8,y:p.y-0.8})))}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width=".8"/>`; }));
@@ -2574,7 +2574,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   d+=`<polygon points="${poly(neckPts)}" fill="url(#nk)"/>`;
   d+=`<rect x="${X(-s.nutW/2-0.5)}" y="${Y(yN+3)}" width="${(s.nutW+1).toFixed(1)}" height="3" fill="#efe8d8"/>`;
   // kop
-  if (hg){ d+=`<g filter="url(#sh)"><path d="${pth(hg.segs,sc)}" fill="${o.fin==='zwart'||o.fin==='wit'||o.fin==='rood'||o.fin==='blauw'||o.fin==='groen'?solid:neckC}"/></g>`+grain(hg.minX,hg.maxX,sc,sc+hg.maxY,'#5a3a20','ch')+`<g clip-path="url(#ch)"><path d="${pth(hg.segs,sc)}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bev)"/></g><path d="${pth(hg.segs,sc)}" fill="url(#gloss)"/>`;
+  if (hg){ d+=`<g filter="url(#sh)"><path d="${pth(hg.segs,sc)}" fill="${o.fin==='zwart'||o.fin==='wit'||o.fin==='rood'||o.fin==='blauw'||o.fin==='groen'?solid:o.fin==='noten'?WOOD_COL.walnoot:neckC}"/></g>`+grain(hg.minX,hg.maxX,sc,sc+hg.maxY,o.fin==='noten'?'#2a1408':'#5a3a20','ch')+`<g clip-path="url(#ch)"><path d="${pth(hg.segs,sc)}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bev)"/></g><path d="${pth(hg.segs,sc)}" fill="url(#gloss)"/>`;
     h.posts.forEach(p=>{ const hs=housing(h,hg,p); d+=`<rect x="${X(hs.end+hs.dir*7-7)}" y="${Y(sc+p.y+h.set.housW/2+2)}" width="14" height="${(h.set.housW+4).toFixed(1)}" rx="4" fill="url(#met)" opacity=".95"/>`; d+=`<circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.holeD/2+2).toFixed(1)}" fill="url(#met)"/><circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.postD/2).toFixed(1)}" fill="${M[2]}"/>`; }); }
   // hardware
   ctx.br.forEach(q=>{ d+= q.r!=null?`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="${q.r}" fill="url(#met)"/>`:rc(q,'fill="url(#met)" stroke="#000" stroke-opacity=".3" stroke-width=".6"'); });
