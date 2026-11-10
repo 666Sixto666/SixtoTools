@@ -2529,8 +2529,9 @@ const WOOD_COL={vuren:'#e3c9a0',grenen:'#dcb27a',els:'#d6ab7f',essen:'#d9bd8f',e
 const FINISH={hout:['Hout naturel'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
 const BOARD={pal:['Palissander','#4a2c1e'],ebben:['Ebben','#1c1714'],esdoorn:['Esdoorn','#e2c48e']};
 const NECKC={esdoorn:['Esdoorn','#e2c48e'],mahonie:['Mahonie','#8e4c2b'],roast:['Geroosterde esdoorn','#b9814a']};
+const PUCOL={zwart:['Zwart','#1a1a1a'],creme:['Crème','#efe6cf'],wit:['Wit','#f6f5f0'],metaal:['Metaal (zoals de hardware)']};
 const METAL={chroom:['Chroom',['#f4f6f7','#9aa2a8','#5d656b']],zwart:['Zwart',['#6a6a6a','#2a2a2a','#111']],goud:['Goud',['#fff1b8','#c9a24a','#7a5a1c']]};
-function rndOpt(){ const r=lib.view.rnd||(lib.view.rnd={}); return Object.assign({fin:'hout',board:'pal',neck:'esdoorn',metal:'chroom'},r); }
+function rndOpt(){ const r=lib.view.rnd||(lib.view.rnd={}); return Object.assign({fin:'hout',board:'pal',neck:'esdoorn',metal:'chroom',pu:'zwart'},r); }
 function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(b), hg=h?geom(h):null, sc=s.scale;
   const minX=Math.min(g.minX,hg?hg.minX:0)-30, maxX=Math.max(g.maxX,hg?hg.maxX:0)+30, minY=g.minY-30, maxY=(hg?sc+hg.maxY:sc+40)+30, W=maxX-minX, H=maxY-minY;
   const X=x=>(x-minX).toFixed(2), Y=y=>(maxY-y).toFixed(2), P=(x,y)=>X(x)+','+Y(y);
@@ -2578,7 +2579,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   // hardware
   ctx.br.forEach(q=>{ d+= q.r!=null?`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="${q.r}" fill="url(#met)"/>`:rc(q,'fill="url(#met)" stroke="#000" stroke-opacity=".3" stroke-width=".6"'); });
   ctx.pus.forEach(p=>{ const t=s[p.k].t; if(t==='HBR') d+=`<circle cx="${X(0)}" cy="${Y(p.route.cy)}" r="${RH_R}" fill="#111" opacity=".85"/>`;
-    d+=rc(p.cover,`fill="${/^HB|MINI/.test(t)?'#1a1a1a':'#f1ece0'}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`);
+    d+=rc(p.cover,`fill="${o.pu==='metaal'?'url(#met)':(PUCOL[o.pu]||PUCOL.zwart)[1]}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`);
     const n=s.strings, sp=Math.min(p.cover.w-14,s.spBridge); for(let i=0;i<n;i++){ const x=-sp/2+i*sp/(n-1||1), a=(p.cover.a||0)*Math.PI/180, yy=p.cover.cy+x*Math.sin(a); d+=`<circle cx="${X(x*Math.cos(a))}" cy="${Y(yy)}" r="1.6" fill="url(#met)"/>`; } });
   (s.ctrl.items||[]).forEach(it=>{ if(it.t==='knob') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="${(s.ctrl.knobD/2-2).toFixed(1)}" fill="${o.metal==='goud'?'url(#met)':'#1d1b1a'}" stroke="#000" stroke-opacity=".5"/><circle cx="${X(it.x-2)}" cy="${Y(it.y+2)}" r="${(s.ctrl.knobD/4).toFixed(1)}" fill="#fff" opacity=".12"/>`;
     else if(it.t==='sw') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="6" fill="url(#met)"/><circle cx="${X(it.x)}" cy="${Y(it.y)}" r="3" fill="#f1ece0"/>`;
@@ -2597,8 +2598,8 @@ function openRender(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===
   const h=partnerHead(b), o=rndOpt(), r=guitarSVG(b,h,o), opt=(k,obj)=>`<select data-r="${k}">${Object.entries(obj).map(([a,v])=>`<option value="${a}" ${o[k]===a?'selected':''}>${v[0]}</option>`).join('')}</select>`;
   MB.innerHTML=`<div class="mhead"><h2>🎨 Render · ${esc(b.name)}</h2><button data-m="close">✕</button></div>
   <div class="rnd"><div class="rimg">${r.svg.replace('<svg ','<svg style="width:100%;height:100%" ')}</div>
-  <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div><div class="row"><label>Hals</label>${opt('neck',NECKC)}</div><div class="row"><label>Hardware</label>${opt('metal',METAL)}</div>
-  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Kies hem bij Hardware → Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
+  <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div><div class="row"><label>Hals</label>${opt('neck',NECKC)}</div><div class="row"><label>Hardware</label>${opt('metal',METAL)}</div><div class="row"><label>Pickups (alle)</label>${opt('pu',PUCOL)}</div>
+  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Kies hem bij Kop en render.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
   openModal(); rndBlob=null; svgToPng(r.svg,r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
 MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; save(); openRender(); });
 MB.addEventListener('click',e=>{ const t=e.target.closest('[data-r=save]'); if(t&&rndBlob){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); shareFile(rndBlob,fileSafe(b?b.name:'gitaar')+'_render.png'); }
