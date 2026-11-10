@@ -25,7 +25,7 @@ button:disabled{opacity:.45;cursor:default}
 button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 button.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
 select,input{font:inherit;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:#fff;color:var(--ink)}
-input[type=number]{width:78px;text-align:right}
+input[type=number],input[data-n]{width:78px;text-align:right}
 .spacer{flex:1}
 main{position:absolute;top:54px;left:0;right:0;bottom:0;display:flex}
 #stage{position:relative;flex:1;min-width:0;overflow:hidden}
@@ -55,7 +55,7 @@ section h3{font-size:12.5px;margin:10px 0 4px;color:var(--ink)}
 .tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
 .tbl th{font-weight:500;color:var(--muted);text-align:left;font-size:12px}
 .tbl td{padding:2px 2px}
-.tbl input[type=number]{width:60px}
+.tbl input[type=number],.tbl input[data-n]{width:60px}
 .tbl select{max-width:120px}
 .edit{background:#fff7ef;border:1px solid #f0d9c6;border-radius:6px}
 #pillW,#tools #moreGrp{display:none}
@@ -153,26 +153,55 @@ details section{border-bottom:0;padding-top:4px}
   #help,#cursor{display:none}
   #modeHint{background:rgba(255,255,255,.95);border-radius:14px;padding:4px 12px;text-align:center}
   #modeHint:empty{display:none}
-  input[type=number]{width:84px}
+  input[type=number],input[data-n]{width:84px}
+  .nw input[data-n]{width:64px!important}
+  .ideas:not(.bouw){grid-template-columns:repeat(4,1fr);gap:5px}.ideas:not(.bouw) .idea{min-height:0;padding:3px 1px 4px;font-size:11.5px}.ideas:not(.bouw) .idea svg{height:58px}
+  #tools #tabGrp.keep{display:flex}#tabGrp button{min-height:44px;padding:0 11px;font-size:14px;border-color:transparent;background:transparent}#tabGrp button.on{background:var(--ink);color:#fff;border-radius:7px}
+  .hint{font-size:13px}
   #modal .box{width:calc(100% - 12px);max-height:calc(100% - 12px);padding:12px}
   .grid{grid-template-columns:repeat(2,1fr)}
   .mash .ctl{min-width:0}
   .mash svg{max-width:100%;height:auto}
-  #toast{bottom:calc(88px + env(safe-area-inset-bottom));max-width:90%;text-align:center}
-  body.sheet #toast{bottom:calc(54% + 54px)}
+  #toast{top:calc(66px + env(safe-area-inset-top));bottom:auto;max-width:90%;text-align:center}
 }
 @media (max-height:520px) and (orientation:landscape){
   main{flex-direction:row}
   aside{flex:0 0 340px;border-top:0;border-left:2px solid var(--line)}
-  body.sheet #toast{bottom:62px}
 }
+.row{flex-wrap:wrap}.row>label{flex:1 1 110px}
+.nw{display:inline-flex;align-items:center;gap:3px}.nw input[data-n]{width:68px!important}
+.stp{width:32px;height:32px;padding:0;font-size:18px;line-height:1;flex:none;touch-action:none;-webkit-user-select:none;user-select:none;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;flex:0 1 auto;margin-left:auto}.seg button{padding:5px 10px;min-height:32px}.seg button.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+@media (pointer:coarse){.stp{width:40px;height:40px;font-size:20px}.seg button{min-height:40px}}
+#stepNav{position:sticky;top:0;z-index:3;display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:7px 10px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)}#stepNav::-webkit-scrollbar{display:none}
+#stepNav button{flex:none;padding:5px 10px;border-radius:16px;font-size:13px;white-space:nowrap;min-height:34px}#stepNav button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+[data-nav]{scroll-margin-top:52px}
+.iopt{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#faf8f4}.ilab{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:6px 0 4px}.iopt .hint{margin:4px 0 6px}
+.glist{display:flex;flex-direction:column;gap:5px}.gl{display:flex;gap:8px;align-items:flex-start;text-align:left;padding:7px 9px;font-size:13px;line-height:1.3}.gl .gck{flex:none;width:18px;height:18px;border:1.5px solid var(--muted);border-radius:4px;text-align:center;line-height:15px;font-size:13px}.gl.on{background:#eef4f7;border-color:var(--accent2);color:var(--ink)}.gl.on .gck{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.ilst{text-align:left;font-size:11.5px;color:var(--ink);margin-top:4px}.ilst b{font-weight:600;color:var(--muted)}.ilst ul{margin:1px 0 0;padding-left:15px}
+.iopt .chips.cells,.chips.cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:5px}.chips.cells button{line-height:1.2;min-height:36px;padding:5px 6px}
+.seg.segw{flex:1 1 100%;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;margin-left:0}.seg.segw button{line-height:1.2;padding:5px 4px}
+#tools #tabGrp{display:none}#tools #tgtGrp.off{display:none!important}
+/* één stijl voor wat gekozen is: blauwgroen. Oranje alleen voor de hoofdknoppen. */
+.idea.on,.th.on{background:#eef4f7!important;border-color:var(--accent2)!important}#stepNav button.on{background:var(--accent2);border-color:var(--accent2)}
+/* kaarten */
+aside{background:#f6f2ec}
+aside>section,aside>details{margin:10px 10px 0;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+aside>details:last-child{margin-bottom:14px}aside>p.hint{margin:12px 14px 2px!important}
+aside>details>summary{padding:12px 14px}
+.qsum{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--muted);margin-left:6px}.qsum .dot{width:8px;height:8px;vertical-align:0}
+#cv text{paint-order:stroke fill;stroke:#fbf9f6;stroke-width:3px;stroke-linejoin:round}
+#mbox{padding-top:0;padding-bottom:0}.mhead{position:sticky;top:0;z-index:4;background:#fff;padding:12px 0 8px;border-bottom:1px solid #f0ebe3}
+.mfoot{position:sticky;bottom:0;z-index:4;background:#fff;padding:10px 0 12px;border-top:1px solid var(--line)}
+.th{padding:6px}.th svg{display:block;margin:0 auto}
+@media (min-width:901px){aside{width:400px}}
 .stepn{display:inline-block;min-width:20px;height:20px;line-height:20px;border-radius:10px;background:#b5541c;color:#fff;font-size:12px;text-align:center;margin-right:7px;vertical-align:1px}.hint.flow{margin:-4px 0 8px}
 </style>
 </head>
 <body>
 <header>
   <h1>Sixto <span>Vormontwerper</span></h1>
-  <div class="tabs"><button data-tab="body">Body</button><button data-tab="headstock">Headstock</button></div>
+  <div class="tabs"><button data-tab="body">Body</button><button data-tab="headstock">Kop</button></div>
   <select id="designSel" title="Kies ontwerp" style="max-width:240px"></select>
   <button data-act="new">Nieuw</button>
   <button data-act="dup">Dupliceer</button>
@@ -193,6 +222,7 @@ details section{border-bottom:0;padding-top:4px}
         <button id="histN" data-act="histList" title="Alle stappen zien en terugspringen" aria-label="Alle stappen">0</button>
         <button id="redoB" data-act="redo" title="Opnieuw (Ctrl+Y)" aria-label="Opnieuw">↷</button>
       </div>
+      <div class="grp keep" id="tabGrp"><button data-tab="body">Body</button><button data-tab="headstock">Kop</button><button data-act="insp" aria-label="Inspirator" title="Inspirator">✨</button></div>
       <div class="grp" id="modeGrp">
         <button data-mode="edit" title="Punten en onderdelen slepen">✋ Bewerken</button>
         <button data-mode="measure" title="Sleep om een afstand te meten">📏 Meten</button>
@@ -205,9 +235,9 @@ details section{border-bottom:0;padding-top:4px}
       </div>
       <div class="grp">
         <button data-act="insp" title="Willekeurige vormen en variaties">✨ Inspirator</button>
-        <button data-act="mash" title="Combineer tot 4 vormen, één per hoek">🧩 Mashup</button>
+        <button data-act="mash" title="Combineer tot 4 vormen, één per hoek">🧩 Hoeken mengen</button>
       </div>
-      <div class="grp" id="tgtGrp" style="display:none">
+      <div class="grp off" id="tgtGrp">
         <span style="padding:5px 4px;color:var(--muted)">Je bewerkt:</span>
         <button data-act="tgtBody">Body</button>
         <button data-act="tgtPG">Pickguard</button>
@@ -272,12 +302,12 @@ function defaultBody(){
     set:{scale:648, frets:22, strings:6, nutW:43, heelW:56, pocket:50, spNut:35, spBridge:52,
       bridge:'tom', pu1:{t:'HB',d:40,a:0}, pu2:{t:'none',d:95,a:0}, pu3:{t:'HB',d:140,a:0},
       ctrl:ctrlDef(3,'square','toggle3','side'), pg:pgDef('none'),
-      thick:45, wood:'els', dens:0.5, inside:'solid'},
+      thick:45, wood:'vuren', dens:0.5, inside:'solid'},
     bg:null };
 }
 function defaultHead(noPosts){
   const P = [[0,170,1],[2.5,171.5,0],[8,172,0],[21.5,165,0],[38,164,1],[34,121.5,0],[32.5,81,0],[33.5,49.5,0],[35,37.5,0],[25,19.5,0],[21.25,0,1],[0,0,1]]; // afgeleid van een echte open-book kop
-  const d = { id:uid(), type:'headstock', name:'Nieuwe headstock', sym:true, tension:1,
+  const d = { id:uid(), type:'headstock', name:'Nieuwe kop', sym:true, tension:1,
     pts:P.map(([x,y,c])=>({x,y,c:!!c})),
     set:{strings:6, nutW:42.5, spNut:35, layout:'split', auto:true, first:58.5, spacing:34.5, xoff:21, slant:0, pat:null,
       tuner:'grover', holeD:10, postD:6, housW:16, housL:32, minSp:30, rod:'head'},
@@ -381,7 +411,7 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('mm','Melody Maker-type',B.mm,false,{...GIB,pocket:40,bridge:'wrap',pu1:PU('SC',40),pu2:NOPU,pu3:PU('SC',140),ctrl:ctrlDef(4,'square','toggle3','side'),pg:pgDef('full',20)}),
   mkBody('prs','PRS-type',B.prs,false,{...GIB,scale:635,pocket:20,bridge:'wrap',ctrl:ctrlDef(2,'diag','blade5','side'),pg:pgDef('none')}),
   mkBody('super','Superstrat-type (5150)',B.c5150,false,{...FEN,frets:22,pu1:PU('HB',40),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(1,'row','none','side'),pg:pgDef('none')}),
-  mkBody('js','JS-type (Ibanez)',B.js,false,{...FEN,frets:24,pocket:62,pu1:PU('HB',40),pu2:PU('SC',90),pu3:PU('HB',136),ctrl:ctrlDef(2,'diag','blade5','side'),pg:pgDef('none')}),
+  mkBody('js','Ibanez JS-type',B.js,false,{...FEN,frets:24,pocket:62,pu1:PU('HB',40),pu2:PU('SC',90),pu3:PU('HB',136),ctrl:ctrlDef(2,'diag','blade5','side'),pg:pgDef('none')}),
   mkBody('axis','Axis-type (Music Man)',B.axis,false,{...FEN,frets:22,pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',145),ctrl:ctrlDef(2,'diag','toggle3','side'),pg:pgDef('none')}),
   mkBody('albertlee','Albert Lee-type (Music Man)',B.albertlee,false,{...FEN,frets:22,ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('full',22)}),
   mkBody('n4','N4-type (Washburn)',B.n4,false,{...FEN,frets:22,pocket:70,pu1:PU('HB',40),pu2:NOPU,pu3:PU('SC',146),ctrl:ctrlDef(1,'row','toggle3','side'),pg:pgDef('none')}),
@@ -464,7 +494,7 @@ let lib = load();
 const CMP=matchMedia('(max-width:900px),(max-height:520px)');
 if (CMP.matches && matchMedia('(pointer:coarse)').matches && !lib.view.cmpInit){ lib.view.cmpInit=true; lib.view.grid=false; lib.view.dims=false; lib.view.wline=false; }
 function setMenu(on){ const b=document.body; if(b.classList.contains('menu')===!!on) return; b.classList.toggle('menu',!!on); resize(); render(); }
-function setSheet(on){ document.body.classList.toggle('sheet',!!on); pillUI(); fit(); }
+function setSheet(on){ document.body.classList.toggle('sheet',!!on); pillUI(); fit(); if(lib.view.sheet!==!!on){ lib.view.sheet=!!on; save(); } }
 function pillUI(){ const on=document.body.classList.contains('sheet'), p=$('#pill'); if(!p) return; p.textContent=on?'▾':'▴ Instellingen'; $('#pillUse').style.display=(D().ref&&!on)?'':'none'; }
 let saveT = null;
 function save(){
@@ -502,14 +532,15 @@ function snap(d){ if(!d.bg||!d.bg.src) return JSON.stringify(d); const s=d.bg.sr
 function unsnap(json,cur){ const n=JSON.parse(json); if(n.bg&&String(n.bg.src).startsWith('img:')){ const s=bgPool[n.bg.src]||(cur.bg&&cur.bg.src); if(s) n.bg.src=s; else n.bg=null; } return n; }
 function histOf(d){ return hist[d.id]||(hist[d.id]={u:[],r:[],cur:snap(d)}); }
 function diffLabel(a,b){ try { const A=JSON.parse(a), B=JSON.parse(b), same=k=>JSON.stringify(A[k])===JSON.stringify(B[k]), S=k=>JSON.stringify((A.set||{})[k])===JSON.stringify((B.set||{})[k]);
-    if(!same('name')) return 'Naam'; if(!same('pts')||!same('tension')||!same('sym')) return 'Vorm'; if(!same('posts')) return 'Mechanieken'; if(!same('bg')) return 'Achtergrond';
+    if(!same('name')) return 'Naam'; if(!same('pts')||!same('tension')||!same('sym')){ try{ const ga=geom(A), gb=geom(B), dw=(gb.maxX-gb.minX)-(ga.maxX-ga.minX), dl=(gb.maxY-gb.minY)-(ga.maxY-ga.minY), sg=v=>(v>0?'+':'−')+fmt(Math.abs(v),0)+' mm';
+      if(Math.abs(dw)>=1&&Math.abs(dw)>=Math.abs(dl)) return 'Vorm: breedte '+sg(dw); if(Math.abs(dl)>=1) return 'Vorm: lengte '+sg(dl); if(A.pts.length!==B.pts.length) return B.pts.length>A.pts.length?'Vorm: punt erbij':'Vorm: punt weg'; if(!same('tension')) return 'Vorm: lijn '+(B.tension>A.tension?'ronder':'strakker'); }catch(e){} return 'Vorm: lijn bijgewerkt'; } if(!same('posts')) return 'Mechanieken'; if(!same('bg')) return 'Achtergrond';
     if(!S('strapF')) return 'Riemknop'; if(!S('pu1')||!S('pu2')||!S('pu3')) return 'Elementen'; if(!S('bridge')) return 'Brug'; if(!S('wood')||!S('dens')) return 'Hout'; if(!S('thick')) return 'Dikte';
     if(['scale','frets','fbFret','strings','nutW','heelW','pocket','spNut','spBridge'].some(k=>!S(k))) return 'Hals en snaren'; if(!S('inside')) return 'Kamers'; if(!S('sh')) return 'Klankgaten'; if(!S('neckWood')) return 'Halshout'; if(!S('ctrl')) return 'Knoppen'; if(!S('pg')) return 'Pickguard';
   } catch(e){} return 'Aanpassing'; }
 function histCommit(d){ if(d.ref) return; const h=histOf(d), s=snap(d); if(s===h.cur) return; h.u.push({s:h.cur,t:diffLabel(h.cur,s),at:Date.now()}); if(h.u.length>HIST_MAX) h.u.shift(); h.r=[]; h.cur=s; histUI(); histSave(); }
 function histFlush(){ if(!histT) return; clearTimeout(histT); histT=null; const x=lib.designs.find(q=>q.id===histPend); if(x) histCommit(x); }
 function pushUndo(){ histFlush(); } // de vorige stap afsluiten, zodat twee handelingen niet samenvallen
-function histAfterUpdate(){ const a=document.activeElement, soft=histSoft||(a&&a.matches&&a.matches('input[type=number],input[type=text],textarea')); histSoft=false; if(soft){ histFlush(); histPend=D().id; histT=setTimeout(histFlush,700); } else { histFlush(); histCommit(D()); } }
+function histAfterUpdate(){ const a=document.activeElement, soft=histSoft||(a&&a.matches&&a.matches('input[type=number],input[data-n],input[type=text],textarea')); histSoft=false; if(soft){ if(!(histT&&histPend===D().id)){ histFlush(); histPend=D().id; } clearTimeout(histT); histT=setTimeout(histFlush,700); } else { histFlush(); histCommit(D()); } }
 function histUI(){ const d=D(), h=d.ref?{u:[],r:[]}:histOf(d), u=$('#undoB'), r=$('#redoB'), n=$('#histN'); if(!u) return; u.disabled=!h.u.length; r.disabled=!h.r.length; n.disabled=!h.u.length&&!h.r.length; n.textContent=h.u.length; }
 function histStep(n){ histFlush(); const d=D(); if(d.ref) return ''; const h=histOf(d), a=document.activeElement; if(a&&a.blur&&a!==document.body) a.blur();
   const old=d.type==='body'?clone(d.set.ctrl.items||[]):null; let last='';
@@ -880,7 +911,13 @@ function autoControls(d,ctx){
   items.forEach(it=>{ it.x=Math.round(it.x*10)/10; it.y=Math.round(it.y*10)/10; });
   c.items=items;
 }
-function autoPG(d,ctx){
+// de pickguard blijft altijd binnen de body: wat de vloeiende lijn tussen de ankerpunten buiten de rand duwt, wordt teruggelegd op de rand (min. de marge)
+function autoPG(d,ctx){ autoPG0(d,ctx); const pg=d.set.pg; if(pg.pts&&pg.pts.length>=3) pgContain(d,ctx); }
+function pgContain(d,ctx){ const pg=d.set.pg, g=ctx.g, m=Math.max(1,(pg.margin||0)-1.5);
+  for(let r=0;r<3;r++){ const allow=offsetPoly(g.poly,m+r*1.5), poly=geom({pts:pg.pts,sym:false,tension:d.tension}).poly;
+    let bad=0; const Q=poly.map(p=>{ if(inside(allow,p)) return {x:p.x,y:p.y}; bad++; const q=nearestOnPoly(allow,p); return {x:q.x,y:q.y}; });
+    if(!bad) return; pg.pts=fitAnchors(Q,{tol:0.5}).map(p=>({x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2,c:!!p.c})); } }
+function autoPG0(d,ctx){
   const pg=d.set.pg, s=d.set; if (pg.style==='none'){ return; }
   const g=ctx.g, hw=s.heelW/2, off=offsetPoly(g.poly,pg.margin);
   const X=y=>{ const xs=hits(off,y); return xs.length>=2?[xs[0],xs[xs.length-1],xs.length]:null; };
@@ -901,7 +938,7 @@ function autoPG(d,ctx){
     [[w-k,lo],[w,lo+k],[w,hi,1],[-w,hi,1],[-w,lo+k],[-w+k,lo]].forEach(q=>add(q[0],q[1],q[2])); pg.pts=P; return; }
   if (pg.style==='drop'){   // los blad aan de diskantkant, zoals bij een Les Paul
     if(!pusF.length){ pg.pts=null; return; }
-    const lo=Math.min(...pusF.map(p=>p.cover.cy-p.cover.h/2)), hi=Math.max(...pusF.map(p=>p.cover.cy+p.cover.h/2))+25, xi=Math.max(hw+2,pw+4);
+    const lo=Math.min(...pusF.map(p=>p.cover.cy-p.cover.h/2)), xi=Math.max(hw+2,pw+4); let hi=Math.max(...pusF.map(p=>p.cover.cy+p.cover.h/2))+25; while(hi>lo+40&&(!X(hi)||X(hi)[2]>2||!X(hi+12)||X(hi+12)[2]>2)) hi-=2;   // niet de hoorn in
     const xo=y=>{ const r=X(y); return r?r[1]-8-inset:xi; }; if(hi-lo<40||xo((lo+hi)/2)-xi<22){ pg.pts=null; return; }
     add(xi,hi-8,1); add(xi+(xo(hi)-xi)*0.55,hi); ysDown(hi-18,lo+35,4).forEach(y=>add(xo(y),y)); add(xi+(xo(lo+20)-xi)*0.3,lo); add(xi,lo+28,1); pg.pts=P; return; }
   if (yHi-yLow<20){ pg.pts=null; return; }
@@ -928,11 +965,17 @@ function autoPG(d,ctx){
   if (notch) add(-nw(yHi)-1,yHi,1);
   pg.pts=P;
 }
+// halsdiepte: volgt altijd de laatste versie. Wat het hout (body en hals) en de halsbreedte vragen, wordt toegepast,
+// tenzij je hem zelf kiest. De halspickup begrenst hoe diep hij kan: dan meldt de queeste dat het krap is.
+function pocketRoom(d,ctx){ const tops=ctx.pus.map(p=>p.route.cy+Math.max(p.route.h,p.route.w*Math.abs(Math.sin((p.route.a||0)*Math.PI/180)))/2); return tops.length?ctx.topY-Math.max(...tops)-3:Infinity; }
+function autoPocket(d){ const s=d.set; if(d.ref||s.pocketMan) return false; const J=jointNeed(s), ctx=bodyCtx(d), room=pocketRoom(d,ctx);
+  const v=Math.max(10,Math.min(Math.ceil(J.g),Math.floor(room*2)/2)); if(Math.abs(v-s.pocket)<0.25) return false; s.pocket=v; return true; }
 function refreshAuto(d,light){
   if (d.type==='headstock'){ if(d.set.pitch==null) d.set.pitch=pitchOf(d); if(!light && !d.ref && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); return; }
   if (d.type!=='body') return;
   const s=d.set, c=s.ctrl;
   let ctx=bodyCtx(d);
+  if (autoPocket(d)) ctx=bodyCtx(d);
   if (!s.sh) s.sh=shDef();
   // vaste volgorde: hals > brug en pickups > pickguard > kamers > klankgaten > knoppen. Elke stap wijkt voor de vorige.
   if (!s.pg.edited) autoPG(d,ctx);
@@ -1088,8 +1131,9 @@ function fit(){
   const g=geom(D()); let {minX,maxX,minY,maxY}=g;
   if (D().type==='headstock') minY=Math.min(minY,-30);
   if (D().type==='body'&&lib.view.whole&&lib.view.neck){ const hd=partnerHead(D()); maxY=Math.max(maxY,D().set.scale+(hd?geom(hd).maxY:40)); }
+  if (D().type==='body'){ minX-=14; maxX+=14; minY-=10; }
   const w=maxX-minX, h=maxY-minY;
-  const cmp=CMP.matches; view.s=Math.max(0.2,Math.min((W-(cmp?36:90))/w,(H-(cmp?176:150))/h)); view.cx=(minX+maxX)/2; view.cy=(minY+maxY)/2 + (cmp?-24:16)/view.s;
+  const cmp=CMP.matches; view.s=Math.max(0.2,Math.min((W-(cmp?36:90))/w,(H-(cmp?196:150))/h)); view.cx=(minX+maxX)/2; view.cy=(minY+maxY)/2 + (cmp?-8:16)/view.s;
   render();
 }
 function pathD(segs,map=toS){
@@ -1152,9 +1196,9 @@ function render(){
   const mh=$('#modeHint');
   mh.className = blockMsg ? 'bad' : '';
   mh.textContent = blockMsg ? '⛔ '+blockMsg : calib ? 'Kalibreren: klik 2 punten op de afbeelding waarvan je de afstand kent' : mode==='measure' ? 'Meten: sleep van punt A naar punt B' : mode==='bg' ? 'Achtergrond: sleep om de afbeelding te verplaatsen' : tgt.isPG ? 'Je bewerkt de pickguard' : '';
-  $('#help').textContent = mode==='edit' ? 'Sleep de punten · dubbelklik op de lijn = punt erbij · alles op de tekening is versleepbaar' : 'Esc = terug naar bewerken';
+  $('#help').textContent = mode==='edit' ? 'Sleep de punten · dubbeltik op de lijn = punt erbij · alles op de tekening is versleepbaar' : 'Esc = terug naar bewerken';
   const showTgt = d.type==='body' && d.set.pg.style!=='none' && d.set.pg.pts && !d.ref;
-  $('#tgtGrp').style.display = showTgt ? 'flex' : 'none';
+  $('#tgtGrp').classList.toggle('off',!showTgt);
   document.querySelector('[data-act=tgtBody]').classList.toggle('on',!tgt.isPG);
   document.querySelector('[data-act=tgtPG]').classList.toggle('on',!!tgt.isPG);
 }
@@ -1334,7 +1378,20 @@ function shRing(type,L,N=72){ const S=SH_TYPES[type]; if(!S||S.multi) return [];
   for(let i=0;i<=N;i++){ const t=i/N; C.push({x:S.c(t)*L,y:(t-0.5)*L,w:S.w(t)*L}); }
   C.forEach((p,i)=>{ const a=C[Math.max(0,i-1)], b=C[Math.min(N,i+1)], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1, nx=-ty/l, ny=tx/l; out.push({x:p.x+nx*p.w,y:p.y+ny*p.w}); back.push({x:p.x-nx*p.w,y:p.y-ny*p.w}); });
   return out.concat(back.reverse()).filter((p,i,A)=>i===0||Math.hypot(p.x-A[i-1].x,p.y-A[i-1].y)>0.05); }
-const shDef=()=>({type:'none',size:null,ang:6,side:'both',dx:0,dy:0,text:'SCG',pos:'auto'});
+const shDef=()=>({type:'none',size:null,ang:6,side:'both',dx:0,dy:0,text:'SCG',pos:'auto',flow:'off'});
+// meegolven: het klankgat volgt de lijn van de body op de plek waar het staat, als een offset van de rand.
+// De lengte van het gat loopt langs die offsetlijn, de breedte haaks erop. De kanteling geldt dan t.o.v. de rand.
+function flowRings(R,B,cx,cy,sd,f,cand){ const n=R.length; let j0=0,D=Infinity; (cand&&cand.length?cand:R.map((_,j)=>j)).forEach(j=>{ const p=R[j], v=Math.hypot(p.x-cx,p.y-cy); if(v<D){D=v;j0=j;} });
+  if(!(f>0)||D<3) return B.map(r=>r.map(p=>({x:p.x+cx,y:p.y+cy})));
+  let O=offsetPoly(R,D); const N=O.map((q,j)=>({x:(q.x-R[j].x)/D,y:(q.y-R[j].y)/D})); for(let r=0;r<4;r++){ const Q=O.map((_,j)=>{ let x=0,y=0; for(let k=-3;k<=3;k++){ const q=O[(j+k+n)%n]; x+=q.x; y+=q.y; } return {x:x/7,y:y/7}; }); O=Q; }
+  const cum=[0]; for(let j=1;j<=n;j++){ const a=O[j-1], b=O[j%n]; cum.push(cum[j-1]+Math.hypot(b.x-a.x,b.y-a.y)); } const Lt=cum[n];
+  const atS=s=>{ s=((s%Lt)+Lt)%Lt; let lo=0,hi=n; while(hi-lo>1){ const m=(lo+hi)>>1; if(cum[m]<=s) lo=m; else hi=m; } const u=(s-cum[lo])/((cum[lo+1]-cum[lo])||1), a=O[lo], b=O[(lo+1)%n];
+    const tx=b.x-a.x, ty=b.y-a.y, tl=Math.hypot(tx,ty)||1, na=N[lo], nb=N[(lo+1)%n], nx=na.x+(nb.x-na.x)*u, ny=na.y+(nb.y-na.y)*u, nl=Math.hypot(nx,ny)||1; return {x:a.x+tx*u,y:a.y+ty*u,tx:tx/tl,ty:ty/tl,nx:nx/nl,ny:ny/nl}; };
+  const s0=cum[j0], q0=atS(s0), dir=q0.ty>=0?1:-1, cin={x:cx-q0.x,y:cy-q0.y};
+  // binnenwaarts = naar het midden van de body
+  return B.map(r=>r.map(p=>{ const along=p.y, out=p.x*sd, q=atS(s0+dir*along), m={x:q.x-q.nx*out+cin.x,y:q.y-q.ny*out+cin.y};
+    return {x:(p.x+cx)*(1-f)+m.x*f, y:(p.y+cy)*(1-f)+m.y*f}; })); }
+const SH_FLOW={off:'Recht',half:'Half mee',full:'Volgt de rand'};
 // plaats: in de kamer van elke vleugel, in de gekozen zone (naast de pickups, bovenbout of onderbout).
 // De tool zoekt zelf de plek die het dichtst bij die zone ligt en vrij blijft van pickups, knoppen, brug en pickguard. Te groot? Dan wordt het kleiner tot het past.
 const SH_POS={auto:'Automatisch (naast de pickups, vrij van alles)',pu:'Naast de pickups',upper:'Bovenbout',waist:'Taille',lower:'Onderbout',offset:'Verspringend: bas hoger, diskant lager',free:'Vrij: zelf de plek kiezen'};
@@ -1355,10 +1412,17 @@ function holePolys(d){ const s=d.set, h=s.sh; if(!h||h.type==='none'||!SH_TYPES[
   const want=h.side==='bass'?[-1]:h.side==='treble'?[1]:[1,-1];
   // zoek met x als afstand tot de middellijn (u > 0); bij twee kanten moet elke kant passen
   const bt=bouts(g), yW=bt&&bt.waist?bt.waist.y:yPU;
+  // meegolven: de zijlijn van de body (niet de onderrand) bepaalt de richting; bij het zoeken al meedraaien, daarna echt meebuigen
+  const fl=h.flow==='full'?1:h.flow==='half'?0.5:0; let FL=null;
+  if(fl){ const RS=resampleClosed(g.poly,1.5), n=RS.length, O1=offsetPoly(RS,1), lat={};
+    [1,-1].forEach(sd=>{ lat[sd]=RS.map((_,j)=>j).filter(j=>-(O1[j].x-RS[j].x)*sd>0.6); });
+    const ang=(sd,x,y)=>{ const L=lat[sd]; if(!L.length) return 0; let jb=L[0],db=Infinity; for(const j of L){ const v=(RS[j].x-x)**2+(RS[j].y-y)**2; if(v<db){db=v;jb=j;} } const a=RS[(jb-2+n)%n], b=RS[(jb+2)%n]; let tx=b.x-a.x, ty=b.y-a.y; if(ty<0){tx=-tx;ty=-ty;} return Math.atan2(-tx,ty)*fl; };
+    FL={RS,lat,ang}; }
+  const rot=(Rr,f)=>{ if(!f) return Rr; const c=Math.cos(f), sn=Math.sin(f); return Rr.map(r=>r.map(p=>({x:p.x*c-p.y*sn,y:p.x*sn+p.y*c}))); };
   const search=(sides,useConf,zone,kStart)=>{ let best=null; zone=zone||pos; const R0=S[sides[0]].room, ys=R0.map(p=>p.y), Y0=Math.min(...ys), Y1=Math.max(...ys), yT=zone==='upper'?Y1-L0*0.55:zone==='lower'?Y0+L0*0.55:zone==='waist'?yW:yPU;
     for(let k=kStart||1;k>0.44&&!best;k-=0.05){ const B={}; sides.forEach(sd=>{ B[sd]=S[sd].base(k).map(r=>r.filter((_,i)=>i%3===0)); });
       for(let cy=Y0;cy<=Y1;cy+=8){ const xs=hits(R0,cy).map(x=>x*sides[0]).filter(x=>x>0).sort((a,b)=>a-b); if(xs.length<2) continue; const um=(xs[0]+xs[xs.length-1])/2;
-        for(let u=xs[0];u<=xs[xs.length-1];u+=8){ let ok=true, cf=0; for(const sd of sides){ const rs=at(B[sd],sd*u,cy); if(!S[sd].fits(rs)){ ok=false; break; } if(useConf) cf+=shConflicts(d,ctx,pg,rs); } if(!ok) continue;
+        for(let u=xs[0];u<=xs[xs.length-1];u+=8){ let ok=true, cf=0; for(const sd of sides){ const rs=at(FL?rot(B[sd],FL.ang(sd,sd*u,cy)):B[sd],sd*u,cy); if(!S[sd].fits(rs)){ ok=false; break; } if(useConf) cf+=shConflicts(d,ctx,pg,rs); } if(!ok) continue;
           const cost=Math.abs(cy-yT)+0.4*Math.abs(u-um)+cf*400; if(!best||cost<best.cost) best={cost,u,cy,k,cf,far:Math.abs(cy-yT)>45}; } } }
     return best; };
   const useConf=pos!=='pu'; let plans=null, single=false;
@@ -1372,7 +1436,8 @@ function holePolys(d){ const s=d.set, h=s.sh; if(!h||h.type==='none'||!SH_TYPES[
   else if(want.length===2){ const both=search([1,-1],useConf); if(both&&(both.cf===0||!useConf)) plans=[1,-1].map(sd=>({sd,b:both}));
     else { const one=[-1,1].map(sd=>({sd,b:search([sd],useConf)})).filter(o=>o.b&&o.b.cf===0).sort((a,b)=>a.b.cost-b.b.cost)[0]; if(one){ plans=[one]; single=true; } else if(both) plans=[1,-1].map(sd=>({sd,b:both})); } }
   else { const b=search(want,useConf,zoneOf(want[0])); if(b) plans=[{sd:want[0],b}]; }
-  if(plans){ const nud=pos==='free'?0:1; plans.forEach(({sd,b})=>{ const {u,cy}=b; let k=b.k, rings=at(S[sd].base(k),sd*(u+nud*(h.dx||0)),cy+nud*(h.dy||0)); while(pos!=='free'&&!S[sd].fits(rings)&&k>0.45){ k-=0.03; rings=at(S[sd].base(k),sd*(u+nud*(h.dx||0)),cy+nud*(h.dy||0)); } out.push({side:sd,rings,ring:[].concat(...rings),k,fit:S[sd].fits(rings),L:L0*k,overChamber:real,single,far:!!b.far&&pos!=='auto'}); }); }
+  const put=(sd,k,X,Y)=>FL?flowRings(FL.RS,S[sd].base(k),X,Y,sd,fl,FL.lat[sd]):at(S[sd].base(k),X,Y);
+  if(plans){ const nud=pos==='free'?0:1; plans.forEach(({sd,b})=>{ const {u,cy}=b; let k=b.k, rings=put(sd,k,sd*(u+nud*(h.dx||0)),cy+nud*(h.dy||0)); while(pos!=='free'&&!S[sd].fits(rings)&&k>0.45){ k-=0.03; rings=put(sd,k,sd*(u+nud*(h.dx||0)),cy+nud*(h.dy||0)); } out.push({side:sd,rings,ring:[].concat(...rings),k,fit:S[sd].fits(rings),L:L0*k,overChamber:real,single,far:!!b.far&&pos!=='auto'}); }); }
   else want.forEach(sd=>{ const rings=at(S[sd].base(1),sd*((g.maxX-g.minX)/4+(h.dx||0)),yPU+(h.dy||0)); out.push({side:sd,rings,ring:[].concat(...rings),k:1,fit:false,L:L0,overChamber:real,single:false}); });
   SH_CACHE={k:key,v:out,id:d.id}; return out; }
 function holeChecks(d){ const H=holePolys(d), out=[]; if(!H.length) return out; const s=d.set, ctx=bodyCtx(d), nm=SH_TYPES[s.sh.type].n;
@@ -1389,13 +1454,14 @@ function pgHTML(){ return `<section><h2>Pickguard</h2>
       <div class="btns"><button data-act="pgVary">🎲 Variatie</button><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
       <p class="hint" id="pgState"></p></div></section>`; }
 function holesHTML(){ return `<section><h2>Klankgaten</h2><div class="ideas bouw sh">${['none',...Object.keys(SH_TYPES)].map(k=>`<button class="idea" data-act="shType" data-k="${k}">${shPic(k)}${k==='none'?'Geen':SH_TYPES[k].n}</button>`).join('')}</div>
-  <div id="shOpts" style="margin-top:8px">${num('set.sh.size','Lengte','mm',1)}<div class="row" id="shTxtRow"><label>Tekst in morse</label><input type="text" data-bind="set.sh.text" maxlength="12" style="width:110px;text-transform:uppercase"></div>${num('set.sh.ang','Kanteling','°',1)}${sel_('set.sh.side','Waar',{both:'Beide kanten',bass:'Alleen baskant',treble:'Alleen diskantkant'})}${sel_('set.sh.pos','Plaats',SH_POS)}<div id="shNudge">${num('set.sh.dx','Naar buiten (+) of binnen','mm',1)}${num('set.sh.dy','Omhoog (+) of omlaag','mm',1)}</div><div id="shFree">${num('set.sh.fx','Afstand tot de middellijn','mm',1)}${num('set.sh.fy','Hoogte boven het zadel','mm',1)}</div><p class="hint" id="shState"></p></div></section>`; }
+  <div id="shOpts" style="margin-top:8px">${num('set.sh.size','Lengte','mm',1)}<div class="row" id="shTxtRow"><label>Tekst in morse</label><input type="text" data-bind="set.sh.text" maxlength="12" style="width:110px;text-transform:uppercase"></div>${sel_('set.sh.flow','Meegolven met de rand',SH_FLOW)}${num('set.sh.ang','Kanteling','°',1)}${sel_('set.sh.side','Welke kant',{both:'Beide',bass:'Bas',treble:'Diskant'})}${sel_('set.sh.pos','Plaats',SH_POS)}<div id="shNudge">${num('set.sh.dx','Naar buiten (+) of binnen','mm',1)}${num('set.sh.dy','Omhoog (+) of omlaag','mm',1)}</div><div id="shFree">${num('set.sh.fx','Afstand tot de middellijn','mm',1)}${num('set.sh.fy','Hoogte boven het zadel','mm',1)}</div><p class="hint" id="shState"></p></div></section>`; }
 function shState(d){ const H=holePolys(d); if(!H.length) return ''; const s=d.set, k=Math.min(...H.map(h=>h.k)), out=[];
   if(s.sh.pos==='free') out.push('Op de plek die je zelf koos: de tool zoekt niet, maar waarschuwt als iets botst.');
   else { if(H.some(h=>h.single)) out.push(`Maar één klankgat, aan de ${H[0].side>0?'diskant':'bas'}kant: gespiegeld was er geen vrije plek.`);
     else if(s.sh.pos==='offset'&&H.length===2) out.push('Verspringend: baskant hoger, diskantkant lager.');
     if(H.some(h=>h.far)) out.push('In die zone stond iets in de weg, dus staat het op de dichtstbijzijnde vrije plek.');
     if(k<0.999) out.push(`Kleiner gemaakt tot ${fmt(Math.min(...H.map(h=>h.L)),0)} mm om te passen.`); }
+  if(s.sh.flow==='full') out.push('Volgt de lijn van de body op die plek, als een offset van de rand. De kanteling geldt t.o.v. de rand.'); else if(s.sh.flow==='half') out.push('Buigt half mee met de lijn van de body.');
   out.push(s.inside&&s.inside!=='solid'?'De knoppen wijken voor de klankgaten.':'Zonder kamers staan ze waar de kamers bij semi-hollow zouden zitten.');
   return out.join(' '); }
 
@@ -1413,9 +1479,10 @@ function bouwHTML(){ const ins=k=>`<svg viewBox="0 0 60 50"><path d="M4 12H56V38
     <div style="margin-top:8px">${num('set.thick','Dikte')}${sel_('set.wood','Bodyhout',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}${sel_('set.neckWood','Halshout (voor de lijmnaad)',NECK_WOOD)}</div></section>`; }
 function buildPanel(){
   const d=D(), v=lib.view; let h='';
+  if (d.type==='body') h+=`<nav id="stepNav">${[['V','Vorm'],['1','1 Hals'],['2','2 Pickups'],['3','3 Pickguard'],['4','4 Hout'],['5','5 Klankgaten'],['6','6 Knoppen'],['7','7 Kop']].map(([k,n])=>`<button type="button" data-nav-go="${k}">${n}</button>`).join('')}</nav>`;
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
-  h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section><section><h2>De queeste</h2><div id="playBox"></div></section>`;
-  h+=`<section><h2>Vorm</h2>
+  h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section><details id="qBox" class="card" ${(v.qbox!=null?v.qbox:!CMP.matches)?'open':''}><summary>De queeste <span id="qSum" class="qsum"></span></summary><section><div id="playBox"></div></section></details>`;
+  h+=`<section><h2 data-nav="V">Vorm</h2>
     <div class="feel">${(d.type==='body'?[['lo','Onderbout'],['wa','Taille'],['up','Bovenbout'],['w','Breedte'],['l','Lengte']]:[['mi','Midden'],['to','Top'],['w','Breedte'],['l','Lengte']]).map(([k,n])=>`<div class="fr"><button data-act="feel" data-k="${k}-" aria-label="${n} kleiner">−</button><span>${n}</span><button data-act="feel" data-k="${k}+" aria-label="${n} groter">+</button></div>`).join('')}</div>
     <div class="row"><label>Lijn: strak ↔ rond</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
     <div class="row"><label>Slepen: punt ↔ klei</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:130px"></div>
@@ -1423,10 +1490,11 @@ function buildPanel(){
     <div class="btns"><button data-act="fair" title="Haalt bultjes en deukjes uit de lijn">Gladstrijken</button></div>
     <div id="ptBox"></div></section>`;
   if (d.type==='body'){
-    const step=(n,tit,why)=>`<h2><span class="stepn">${n}</span>${tit}</h2><p class="hint flow">${why}</p>`;
+    const step=(n,tit,why)=>`<h2 data-nav="${n}"><span class="stepn">${n}</span>${tit}</h2><p class="hint flow">${why}</p>`;
     h+=`<p class="hint" style="margin:4px 2px 10px">De hardware kies je in deze volgorde. Elke stap houdt rekening met de stappen erboven; verander je iets bovenaan, dan schuift wat eronder automatisch mee.</p>`;
     h+=`<section>${step(1,'Hals en mensuur','Legt vast waar de frets en het einde van de toets liggen. Daar mogen geen pickups komen.')}
-      <div class="row"><label>Mensuur</label><span><input type="number" step="0.5" data-bind="set.scale" style="width:70px"><span class="u">mm</span> <input type="number" step="0.125" data-bind="scaleIn" style="width:62px"><span class="u">inch</span></span></div>
+      <div class="row"><label>Mensuur</label><input type="number" step="0.5" data-bind="set.scale"><span class="u">mm</span></div>
+      <div class="row"><label>Mensuur in inch</label><input type="number" step="0.125" data-bind="scaleIn"><span class="u">inch</span></div>
       <div class="row"><label>Gekende mensuur</label><select id="scalePick"><option value="">eigen maat</option>${Object.entries(SCALES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       ${num('set.frets','Aantal frets','',1)}
       <div id="neckBox"></div></section>`;
@@ -1447,7 +1515,7 @@ function buildPanel(){
       ${sel_('set.ctrl.sw','Schakelaar',{none:'Geen',toggle3:'3-weg toggle',blade3:'3-weg schuif',blade5:'5-weg schuif'},'data-after="ctrl"')}
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
       ${chk('set.ctrl.loose','Elke knop apart slepen')}</section>`;
-    h+=`<section><h2>Kop en render</h2>
+    h+=`<section>${step(7,'Kop en render','Welke kop bij deze body hoort, en hoe de hele gitaar eruitziet.')}
       <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock').sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
       <div class="btns"><button data-act="editHead">Bewerk deze kop</button><button data-act="render">🎨 Render</button></div></section>`;
     h+=`<details id="techBox" ${v.tech?'open':''}><summary>Technische details</summary>
@@ -1485,7 +1553,7 @@ function buildPanel(){
   h+=`<details id="viewBox" ${v.vw?'open':''}><summary>Weergave, achtergrond &amp; back-up</summary><section>
     ${chk('view.grid','Raster')}${chk('view.dims','Maatlijnen')}${chk('view.hw','Hardware')}${chk('view.routes','Frezingen en kanalen')}
     ${d.type==='body'?chk('view.pgShow','Pickguard')+chk('view.neck','Hals met frets')+chk('view.whole','Hele gitaar (met kop)','data-after="fit"'):''}
-    ${chk('view.strings','Snaren')}${chk('view.wline','Breedte meten onder de muis')}
+    ${chk('view.strings','Snaren')}${chk('view.wline','Breedte meten waar je wijst')}
     ${chk('view.snap','Punten op hele mm vastklikken')}
     <div class="row"><label>Vergelijk met</label><select data-bind="view.ghost" id="ghostSel" style="max-width:190px"></select></div></section>
     <section><h2>Achtergrond (schets of foto)</h2><div id="bgBox"></div></section>
@@ -1502,7 +1570,7 @@ function sumHTML(d,g){
   const L=d.type==='body'?g.maxY-g.minY:g.maxY, B=g.maxX-g.minX;
   let h=`<div class="big">${fmt(L,0)} × ${fmt(B,0)} mm</div>`;
   if (d.type==='body'){ const s=d.set, dens=s.wood==='ander'?s.dens:WOODS[s.wood][1];
-    h+=`<div class="sub">± ${fmt(bodyCells(g,s).solid/900,1)} kg blank · hals sluit aan bij fret ${fmt(yToFret(s,topOf(g)),0)}</div>`; }
+    h+=`<div class="sub">body blank ± ${fmt(bodyCells(g,s).solid/900,1)} kg · hals sluit aan bij fret ${fmt(yToFret(s,topOf(g)),0)}</div>`; }
   else { const pi=pullInfo(d), lay={split:'3 + 3',inline:'6 op rij',rev:'6 op rij omgekeerd',custom:'zoals het origineel'}[d.set.layout]||'';
     const n=d.set.strings, lb=d.set.layout==='split'?`${Math.ceil(n/2)} + ${Math.floor(n/2)}`:d.set.layout==='custom'?lay:`${n} op rij${d.set.layout==='rev'?' (omgekeerd)':''}`;
     h+=`<div class="sub">${lb} · snaren lopen <b class="${pi.worst<=8?'good':pi.worst<=12?'':'warn'}">${pi.word}</b> naar de mechanieken</div>`; }
@@ -1580,15 +1648,15 @@ const WORST=rows=>rows.some(r=>r.cls==='b')?'b':rows.some(r=>r.cls==='m')?'m':'g
 // enkel wat de tool echt uit de tekening haalt: vorm, maten, riemknoppen, snaarpad. Klank en stijfheid kan hij niet weten.
 function queeste(d){ const out=(k,rows)=>({k,rows,dot:WORST(rows),line:(rows.find(r=>r.cls==='b')||rows.find(r=>r.cls==='m')||rows[0]).word});
   if (d.type==='body'){ const f=bodyPhysics(d), s=d.set, h=partnerHead(d), g=geom(d);
-    const J=jointNeed(s), jw=J.name;
-    const stab=[]; stab.push(s.pocket>=J.g?playRow('g','Halsverbinding',`${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,J.tip):s.pocket>=J.m?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body, ± ${fmt(J.g,0)} aangeraden in ${jw}`,`Gelijmd met Titebond Original is de lijm sterker dan het hout: het zwakste hout van de naad bepaalt het. ${J.tip}`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,`Weinig lijmvlak, zoals een SG. Dat is de plek die het eerst werkt. ${J.tip}`));
+    const J=jointNeed(s), jw=J.name, tight=!s.pocketMan&&s.pocket<J.g-0.5?' De halspickup laat niet dieper toe: schuif hem wat naar de brug, dan gaat de hals vanzelf dieper.':'';
+    const stab=[]; stab.push(s.pocket>=J.g?playRow('g','Halsverbinding',`halsvoet ${fmt(s.pocket,0)} mm diep (${jw} vraagt ± ${fmt(J.g,0)})`,J.tip):s.pocket>=J.m?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body, ± ${fmt(J.g,0)} aangeraden in ${jw}`,`Gelijmd met Titebond Original is de lijm sterker dan het hout: het zwakste hout van de naad bepaalt het. ${J.tip}${tight}`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,`Weinig lijmvlak, zoals een SG. Dat is de plek die het eerst werkt. ${J.tip}${tight}`));
     if(f.horn<35) stab.push(playRow(f.horn<25?'b':'m','Hoorn',`${fmt(f.horn,0)} mm breed`,'Smalle hoorn: de houtdraad loopt er dwars op, dus kwetsbaar als de gitaar valt.'));
     if(h&&h.posts&&h.posts.length){ const hp=headPhysics(h), pi=pullInfo(h), w=pi.worst; stab.push(playRow(w>12||hp.pitch>=17?'m':'g','Stemmen',`${esc(ownName(h)||h.name)}: trek tot ${fmt(w,0)}°${hp.pitch?`, ${hp.pitch}° kop`:hp.trees?`, ${hp.trees} snaarboom`:''}`,hp.pitch>=17?'Stevige druk op de nut, maar een schuine kop breekt sneller: reken op een las.':w>12?'Open de kop om de snaartrek te verbeteren.':'')); }
     const pl=[], fh=f.fretHand; pl.push(fh>=20?playRow('g','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`):fh>=17.5?playRow('m','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant, of laat de hals vroeger in de body gaan.'):playRow('b','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant.'));
     pl.push(f.fretF<=14?playRow('g','Nut bereiken',`makkelijk (riemknop bij fret ${fmt(f.fretF,0)})`):f.fretF<=17?playRow('m','Nut bereiken',`iets verder (fret ${fmt(f.fretF,0)})`):playRow('b','Nut bereiken',`ver (fret ${fmt(f.fretF,0)})`,'Een langere bashoorn brengt de hals dichter naar je toe.'));
     const er=[]; er.push(f.margin>=135?playRow('g','Staand','blijft liggen'):f.margin>=75?playRow('m','Staand','neigt naar de hals','Sleep de riemknop verder naar de hals, of neem een lichtere kop.'):playRow('b','Staand','hals zakt','Langere bashoorn, riemknop verder naar de hals, of lichtere mechanieken.'));
     const W=g.maxX-g.minX; er.push(f.seat.depth<10?playRow('b','Zittend','geen taille, schuift van je been','Een duidelijke taille aan de diskantkant houdt de gitaar op je been.'):f.seat.lever>95?playRow('m','Zittend','hals zakt op je been','De rustplek ligt ver achter het zwaartepunt, zoals bij een SG.'):W>380?playRow('m','Zittend',`breed (${fmt(W,0)} mm)`,'Een brede onderbout duwt de arm naar buiten.'):playRow('g','Zittend','ligt rustig op je been'));
-    er.push(playRow(f.M<3600?'g':f.M<4300?'m':'b','Gewicht',`± ${fmt(f.M/1000,1)} kg`,`Met ${(WOODS[s.wood]||['eigen hout'])[0].toLowerCase().replace(/ \(.*$/,'')}, ${fmt(s.thick,0)} mm dik${s.inside&&s.inside!=='solid'?', '+INSIDES[s.inside][0].toLowerCase():''}. Hout verschilt per plank: weeg je blank.`));
+    er.push(playRow(f.M<3600?'g':f.M<4300?'m':'b','Gewicht',`hele gitaar ± ${fmt(f.M/1000,1)} kg`,`Met ${(WOODS[s.wood]||['eigen hout'])[0].toLowerCase().replace(/ \(.*$/,'')}, ${fmt(s.thick,0)} mm dik${s.inside&&s.inside!=='solid'?', '+INSIDES[s.inside][0].toLowerCase():''}. Hout verschilt per plank: weeg je blank.`));
     return [out('Stabiel',stab),out('Speelbaar',pl),out('Ergonomisch',er),out('Eigen',[ownRow(d)])]; }
   const f=headPhysics(d), pi=d.posts.length?pullInfo(d):null, st=[];
   if (pi) st.push(playRow(pi.worst<=8?'g':pi.worst<=12?'m':'b','Snaartrek',pi.word+` (tot ${fmt(pi.worst,0)}°)`));
@@ -1602,7 +1670,7 @@ function playHTML(d){ const Q=queeste(d), f=d.type==='body'?bodyPhysics(d):null;
   return Q.map(q=>`<details class="q" data-q="${q.k}" ${qOpen.has(q.k)?'open':''}><summary><span class="dot ${q.dot}"></span><b>${q.k}</b><span class="ql">${q.line}</span></summary>${q.rows.map(rowHTML).join('')}</details>`).join('')
    +`<div class="btns"><button data-act="goalInsp">🎯 Verbeter dit ontwerp</button>${f&&f.own?'<button data-act="strapAuto">Riemknop terug</button>':''}</div>`
    +(d.type==='body'?`<p class="hint">Gerekend met kop "${esc((partnerHead()||{}).name||'')}". Schatting om te vergelijken, geen weegschaal.</p>`:''); }
-function qDots(d){ const box=$('#qdots'); if(!box) return; box.innerHTML=queeste(d).map(q=>`<span class="dot ${q.dot}" title="${q.k}"></span>`).join(''); }
+function qDots(d){ const box=$('#qdots'); if(!box) return; const Q=queeste(d); box.innerHTML=Q.map(q=>`<span class="dot ${q.dot}" title="${q.k}"></span>`).join(''); const qs=$('#qSum'); if(qs) qs.innerHTML=Q.map(q=>`<span class="dot ${q.dot}"></span> ${q.k}`).join(' '); }
 // zachte adviezen (geen fouten, wel dingen die een bouwer zou opmerken)
 function bodyAdvice(d){
   const g=geom(d), s=d.set, out=[]; let best={w:0,y:0};
@@ -1638,10 +1706,11 @@ function syncPanel(){
         ${num('pt.x','x (zijwaarts)','mm',0.5,lockX?'disabled':'')}${num('pt.y','y (lengte)','mm',0.5)}
         ${chk('pt.c','Scherpe hoek (geen ronding)')}
         <div class="btns"><button data-act="resetH">Automatische ronding</button><button data-act="delPt">Punt verwijderen</button><button data-act="desel">Klaar</button></div></div>`;
-    } else pb.innerHTML=`<p class="hint">Klik een punt aan om het exact in te stellen of de ronding te sturen met de blauwe handgrepen. Dubbelklik op de lijn om een punt toe te voegen.</p>`;
+    } else pb.innerHTML=`<p class="hint">Tik een punt aan om het exact in te stellen, of stuur de ronding met de blauwe handgrepen. Dubbeltik op de lijn voor een nieuw punt.</p>`;
     if (d.type==='headstock'){
       $('#postRows').innerHTML=d.posts.map((p,i)=>`<tr><td><b>${i+1}</b></td><td><input type="number" step="0.5" data-bind="posts.${i}.x"></td><td><input type="number" step="0.5" data-bind="posts.${i}.y"></td><td><select data-bind="posts.${i}.side"><option value="L">links</option><option value="R">rechts</option></select></td></tr>`).join('');
     }
+    if (d.type==='body'&&!locked()) ['pu1','pu2','pu3'].forEach(k=>{ const off=d.set[k].t==='none'; P.querySelectorAll(`[data-bind="set.${k}.d"],[data-bind="set.${k}.a"]`).forEach(e=>{ e.disabled=off; }); });
     if (d.type==='body'){ const r=P.querySelector('[data-bind="set.dens"]'); if(r) r.closest('.row').style.display = d.set.wood==='ander'?'':'none';
       $('#pgOpts').style.display = d.set.pg.style==='none'?'none':''; const bo=P.querySelector('[data-bind="set.pg.bottom"]'); if(bo) bo.closest('.row').style.display = d.set.pg.style==='full'?'':'none';
       const kn=P.querySelector('[data-bind="set.pg.knobs"]'); if(kn) kn.closest('.row').style.display = d.set.pg.style==='full'?'':'none';
@@ -1659,7 +1728,7 @@ function syncPanel(){
     if (el.dataset.bind==='scaleIn'){ el.value=d.set.scale?Math.round(d.set.scale/25.4*1000)/1000:''; return; }
     const [o,p]=bindRoot(el.dataset.bind); if(!o) return; const v=getP(o,p);
     if (el.type==='checkbox') el.checked = el.dataset.bind==='bg.show' ? v!==false : !!v;
-    else if (el.type==='number') el.value = v==null?'':Math.round(v*10000)/10000;
+    else if (isNumEl(el)) el.value = v==null?'':Math.round(v*10000)/10000;
     else el.value = v==null?'':v;
   });
   $('#info').innerHTML = infoHTML(d,g); { const nb=$('#neckBox'); if(nb&&!nb.contains(document.activeElement)) nb.innerHTML=neckHTML(d,g); const sp=$('#scalePick'); if(sp&&sp!==document.activeElement){ const m=Object.keys(SCALES).find(k=>Math.abs(+k-d.set.scale)<1.5); sp.value=m||''; } } $('#sum').innerHTML = sumHTML(d,g); if(!drag) $('#playBox').innerHTML=playHTML(d); qDots(d);
@@ -1674,7 +1743,7 @@ function syncPanel(){
   }
   $('#designSel').innerHTML = optionsFor(lib.tab,null,d.id);
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===lib.tab));
-  enhanceSelects();
+  enhanceSelects(); if(window.navKick) navKick();
 }
 // galerij: elk idee getekend op de vorm die nu op het scherm staat
 let ideasKey='';
@@ -1707,7 +1776,8 @@ function frow(l,dim,v,hint){ return `<div class="row"><label>${l}${hint?`<br><sm
 function erow(l,dim,v){ return `<div class="row"><label>${l}</label><span><input type="number" step="0.5" class="edit" data-dim="${dim}" value="${Math.round(v*10)/10}"> <span class="u">mm</span></span></div>`; }
 function neckHTML(d,g){ const s=d.set, topY=topOf(g); let h='';
     h+=frow('Body begint bij','jointF',yToFret(s,topY),'de body schuift, de brug blijft');
-    h+=frow('Hals loopt tot','neckF',yToFret(s,topY-s.pocket),`${fmt(s.pocket,0)} mm in de body`);
+    { const J=jointNeed(s); h+=frow('Hals loopt tot','neckF',yToFret(s,topY-s.pocket),s.pocketMan?`${fmt(s.pocket,0)} mm in de body, zelf gekozen`:`${fmt(s.pocket,0)} mm in de body, automatisch (${J.name} vraagt ± ${fmt(J.g,0)})`);
+      h+=`<div class="row"><label><input type="checkbox" data-bind="set.pocketMan" ${s.pocketMan?'checked':''}> Halsdiepte zelf kiezen</label></div>`; }
     { const fe=fbEndY(s), over=topY-s.pocket-fe; h+=frow('Toets loopt tot','fbF',fbFret(s),over>0.5?`${fmt(over,0)} mm voorbij de hals, op de body`:`${FB_OVER} mm voorbij die fret`); }
     const over=fretY(s,s.frets)-topY;
     h+=row(`Fret ${s.frets} t.o.v. body`, over>=0?`${fmt(over)} mm vrij`:`${fmt(-over)} mm boven body`, over>=0?'good':'');
@@ -1752,9 +1822,9 @@ P.addEventListener('input',e=>{
   if (b==='sym'){ toggleSym(el.checked); buildPanel(); update(); return; }
   if (b==='scaleIn'){ const v=parseFloat(el.value); if(isFinite(v)&&v>=10&&v<=40){ d.set.scale=Math.round(v*25.4*100)/100; update(); } return; }
   const [o,p]=bindRoot(b); if(!o) return;
-  let v = el.type==='checkbox' ? el.checked : (el.type==='number'||el.type==='range') ? parseFloat(el.value) : el.value;
+  let v = el.type==='checkbox' ? el.checked : (isNumEl(el)||el.type==='range') ? parseFloat(el.value) : el.value;
   if (b==='set.edge' && el.value===''){ delete D().set.edge; D().set.auto=true; update(); return; }
-  if ((el.type==='number'||el.type==='range') && !isFinite(v)) return;
+  if ((isNumEl(el)||el.type==='range') && !isFinite(v)) return;
   if (b==='set.strings') v=Math.max(1,Math.min(12,Math.round(v)));
   if (b==='set.frets'){ v=Math.max(1,Math.min(36,Math.round(v))); const s0=D().set; if(s0.fbFret==null||s0.fbFret===s0.frets) s0.fbFret=v; }
   if (b==='set.ctrl.n') v=Math.max(0,Math.min(6,Math.round(v)));
@@ -1779,7 +1849,7 @@ P.addEventListener('change',e=>{
   } else if (dim==='wid'){ const f=v/(g.maxX-g.minX); d.pts.forEach(p=>p.x*=f); if(d.posts) d.posts.forEach(p=>p.x*=f); }
   else if (dim==='bot'){ const dy=-v-g.minY; d.pts.forEach(p=>p.y+=dy); }
   else if (dim==='jointF'){ const dy=fretY(d.set,v)-topOf(g); d.pts.forEach(p=>p.y+=dy); if(d.set.pg) d.set.pg.edited=false; }
-  else if (dim==='neckF'){ d.set.pocket=Math.round(Math.max(0,topOf(g)-fretY(d.set,v))*2)/2; }
+  else if (dim==='neckF'){ d.set.pocketMan=true; d.set.pocket=Math.round(Math.max(0,topOf(g)-fretY(d.set,v))*2)/2; }
   else if (dim==='fbF'){ d.set.fbFret=Math.max(1,Math.round(v)); }
   d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
   el.blur(); update();
@@ -1795,7 +1865,7 @@ function feel(d,k,hold){
   d.pts.forEach(p=>{p.x=Math.round(p.x*100)/100;p.y=Math.round(p.y*100)/100;});
   if (d.type==='headstock' && d.set.auto===false && (a==='w'||a==='l')) d.posts.forEach(p=>{ if(a==='l') p.y*=f; else p.x*=1+(f-1)*Math.min(1,Math.max(0,p.y)/45); });
 }
-P.addEventListener('toggle',e=>{ const t=e.target; if(t.matches&&t.matches('.q')){ if(t.open) qOpen.add(t.dataset.q); else qOpen.delete(t.dataset.q); } },true);
+P.addEventListener('toggle',e=>{ const t=e.target; if(t.id==='qBox'){ lib.view.qbox=t.open; save(); } if(t.matches&&t.matches('.q')){ if(t.open) qOpen.add(t.dataset.q); else qOpen.delete(t.dataset.q); } },true);
 // ingedrukt houden = blijven boetseren
 let holdFired=false, holdT=null;
 P.addEventListener('pointerdown',e=>{ const t=e.target.closest('[data-act=feel]'); if(!t||t.disabled||locked()) return; holdFired=false; clearInterval(holdT);
@@ -2180,8 +2250,8 @@ function headFromPoly(poly,set,name,posts,nut){
 function vary(src,w){
   if (src.type==='body'){ const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
     // variëren zoals een ontwerper: benoemde ingrepen, soms een organische zwaai; nooit mengen met een willekeurige andere vorm
-    const d=moveCandidate(src,0.3+w*0.9); if(!d) return null; let poly=geom(d).poly; const org=Math.random()<0.2+0.4*w; if(org) poly=organicFlow(poly,0.3+0.5*w,Math.random);
-    const ok=finishBody(poly,L0); if(!ok) return null; const n=bodyFromPoly(ok,src.set,(org?'Organische variatie op ':'Variatie op ')+src.name.replace(/^(Organische )?[Vv]ariatie op /,'')); return n; }
+    const d=moveCandidate(src,0.3+w*0.9); if(!d) return null; let poly=geom(d).poly; const org=insp.org!==false&&Math.random()<0.2+0.4*w; if(org) poly=organicFlow(poly,0.3+0.5*w,Math.random);
+    const ok=finishBody(poly,L0); if(!ok) return null; const n=bodyFromPoly(ok,src.set,(org?'Organische variatie op ':'Variatie op ')+src.name.replace(/^(Organische )?[Vv]ariatie op /,'')); n.moves=(d.moves||[]).concat(org?['organische zwaai']:[]); return n; }
   return varyHead(src,w);
 }
 function fitMap(gs,w,h,pad){
@@ -2189,35 +2259,38 @@ function fitMap(gs,w,h,pad){
   const k=Math.min((w-2*pad)/(maxX-minX),(h-2*pad)/(maxY-minY)), cx=(minX+maxX)/2, cy=(minY+maxY)/2;
   return (x,y)=>[w/2+(x-cx)*k, h/2-(y-cy)*k];
 }
-function thumbSVG(d,w,h){
-  const g=geom(d), m=fitMap([g],w,h,8), c=m(0,0)[0];
+function thumbSVG(d,w,h,ghost){
+  const g=geom(d), gg=ghost?geom(ghost):null, m=fitMap(gg?[g,gg]:[g],w,h,10), c=m(0,0)[0];
   let o=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><line x1="${c}" y1="0" x2="${c}" y2="${h}" stroke="#e3cdb9" stroke-dasharray="4 3"/>`;
   if (d.type==='body'){ const s=d.set, tY=topOf(g), a=m(-s.heelW/2,tY+400), b=m(s.heelW/2,tY-(s.pocket||40)); o+=`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   o+=`<path d="${pathD(g.segs,m)}" fill="#f3e6d6" stroke="#1f1c18" stroke-width="1.5"/>`;
+  if (gg) o+=`<path d="${pathD(gg.segs,m)}" fill="none" stroke="#2f6f8f" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>`;
   if (d.type==='body'){ const s=d.set, tY=topOf(g), a=m(-s.heelW/2,tY+400), b=m(s.heelW/2,tY-2); o+=`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   if (d.type==='headstock'){ const k=m(1,0)[0]-m(0,0)[0]; d.posts.forEach(p=>{ const q=m(p.x,p.y); o+=`<circle cx="${q[0]}" cy="${q[1]}" r="${d.set.holeD/2*k}" fill="#fff" stroke="#2f6f8f"/>`; }); }
   return o+'</svg>';
 }
 const MB=$('#mbox');
 let insp={mode:'free',wild:0.5,items:[],pick:-1,goals:{bal:1,seat:1,reach:1,high:1,own:1,pull:1,short:1},run:0};
+insp.src=Object.assign({klas:1,nat:1,arch:1,wild:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!==false; if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
 const GOALS={body:[['bal','Staand'],['seat','Zittend'],['reach','Nut dichterbij'],['high','Hoge frets'],['own','Licht eigen'],['light','Lichter']],headstock:[['pull','Rechte trek'],['short','Korte snaar'],['lightH','Lichte kop'],['tree','Zonder snaarboom']]};
 const clamp01=v=>Math.max(0,Math.min(1,v));
 function goalVals(d){ refreshAuto(d);
   if (d.type==='body'){ const f=bodyPhysics(d); const w=ownInfo(d), ow=w.v<0.03?clamp01((w.v-0.006)/0.024):w.v<=0.06?1:clamp01((0.11-w.v)/0.05); f.ownV=w.v; f.ownN=ownName(w.o); return {ch:bodyChecks(d).length,f,v:{bal:clamp01((f.margin-40)/110),seat:clamp01(f.seat.depth/20)*clamp01((140-f.seat.lever)/90),reach:clamp01((19-f.fretF)/7),high:clamp01((f.fretHand-16)/6),light:clamp01((4300-f.M)/1400),own:ow}}; }
   const f=headPhysics(d), pi=d.posts.length?pullInfo(d):{worst:20}; f.worst=pi.worst;
   return {ch:headChecks(d).length,f,v:{pull:clamp01((14-pi.worst)/10),short:clamp01((230-f.len)/100),lightH:clamp01((520-f.hm.g)/260),tree:f.trees?clamp01(1-f.trees/3):1}}; }
-function gainText(a,b,G){ const o=[], A=a.f, B=b.f, add=(k,t)=>{ if(G[k]&&t) o.push(t); }, n=(x,dec=0)=>fmt(x,dec);
-  add('bal',B.margin-A.margin>4?`balans ${n(B.margin-A.margin)} mm beter`:'');
-  add('reach',A.fretF-B.fretF>0.3?`nut ${n(A.reach-B.reach)} mm dichter`:'');
-  add('high',B.fretHand-A.fretHand>0.3?`hand tot fret ${n(B.fretHand)}`:'');
-  add('seat',A.seat&&(A.seat.lever-B.seat.lever>6||B.seat.depth-A.seat.depth>2)?`zit rustiger`:'');
-  add('own',A.ownV<0.03&&B.ownV-A.ownV>0.004?`minder ${A.ownN}`:'');
-  add('light',A.M-B.M>40?`${n((A.M-B.M)/1000,1)} kg lichter`:'');
-  add('pull',A.worst-B.worst>=0.9?`trek ${n(B.worst)}° i.p.v. ${n(A.worst)}°`:'');
-  add('short',A.len-B.len>3?`snaar ${n(A.len-B.len)} mm korter`:'');
-  add('lightH',A.hm&&A.hm.g-B.hm.g>8?`${n(A.hm.g-B.hm.g)} g lichter`:'');
+function gainText(a,b,G){ return gainList(a,b,G).join(' · '); }
+function gainList(a,b,G){ const o=[], A=a.f, B=b.f, add=(k,t)=>{ if(G[k]&&t) o.push(t); }, n=(x,dec=0)=>fmt(x,dec);
+  add('bal',B.margin-A.margin>4?`staat steviger aan de riem: balans ${n(B.margin-A.margin)} mm beter`:'');
+  add('reach',A.fretF-B.fretF>0.3?`eerste frets ${n(A.reach-B.reach)} mm dichter bij je hand`:'');
+  add('high',B.fretHand-A.fretHand>0.3&&n(B.fretHand)!==n(A.fretHand)?`je hand komt tot fret ${n(B.fretHand)} (was ${n(A.fretHand)})`:'');
+  add('seat',A.seat&&(A.seat.lever-B.seat.lever>6||B.seat.depth-A.seat.depth>2)?`ligt rustiger op je been`:'');
+  add('own',A.ownV<0.03&&B.ownV-A.ownV>0.004?`lijkt minder op een ${A.ownN}`:'');
+  add('light',A.M-B.M>40?`body ${n((A.M-B.M)/1000,1)} kg lichter`:'');
+  add('pull',A.worst-B.worst>=0.9?`snaarknik ${n(B.worst)}° in plaats van ${n(A.worst)}°`:'');
+  add('short',A.len-B.len>3?`${n(A.len-B.len)} mm minder snaar achter de nut`:'');
+  add('lightH',A.hm&&A.hm.g-B.hm.g>8?`kop ${n(A.hm.g-B.hm.g)} g lichter`:'');
   add('tree',A.trees>B.trees?(B.trees?`${B.trees} snaarboom`:'geen snaarboom'):'');
-  return o.join(' · '); }
+  return o; }
 // verbeteren, niet veranderen om te veranderen: een voorstel telt pas als het op wat je kiest beter is dan je ontwerp, en op de rest niet achteruit gaat
 function shapeSig(d){ const g=geom(d), L=g.maxY-g.minY||1, o=[]; for(let i=1;i<20;i++){ const xs=hits(g.poly,g.minY+L*i/20); o.push(xs.length?xs[0]/L:0,xs.length?xs[xs.length-1]/L:0); } return o; }
 function sigDist(a,b){ const x=a.sig||(a.sig=shapeSig(a)), y=b.sig||(b.sig=shapeSig(b)); return x.reduce((t,v,i)=>t+Math.abs(v-y[i]),0)/x.length; }
@@ -2262,13 +2335,13 @@ function searchGoal(){
   const F0=shapeFair(g0), LB0=lobeInfo(g0.poly).lobes, maxDist=0.02+0.04*w; delete src.sig;
   const add=d=>{ if(!d) return; const g1=geom(d); if(g1.maxY-g1.minY>L0*1.06||g1.maxX-g1.minX>W0*1.06) return; const fq=shapeFair(g1); if(fq.flips>F0.flips||fq.E>F0.E*1.2||lobeInfo(g1.poly).lobes>LB0||!simplePoly(g1.poly)) return; delete d.sig; if(sigDist(d,src)>maxDist) return; const r=goalVals(d); if(r.ch) return; const gain=keys.reduce((a,k)=>a+r.v[k]-base.v[k],0), worse=keys.some(k=>r.v[k]<base.v[k]-0.05)||Object.keys(r.v).some(k=>r.v[k]<base.v[k]-0.25);
     const fn=keys.filter(k=>k!=='own'); if(fn.length&&fn.reduce((a,k)=>a+r.v[k]-base.v[k],0)<0.03) return; // anders zijn alleen is geen verbetering
-    if(gain<0.04||worse) return; d.gain=gain; d.why=gainText(base,r,G); if(fn.length&&!gainText(base,r,{...G,own:0})) return; if(d.why){ if(d.moves){ d.why=d.moves.join(', ')+' → '+d.why; delete d.moves; } pool.push(d); } };
+    if(gain<0.04||worse) return; d.gain=gain; d.why=gainText(base,r,G); d.gains=gainList(base,r,G); if(fn.length&&!gainText(base,r,{...G,own:0})) return; if(d.why) pool.push(d); };
   drawInsp();
   const step=()=>{ if(run!==insp.run||!$('#modal')||getComputedStyle($('#modal')).display==='none') return;
     for(let i=0;i<10;i++){ try{ const best=pool.slice(0,4), a=best.length&&Math.random()<0.6?best[Math.floor(Math.random()*best.length)]:src;
       const q=moveCandidate(src,w); if(q){ q.name=src.name.replace(/( verbeterd)+$/,'').slice(0,28)+' verbeterd'; add(q); } }catch(e){} n++; }
-    pool.sort((a,b)=>b.gain-a.gain); const kept=[]; pool.forEach(d=>{ if(kept.length<8&&kept.every(k=>sigDist(k,d)>0.012)) kept.push(d); }); insp.items=kept; insp.prog=Math.min(1,n/300);
-    if(n<300&&keys.length){ drawInsp(); setTimeout(step,10); } else { insp.busy=false; drawInsp(); } };
+    pool.sort((a,b)=>b.gain-a.gain); const kept=[]; for(const fresh of [true,false]) pool.forEach(d=>{ if(kept.length<8&&isSeen(d)!==fresh&&!kept.includes(d)&&kept.every(k=>sigDist(k,d)>0.012)) kept.push(d); }); insp.items=kept; insp.prog=Math.min(1,n/300);
+    if(n<300&&keys.length){ drawInsp(); setTimeout(step,10); } else { insp.busy=false; markSeen(kept); drawInsp(); } };
   setTimeout(step,10);
 }
 function openModal(){ $('#modal').style.display='flex'; }
@@ -2279,20 +2352,48 @@ function rollInsp(){
   if (insp.mode==='goal'){ searchGoal(); return; }
   // eerst tonen dat er gezocht wordt, dan rekenen: elk voorstel wordt gekeurd en bijgewerkt, dat vraagt een paar tellen
   const run=insp.run; insp.items=[]; insp.loading=true; drawInsp();
-  setTimeout(()=>{ if(run!==insp.run) return; insp.items=fillInsp(()=> insp.mode==='vary' ? vary(D(),w) : insp.mode==='mash' ? mashOK(mashDesign(randomMs(t))) : (t==='body'?genBody(w):genHead(w)),8,t==='body'||insp.mode==='mash'); insp.loading=false; drawInsp(); },40);
+  setTimeout(()=>{ if(run!==insp.run) return; const lv=wildLv(w), src=D(); REFSIG=null;
+    const mk = insp.mode==='vary' ? (amp=>vary(src,Math.min(1.4,amp/1.7))) : insp.mode==='mash' ? (()=>mashOK(mashDesign(randomMs(t)))) : t==='body' ? (amp=>genBody(w,amp)) : (amp=>genHead(Math.min(1.4,amp/1.7)));
+    const nov = insp.mode==='vary' ? (d=>sigDist(d,src)) : novelty;
+    insp.items=fillWild(mk,8,lv,{nov,band:insp.mode!=='mash',scale:insp.mode==='vary'?1.3:t==='body'?1:0.8}); delete src.sig; markSeen(insp.items); insp.loading=false; drawInsp(); },40);
 }
 function openInsp(){ openModal(); rollInsp(); }
+const MODE_TXT={free:'Nieuwe vormen uit de bronnen die je aanzet: één bestaande vorm bewust bijgestuurd, of twee vormen per helft gemengd.',
+  vary:'Je eigen ontwerp blijft het vertrekpunt. De tool doet benoemde ingrepen (taille, hoorn, staart, schouder…) en zet erbij wat hij veranderde.',
+  mash:'Twee tot vier vormen, elk voor een hoek van de body of kop, met vloeiende naden. Wildheid speelt hier niet mee, de bronnen wel.',
+  goal:'Zoekt kleine aanpassingen die je ontwerp echt beter maken op wat je aanvinkt, zonder dat iets anders achteruit gaat.'};
+const SRC_TXT={klas:'Strat, Les Paul, SG…',nat:'peer, blad, schelp, golf…',arch:'gotische en Romaanse boog, art deco…',wild:'Explorer, Firebird, Iceman…'};
+const GOAL_TXT={bal:'Staand: hangt hij aan de riem, dan zakt de kop niet. Het zwaartepunt komt verder van de hals.',
+  seat:'Zittend: hij blijft rustig op je been liggen. De taille ligt dieper en dichter bij het zwaartepunt.',
+  reach:'Nut dichterbij: je linkerhand hoeft minder ver te reiken naar de eerste frets.',
+  high:'Hoge frets: je hand komt verder op de toets, door een diepere uitsparing aan de hals.',
+  own:'Licht eigen: wijkt een beetje af van het model waar hij het meest op lijkt, zonder vreemd te worden.',
+  light:'Lichter: minder hout, dus een lichtere body.',
+  pull:'Rechte trek: de snaren lopen rechter van de nut naar de mechaniek, met minder knik en minder stemproblemen.',
+  short:'Korte snaar: minder snaar achter de nut, een compactere kop.',
+  lightH:'Lichte kop: minder gewicht aan het einde van de hals, dus minder kopzwaar.',
+  tree:'Zonder snaarboom: de mechanieken komen zo te staan dat er geen snaarboom nodig is.'};
+function inspSave(){ lib.view.inspSrc=insp.src; lib.view.inspOrg=insp.org; lib.view.inspWild=insp.wild; save(); }
 function drawInsp(){
-  const t=lib.tab, modes=[['free','🎲 Vrij genereren'],['vary',`Variaties op "${esc(D().name)}"`],['mash','🧩 Willekeurige mashups'],['goal','🎯 Verbeter dit ontwerp']];
-  MB.innerHTML=`<div class="mhead"><h2>✨ Inspirator · ${t==='body'?'body':'headstock'}</h2><button data-m="close">✕</button></div>
-  <div class="mbar"><div class="tabs">${modes.map(([k,n])=>`<button data-m="mode" data-v="${k}" class="${insp.mode===k?'on':''}">${n}</button>`).join('')}</div>
-  <label>Wildheid <input type="range" min="0" max="1" step="0.05" value="${insp.wild}" data-m="wild" style="width:120px;vertical-align:middle"></label>
-  <button class="primary" data-m="roll">🎲 Nieuwe reeks</button></div>
-  ${insp.mode==='goal'?`<div class="chips" style="margin-bottom:10px">${GOALS[t].map(([k,n])=>`<button data-m="goal" data-v="${k}" class="${insp.goals[k]?'on':''}">${n}</button>`).join('')}</div><p class="hint" style="margin:0 0 8px">${insp.busy?`Aan het zoeken… ${Math.round((insp.prog||0)*100)}%`:insp.items.length?'Alleen wat echt beter is dan je ontwerp, en op de rest niet achteruit gaat.':'Niets gevonden dat echt beter is zonder iets anders te schaden. Kies andere doelen, of je ontwerp zit hier al goed.'}</p>`:''}
-  ${insp.loading?'<p class="hint" style="margin:30px 0;text-align:center">Even zoeken naar vormen die kloppen en mooi zijn… elk voorstel wordt eerst gekeurd en bijgewerkt.</p>':(!insp.items.length&&insp.mode!=='goal'?'<p class="hint" style="margin:30px 0;text-align:center">Niets gevonden dat de keuring doorstaat. Probeer een nieuwe reeks of minder wildheid.</p>':'')}
-  <div class="grid">${insp.items.map((d,i)=>`<div class="th ${i===insp.pick?'on':''}" data-m="pick" data-i="${i}">${thumbSVG(d,140,170)}<div>${esc(d.name)}</div>${d.why&&insp.mode==='goal'?`<div class="sug">${esc(d.why)}</div>`:''}</div>`).join('')}</div>
-  <div class="mfoot"><span class="hint">Klik een vorm om te kiezen, dubbelklik om hem meteen als nieuw ontwerp te openen. Techniek (pickups, knoppen, mechanieken) wordt daarna automatisch ingepast.</span>
-  <button class="primary" data-m="use" ${insp.pick<0?'disabled':''}>Gebruik als nieuw ontwerp</button></div>`;
+  const t=lib.tab, modes=[['free','🎲 Vrij'],['vary','🔁 Variaties'],['mash','🧩 Mashup'],['goal','🎯 Verbeteren']], lv=wildLv(insp.wild), m=insp.mode;
+  const srcAny=SRC_CATS.some(([k])=>insp.src[k]);
+  const lst=(tit,a)=>a&&a.length?`<div class="ilst"><b>${tit}</b><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'';
+  let o=`<div class="mhead"><h2>✨ Inspirator · ${t==='body'?'body':'kop'}</h2><button data-m="close">✕</button></div>
+  <div class="mbar"><div class="tabs">${modes.map(([k,n])=>`<button data-m="mode" data-v="${k}" class="${m===k?'on':''}">${n}</button>`).join('')}</div></div>
+  <p class="hint" style="margin:0 0 8px">${m==='vary'||m==='goal'?`<b>${esc(D().name)}</b>: `:''}${MODE_TXT[m]}</p><div class="iopt">`;
+  if (m!=='mash') o+=`<div class="ilab">${m==='goal'?'Hoe ver mag het gaan':'Wildheid'}</div><div class="chips cells">${WILD_LV.map((l,i)=>`<button data-m="wildL" data-v="${i}" class="${l===lv?'on':''}">${l.n}</button>`).join('')}</div>
+    <p class="hint">${m==='vary'?'Hoe ver een variatie van je ontwerp mag gaan. ':m==='goal'?'Hoe ver een verbetering van je ontwerp mag afwijken. ':''}${lv.txt}</p>`;
+  if (m==='free'||m==='mash') o+=`<div class="ilab">Bronnen</div><div class="chips cells">${SRC_CATS.map(([k,n])=>`<button data-m="src" data-v="${k}" class="${insp.src[k]?'on':''}">${n}</button>`).join('')}</div>
+    <p class="hint">${srcAny?'Aan: '+SRC_CATS.filter(([k])=>insp.src[k]).map(([k,n])=>`<b>${n}</b> (${SRC_TXT[k]})`).join(', ')+'.':'<span class="warn">Zet minstens één bron aan.</span>'}${m==='mash'?' Je eigen ontwerpen doen altijd mee.':''}</p>`;
+  if (t==='body'&&(m==='free'||m==='vary')) o+=`<div class="ilab">Organische zwaai</div><div class="chips"><button data-m="org" data-v="1" class="${insp.org!==false?'on':''}">Aan</button><button data-m="org" data-v="0" class="${insp.org===false?'on':''}">Uit</button></div>
+    <p class="hint">${insp.org!==false?'Soms een zachte zwaai door de hele vorm, zoals gegroeid hout. Hoe wilder, hoe vaker en hoe sterker.':'Uit: de vormen blijven strak en symmetrisch van gevoel.'}</p>`;
+  if (m==='goal') o+=`<div class="ilab">Wat moet beter</div><div class="glist">${GOALS[t].map(([k,n])=>`<button data-m="goal" data-v="${k}" class="gl ${insp.goals[k]?'on':''}"><span class="gck">${insp.goals[k]?'✓':''}</span><span>${esc(GOAL_TXT[k]||n)}</span></button>`).join('')}</div>`;
+  o+=`</div><div style="margin:8px 0 10px"><span class="hint">${m==='goal'?(insp.busy?`Aan het zoeken… ${Math.round((insp.prog||0)*100)}%`:insp.items.length?'Alleen wat echt beter is en op de rest niet achteruit gaat.':'Niets gevonden dat echt beter is zonder iets anders te schaden. Kies andere doelen, of je ontwerp zit hier al goed.'):'Elke reeks toont eerst vormen die je nog niet zag.'}</span></div>`;
+  o+=insp.loading?'<p class="hint" style="margin:30px 0;text-align:center">Even zoeken naar vormen die kloppen en mooi zijn… elk voorstel wordt eerst gekeurd en bijgewerkt.</p>':(!insp.items.length&&m!=='goal'?`<p class="hint" style="margin:30px 0;text-align:center">${(m==='free'||m==='mash')&&!srcAny?'Zet minstens één bron aan.':'Niets gevonden dat de keuring doorstaat. Probeer een nieuwe reeks, een andere wildheid of meer bronnen.'}</p>`:'');
+  o+=`<div class="grid">${insp.items.map((d,i)=>`<div class="th ${i===insp.pick?'on':''}" data-m="pick" data-i="${i}">${thumbSVG(d,140,170,m==='goal'||m==='vary'?D():null)}<div>${esc(d.name)}</div>${m==='goal'||m==='vary'?lst('Wat verandert',d.moves)+lst('Wat het oplevert',d.gains):''}</div>`).join('')}</div>
+  <p class="hint">Tik een vorm om te kiezen, dubbeltik om hem meteen te openen. Pickups, knoppen en mechanieken worden daarna vanzelf ingepast.${m==='goal'||m==='vary'?' De stippellijn is je huidige ontwerp.':''}</p>
+  <div class="mfoot"><button data-m="roll">🎲 Nieuwe reeks</button><button class="primary" data-m="use" ${insp.pick<0?'disabled':''}>Gebruik als nieuw ontwerp</button></div>`;
+  MB.innerHTML=o;
 }
 function useDesign(d){
   const n=clone(d); n.id=uid(); delete n.ref;
@@ -2352,22 +2453,51 @@ function organicFlow(poly,amt,rnd){ const P=resampleClosed(poly,3), ys=P.map(p=>
     x+=sw*Math.pow(Math.max(0,u-0.5)/0.5,2)*ss(Math.abs(p.x),POCKET_HW+4,POCKET_HW+50);   // hoorns zwaaien, hals blijft
     return {x,y}; });
   return smoothZones(Q,[{bot:y0+L*2}],1e4,4); }
-function genBody(w){ const V=refVecs(), pool=GEN_POOL.filter(k=>V[k]).concat(Math.random()<w*0.6?GEN_WILD.filter(k=>V[k]):[]); let best=null;
-  // de helft van de keren: één vorm nemen (ook uit natuur en architectuur) en hem bewust bijsturen, zoals een ontwerper; anders twee vormen per helft mengen
-  if(Math.random()<0.45){ for(let i=0;i<10;i++){ const k=pick(pool.concat(['n-deco'])), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
-      const m=moveCandidate(src,0.35+w*0.9)||clone(src); let poly=geom(m).poly; const org=Math.random()<0.2+0.4*w; if(org) poly=organicFlow(poly,0.4+0.6*w,Math.random);
-      const ok=finishBody(poly,L0); if(ok) return bodyFromPoly(ok,src.set,(org?'Organisch naar ':'Naar ')+refName(k)); } }
+// bronnen voor genereren: klassiekers, natuur, architectuur, uitgesproken vormen. Je kiest zelf welke meedoen.
+const SRC_CATS=[['klas','Klassiekers'],['nat','Natuur'],['arch','Architectuur'],['wild','Uitgesproken']];
+function srcCat(id){ const k=id.replace(/^ref-(h-)?/,''), r=lib.designs.find(d=>d.id===id); const nm=r?r.name:''; if(/architectuur/.test(nm)) return 'arch'; if(/natuur/.test(nm)) return 'nat'; if(GEN_WILD.includes(k)||/^(iceman|firebird|explorer|moderne|n4|wolf|styleo|rhoads|c5150)$/.test(k)) return 'wild'; return 'klas'; }
+function srcOn(id){ const S=insp.src||{}; return !!S[srcCat(id)]; }
+function bodyPool(){ return [...new Set(GEN_POOL.concat(GEN_WILD,['n-deco'],lib.designs.filter(d=>d.ref&&d.type==='body'&&/^ref-n-/.test(d.id)).map(d=>d.id.slice(4))))].filter(k=>refVecs()[k]&&srcOn('ref-'+k)); }
+// wildheid: hoe ver een voorstel van elke bestaande vorm mag liggen (gemeten op de omtrek). Elke trap heeft een eigen band.
+const WILD_LV=[{w:0.1,n:'Dicht bij de bron',lo:0,hi:0.011,amp:0.2,txt:'Herkenbaar: kleine ingrepen op één bestaande vorm.'},
+  {w:0.4,n:'Eigen',lo:0.009,hi:0.02,amp:0.8,txt:'Duidelijk een eigen vorm, maar nog vertrouwd.'},
+  {w:0.7,n:'Gedurfd',lo:0.018,hi:0.032,amp:1.5,txt:'Grotere ingrepen en mengvormen, de bron herken je nog maar half.'},
+  {w:1,n:'Wild',lo:0.029,hi:1,amp:2.4,txt:'Ver van alles wat bestaat. Elke vorm blijft gekeurd: bouwbaar en een schone lijn.'}];
+const wildLv=w=>WILD_LV.reduce((b,l)=>Math.abs(l.w-w)<Math.abs(b.w-w)?l:b,WILD_LV[0]);
+let REFSIG=null;
+// wat je al te zien kreeg, per tab en soort (en per ontwerp bij variaties en verbeteringen): een nieuwe reeks toont eerst verse vormen
+const SEEN={};
+function seenKey(){ return lib.tab+':'+insp.mode+(insp.mode==='vary'||insp.mode==='goal'?':'+D().id:''); }
+function isSeen(d){ const a=SEEN[seenKey()]; if(!a||!a.length) return false; const s=shapeSig(d); return a.some(y=>s.reduce((t,v,i)=>t+Math.abs(v-y[i]),0)/s.length<0.008); }
+function markSeen(items){ const k=seenKey(), a=SEEN[k]||(SEEN[k]=[]); items.forEach(d=>a.push(shapeSig(d))); if(a.length>80) a.splice(0,a.length-80); }
+function novelty(d){ if(!REFSIG) REFSIG=lib.designs.filter(x=>x.ref&&x.type===d.type).map(x=>({t:x.type,s:shapeSig(x)})); const s=shapeSig(d); let m=Infinity; REFSIG.forEach(r=>{ if(r.t!==d.type) return; const v=s.reduce((t,x,i)=>t+Math.abs(x-r.s[i]),0)/s.length; if(v<m) m=v; }); return m; }
+function genBody(w,amp){ const V=refVecs(), pool=bodyPool(), org0=insp.org===false?0:1; if(!pool.length) return null; if(amp==null) amp=w;
+  const single=Math.random()<Math.max(0.15,0.85-amp*0.35);
+  // één vorm nemen (ook uit natuur en architectuur) en hem bewust bijsturen, zoals een ontwerper; hoe wilder, hoe meer ingrepen na elkaar
+  if(single){ for(let i=0;i<10;i++){ const k=pick(pool), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=Math.max(MAX_LOBES,lobeInfo(geom(src).poly).lobes);
+      let m=clone(src); const rounds=1+Math.floor(amp*1.2+Math.random()*amp); for(let r=0;r<rounds;r++){ const q=moveCandidate(m,Math.min(1.6,0.25+amp*0.6)); if(q) m=q; }
+      let poly=geom(m).poly; const org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2,0.3+0.6*amp),Math.random);
+      const ok=finishBody(poly,L0); if(ok) return bodyFromPoly(ok,src.set,refName(k)+(org?', organisch':', bijgestuurd')); } }
+  if(pool.length<2) return null;
   for(let i=0;i<14;i++){ const pT=pickHalf(V,pool,'t',Math.random), pB=Math.random()<0.45?pT.map(x=>[...x]):pickHalf(V,pool,'b',Math.random);
-    const g=blendBody(V,pool,Math.random,{amt:0.35+w*1.1,pT,pB}); let poly=g.poly, org=Math.random()<0.25+0.35*w; if(org) poly=organicFlow(poly,0.6+w*0.8,Math.random);
-    const ok=finishBody(poly,w>0.7?10:MAX_LOBES); if(!ok) continue;
+    const g=blendBody(V,pool,Math.random,{amt:Math.min(2.6,0.3+amp*1.0),pT,pB}); let poly=g.poly, org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2.2,0.5+amp*0.7),Math.random);
+    const ok=finishBody(poly,amp>1.2?10:MAX_LOBES); if(!ok) continue;
     const main=lib.designs.find(d=>d.id==='ref-'+g.parents.t[0])||defaultBody(), nm=[...new Set(g.parents.t.concat(g.parents.b))].slice(0,3).map(refName).join(' × ');
-    return bodyFromPoly(ok,main.set,(org?'Organisch ':'Inspiratie ')+nm); }
+    return bodyFromPoly(ok,main.set,nm+(org?', organisch':'')); }
   return null; }
+// acht voorstellen binnen de band van de gekozen wildheid; binnen de band wint de rustigste lijn. Liever minder dan buiten de band.
+function fillWild(make,n,lv,opt){ opt=opt||{}; const t0=Date.now(), got=[], near=[], stale=[], nov=opt.nov||novelty, sc=opt.scale||1, lo=lv.lo*sc, hi=lv.hi>=1?1:lv.hi*sc;
+  for(let i=0;i<140&&Date.now()-t0<(opt.ms||2800)&&got.length<n*2;i++){ const amp=lv.amp*(0.75+Math.random()*0.5); let d=null; try{ d=make(amp); }catch(e){} if(!d) continue; delete d.sig;
+    if(got.concat(near,stale).some(o=>sigDist(o,d)<0.01)) continue; if(isSeen(d)){ stale.push(d); continue; } const v=nov(d); d._nov=v; (opt.band===false||(v>=lo&&v<=hi)?got:near).push(d); }
+  if(got.length+near.length<n) near.push(...stale.slice(0,n-got.length-near.length));
+  got.forEach(d=>d._b=beauty(d)); got.sort((a,b)=>a._b-b._b); let keep=got.slice(0,n);
+  if(keep.length<n){ const gap=d=>d._nov==null?9:d._nov<lo?lo-d._nov:d._nov-hi; near.sort((a,b)=>gap(a)-gap(b)); keep=keep.concat(near.slice(0,n-keep.length)); }
+  keep.forEach(d=>{ delete d._b; delete d._nov; }); return keep.sort(()=>Math.random()-0.5); }
 
 // ---- koppen: niet middelen (dat geeft blobben), maar een strakke kop nemen en hem bewust bijsturen ----
 // organische vormen erbij: blad, kiezel, golf, vlam, kling, druppel. Zelfde volgorde als de referenties: top, diskantkant naar de nut, baskant terug omhoog.
 const HEAD_ORG={split:{},inline:{}};   // de organische koppen staan nu als referenties in de database (natuur en architectuur)
-function headSkeleton(fam,w){ const refs=HEAD_FAM[fam].map(k=>lib.designs.find(d=>d.id==='ref-h-'+k)).filter(Boolean); if(!refs.length) return null;
+function headSkeleton(fam,w){ const refs=HEAD_FAM[fam].map(k=>lib.designs.find(d=>d.id==='ref-h-'+k)).filter(d=>d&&srcOn(d.id)); if(!refs.length) return null;
   const org=Object.entries(HEAD_ORG[fam]||{}), useOrg=org.length&&Math.random()<0.25+0.25*w; let d, nm;
   if(useOrg){ const [n,pts]=pick(org), base=fam==='split'?(lib.designs.find(x=>x.id==='ref-h-lp')||refs[0]):(lib.designs.find(x=>x.id==='ref-h-strat')||refs[0]); d=clone(base); const k=d.set.nutW/43; d.pts=pts.map(([x,y,c])=>({x:x*k,y,c:!!c})); d.sym=false; d.tension=1; nm='Organisch: '+n; }
   else { const r=pick(refs); d=clone(r); if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } nm='Kop naar '+r.name.replace(/ kop.*$/,'').replace(/-type$/,''); }
@@ -2391,7 +2521,7 @@ function genHead(w){ for(let i=0;i<14;i++){ const r=Math.random(), fam=r<0.5?'sp
     headTransform(d,0.4+w*1.0); if(!headOK(d,L0+1)) continue; seatPosts(d); if(headChecks(d).length||pullInfo(d).worst>11) continue; return d; }
   return null; }
 function varyHead(src,w){ for(let i=0;i<10;i++){ const d=clone(src); delete d.ref; if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } const L0=lobeInfo(geom(src).poly).lobes;
-    headTransform(d,0.2+w*0.7); if(!headOK(d,Math.max(L0,L0+1))) continue; seatPosts(d); if(headChecks(d).length||pullInfo(d).worst>Math.max(11,pullInfo(src).worst+2)) continue; d.name='Variatie op '+src.name; return d; }
+    d.moves=headTransform(d,0.2+w*0.7); if(!headOK(d,Math.max(L0,L0+1))) continue; seatPosts(d); if(headChecks(d).length||pullInfo(d).worst>Math.max(11,pullInfo(src).worst+2)) continue; d.name='Variatie op '+src.name; return d; }
   return null; }
 // acht voorstellen die de keuring doorstaan; liever minder dan lelijke
 function beauty(d){ const g=geom(d), L=lobeInfo(g.poly), f=shapeFair(g); return L.lobes+0.7*L.small+0.25*f.flips+0.3*f.E; }   // lager is rustiger
@@ -2447,11 +2577,11 @@ function mashDesign(m){
     let best=null; for (const k of QK){ const t=clone(d); t.set=clone(r.S[k].d.set); t.set.nutW=d.set.nutW; if(t.set.layout==='custom') t.set.layout=headFam(r.S[k].d); t.set.pat=null; placePosts(t); if(headChecks(t).length) fitPosts(t); const n=headChecks(t).length*20+pullInfo(t).worst; if(!best||n<best.n) best={n,set:t.set,posts:t.posts}; if(n<8) break; }
     d.set=best.set; d.posts=best.posts; }
   const nm=[...new Set(QK.map(k=>r.S[k].d.name.replace(/ \(.*\)$/,'').replace(/-type.*$/,'').replace(/ kop$/,'')))];
-  d.name='Mashup '+nm.join(' × '); return d;
+  d.name=nm.join(' × '); return d;
 }
 function randomMs(type){
   const cur=D(), same=x=>(x.set.strings>4)===((cur.type===type?cur.set.strings:6)>4);
-  let ids=lib.designs.filter(x=>x.type===type&&same(x)).map(x=>x.id);
+  let ids=lib.designs.filter(x=>x.type===type&&same(x)).map(x=>x.id); { const f=ids.filter(id=>!/^ref-/.test(id)||srcOn(id)); if(f.length>=2) ids=f; }
   // koppen alleen binnen één familie mengen (3+3 met 3+3, op rij met op rij): anders wordt het een vreemd beest
   if (type==='headstock'){ const fam=x=>headFam(lib.designs.find(q=>q.id===x)), f0=fam(pick(ids)); const same2=ids.filter(x=>fam(x)===f0); if(same2.length>=2) ids=same2; }
   const n=Math.min(ids.length,pick([2,2,3,4])), ch=[...ids].sort(()=>Math.random()-0.5).slice(0,n);
@@ -2462,12 +2592,12 @@ function randomMs(type){
   return {type,ul:a[0],ur:a[1],ll:a[2],lr:a[3],autoL:true,autoR:true,yL:0,yR:0,soft:type==='body'?8:5};
 }
 const msBy={body:null,headstock:null};
-function openMash(){
+function openMash(){ requestAnimationFrame(()=>{ const b=$('#mbox'); if(b&&!openMash.kept) b.scrollTop=0; });
   const t=lib.tab, cur=D().id, other=(lib.designs.find(x=>x.type===t&&x.id!==cur&&x.ref)||D()).id;
   if (!msBy[t]) msBy[t]={type:t,ul:cur,ur:cur,ll:other,lr:other,autoL:true,autoR:true,yL:0,yR:0,soft:t==='body'?8:5};
   const ms=msBy[t];
   openModal();
-  MB.innerHTML=`<div class="mhead"><h2>🧩 Mashup · ${t==='body'?'body':'headstock'} · tot 4 vormen, één per hoek</h2><button data-m="close">✕</button></div>
+  MB.innerHTML=`<div class="mhead"><h2>🧩 Hoeken mengen · ${t==='body'?'body':'kop'}</h2><button data-m="close">✕</button></div>
   <div class="mash" style="margin-top:12px"><div id="mprev"></div><div class="ctl">
     ${QK.map(k=>`<div class="row"><label><span class="sw" style="background:${QC[k]}"></span>${QN[t][k]}</label><select data-m="src" data-k="${k}" style="max-width:190px">${optionsFor(t,null,ms[k])}</select></div>`).join('')}
     <div class="btns"><button data-m="rand">🎲 Willekeurige bronnen</button></div>
@@ -2506,6 +2636,9 @@ $('#modal').addEventListener('click',e=>{
   if (a==='close') closeModal();
   else if (a==='mode'){ insp.mode=t.dataset.v; rollInsp(); }
   else if (a==='goal'){ const k=t.dataset.v; insp.goals[k]=insp.goals[k]?0:1; rollInsp(); }
+  else if (a==='wildL'){ insp.wild=WILD_LV[+t.dataset.v].w; inspSave(); rollInsp(); }
+  else if (a==='src'){ const k=t.dataset.v; insp.src[k]=insp.src[k]?0:1; inspSave(); VECS=null; rollInsp(); }
+  else if (a==='org'){ insp.org=t.dataset.v==='1'; inspSave(); rollInsp(); }
   else if (a==='roll') rollInsp();
   else if (a==='pick'){ insp.pick=+t.dataset.i; drawInsp(); }
   else if (a==='use' && insp.pick>=0) useDesign(insp.items[insp.pick]);
@@ -2599,7 +2732,7 @@ function openRender(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===
   MB.innerHTML=`<div class="mhead"><h2>🎨 Render · ${esc(b.name)}</h2><button data-m="close">✕</button></div>
   <div class="rnd"><div class="rimg">${r.svg.replace('<svg ','<svg style="width:100%;height:100%" ')}</div>
   <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div><div class="row"><label>Hals</label>${opt('neck',NECKC)}</div><div class="row"><label>Hardware</label>${opt('metal',METAL)}</div><div class="row"><label>Pickups (alle)</label>${opt('pu',PUCOL)}</div>
-  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Kies hem bij Kop en render.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
+  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Andere kop? Kies hem in de instellingen onder Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
   openModal(); rndBlob=null; svgToPng(r.svg,r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
 MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; save(); openRender(); });
 MB.addEventListener('click',e=>{ const t=e.target.closest('[data-r=save]'); if(t&&rndBlob){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); shareFile(rndBlob,fileSafe(b?b.name:'gitaar')+'_render.png'); }
@@ -2710,7 +2843,7 @@ let prt=null;
 function buildPrint(){ const o=prOpt(), bx=o.bx-o.margin, by=o.by-o.margin, res=[];
   templateShapes(o).forEach(sh=>{ let outer=ringArea(sh.outer)<0?sh.outer.slice().reverse():sh.outer; const r=splitParts(outer,sh.holes,bx,by,o.gap); if(!r){ res.push({...sh,err:'Te groot om op te delen'}); return; }
     const rows=r.ny, cols=r.nx, RN=rows===1?['']:rows===2?['boven','onder']:rows===3?['boven','midden','onder']:[...Array(rows)].map((_,i)=>'rij'+(i+1)), CN=cols===1?['']:cols===2?['links','rechts']:cols===3?['links','midden','rechts']:[...Array(cols)].map((_,i)=>'kol'+(i+1));
-    const seen={}; r.parts.forEach(p=>{ const bb=ringBox(p.outer), mx=(bb.x0+bb.x1)/2, my=(bb.y0+bb.y1)/2, ci=r.cx.filter(c=>mx>c).length, ri=rows-1-r.cy.filter(c=>my>c).length; let nm=[RN[ri],CN[ci]].filter(Boolean).join('-')||'heel'; seen[nm]=(seen[nm]||0)+1; if(seen[nm]>1) nm+=String.fromCharCode(96+seen[nm]); p.label=nm; p.w=bb.x1-bb.x0; p.h=bb.y1-bb.y0; });
+    const seen={}; r.parts.forEach(p=>{ const bb=ringBox(p.outer), mx=(bb.x0+bb.x1)/2, my=(bb.y0+bb.y1)/2, ci=r.cx.filter(c=>mx>c).length, ri=rows-1-r.cy.filter(c=>my>c).length; let nm=[RN[ri],CN[ci]].filter(Boolean).join('-')||'hiel'; seen[nm]=(seen[nm]||0)+1; if(seen[nm]>1) nm+=String.fromCharCode(96+seen[nm]); p.label=nm; p.w=bb.x1-bb.x0; p.h=bb.y1-bb.y0; });
     res.push({...sh,parts:r.parts,nx:cols,ny:rows}); });
   prt={o,res}; return prt; }
 function printPreview(P){ let all=[]; P.res.forEach(r=>(r.parts||[]).forEach(p=>all.push(p))); if(!all.length) return '<p class="hint">Niets om te tonen.</p>';
@@ -2724,7 +2857,7 @@ function printPreview(P){ let all=[]; P.res.forEach(r=>(r.parts||[]).forEach(p=>
   return `<svg viewBox="-10 0 ${x0+P.o.bx+20} ${Math.max(H,P.o.by+30)}" style="width:100%;max-height:52vh">${items}${bed}</svg>`; }
 let prtZip=null;
 function openPrint(){ const o=prOpt(); prtZip=null; const P=buildPrint(); let info='';
-  P.res.forEach(r=>{ info+= r.err?`<p><b>${r.key}</b>: ${r.err}</p>`:`<p><b>${r.key==='body'?'Body':'Kop'}</b> · ${esc(r.name)}: ${r.parts.length} ${r.parts.length>1?'stukken':'stuk'}${r.parts.length>1?` (${r.nx}×${r.ny})`:''}, grootste ${fmt(Math.max(...r.parts.map(p=>Math.max(p.w,p.h))),0)} mm${r.parts.some(p=>Math.abs(ringArea(p.outer))<400)?' · <span style="color:#b5541c">let op: een heel klein stukje</span>':''}</p>`; });
+  P.res.forEach(r=>{ info+= r.err?`<p><b>${r.key}</b>: ${r.err}</p>`:`<p><b>${r.key==='body'?'Body':'Kop'}</b> · ${esc(r.name)}: ${r.parts.length} ${r.parts.length>1?'stukken':'stuk'}${r.parts.length>1?` (${r.nx}×${r.ny})`:''}, grootste stuk ${fmt(Math.max(...r.parts.map(p=>Math.max(p.w,p.h))),0)} mm${r.parts.some(p=>Math.abs(ringArea(p.outer))<400)?' · <span style="color:#b5541c">let op: een heel klein stukje</span>':''}</p>`; });
   const num=(k,l,u,st)=>`<div class="row"><label>${l}</label><input type="number" data-p-in="${k}" value="${o[k]}" step="${st||1}"><span class="u">${u}</span></div>`, ck=(k,l)=>`<div class="row"><label><input type="checkbox" data-p-in="${k}" ${o[k]?'checked':''}> ${l}</label></div>`;
   MB.innerHTML=`<div class="mhead"><h2>🖨 3D-print mallen</h2><button data-m="close">✕</button></div>
   <div class="rnd"><div class="rimg" style="background:#faf7f2">${printPreview(P)}</div><div class="ropt">${info}
@@ -2732,7 +2865,7 @@ function openPrint(){ const o=prOpt(); prtZip=null; const P=buildPrint(); let in
   ${num('t','Dikte van de mal','mm',0.5)}${num('bx','Bed breed','mm')}${num('by','Bed diep','mm')}${num('margin','Marge op het bed','mm')}${num('gap','Speling per kant','mm',0.05)}
   ${ck('tuners','Mechaniekgaten in de kop')}${ck('center','Merkgaatjes op de middenlijn')}${ck('pus','Pickupfrezingen als gat')}${ck('sh','Klankgaten als gat')}
   <p class="hint">Standaard voor je FlashForge AD5M (220 × 220). Stukken zijn verbonden met zwaluwstaarten: lijmen en ze liggen vanzelf juist.</p>
-  <div class="btns"><button class="primary" data-p="make">Maak STL-bestanden</button><button data-p="share" ${prtZip?'':'disabled'}>Bewaar zip</button></div><p class="hint" id="prtMsg"></p></div></div>`;
+  <div class="btns"><button class="primary" data-p="make">1 · Maak de STL's</button><button data-p="share" ${prtZip?'':'disabled'}>2 · Bewaar als zip</button></div><p class="hint" id="prtMsg">Eerst maken, dan bewaren: de iPhone wil voor het delen een eigen tik.</p></div></div>`;
   openModal(); }
 MB.addEventListener('change',e=>{ const k=e.target.dataset.pIn; if(!k) return; const o=lib.view.prt||(lib.view.prt={}); o[k]=e.target.type==='checkbox'?e.target.checked:parseFloat(e.target.value); if(e.target.type!=='checkbox'&&!isFinite(o[k])) delete o[k]; save(); openPrint(); });
 function printAct(a){
@@ -2742,15 +2875,71 @@ function printAct(a){
       files.push({name:'overzicht.svg',data:map});
       files.push({name:'LEESMIJ.txt',data:`Sixto Vormontwerper - 3D-print mallen\n${new Date().toLocaleString('nl-BE')}\n\n`+P.res.map(r=>r.err?`${r.key}: ${r.err}`:`${r.key} (${r.name}): ${r.parts.length} stuk(ken)\n`+r.parts.map(p=>`  ${r.key}_${p.label}.stl  ${fmt(p.w,0)} x ${fmt(p.h,0)} mm`).join('\n')).join('\n\n')+`\n\nDikte ${o.t} mm, bed ${o.bx} x ${o.by} mm, marge ${o.margin} mm, speling ${o.gap} mm per kant.\nMaten in mm, ware grootte. Zwaluwstaarten: eerst droog passen, dan lijmen op een vlakke plaat.\nZie overzicht.svg voor hoe de stukken samen gaan.\n`});
       const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); prtZip={blob:zipBlob(files),name:fileSafe(b?b.name:'mallen')+'_STL.zip'};
-      const bt=MB.querySelector('[data-p=share]'); if(bt) bt.disabled=false; if(msg) msg.textContent=`${n} STL-bestanden klaar. Tik op "Bewaar zip": kies Dropbox, dan staat hij op je laptop.`;
+      const bt=MB.querySelector('[data-p=share]'); if(bt) bt.disabled=false; if(msg) msg.textContent=`${n} STL-bestanden klaar. Tik op "2 · Bewaar als zip": kies Dropbox, dan staat hij op je laptop.`;
     }catch(err){ if(msg) msg.textContent='Er ging iets mis: '+err.message; } }
   if(a==='share'&&prtZip) shareFile(prtZip.blob,prtZip.name); }
 
 // ================= kiezer (vervangt de systeem-dropdowns, zelfde gedrag op iPad, iPhone en laptop) =================
 const isDesignSel=sel=>sel.id==='designSel'||sel.id==='headSel'||sel.id==='ghostSel'||sel.dataset.m==='src';
+function isNumEl(el){ return el.type==='number'||(!!el.hasAttribute&&el.hasAttribute('data-n')); }
+// getallen: gewoon tekstveld met cijferklavier (komma mag), en − / + ernaast zodat je niet hoeft te typen
+const SIGNED=/(^|\.)(x|y|rot|a|ang|dx|dy|fx|fy|tilt|curve|inset|bottom|bot)$/;
+function enhanceNums(){
+  document.querySelectorAll('input[type=number]').forEach(el=>{
+    const key=el.dataset.bind||el.dataset.dim||el.dataset.pIn||el.dataset.m||'';
+    el.setAttribute('data-n',el.getAttribute('step')||'1'); el.type='text'; el.setAttribute('autocomplete','off'); el.setAttribute('autocorrect','off'); el.setAttribute('autocapitalize','off'); el.spellcheck=false;
+    if (!SIGNED.test(key)) el.inputMode='decimal';
+    const st=parseFloat(el.dataset.n);
+    if (el.closest('.tbl')||!(st>=0.01)) return;
+    const w=document.createElement('span'); w.className='nw'; el.before(w);
+    w.insertAdjacentHTML('afterbegin','<button type="button" class="stp" data-stp="-1" aria-label="Kleiner" tabindex="-1">−</button>'); w.appendChild(el);
+    w.insertAdjacentHTML('beforeend','<button type="button" class="stp" data-stp="1" aria-label="Groter" tabindex="-1">+</button>');
+  });
+  document.querySelectorAll('.nw').forEach(w=>{ const el=w.querySelector('input'); if(!el) return; w.querySelectorAll('.stp').forEach(b=>{ if(b.disabled!==el.disabled) b.disabled=el.disabled; }); });
+}
+function stpSel(el){ for (const a of ['bind','dim','pIn','m']) if (el.dataset[a]!=null) return `input[data-${a.replace(/[A-Z]/g,c=>'-'+c.toLowerCase())}="${el.dataset[a]}"]`+(el.dataset.s!=null?`[data-s="${el.dataset.s}"]`:''); return null; }
+function stpOnce(q,dir,first){
+  const el=document.querySelector(q); if(!el||el.disabled) return;
+  const st=parseFloat(el.dataset.n)||1; let v=parseFloat(String(el.value).replace(',','.'));
+  if (!isFinite(v)) v=0;
+  v=Math.round((v+dir*st)/st)*st; v=Math.round(v*10000)/10000;
+  const mn=parseFloat(el.getAttribute('min')), mx=parseFloat(el.getAttribute('max')); if(isFinite(mn)) v=Math.max(mn,v); if(isFinite(mx)) v=Math.min(mx,v);
+  if (first) el.dispatchEvent(new Event('focusin',{bubbles:true}));
+  histSoft=true; el.value=String(v); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true}));
+}
+let stpT=null, stpLast=null;
+document.addEventListener('pointerdown',e=>{ const b=e.target.closest&&e.target.closest('.stp'); if(!b||b.disabled) return; e.preventDefault();
+  const el=b.parentNode.querySelector('input'), q=el&&stpSel(el); if(!q) return; const dir=+b.dataset.stp, t0=Date.now();
+  const a=document.activeElement; if(a&&a.blur&&a!==document.body&&a!==el) a.blur();
+  const fresh=!(stpLast&&stpLast.q===q&&t0-stpLast.t<1500); stpLast={q,t:t0}; stpOnce(q,dir,fresh); clearInterval(stpT);
+  stpT=setInterval(()=>{ const dt=Date.now()-t0; if(dt<420) return; stpOnce(q,dir*(dt>2200?5:1),false); },110); });
+const stpEnd=()=>{ if(stpT){ clearInterval(stpT); stpT=null; if(stpLast) stpLast.t=Date.now(); } };
+window.addEventListener('pointerup',stpEnd); window.addEventListener('pointercancel',stpEnd); window.addEventListener('blur',stpEnd);
+document.addEventListener('input',e=>{ const el=e.target; if(el.hasAttribute&&el.hasAttribute('data-n')&&el.value.indexOf(',')>=0) el.value=el.value.replace(/,/g,'.'); },true);
+document.addEventListener('keydown',e=>{ const el=e.target; if(e.key==='Enter'&&el.hasAttribute&&el.hasAttribute('data-n')) el.blur(); });
+// stappenbalk: springen naar een stap, en tonen waar je bent
+document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-nav-go]'); if(!b) return; const t=P.querySelector(`[data-nav="${b.dataset.navGo}"]`); if(!t) return;
+  const nav=$('#stepNav'), off=(nav?nav.offsetHeight:0)+6; P.scrollTo({top:Math.max(0,P.scrollTop+t.getBoundingClientRect().top-P.getBoundingClientRect().top-off),behavior:'smooth'}); });
+let navRaf=0;
+function navMark(){ navRaf=0; lib.view['ps_'+lib.tab]=Math.round(P.scrollTop); const nav=$('#stepNav'); if(!nav) return; const top=P.getBoundingClientRect().top+nav.offsetHeight+P.clientHeight*0.3; let cur='';
+  const H=[...P.querySelectorAll('[data-nav]')]; H.forEach(h=>{ if(h.getBoundingClientRect().top<=top) cur=h.dataset.nav; }); if(P.scrollTop+P.clientHeight>=P.scrollHeight-4&&H.length) cur=H[H.length-1].dataset.nav;
+  nav.querySelectorAll('button').forEach(b=>{ const on=b.dataset.navGo===cur; if(b.classList.contains('on')!==on){ b.classList.toggle('on',on); if(on){ const l=b.offsetLeft-nav.offsetWidth/2+b.offsetWidth/2; nav.scrollTo({left:Math.max(0,l),behavior:'smooth'}); } } }); }
+P.addEventListener('scroll',()=>{ if(!navRaf) navRaf=requestAnimationFrame(navMark); },{passive:true});
+window.navKick=()=>{ if(!navRaf) navRaf=requestAnimationFrame(navMark); };
+// korte keuzelijsten worden knoppen: één tik in plaats van open en kies
+const segOK=s=>!/designSel|more|hwPreset|headSel|scalePick/.test(s.id||'')&&!s.closest('.tbl,header')&&s.options.length>=2&&s.options.length<=4&&!s.querySelector('optgroup')&&[...s.options].every(o=>o.textContent.length<=22);
+function pickVal(sel,v){ if (v===sel.value) return; sel.dispatchEvent(new Event('focusin',{bubbles:true})); sel.value=v; sel.dispatchEvent(new Event('input',{bubbles:true})); sel.dispatchEvent(new Event('change',{bubbles:true})); enhanceSelects(); }
 function enhanceSelects(){
+  enhanceNums();
   document.querySelectorAll('select').forEach(sel=>{
     let b=sel.nextElementSibling;
+    if (segOK(sel)){
+      if (!b||!b.classList.contains('seg')){ b=document.createElement('div'); b.className='seg'+(sel.options.length>=3?' segw':''); sel.classList.add('nat'); sel.after(b); b.addEventListener('click',e=>{ const t=e.target.closest('button'); if(t&&!t.disabled) pickVal(sel,t.dataset.v); }); }
+      const sig=[...sel.options].map(o=>o.value+'='+o.textContent).join('|');
+      if (b.dataset.sig!==sig){ b.dataset.sig=sig; b.innerHTML=[...sel.options].map(o=>`<button type="button" data-v="${esc(o.value)}">${esc(o.textContent)}</button>`).join(''); }
+      b.querySelectorAll('button').forEach(t=>{ const on=t.dataset.v===sel.value; if(t.classList.contains('on')!==on) t.classList.toggle('on',on); if(t.disabled!==sel.disabled) t.disabled=sel.disabled; });
+      return;
+    }
     if (!b||!b.classList.contains('pick')){ b=document.createElement('button'); b.type='button'; b.className='pick'; if(sel.style.maxWidth) b.style.maxWidth=sel.style.maxWidth; if(sel.title) b.title=sel.title; sel.classList.add('nat'); sel.after(b); b.addEventListener('click',()=>openPicker(sel,b)); }
     const o=sel.options[sel.selectedIndex], tx=o?o.textContent:'—'; if(b.textContent!==tx) b.textContent=tx; if(b.disabled!==sel.disabled) b.disabled=sel.disabled;
   });
@@ -2784,7 +2973,7 @@ function switchDesign(){
   if (!lib.designs.some(x=>x.type===lib.tab)) lib.designs.push(lib.tab==='body'?defaultBody():defaultHead());
   if (!lib.designs.some(x=>x.id===lib.active[lib.tab])) lib.active[lib.tab]=lib.designs.find(x=>x.type===lib.tab).id;
   histFlush(); setMenu(false); sel=-1; measure=null; calib=null; editPG=false; if(mode==='bg') mode='edit';
-  refreshAuto(D()); if(!D().ref){ if(hist[D().id]) histCommit(D()); else histOf(D()); } histUI(); pillUI(); buildPanel(); syncPanel(); fit(); save();
+  refreshAuto(D()); if(!D().ref){ if(hist[D().id]) histCommit(D()); else histOf(D()); } histUI(); pillUI(); buildPanel(); syncPanel(); P.scrollTop=lib.view['ps_'+lib.tab]||0; fit(); save();
 }
 function update(light){ refreshAuto(D(),light||!!drag); render(); syncPanel(); save(); if(!light&&!drag&&!histMute) histAfterUpdate(); }
 const leaving=()=>{ histFlush(); if(saveT) saveNow(); if(histW) histWrite(); };
@@ -2793,6 +2982,7 @@ let lastSz=null; window.addEventListener('resize',()=>{ const r=svg.getBoundingC
 if (lib.view.soft===30) lib.view.soft=60;
 ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false){ placePosts(d); if(d.ref&&headChecks(d).length) fitPosts(d); } });
 switchDesign();
+if (CMP.matches && lib.view.sheet) setSheet(true);
 </script>
 </body>
 </html>
