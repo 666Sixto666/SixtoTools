@@ -55,7 +55,7 @@
   <div><a class="eyebrow home" href="./">‹ Werkplaats</a><h1>Status</h1></div>
 </header>
 <div class="meta" id="meta"></div>
-<div class="reqbar"><button class="btn" id="reqbtn" onclick="requestUpdate()" style="margin-top:0;">🔄 Vraag CS om een nieuwe update</button><span class="note" id="reqnote"></span></div>
+<div class="reqbar"><button class="btn" id="reqbtn" onclick="requestUpdate()" style="margin-top:0;">🔄 Vraag Spaan om een nieuwe update</button><span class="note" id="reqnote"></span></div>
 <div id="doc"><div class="msg">Laden…</div></div>
 
 <script>
@@ -125,7 +125,7 @@ async function liveBuilds(token, stand){
     `<td>${r.next ? cell(r.next.text.replace(/\s*\((klantbuild|verkoop|prototype)\)/g, '')) + `<span class="sub">${esc(r.next.phase)}</span>` : 'alles afgevinkt'}</td></tr>`).join('') + '</table></div>';
 }
 
-/* "Vraag CS om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt CS elk halfuur
+/* "Vraag Spaan om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt CS elk halfuur
    (07–22 u, als de pc en de Claude-app aanstaan) of er een verzoek ligt, herschrijft dan de status en wist het verzoek. */
 const REQ = 'sixto-private/contents/requests/update.json';
 async function showRequest(token){
@@ -134,7 +134,7 @@ async function showRequest(token){
   if(res.ok){
     const j = await res.json(); let at = '';
     try{ at = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))))).requestedAt; }catch(e){}
-    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. CS werkt de status bij binnen het halfuur (als de pc aanstaat).';
+    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. Spaan werkt de status bij binnen het halfuur (als de pc aanstaat).';
     btn.disabled = true; btn.style.opacity = .5; return j.sha;
   }
   note.textContent = ''; btn.disabled = false; btn.style.opacity = 1; return null;
@@ -168,7 +168,7 @@ async function load(){
     if(h){ const live = await liveBuilds(token, stand).catch(() => null);
       if(live){ h.innerHTML = 'Builds<span class="live">● live uit Builds</span>'; h.nextElementSibling.innerHTML = live; } }
     const commits = await api(`${REPO}/commits?path=${PATH}&per_page=1`, token).then(r => r.ok ? r.json() : []);
-    if(commits[0]) document.getElementById('meta').textContent = 'Rapport van CS: ' + hhmm(commits[0].commit.author.date);
+    if(commits[0]) document.getElementById('meta').textContent = 'Rapport van Spaan: ' + hhmm(commits[0].commit.author.date);
     showRequest(token).catch(() => {});
   }catch(e){
     doc.innerHTML = `<div class="msg">Kon de status niet laden (${esc(e.message)}). Offline? <button class="btn" onclick="load()">Opnieuw</button></div>`;
