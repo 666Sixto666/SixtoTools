@@ -139,7 +139,7 @@ function render(){
 
   document.getElementById('ready').innerHTML = open.length
     ? `<h2>Klaar om te posten</h2>` + open.map(renderReady).join('')
-    : `<h2>Klaar om te posten</h2><div class="card"><div class="muted">Niets klaar op dit moment. Claude zet hier de volgende reel klaar, met video en tekst.</div></div>`;
+    : `<h2>Klaar om te posten</h2><div class="card"><div class="muted">Niets klaar op dit moment. Spaan zet hier de volgende reel klaar, met video en tekst.</div></div>`;
 
   const posted = posts.filter(p => p.posted && (p.posted.instagram || p.posted.youtube));
   document.getElementById('posted').innerHTML = done.length ? `<h2>Gepost</h2><div class="card">` + done
