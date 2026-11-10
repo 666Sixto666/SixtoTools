@@ -195,6 +195,7 @@ aside>details>summary{padding:12px 14px}
 .mfoot{position:sticky;bottom:0;z-index:4;background:#fff;padding:10px 0 12px;border-top:1px solid var(--line)}
 .th{padding:6px}.th svg{display:block;margin:0 auto}
 @media (min-width:901px){aside{width:400px}}
+.jopt{margin:2px 0 8px;padding:6px 8px;border-radius:8px;background:#f7f4ef;font-size:12.5px}.jrow{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:3px 0}.jrow span{flex:1}.jrow button{padding:4px 10px;min-height:32px}
 .stepn{display:inline-block;min-width:20px;height:20px;line-height:20px;border-radius:10px;background:#b5541c;color:#fff;font-size:12px;text-align:center;margin-right:7px;vertical-align:1px}.hint.flow{margin:-4px 0 8px}
 </style>
 </head>
@@ -1256,6 +1257,7 @@ function bodyItems(d,g){
   if (!lib.view.hw) return '';
   const s=d.set, c=s.ctrl, ctx=bodyCtx(d), its=c.items||[]; let o='';
   { const f=bodyPhysics(d), a=toS(f.C.x,f.C.y), col=f.margin>=120?'#2e7d4f':f.margin>=70?'#b57f1c':'#c0392b';
+    { const S=strapPins(d,g), alt=S.mode==='trad'?S.ideal:S.trad; if(Math.hypot(alt.x-f.F.x,alt.y-f.F.y)>4){ const u=toS(alt.x,alt.y); o+=`<circle cx="${u[0]}" cy="${u[1]}" r="5" fill="none" stroke="#1f1c18" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`; } }
     [f.F,f.R].forEach(q=>{ const u=toS(q.x,q.y); o+=`<circle cx="${u[0]}" cy="${u[1]}" r="6" fill="#fff" stroke="#1f1c18" stroke-width="2"/><circle cx="${u[0]}" cy="${u[1]}" r="2" fill="#1f1c18"/>`; });
     const u=toS(f.F.x,f.F.y); if(!CMP.matches) o+=`<text x="${u[0]-9}" y="${u[1]-9}" font-size="11" text-anchor="end" fill="#1f1c18">riem</text>`;
     o+=`<circle cx="${a[0]}" cy="${a[1]}" r="9" fill="#fff" stroke="${col}" stroke-width="2"/><path d="M${a[0]} ${a[1]-9}A9 9 0 0 1 ${a[0]+9} ${a[1]}L${a[0]} ${a[1]}Z M${a[0]} ${a[1]+9}A9 9 0 0 1 ${a[0]-9} ${a[1]}L${a[0]} ${a[1]}Z" fill="${col}"/>${CMP.matches?'':`<text x="${a[0]+13}" y="${a[1]+4}" font-size="11" fill="${col}">zwaartepunt</text>`}`; }
@@ -1514,7 +1516,8 @@ function buildPanel(){
       <p class="hint" id="ctrlState"></p>
       ${sel_('set.ctrl.sw','Schakelaar',{none:'Geen',toggle3:'3-weg toggle',blade3:'3-weg schuif',blade5:'5-weg schuif'},'data-after="ctrl"')}
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
-      ${chk('set.ctrl.loose','Elke knop apart slepen')}</section>`;
+      ${chk('set.ctrl.loose','Elke knop apart slepen')}
+      ${sel_('set.strapMode','Bovenste riemknop',{ideal:'Ideaal',trad:'Traditioneel'})}<p class="hint" id="strapState"></p></section>`;
     h+=`<section>${step(7,'Kop en render','Welke kop bij deze body hoort, en hoe de hele gitaar eruitziet.')}
       <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock').sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
       <div class="btns"><button data-act="editHead">Bewerk deze kop</button><button data-act="render">🎨 Render</button></div></section>`;
@@ -1587,10 +1590,30 @@ function headMass(h){ const g=geom(h), wood=g.area*(pitchOf(h)?15:14)/1000*0.62/
   let cy=0,A=0; g.poly.forEach((p,i)=>{ const q=g.poly[(i+1)%g.poly.length], c=p.x*q.y-q.x*p.y; A+=c; cy+=(p.y+q.y)*c; }); cy=A?cy/(3*A):g.maxY/2;
   const ty=n?h.posts.reduce((a,p)=>a+p.y,0)/n:cy;
   return {wood,tuners:tg,g:wood+tg,cy:(wood*cy+tg*ty)/((wood+tg)||1)}; }
-function strapPins(d,g){ g=g||geom(d); const s=d.set;
-  const auto=g.poly.filter(p=>p.x<-neckHW(s,p.y)).reduce((m,p)=>p.y>m.y?p:m,{x:g.minX,y:-1e9});
+// riemknoppen. Traditioneel: bovenaan op de bashoorn (het hoogste punt aan de baskant naast de hals) en onderaan in het midden.
+// Ideaal: zo hoog mogelijk aan de baskant (beter voor balans en om de nut te bereiken), maar alleen waar genoeg hout achter de schroef zit,
+// en niet tegen de hals. Aanname (zie Kennisboek): schroef ± 20 mm, met ± 10 mm hout errond = 30 mm hout loodrecht achter de rand.
+const STRAP_WOOD=30;
+// hout achter de schroef: diepte loodrecht op de rand, en breedte op 12 mm diep (anders splijt een smalle hoorn). Het kleinste telt.
+function woodBehind(poly,P,i,sg){ const n=P.length, p=P[i], a=P[(i-2+n)%n], b=P[(i+2)%n], tx=b.x-a.x, ty=b.y-a.y, l=Math.hypot(tx,ty)||1, ux=tx/l, uy=ty/l, nx=-ty/l*sg, ny=tx/l*sg;
+  let t=1; while(t<80&&inside(poly,{x:p.x+nx*t,y:p.y+ny*t})) t+=1;
+  const q={x:p.x+nx*12,y:p.y+ny*12}; if(!inside(poly,q)) return Math.min(t,12); let w=0; for(const sd of [1,-1]){ let k=0; while(k<40&&inside(poly,{x:q.x+sd*ux*k,y:q.y+sd*uy*k})) k+=1; w+=k; }
+  return Math.min(t,w+6); }
+function strapSpots(d,g){ const s=d.set, key=JSON.stringify([d.pts,d.sym,d.tension,s.heelW,s.nutW,s.scale]); if(g._sK===key) return g._s;
+  const P=resampleClosed(g.poly,3), n=P.length; let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%n]; A+=p.x*q.y-q.x*p.y; }); const sg=A>0?1:-1, mid=(g.minY+g.maxY)/2;
+  let ti=-1; P.forEach((p,i)=>{ if(p.x<-(neckHW(s,p.y)+10)&&(ti<0||p.y>P[ti].y)) ti=i; });
+  const trad=ti<0?{x:g.minX,y:mid}:{x:P[ti].x,y:P[ti].y,wood:woodBehind(g.poly,P,ti,sg)};
+  let best=null; for(let i=0;i<n;i++){ const p=P[i]; if(p.y<mid||p.x>=-(neckHW(s,p.y)+10)) continue; if(best&&p.y<=best.y) continue; const w=woodBehind(g.poly,P,i,sg); if(w>=STRAP_WOOD) best={x:p.x,y:p.y,wood:w}; }
   const v=vhits(g.poly,0), R={x:0,y:v.length?Math.min(...v):g.minY};
-  return {F:s.strapF?nearestOnPoly(g.poly,s.strapF):auto,R,own:!!s.strapF}; }
+  g._sK=key; g._s={trad,ideal:best||trad,R}; return g._s; }
+function strapPins(d,g){ g=g||geom(d); const s=d.set, S=strapSpots(d,g), mode=s.strapF?'own':s.strapMode==='trad'?'trad':'ideal';
+  return {F:s.strapF?nearestOnPoly(g.poly,s.strapF):mode==='trad'?S.trad:S.ideal,R:S.R,own:!!s.strapF,mode,trad:S.trad,ideal:S.ideal}; }
+function strapState(d){ const S=strapPins(d), f=bodyPhysics(d), dy=S.trad.y-S.ideal.y, out=[];
+  if(S.mode==='own') out.push('Zelf geplaatst. "Riemknop terug" in de queeste zet hem weer op de ideale plek.');
+  else if(dy<3) out.push(`Ideaal en traditioneel vallen samen: bovenaan op de bashoorn, met ${fmt(S.trad.wood||0,0)} mm hout achter de schroef.`);
+  else out.push(S.mode==='ideal'?`Ideaal: ${fmt(dy,0)} mm onder de hoorntip, want op de tip zit maar ${fmt(S.trad.wood||0,0)} mm hout achter de schroef (min. ${STRAP_WOOD}).`:`Traditioneel op de hoorntip, met maar ${fmt(S.trad.wood||0,0)} mm hout achter de schroef. Ideaal ligt ${fmt(dy,0)} mm lager.`);
+  out.push(`Onderste knop in het midden van de staart. Staand: ${f.margin>=135?'blijft liggen':f.margin>=75?'neigt naar de hals':'hals zakt'} (zwaartepunt ${fmt(f.margin,0)} mm binnen de knoppen), nut bij fret ${fmt(f.fretF,0)}.`);
+  return out.join(' '); }
 const INSIDES={solid:['Massief','Geen kamers'],light:['Lichtkamers','Kleine holtes in de vleugels, de top blijft dicht'],semi:['Semi-hollow','Rand 20 mm, middenblok 80 mm, vleugels hol']};
 const HOLLOW_SKIN=6;
 // dikte op plaats x, en hoeveel hout de kamers wegnemen: per strook gerekend
@@ -1650,8 +1673,9 @@ function queeste(d){ const out=(k,rows)=>({k,rows,dot:WORST(rows),line:(rows.fin
   if (d.type==='body'){ const f=bodyPhysics(d), s=d.set, h=partnerHead(d), g=geom(d);
     const J=jointNeed(s), jw=J.name, tight=!s.pocketMan&&s.pocket<J.g-0.5?' De halspickup laat niet dieper toe: schuif hem wat naar de brug, dan gaat de hals vanzelf dieper.':'';
     const stab=[]; stab.push(s.pocket>=J.g?playRow('g','Halsverbinding',`halsvoet ${fmt(s.pocket,0)} mm diep (${jw} vraagt ± ${fmt(J.g,0)})`,J.tip):s.pocket>=J.m?playRow('m','Halsverbinding',`${fmt(s.pocket,0)} mm in de body, ± ${fmt(J.g,0)} aangeraden in ${jw}`,`Gelijmd met Titebond Original is de lijm sterker dan het hout: het zwakste hout van de naad bepaalt het. ${J.tip}${tight}`):playRow('b','Halsverbinding',`maar ${fmt(s.pocket,0)} mm in de body (± ${fmt(J.g,0)} nodig in ${jw})`,`Weinig lijmvlak, zoals een SG. Dat is de plek die het eerst werkt. ${J.tip}${tight}`));
+    { const S=strapPins(d,g); if(S.mode!=='ideal'){ const P=resampleClosed(g.poly,3); let A=0; P.forEach((p,i)=>{ const q=P[(i+1)%P.length]; A+=p.x*q.y-q.x*p.y; }); let bi=0; P.forEach((p,i)=>{ if(Math.hypot(p.x-S.F.x,p.y-S.F.y)<Math.hypot(P[bi].x-S.F.x,P[bi].y-S.F.y)) bi=i; }); const w=woodBehind(g.poly,P,bi,A>0?1:-1); if(w<STRAP_WOOD) stab.push(playRow(w<22?'b':'m','Riemknop',`maar ${fmt(w,0)} mm hout achter de schroef`,'Te dun voor de schroef van de riemknop: kies "Ideaal" bij stap 6, of zet hem iets lager op de hoorn.')); } }
     if(f.horn<35) stab.push(playRow(f.horn<25?'b':'m','Hoorn',`${fmt(f.horn,0)} mm breed`,'Smalle hoorn: de houtdraad loopt er dwars op, dus kwetsbaar als de gitaar valt.'));
-    if(h&&h.posts&&h.posts.length){ const hp=headPhysics(h), pi=pullInfo(h), w=pi.worst; stab.push(playRow(w>12||hp.pitch>=17?'m':'g','Stemmen',`${esc(ownName(h)||h.name)}: trek tot ${fmt(w,0)}°${hp.pitch?`, ${hp.pitch}° kop`:hp.trees?`, ${hp.trees} snaarboom`:''}`,hp.pitch>=17?'Stevige druk op de nut, maar een schuine kop breekt sneller: reken op een las.':w>12?'Open de kop om de snaartrek te verbeteren.':'')); }
+    if(h&&h.posts&&h.posts.length){ const hp=headPhysics(h), pi=pullInfo(h), w=pi.worst; stab.push(playRow(w>12||hp.pitch>=17?'m':'g','Stemmen',`${esc(h.ref?(ownName(h)||h.name):h.name)}: trek tot ${fmt(w,0)}°${hp.pitch?`, ${hp.pitch}° kop`:hp.trees?`, ${hp.trees} snaarboom`:''}`,hp.pitch>=17?'Stevige druk op de nut, maar een schuine kop breekt sneller: reken op een las.':w>12?'Open de kop om de snaartrek te verbeteren.':'')); }
     const pl=[], fh=f.fretHand; pl.push(fh>=20?playRow('g','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`):fh>=17.5?playRow('m','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant, of laat de hals vroeger in de body gaan.'):playRow('b','Hoge frets',`hand kan tot fret ${fmt(fh,0)}`,'Diepere uitsparing aan de diskantkant.'));
     pl.push(f.fretF<=14?playRow('g','Nut bereiken',`makkelijk (riemknop bij fret ${fmt(f.fretF,0)})`):f.fretF<=17?playRow('m','Nut bereiken',`iets verder (fret ${fmt(f.fretF,0)})`):playRow('b','Nut bereiken',`ver (fret ${fmt(f.fretF,0)})`,'Een langere bashoorn brengt de hals dichter naar je toe.'));
     const er=[]; er.push(f.margin>=135?playRow('g','Staand','blijft liggen'):f.margin>=75?playRow('m','Staand','neigt naar de hals','Sleep de riemknop verder naar de hals, of neem een lichtere kop.'):playRow('b','Staand','hals zakt','Langere bashoorn, riemknop verder naar de hals, of lichtere mechanieken.'));
@@ -1725,6 +1749,7 @@ function syncPanel(){
   }
   P.querySelectorAll('[data-bind]').forEach(el=>{
     if (el===document.activeElement) return;
+    if (el.dataset.bind==='set.strapMode'){ el.value=d.set.strapMode||'ideal'; return; }
     if (el.dataset.bind==='scaleIn'){ el.value=d.set.scale?Math.round(d.set.scale/25.4*1000)/1000:''; return; }
     const [o,p]=bindRoot(el.dataset.bind); if(!o) return; const v=getP(o,p);
     if (el.type==='checkbox') el.checked = el.dataset.bind==='bg.show' ? v!==false : !!v;
@@ -1738,7 +1763,7 @@ function syncPanel(){
     + adv.map(t=>`<div class="adv">ℹ ${esc(t)}</div>`).join('');
   const ps=$('#postState'); if (ps) ps.textContent = d.ref ? '' : d.set.layout==='custom' ? 'Posts staan zoals op het plan.' : d.set.auto===false ? 'Je hebt posts zelf versleept. "Opnieuw plaatsen" zet ze terug op de ideale plek.' : 'Worden automatisch geplaatst en volgen je vorm: rechte snaartrek, gelijke afstand tot de rand.';
   if (d.type==='body'){
-    syncIdeas(d);
+    syncIdeas(d); { const st=$('#strapState'); if(st&&!drag) st.textContent=strapState(d); }
     const ps=$('#pgState'); if (ps) ps.textContent = d.set.pg.edited ? 'Zelf aangepast: volgt de body niet meer automatisch.' : 'Volgt de body automatisch tot je de vorm aanpast.';
   }
   $('#designSel').innerHTML = optionsFor(lib.tab,null,d.id);
@@ -1774,8 +1799,36 @@ function drawIdeas(d){
 function row(l,v,cls=''){ return `<div class="row"><label>${l}</label><span class="v ${cls}">${v}</span></div>`; }
 function frow(l,dim,v,hint){ return `<div class="row"><label>${l}${hint?`<br><small class="hint">${hint}</small>`:''}</label><span><input type="number" step="0.5" class="edit" data-dim="${dim}" value="${Math.round(v*10)/10}"> <span class="u">fret</span></span></div>`; }
 function erow(l,dim,v){ return `<div class="row"><label>${l}</label><span><input type="number" step="0.5" class="edit" data-dim="${dim}" value="${Math.round(v*10)/10}"> <span class="u">mm</span></span></div>`; }
+// waar de hals in de body gaat: traditioneel zoals het model waar je ontwerp het meest op lijkt; ideaal = zo hoog mogelijk (vrije hoge frets)
+// terwijl hij staand blijft liggen (balans ≥ 135 mm) en de brug 130–250 mm voor de staart blijft (nagemeten, zie Kennisboek)
+function jointEval(d){ const g=geom(d), s=d.set, base=bodyPhysics(d), top=topOf(g), cells=base.cells, h=partnerHead(d), hm=base.hm, nw=(s.nutW+s.heelW)/2;
+  const fixed=[]; if(HW_G[s.bridge]) fixed.push({m:HW_G[s.bridge],x:0,y:-5}); ['pu1','pu2','pu3'].forEach(k=>{ if(s[k]&&PUS[s[k].t]&&PUS[s[k].t][1]) fixed.push({m:/^HB/.test(s[k].t)?110:70,x:0,y:s[k].d}); });
+  const its=(s.ctrl.items||[]).filter(x=>x.t==='knob'); if(its.length) fixed.push({m:60+its.length*30,x:its[0].x,y:its[0].y}); if(hm) fixed.push({m:hm.g,x:0,y:s.scale+hm.cy}); fixed.push({m:200,x:0,y:-40});
+  const xH=s.heelW/2+20, yH=vhits(g.poly,xH), yHm=yH.length?Math.max(...yH):null, maxF=Math.min(s.frets,fbFret(s));
+  return dy=>{ const L=Math.max(50,s.scale-top-dy), parts=fixed.concat([{m:cells.m,x:cells.x,y:cells.y+dy},{m:L*nw*22/1000*0.7,x:0,y:top+dy+L/2}]), M=parts.reduce((a,p)=>a+p.m,0), C={x:parts.reduce((a,p)=>a+p.m*p.x,0)/M,y:parts.reduce((a,p)=>a+p.m*p.y,0)/M};
+    const F={x:base.F.x,y:base.F.y+dy}, R={x:base.R.x,y:base.R.y+dy}, ax=R.x-F.x, ay=R.y-F.y, l=Math.hypot(ax,ay)||1, margin=((C.x-F.x)*ax+(C.y-F.y)*ay)/l;
+    return {margin,fretF:yToFret(s,F.y),hand:Math.min(maxF,yHm!=null?yToFret(s,yHm+dy):maxF),tail:-(g.minY+dy),maxF}; }; }
+// waar de hals in de body gaat. Traditioneel: zoals het model waar je ontwerp het meest op lijkt.
+// Ideaal: zo dicht mogelijk bij de nut (beter voor de balans en om de nut te bereiken), maar zo dat je hand nog alle frets haalt.
+// Hangt hij dan niet stil (balans < 135 mm), dan schuift de body verder naar de nut tot hij blijft liggen, ten koste van de hoogste frets.
+// Altijd: de brug 130–250 mm voor de staart (nagemeten, zie Kennisboek).
+function jointOpts(d){ const g=geom(d), s=d.set, top=topOf(g), cur=yToFret(s,top);
+  const key=JSON.stringify([d.pts,d.sym,d.tension,s.scale,s.frets,s.fbFret,s.wood,s.dens,s.thick,s.inside,s.bridge,s.pu1,s.pu2,s.pu3,s.head,s.strapMode,s.strapF,s.nutW,s.heelW,lib.active.headstock,(s.ctrl.items||[]).length]); if(jointOpts.k===key) return jointOpts.v;
+  const w=ownInfo(d), ref=w.o, trad=ref?Math.round(yToFret(ref.set,topOf(geom(ref)))*2)/2:null, ev=jointEval(d), at=f=>({f,...ev(fretY(s,f)-top)});
+  const C=[]; for(let f=Math.max(8,Math.floor(cur)-8); f<=Math.min(s.frets+2,Math.ceil(cur)+8); f+=0.5){ const r=at(f); if(r.tail>=130&&r.tail<=250) C.push(r); }
+  let ideal=null, why='';
+  const full=C.filter(r=>r.hand>=r.maxF-0.25), bal=C.filter(r=>r.margin>=135);
+  const fa=full.length?full.reduce((a,b)=>b.f<a.f?b:a):null;
+  if(fa&&fa.margin>=135){ ideal=fa; why='je hand haalt alle frets en staand blijft hij liggen'; }
+  else if(bal.length){ ideal=bal.reduce((a,b)=>b.f>a.f?b:a); why=`staand blijft hij liggen; je hand haalt fret ${fmt(ideal.hand,0)}${fa?', alle frets halen kan alleen met een hals die zakt':''}`; }
+  else if(C.length){ ideal=C.reduce((a,b)=>b.margin>a.margin?b:a); why='beste balans die kan, maar de hals zakt nog: de body of de kop vraagt meer'; }
+  const v={cur,trad,tr:trad!=null?at(trad):null,tradName:ref?ownName(ref):'',ideal,why}; jointOpts.k=key; jointOpts.v=v; return v; }
+function jointHTML(d){ if(d.ref) return ''; const J=jointOpts(d), r=v=>Math.round(v*2)/2, cur=r(J.cur), bal=m=>m>=135?'blijft liggen':m>=75?'neigt naar de hals':'hals zakt'; let h='<div class="jopt">';
+  if(J.trad!=null) h+=`<div class="jrow"><span><b>Traditioneel:</b> fret ${fmt(J.trad,1)}, zoals ${esc(J.tradName)}${J.tr?` · staand ${bal(J.tr.margin)}, hand tot fret ${fmt(J.tr.hand,0)}`:''}</span>${Math.abs(J.trad-cur)>=0.5?`<button data-act="jointSet" data-k="${J.trad}">Zet zo</button>`:'<span class="good">✓</span>'}</div>`;
+  if(J.ideal) h+=`<div class="jrow"><span><b>Ideaal voor de balans:</b> fret ${fmt(J.ideal.f,1)} · ${J.why}</span>${Math.abs(J.ideal.f-cur)>=0.5?`<button data-act="jointSet" data-k="${J.ideal.f}">Zet zo</button>`:'<span class="good">✓</span>'}</div>`;
+  return h+'</div>'; }
 function neckHTML(d,g){ const s=d.set, topY=topOf(g); let h='';
-    h+=frow('Body begint bij','jointF',yToFret(s,topY),'de body schuift, de brug blijft');
+    h+=frow('Body begint bij','jointF',yToFret(s,topY),'de body schuift, de brug blijft')+jointHTML(d);
     { const J=jointNeed(s); h+=frow('Hals loopt tot','neckF',yToFret(s,topY-s.pocket),s.pocketMan?`${fmt(s.pocket,0)} mm in de body, zelf gekozen`:`${fmt(s.pocket,0)} mm in de body, automatisch (${J.name} vraagt ± ${fmt(J.g,0)})`);
       h+=`<div class="row"><label><input type="checkbox" data-bind="set.pocketMan" ${s.pocketMan?'checked':''}> Halsdiepte zelf kiezen</label></div>`; }
     { const fe=fbEndY(s), over=topY-s.pocket-fe; h+=frow('Toets loopt tot','fbF',fbFret(s),over>0.5?`${fmt(over,0)} mm voorbij de hals, op de body`:`${FB_OVER} mm voorbij die fret`); }
@@ -1834,6 +1887,7 @@ P.addEventListener('input',e=>{
   const af=el.dataset.after;
   if (af==='layout'||af==='tuner'){ if(af==='tuner') applyTuner(d); d.set.auto=true; panelKey=''; if(growHead(d)){ toast('De kop is langer geworden zodat alle mechanieken passen. Ongedaan maken kan met ↶.'); fit(); } }
   if (af==='ctrl'){ d.set.ctrl.edited=false; }
+  if (b==='set.strapMode') delete d.set.strapF;
   if (af==='fit') requestAnimationFrame(fit);
   if (af==='pg'){ d.set.pg.edited=false; if(d.set.pg.style==='none') editPG=false; panelKey=''; }
   if (b.startsWith('pt.') && T().isPG) d.set.pg.edited=true;
@@ -2085,6 +2139,7 @@ function runAct(a,t){ const d=D();
     case 'fair': { if(locked()) return; pushUndo(); const tg=T(); fairObj(tg,1,d.type==='headstock'&&!tg.isPG); if(tg.isPG) d.set.pg.edited=true; update(); toast('Lijn gladgestreken'); break; }
     case 'autoCtrl': { const old=clone(d.set.ctrl.items||[]); pushUndo(); d.set.ctrl.edited=false; update(); glide(old); break; }
     case 'strapAuto': pushUndo(); delete d.set.strapF; update(); break;
+    case 'jointSet': { if(locked()){ lockMsg(); return; } pushUndo(); const f=parseFloat(t.dataset.k), dy=fretY(d.set,f)-topOf(geom(d)); d.pts.forEach(p=>{ p.y=Math.round((p.y+dy)*100)/100; }); if(d.set.strapF) d.set.strapF.y+=dy; d.set.pg.edited=false; update(); toast('Body begint nu bij fret '+fmt(f,1)); break; }
     case 'goalInsp': insp.mode='goal'; openInsp(); break;
     case 'idea': { if(locked()){ lockMsg(); return; } const c=d.set.ctrl, old=clone(c.items||[]); pushUndo(); c.layout=t.dataset.k; c.vr=null; c.edited=false; update(); glide(old); break; }
     case 'inside': { if(locked()){ lockMsg(); return; } d.set.inside=t.dataset.k; update(); break; }
