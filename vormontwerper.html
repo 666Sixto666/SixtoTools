@@ -196,21 +196,40 @@ aside>details>summary{padding:12px 14px}
 .th{padding:6px}.th svg{display:block;margin:0 auto}
 @media (min-width:901px){aside{width:400px}}
 .jopt{margin:2px 0 8px;padding:6px 8px;border-radius:8px;background:#f7f4ef;font-size:12.5px}.jrow{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:3px 0}.jrow span{flex:1}.jrow button{padding:4px 10px;min-height:32px}
+/* ---------- niveaus ---------- */
+.lvl-light [data-lv="n"],.lvl-light [data-lv="h"],.lvl-normaal [data-lv="h"],.lvl-normaal [data-lv="l"],.lvl-high [data-lv="l"]{display:none!important}
+.lvl-normaal .putbl th:nth-child(n+3),.lvl-normaal .putbl td:nth-child(n+3),.lvl-light .putbl th:nth-child(n+3),.lvl-light .putbl td:nth-child(n+3){display:none}
+.lvl-light .stepn{display:none}.lvl-light #qdots{display:none!important}.lvl-light #ptBox .row{display:none}
+header h1{display:flex;align-items:center;gap:6px}.logo{width:20px;height:20px;color:var(--accent);flex:none}
+.lvlb{font-size:11px;font-weight:600;color:var(--accent2);border:1px solid var(--accent2);border-radius:10px;padding:1px 7px;margin-left:4px}.lvlb:empty{display:none}
+#welcome{position:fixed;inset:0;z-index:40;overflow:auto;-webkit-overflow-scrolling:touch;background:radial-gradient(120% 70% at 50% 0%,#fff7ee 0%,#f4ede3 55%,#ece2d4 100%);display:none}
+#welcome .wbox{max-width:1100px;margin:0 auto;padding:calc(22px + env(safe-area-inset-top)) 18px 40px}
+#welcome .whead{display:flex;align-items:center;gap:8px;color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12.5px}#welcome .whead .logo{width:26px;height:26px}
+#welcome h1{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(30px,6vw,52px);line-height:1.05;margin:18px 0 8px;color:#2a2018}
+#welcome .wsub{font-size:clamp(15px,2.2vw,18px);color:#6b5d4f;max-width:620px;margin:0 0 18px}
+#welcome .wacts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}#welcome .wacts button{min-height:48px;padding:0 20px;border-radius:24px;font-size:16px}
+#welcome h2{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#8a7a68;margin:26px 0 10px}
+#welcome .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.wcard{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px 12px;border-radius:16px;border:1px solid #e6dccd;background:rgba(255,255,255,.85);box-shadow:0 2px 10px rgba(80,50,20,.06);font-size:13.5px;color:#3a2e24;transition:transform .15s,box-shadow .15s}
+.wcard:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(80,50,20,.12)}.wcard svg{width:100%;height:auto;max-width:150px}
+#welcome .wfoot{margin-top:30px;color:#8a7a68;font-style:italic;text-align:center}
+@media (max-width:520px){#welcome .wgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .stepn{display:inline-block;min-width:20px;height:20px;line-height:20px;border-radius:10px;background:#b5541c;color:#fff;font-size:12px;text-align:center;margin-right:7px;vertical-align:1px}.hint.flow{margin:-4px 0 8px}
 </style>
 </head>
 <body>
 <header>
-  <h1>Sixto <span>Vormontwerper</span></h1>
+  <h1><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg>Sixto <span>Vormontwerper</span><small class="lvlb"></small></h1>
   <div class="tabs"><button data-tab="body">Body</button><button data-tab="headstock">Kop</button></div>
   <select id="designSel" title="Kies ontwerp" style="max-width:240px"></select>
-  <button data-act="new">Nieuw</button>
+  <button data-act="welcome" data-lv="l">🏠 Begin</button>
+  <button data-act="new" data-lv="n">Nieuw</button>
   <button data-act="dup">Dupliceer</button>
   <select id="more" title="Meer"><option value="">Meer…</option><option value="rename">Hernoemen</option><option value="del">Verwijderen</option><option value="saveFile">Back-up bewaren ↓</option><option value="openFile">Back-up inladen ↑</option></select>
   <div class="spacer"></div>
   <button data-act="render" title="Een beeld van de hele gitaar, met de gekoppelde kop">🎨 Render</button>
-  <button data-act="print3d" title="Mallen als STL, in stukken voor je printerbed">🖨 3D-print</button>
-  <button class="primary" data-act="exportSvg" title="Alles op ware grootte (mm), elke laag apart: omtrek, frezingen, gaten, pickguard">SVG 1:1</button>
+  <button data-act="print3d" data-lv="n" title="Mallen als STL, in stukken voor je printerbed">🖨 3D-print</button>
+  <button class="primary" data-act="exportSvg" data-lv="n" title="Alles op ware grootte (mm), elke laag apart: omtrek, frezingen, gaten, pickguard">SVG 1:1</button>
   <input type="file" id="fileIn" accept=".json" hidden>
   <input type="file" id="imgIn" accept="image/*" hidden>
 </header>
@@ -223,11 +242,11 @@ aside>details>summary{padding:12px 14px}
         <button id="histN" data-act="histList" title="Alle stappen zien en terugspringen" aria-label="Alle stappen">0</button>
         <button id="redoB" data-act="redo" title="Opnieuw (Ctrl+Y)" aria-label="Opnieuw">↷</button>
       </div>
-      <div class="grp keep" id="tabGrp"><button data-tab="body">Body</button><button data-tab="headstock">Kop</button><button data-act="insp" aria-label="Inspirator" title="Inspirator">✨</button></div>
+      <div class="grp keep" id="tabGrp"><button data-act="welcome" data-lv="l" aria-label="Begin" title="Opnieuw beginnen">🏠</button><button data-tab="body">Body</button><button data-tab="headstock">Kop</button><button data-act="insp" aria-label="Inspirator" title="Inspirator">✨</button></div>
       <div class="grp" id="modeGrp">
         <button data-mode="edit" title="Punten en onderdelen slepen">✋ Bewerken</button>
-        <button data-mode="measure" title="Sleep om een afstand te meten">📏 Meten</button>
-        <button data-mode="bg" title="Sleep de achtergrondafbeelding">🖼 Achtergrond</button>
+        <button data-mode="measure" data-lv="n" title="Sleep om een afstand te meten">📏 Meten</button>
+        <button data-mode="bg" data-lv="n" title="Sleep de achtergrondafbeelding">🖼 Achtergrond</button>
       </div>
       <div class="grp">
         <button data-act="zoomOut" title="Uitzoomen">−</button>
@@ -236,7 +255,7 @@ aside>details>summary{padding:12px 14px}
       </div>
       <div class="grp">
         <button data-act="insp" title="Willekeurige vormen en variaties">✨ Inspirator</button>
-        <button data-act="mash" title="Combineer tot 4 vormen, één per hoek">🧩 Hoeken mengen</button>
+        <button data-act="mash" data-lv="n" title="Combineer tot 4 vormen, één per hoek">🧩 Hoeken mengen</button>
       </div>
       <div class="grp off" id="tgtGrp">
         <span style="padding:5px 4px;color:var(--muted)">Je bewerkt:</span>
@@ -255,7 +274,10 @@ aside>details>summary{padding:12px 14px}
 
 <script>
 // ================= vaste gegevens =================
-const LS_KEY = 'sixto-vormontwerper-v1';
+// drie versies uit één bron: light (klanten in de shop), normaal (Tom, dagelijks), high (alle details). De build zet dit per bestand.
+const APP_LEVEL='normaal';
+document.body.classList.add('lvl-'+APP_LEVEL);
+const LS_KEY = 'sixto-vormontwerper-v1'+(APP_LEVEL==='light'?'-light':'');
 var ENGINE_READY = false; // pas aan het einde van het script: de plaatsingsfuncties moeten eerst geladen zijn
 const WOODS = {
   els:['Els (alder)',0.45], essen:['Moeras-essen (swamp ash)',0.42], essen2:['Essen (hard)',0.65],
@@ -399,6 +421,16 @@ const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; pos
   tiger:{nut:43,pts:[[0,174.3],[13.1,171.2],[27.5,165],[39.4,158.4,1],[33.4,122.3],[31.5,81.1],[31,39.9],[25.1,19.3],[21.5,0,1],[-21.5,0,1],[-25.1,19.3],[-31,39.9],[-31.5,81.1],[-33.4,122.3],[-39.4,158.4,1],[-27.5,165],[-13.1,171.2]],posts:[[-20.3,51.5],[-19.1,87.6],[-20.3,126],[20.3,126],[19.1,87.6],[20.3,51.5]]}, // benaderd vanaf foto (Doug Irwin)
   c5150:{nut:45.8,pts:[[0.5,121],[28.5,158],[37.5,171.5],[40.5,173],[51.5,182.5],[71.5,188],[91.5,179.5],[94.5,165.5],[85.5,146.5],[70,122.5],[45,76.5],[28.5,33],[23,0.5,1],[-23,0,1],[-31,17.5],[-52,41],[-43,62.5],[-28,83]],posts:[[-32.4,52.6],[-17.2,73.1],[-2,93.6],[13.1,114.1],[28.2,134.6],[43.4,155.1]]}
 };
+const BODY_PTS3={ // 11/11/2026: overgetekend uit gratis 1:1-plannen (Electric Herald), nut en zadel uit de fretlijnen op het plan
+  dano59:[[0.0,238.0],[27.0,237.5,1],[33.0,227.5],[36.5,224.0],[43.5,220.0],[48.0,218.5],[52.5,218.0],[63.0,220.0],[73.5,224.0],[84.0,230.0],[101.5,243.0],[106.0,245.5],[110.5,247.0],[118.0,248.0],[125.5,247.0],[130.0,245.5],[133.0,243.5],[137.5,238.5],[140.0,232.5],[141.0,226.5],[141.0,219.0],[139.5,211.5],[133.5,196.5],[117.5,166.5],[111.0,151.5],[108.0,142.5],[106.5,135.0],[105.5,127.5],[106.0,121.5],[108.5,111.0],[113.0,100.5],[120.0,90.0],[140.0,63.5],[149.0,50.5],[156.5,37.0],[164.5,19.0],[167.5,8.5],[170.5,-3.5],[173.0,-20.0],[173.5,-41.0],[171.5,-59.0],[168.0,-74.0],[162.5,-89.0],[155.0,-104.0],[145.0,-118.5],[135.0,-130.0],[122.5,-141.0],[114.0,-147.0],[100.5,-154.0],[84.0,-160.0],[72.0,-162.5],[58.5,-164.5],[36.0,-166.5],[6.0,-167.5],[-22.5,-167.0],[-48.0,-166.0],[-69.0,-163.0],[-88.5,-158.5],[-105.0,-152.0],[-114.0,-147.0],[-121.5,-142.0],[-128.0,-137.0],[-135.5,-130.0],[-143.0,-121.0],[-149.0,-113.0],[-159.0,-97.0],[-163.0,-88.0],[-167.0,-77.5],[-171.5,-59.5],[-173.5,-41.5],[-173.0,-19.0],[-170.0,-1.0],[-164.5,18.5],[-159.0,32.0],[-150.0,48.5],[-139.5,64.0],[-119.5,90.5],[-113.5,99.5],[-108.0,111.5],[-106.0,122.0],[-105.5,128.0],[-107.0,137.0],[-108.0,143.0],[-111.0,152.0],[-118.0,167.0],[-134.5,198.5],[-138.5,209.0],[-141.0,219.5],[-141.0,225.5],[-140.5,230.0],[-138.0,237.5],[-134.0,242.5],[-128.0,246.0],[-121.5,248.0],[-113.0,247.5],[-107.0,246.0],[-99.5,241.5],[-85.0,230.5],[-76.0,225.0],[-65.5,220.5],[-55.0,218.0],[-50.5,218.0],[-46.0,219.0],[-38.5,222.0],[-32.5,227.5],[-28.0,236.5],[-27.0,238.0]],
+  astrojet:[[-90.5,301.5],[-87.5,300.0],[-85.5,297.5],[-65.5,252.0],[-63.0,247.5],[-60.0,243.5],[-55.0,239.0],[-50.5,237.5],[-44.5,237.0],[-36.5,238.5],[-33.5,238.0],[-32.5,237.0],[-32.0,236.0],[-31.0,233.0],[-31.5,216.0],[-30.5,213.5],[-29.5,212.5],[-26.5,212.0],[29.5,212.5],[32.0,211.0],[33.0,210.0],[37.0,202.0],[41.0,196.5],[48.5,190.0],[54.5,187.0],[61.0,184.5],[66.5,183.5],[73.0,183.0],[80.5,185.5],[92.5,191.5],[110.0,204.5],[127.5,220.5],[130.5,221.5],[131.5,221.5],[136.0,219.0],[145.0,209.0],[149.5,202.0],[152.5,195.5],[155.5,187.0],[156.5,178.0],[156.0,169.0],[154.5,158.0],[151.5,148.0],[148.0,139.0],[143.0,128.0],[134.0,111.5],[130.5,103.0],[129.0,96.5],[128.0,91.0],[128.0,78.5],[131.0,70.0],[136.0,61.0],[143.0,53.5],[157.5,38.0],[166.5,28.5],[177.5,14.0],[184.5,2.0],[190.5,-14.5],[193.5,-28.0],[195.0,-43.0],[194.0,-56.5],[192.0,-67.0],[190.0,-74.5],[186.5,-85.0],[182.0,-95.5],[164.5,-125.0],[156.0,-135.0],[142.5,-148.0],[132.5,-156.5],[123.5,-162.0],[113.0,-168.0],[102.5,-172.5],[87.5,-177.5],[71.0,-181.0],[53.0,-182.5],[36.5,-183.0],[17.0,-182.0],[-8.5,-179.5],[-31.0,-175.5],[-52.0,-169.5],[-71.5,-163.0],[-100.0,-150.5],[-118.0,-141.0],[-132.5,-132.0],[-143.0,-124.0],[-153.0,-114.5],[-162.5,-101.0],[-170.0,-87.5],[-173.5,-77.0],[-175.5,-69.5],[-177.0,-53.0],[-177.0,-44.0],[-176.0,-32.0],[-171.5,-14.0],[-168.5,-6.5],[-164.0,2.5],[-155.0,17.5],[-145.0,31.0],[-128.5,50.0],[-125.0,55.5],[-121.0,64.5],[-119.5,74.0],[-119.5,80.0],[-121.0,85.5],[-125.0,96.5],[-128.5,102.0],[-140.5,118.0],[-148.0,130.0],[-154.5,142.0],[-160.0,155.0],[-163.5,170.5],[-165.0,180.5],[-164.5,197.0],[-162.5,212.0],[-159.0,224.5],[-153.5,238.0],[-146.5,250.0],[-138.0,262.5],[-128.0,273.5],[-116.5,284.0],[-96.5,299.0],[-93.5,301.0]],
+  birdprey:[[129.0,270.5],[131.5,269.5],[133.0,266.5],[135.5,250.0],[135.0,242.5],[120.5,197.5],[110.0,167.5],[90.5,116.5],[74.0,77.5],[73.0,73.0],[74.0,70.0],[78.5,61.0],[88.0,44.5],[102.5,23.0],[124.0,-5.5],[126.0,-10.0],[215.0,-301.0],[216.0,-304.5],[215.5,-306.0],[213.5,-307.5],[212.5,-307.5],[210.0,-305.0],[183.0,-264.0],[147.0,-213.5],[113.0,-169.5],[81.0,-132.0],[55.0,-104.5],[33.5,-85.5],[24.0,-78.5],[15.0,-73.5],[7.5,-70.0],[0.0,-69.0],[-6.0,-70.0],[-13.5,-72.5],[-22.5,-78.0],[-33.5,-86.0],[-45.0,-95.0],[-58.5,-108.0],[-83.5,-134.5],[-113.0,-169.5],[-139.0,-202.5],[-176.0,-254.0],[-194.0,-280.5],[-210.0,-305.0],[-212.0,-307.5],[-214.5,-308.0],[-216.0,-305.5],[-215.5,-302.5],[-136.5,-43.0],[-133.5,-37.0],[-116.0,-12.0],[-102.0,11.5],[-91.5,31.0],[-80.0,58.0],[-72.0,79.0],[-64.5,104.5],[-56.0,142.0],[-51.5,169.5],[-50.5,172.0],[-48.0,174.0],[-41.5,177.0],[-35.0,181.5,1],[-27.5,179.5],[30.0,179.5],[32.5,178.5],[40.0,175.0],[46.0,174.0],[52.0,174.5],[59.5,177.5],[67.0,182.0],[74.5,188.5],[82.0,196.0],[90.5,206.0],[99.0,218.5],[110.0,236.0],[121.5,258.5],[125.5,268.0],[128.0,270.5]],
+  lpjsc:[[-1.0,249.0],[26.0,249.0,1],[29.0,251.5,1],[32.0,251.0],[33.0,249.5],[33.5,204.5],[34.0,200.0],[36.5,194.0],[39.5,190.0],[44.0,185.0],[48.5,182.5],[54.5,181.0],[62.0,180.0],[68.0,180.5],[74.0,183.0],[80.0,186.0],[85.5,190.5],[89.5,195.0],[96.5,205.0],[100.5,207.5],[103.5,207.5],[106.5,206.5],[109.0,204.5],[112.0,200.5],[114.5,194.0],[115.0,188.0],[115.0,177.5],[114.0,170.0],[111.0,159.5],[107.5,150.5],[98.5,132.5],[92.5,117.5],[89.5,105.5],[89.0,99.5],[90.0,95.0],[92.5,87.5],[97.5,79.0],[102.5,72.5],[114.5,60.0],[134.5,36.5],[142.5,25.0],[151.0,10.0],[157.5,-5.0],[161.5,-20.0],[164.5,-38.0],[164.5,-56.0],[163.5,-69.5],[161.0,-84.5],[155.5,-101.0],[149.0,-114.5],[143.0,-125.0],[135.5,-134.0],[123.0,-146.0],[108.0,-159.0],[96.0,-166.5],[85.5,-171.5],[69.0,-178.0],[54.0,-182.0],[39.0,-184.5],[25.5,-186.0],[-12.0,-186.5],[-31.5,-185.5],[-54.0,-182.5],[-61.5,-181.0],[-72.0,-178.5],[-85.5,-173.0],[-100.5,-165.0],[-115.0,-155.5],[-125.0,-147.0],[-135.5,-136.0],[-144.0,-125.5],[-151.0,-113.5],[-156.5,-101.5],[-161.5,-86.5],[-164.5,-74.5],[-166.0,-59.5],[-166.0,-44.5],[-165.0,-29.5],[-162.5,-16.0],[-159.0,-4.0],[-154.5,6.5],[-140.5,30.0],[-124.5,51.0],[-112.0,64.5],[-106.5,72.5],[-98.5,84.0],[-96.0,90.0],[-95.0,100.5],[-96.0,108.0],[-97.0,114.0],[-101.0,124.5],[-115.5,154.5],[-118.5,163.5],[-120.0,171.0],[-120.5,180.0],[-120.0,192.0],[-118.0,201.0],[-114.0,210.5],[-110.0,216.0],[-105.0,222.5],[-94.0,233.0],[-84.0,239.5],[-70.5,245.0],[-60.0,248.0],[-34.0,251.5],[-30.0,251.5],[-28.0,251.0],[-28.0,249.5],[-26.0,249.0]],
+  b6:[[-111.5,302.0],[-110.0,301.5],[-109.0,299.0],[-108.5,284.0],[-107.0,269.0],[-104.5,255.5],[-100.5,242.0],[-97.5,234.5],[-91.5,224.0],[-86.5,217.0],[-80.5,211.0],[-75.0,207.5],[-67.0,204.5],[-59.5,203.5],[-54.0,204.0],[-49.0,205.5],[-43.5,209.5],[-39.5,213.0],[-34.5,219.5],[-32.5,221.5],[-30.5,220.5],[-24.0,215.5],[-23.5,213.0],[-23.5,207.0],[-22.5,205.5],[-20.0,204.0],[25.5,204.5],[27.0,204.0],[29.0,202.0],[34.5,185.0],[37.5,179.0],[41.5,173.5],[47.5,167.5],[52.0,164.5],[56.5,163.0],[65.5,162.0],[74.5,163.5],[83.5,167.5],[92.0,173.5],[96.5,178.5],[100.5,184.0],[105.0,191.5],[108.0,199.0],[111.5,209.5],[113.5,217.0],[115.0,227.5],[115.0,235.5],[115.5,236.5],[117.5,237.0],[125.0,237.0],[127.5,235.5],[129.0,232.5],[132.5,225.0],[134.0,214.5],[134.0,204.0],[132.5,193.5],[130.5,184.5],[126.5,172.5],[114.0,144.0],[108.0,127.5],[104.5,114.0],[104.0,106.5],[104.0,99.0],[107.0,85.5],[111.0,73.5],[137.0,18.0],[146.0,-4.5],[148.5,-15.0],[150.5,-25.5],[151.0,-37.5],[151.0,-51.0],[150.0,-61.5],[147.5,-75.0],[144.5,-84.0],[140.0,-93.0],[134.0,-101.5],[128.5,-108.0],[120.5,-114.5],[112.0,-120.0],[104.5,-123.5],[95.0,-127.0],[86.0,-129.5],[76.0,-131.5],[62.0,-133.0],[48.5,-134.0],[9.5,-133.5],[-10.0,-133.5],[-52.5,-134.0],[-74.5,-132.5],[-87.0,-130.5],[-98.5,-127.5],[-109.0,-123.5],[-117.0,-119.5],[-125.0,-113.5],[-134.0,-105.0],[-141.0,-96.5],[-145.5,-89.0],[-150.0,-80.0],[-153.0,-72.5],[-155.0,-63.5],[-157.0,-53.0],[-157.5,-44.0],[-157.5,-32.0],[-156.0,-15.5],[-152.0,1.0],[-145.5,20.5],[-112.5,100.0],[-109.0,112.0],[-107.0,125.5],[-107.5,139.0],[-110.5,154.0],[-114.0,166.0],[-128.0,203.5],[-134.5,227.5],[-137.5,245.5],[-137.5,260.5],[-136.5,269.5],[-134.5,277.0],[-131.5,284.5],[-128.5,290.5],[-120.5,301.5],[-118.5,302.5]],
+  rick360:[[-112.5,253.0],[-109.5,252.0],[-106.5,250.0],[-100.0,243.5],[-93.0,234.0],[-77.0,209.0],[-68.0,198.0],[-58.0,187.5],[-49.5,180.5],[-42.5,176.0],[-23.0,166.5],[-17.5,164.5],[-2.5,161.5],[19.0,160.0],[46.5,160.0],[57.5,161.0],[66.5,162.5],[74.0,164.5],[80.5,168.0],[89.0,174.5],[106.0,190.0],[110.5,193.0],[116.0,194.5],[119.0,195.0],[122.5,194.0],[129.5,191.0],[135.5,186.5],[140.5,179.0],[143.0,172.5],[144.5,167.0],[145.0,160.0],[145.0,153.5],[142.5,143.0],[135.0,122.5],[132.5,113.5],[131.0,103.0],[132.0,93.0],[134.0,85.5],[137.5,77.5],[142.5,69.0],[159.0,45.0],[167.0,32.5],[174.0,19.0],[180.5,5.0],[186.0,-12.5],[189.5,-27.0],[191.5,-44.0],[191.5,-58.5],[189.0,-77.0],[184.5,-94.5],[178.5,-110.5],[172.0,-123.5],[161.5,-138.0],[147.5,-153.5],[134.0,-165.0],[120.0,-174.0],[104.5,-181.0],[82.5,-187.5],[60.0,-193.0],[40.5,-195.5],[14.5,-197.0],[-9.5,-197.0],[-35.0,-194.5],[-58.5,-191.0],[-79.0,-186.0],[-98.0,-179.5],[-115.0,-172.0],[-129.5,-163.5],[-143.0,-153.5],[-155.5,-142.0],[-166.0,-129.0],[-175.5,-115.0],[-180.5,-105.0],[-185.0,-92.5],[-189.0,-80.0],[-191.5,-67.0],[-192.5,-54.0],[-192.5,-43.0],[-192.0,-31.5],[-190.0,-18.5],[-184.5,1.0],[-176.5,19.5],[-170.5,31.0],[-164.0,42.0],[-157.0,52.5],[-143.5,69.5],[-139.0,76.5],[-134.0,88.5],[-132.0,96.0],[-131.5,101.5],[-131.5,109.0],[-133.5,119.5],[-137.5,129.0],[-150.0,156.5],[-154.5,171.0],[-156.0,179.0],[-157.0,186.5],[-156.5,195.5],[-155.5,203.5],[-153.0,215.5],[-149.0,225.0],[-144.5,234.5],[-139.0,242.0],[-132.0,249.0],[-126.0,252.5],[-120.0,254.0]], // uit een 3D-model (Thingiverse 2443327): middendoorsnede van de body; nut uit de hals (41 mm), zadel = nut - 628 mm
+  boden:[[-125.5,319.5],[-124.0,319.0],[-122.0,315.0],[-116.0,294.5],[-110.0,279.5],[-105.0,269.5],[-99.0,259.5],[-92.0,251.0],[-82.0,242.0],[-74.0,236.0],[-65.0,232.0],[-56.5,229.5],[-50.0,228.5],[-42.5,229.5],[-36.0,232.5],[-33.0,235.0],[-29.5,240.0],[-19.0,257.0],[-15.0,262.5],[-10.0,267.5],[-6.0,270.0],[0.0,271.5],[4.5,271.0],[9.5,269.0],[14.0,265.5],[18.0,261.5],[21.0,256.0],[24.0,249.5],[27.0,242.0],[31.0,223.5],[35.5,191.0],[37.0,184.5],[39.5,180.0],[42.0,176.5],[45.5,174.0],[49.5,171.5],[56.5,169.5],[64.5,168.5],[73.0,169.0],[82.0,170.5],[91.0,174.0],[99.0,177.5],[117.5,190.5],[127.0,196.0],[131.0,197.0],[135.5,197.0],[139.5,195.0],[141.0,193.5],[142.0,191.5],[143.5,187.5],[142.5,182.0],[132.0,163.5],[124.5,149.5],[119.0,137.0],[115.5,126.0],[113.5,117.0],[112.5,109.5],[112.5,100.0],[113.5,90.0],[116.0,80.5],[119.0,70.5],[122.0,63.5],[126.5,55.0],[138.0,40.0],[161.5,15.0],[166.0,8.5],[168.0,3.0],[168.5,-1.5],[168.0,-3.0],[167.0,-4.5],[164.5,-7.0],[159.0,-9.0],[141.0,-13.5],[128.0,-17.0],[115.0,-23.0],[105.5,-28.5],[99.5,-33.0],[91.0,-40.5],[83.0,-49.5],[70.0,-65.0],[65.5,-68.0],[63.5,-68.5],[59.5,-68.0],[55.5,-64.5],[53.0,-61.0],[50.0,-53.5],[50.0,-47.5],[48.0,-46.5],[41.5,-45.5],[14.5,-45.0],[-34.5,-46.0],[-36.0,-46.0],[-35.5,-45.5],[-35.0,-46.0],[-35.5,-48.5],[-54.0,-108.0],[-55.5,-111.0],[-56.5,-111.5],[-58.5,-111.5],[-64.0,-114.0],[-68.5,-115.0],[-79.5,-114.5],[-90.0,-111.5],[-97.0,-108.0],[-106.0,-99.5],[-124.0,-75.0],[-136.5,-56.0],[-147.5,-35.5],[-150.0,-29.0],[-151.0,-24.0],[-151.5,-18.0],[-151.0,-9.0],[-149.0,-0.5],[-147.0,8.0],[-140.5,23.5],[-104.5,98.0],[-99.0,115.5],[-96.5,132.0],[-96.5,143.0],[-97.0,156.0],[-99.5,170.0],[-102.5,181.5],[-110.0,201.5],[-125.0,234.0],[-130.5,247.0],[-135.5,262.5],[-138.0,275.0],[-139.0,292.0],[-138.5,297.5],[-137.5,305.0],[-135.0,311.5],[-132.5,316.0],[-129.0,319.0]], // uit een 3D-model (body-mal, 10 mm): hals bovenaan (Tom, 11/11), middellijn uit de halsbult en de brugnis, zadel ± 45 mm boven de uitsparing voor de stemknoppen achteraan
+  supersonic:[[99.5,210.5],[104.0,211.0],[108.5,211.0],[111.5,210.0],[114.5,208.0],[118.0,204.0],[120.0,201.5],[122.0,193.5],[123.0,177.5],[122.0,166.5],[119.5,157.5],[115.0,147.0],[109.5,131.0],[105.0,113.0],[102.5,98.0],[102.0,83.0],[103.0,72.0],[106.5,59.0],[113.0,42.0],[133.5,-4.0],[140.0,-24.0],[145.0,-42.0],[146.5,-56.5],[146.0,-69.0],[145.0,-79.0],[142.0,-93.0],[136.5,-105.0],[128.0,-117.5],[120.0,-126.5],[110.5,-135.5],[100.5,-142.5],[85.0,-151.5],[72.0,-157.5],[59.5,-162.0],[40.0,-167.5],[6.0,-174.5],[-9.0,-176.5],[-32.0,-179.0],[-50.0,-179.5],[-65.0,-179.0],[-78.5,-176.5],[-91.5,-172.5],[-108.5,-165.5],[-117.0,-160.5],[-126.0,-153.0],[-133.5,-146.0],[-139.0,-138.0],[-143.5,-131.0],[-147.0,-121.5],[-149.5,-111.0],[-150.5,-102.5],[-150.5,-92.0],[-150.0,-86.0],[-148.0,-78.0],[-145.5,-70.5],[-134.0,-45.0],[-120.0,-21.5],[-113.5,-8.0],[-106.5,10.0],[-103.0,26.5],[-101.5,41.5],[-102.5,50.5],[-104.5,56.5],[-117.5,88.0],[-120.5,100.0],[-123.0,116.5],[-123.5,125.5],[-122.5,139.0],[-121.0,145.0],[-118.0,151.0],[-111.5,161.0],[-106.5,165.5],[-99.5,169.0],[-90.5,171.5],[-82.5,171.5],[-64.5,167.5],[-54.0,166.5],[-48.5,167.0],[-42.0,169.0],[-38.0,171.5],[-31.5,177.0],[33.0,177.0],[40.5,173.0],[45.0,172.5],[48.0,172.5],[55.5,175.5],[62.5,180.0],[69.0,185.5],[81.5,199.5],[86.5,204.0],[93.5,208.5]],
+};
 const NOPU={t:'none',d:95,a:0}, PU=(t,d,a)=>({t,d,a:a||0});
 function REFS(){ const B=BODY_PTS; return [
   mkBody('strat','Strat-type',B.strat,false,{...FEN,pocket:76}),
@@ -432,6 +464,15 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('revstar','Revstar-type (Yamaha)',BODY_PTS2.revstar,false,{...GIB,scale:628.6,frets:22,pocket:45,pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',140),pg:pgDef('small')}),
   mkBody('l5','L-5 CES-type (Gibson, archtop)',BODY_PTS2.l5,false,{...GIB,scale:628.6,frets:20,pocket:40,inside:'semi',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',145),pg:pgDef('small'),sh:{type:'f',size:150,ang:6,side:'both',dx:0,dy:0,text:'SCG',pos:'auto'}}),
   mkBody('i5t','Larry Carlton I5T-type (Sire, single cut T)',BODY_PTS2.i5t,false,{...FEN,scale:648,frets:22,bridge:'tele',pocket:45,pu1:PU('SC',44,-8),pu2:NOPU,pu3:PU('P90',157),ctrl:ctrlDef(2,'row','toggle3','side'),pg:{...pgDef('full',76),color:'zwart'}}),
+  mkBody('dano59','Danelectro \'59-type (DC)',BODY_PTS3.dano59,false,{...FEN,scale:635,frets:21,pocket:50,bridge:'wrap',pu1:PU('SC',30,-4),pu2:NOPU,pu3:PU('SC',112,-4),ctrl:ctrlDef(2,'row','toggle3','side'),pg:pgDef('none')}),
+  mkBody('astrojet','Astro Jet-type (Gretsch)',BODY_PTS3.astrojet,false,{...GIB,scale:625,frets:22,pocket:45,pu1:PU('HB',42),pu2:NOPU,pu3:PU('HB',125),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('small')}),
+  mkBody('birdprey','Bird of Prey-type (DBZ, doorlopende hals)',BODY_PTS3.birdprey,false,{...GIB,scale:648,frets:24,pocket:40,bridge:'trem',pu1:PU('HB',42),pu2:NOPU,pu3:PU('HB',128),ctrl:ctrlDef(2,'row','toggle3','side'),pg:pgDef('none')}),
+  mkBody('lpjsc','LP Junior-type (single cut)',BODY_PTS3.lpjsc,false,{...GIB,scale:628,frets:22,pocket:45,bridge:'wrap',pu1:PU('P90',38),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(2,'row','none','side'),pg:pgDef('small')}),
+  mkBody('b6','Blackmachine B6-type',BODY_PTS3.b6,false,{...FEN,scale:648,frets:24,pocket:60,bridge:'hard',pu1:PU('HB',43),pu2:NOPU,pu3:PU('HB',132),ctrl:ctrlDef(1,'row','toggle3','side'),pg:pgDef('none')}),
+  mkBody('supersonic','Supersonic-type (Squier)',BODY_PTS3.supersonic,false,{...FEN,scale:610,frets:22,pocket:60,pu1:PU('HB',45),pu2:NOPU,pu3:PU('HB',135),ctrl:ctrlDef(2,'row','toggle3','top'),pg:pgDef('full',22,true)}),
+  mkBody('rick360','Rickenbacker 360-type (semi-hollow)',BODY_PTS3.rick360,false,{...GIB,scale:628,frets:24,pocket:45,inside:'semi',pu1:PU('SC',42),pu2:NOPU,pu3:PU('SC',128),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('small')}),
+  mkBody('boden','Strandberg Boden-type (headless, ergonomisch)',BODY_PTS3.boden,false,{...FEN,scale:648,frets:24,pocket:25,bridge:'wrap',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',122),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
+  mkBody('jaguar','Jaguar-type (zelfde body als de Jazzmaster)',B.jm,false,{...FEN,scale:610,frets:22,pu1:PU('SC',40,-6),pu2:NOPU,pu3:PU('SC',145),ctrl:ctrlDef(4,'row','blade3','top'),pg:pgDef('full',22,true)}),
   mkBody('stingray','StingRay-type gitaar (Music Man)',BODY_PTS2.stingray,false,{...FEN,scale:648,frets:22,pocket:40,pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',140),pg:pgDef('full',22,true)}),
   mkBody('pbass','P-bass-type',B.strat.map(([x,y,c])=>[x*1.02,y*1.2+50,c]),false,{...BASS,pu1:{t:'none',d:50,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'BASS',d:150,a:0},ctrl:ctrlDef(2,'row','none','top'),pg:pgDef('full',27)}),
   mkBody('jbass','J-bass-type',B.jm.map(([x,y,c])=>[x*0.95,y*1.12+70,c]),false,{...BASS,pu1:{t:'JB',d:45,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'JB',d:130,a:0},ctrl:ctrlDef(3,'row','none','top'),pg:pgDef('full',27)}),
@@ -489,7 +530,7 @@ function load(){
   const b = defaultBody(), h = defaultHead();
   return { designs:[b,h,...REFS()], active:{body:b.id, headstock:h.id}, tab:'body', view:defView() };
 }
-function defView(){ return {grid:true,dims:true,neck:true,strings:true,hw:true,routes:true,pgShow:true,wline:true,ghost:'',snap:false,soft:60}; }
+function defView(){ return APP_LEVEL==='light'?{grid:false,dims:false,neck:true,strings:true,hw:true,routes:false,pgShow:true,wline:false,ghost:'',snap:false,soft:60,qbox:false}:{grid:true,dims:true,neck:true,strings:true,hw:true,routes:true,pgShow:true,wline:true,ghost:'',snap:false,soft:60}; }
 let lib = load();
 // compact (telefoon, iPad rechtop): de vorm is het scherm, de rest komt op vraag
 const CMP=matchMedia('(max-width:900px),(max-height:520px)');
@@ -504,7 +545,7 @@ function save(){
 }
 // Bewaren: IndexedDB is de hoofdopslag (veel meer ruimte dan de ± 5 MB van localStorage, belangrijk met foto's om over te tekenen).
 // localStorage blijft een snelle kopie zolang het past. Referenties worden niet bewaard: die zitten in de app zelf.
-const IDB={db:null, open(){ return new Promise((res,rej)=>{ if(this.db) return res(this.db); if(!window.indexedDB) return rej(new Error('geen IndexedDB')); const r=indexedDB.open('sixto-vormontwerper',1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>{ this.db=r.result; res(this.db); }; r.onerror=()=>rej(r.error); }); },
+const IDB={db:null, open(){ return new Promise((res,rej)=>{ if(this.db) return res(this.db); if(!window.indexedDB) return rej(new Error('geen IndexedDB')); const r=indexedDB.open('sixto-vormontwerper'+(APP_LEVEL==='light'?'-light':''),1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>{ this.db=r.result; res(this.db); }; r.onerror=()=>rej(r.error); }); },
   async put(k,v){ const db=await this.open(); return new Promise((res,rej)=>{ const tx=db.transaction('kv','readwrite'); tx.objectStore('kv').put(v,k); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); tx.onabort=()=>rej(tx.error); }); },
   async get(k){ const db=await this.open(); return new Promise((res,rej)=>{ const q=db.transaction('kv').objectStore('kv').get(k); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); } };
 function saveWarn(on){ let el=document.getElementById('saveWarn'); if(!on){ if(el) el.remove(); return; } if(el) return; el=document.createElement('div'); el.id='saveWarn';
@@ -1481,7 +1522,7 @@ function bouwHTML(){ const ins=k=>`<svg viewBox="0 0 60 50"><path d="M4 12H56V38
     <div style="margin-top:8px">${num('set.thick','Dikte')}${sel_('set.wood','Bodyhout',WOODS)}${num('set.dens','Eigen dichtheid','g/cm³',0.01)}${sel_('set.neckWood','Halshout (voor de lijmnaad)',NECK_WOOD)}</div></section>`; }
 function buildPanel(){
   const d=D(), v=lib.view; let h='';
-  if (d.type==='body') h+=`<nav id="stepNav">${[['V','Vorm'],['1','1 Hals'],['2','2 Pickups'],['3','3 Pickguard'],['4','4 Hout'],['5','5 Klankgaten'],['6','6 Knoppen'],['7','7 Kop']].map(([k,n])=>`<button type="button" data-nav-go="${k}">${n}</button>`).join('')}</nav>`;
+  if (d.type==='body') h+=`<nav id="stepNav">${(APP_LEVEL==='light'?[['V','Vorm'],['2','Pickups'],['3','Pickguard'],['5','Klankgaten'],['6','Knoppen'],['7','Kop & kleur']]:[['V','Vorm'],['1','1 Hals'],['2','2 Pickups'],['3','3 Pickguard'],['4','4 Hout'],['5','5 Klankgaten'],['6','6 Knoppen'],['7','7 Kop']]).map(([k,n])=>`<button type="button" data-nav-go="${k}">${n}</button>`).join('')}</nav>`;
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
   h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section><details id="qBox" class="card" ${(v.qbox!=null?v.qbox:!CMP.matches)?'open':''}><summary>De queeste <span id="qSum" class="qsum"></span></summary><section><div id="playBox"></div></section></details>`;
   h+=`<section><h2 data-nav="V">Vorm</h2>
@@ -1503,9 +1544,9 @@ function buildPanel(){
     h+=`<section>${step(2,'Brug en pickups','De brug ligt op het zadel (nulpunt). De pickups komen tussen de brug en het einde van de toets.')}
       <div class="row"><label>Snel kiezen</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
       ${sel_('set.bridge','Brug',BRIDGES)}
-      <table class="tbl"><tr><th></th><th>type</th><th>afstand</th><th>hoek</th></tr>
+      <table class="tbl putbl"><tr><th></th><th>type</th><th>afstand</th><th>hoek</th></tr>
       ${['pu3:Hals','pu2:Midden','pu1:Brug'].map(x=>{ const [k,n]=x.split(':'); return `<tr><td>${n}</td><td><select data-bind="set.${k}.t">${Object.entries(PUS).map(([a,b])=>`<option value="${a}">${b[0]}</option>`).join('')}</select></td><td><input type="number" step="0.5" data-bind="set.${k}.d"></td><td><input type="number" step="1" data-bind="set.${k}.a" style="width:50px"></td></tr>`; }).join('')}</table>
-      <p class="hint">Afstand = midden pickup tot zadel (mm). Pickups sleep je ook op de tekening.</p></section>`;
+      <p class="hint">${APP_LEVEL==='high'?'Afstand = midden pickup tot zadel (mm). ':''}Pickups sleep je op de tekening.</p></section>`;
     h+=pgHTML().replace('<section><h2>Pickguard</h2>',`<section>${step(3,'Pickguard','Volgt de pickups en de brug. Kies je knoppen op de pickguard, dan groeit hij mee tot onder de knoppen.')}`);
     h+=bouwHTML().replace('<section><h2>Hout en kamers</h2><p class="hint">Voor het gewicht en de balans. De kamers worden getekend en gaan mee in het freesplan.</p>',`<section>${step(4,'Hout en kamers','Voor gewicht en balans. De kamers bepalen waar klankgaten echt iets doen.')}`);
     h+=holesHTML().replace('<section><h2>Klankgaten</h2>',`<section>${step(5,'Klankgaten','Boven de kamer, vrij van pickups, brug en pickguard. Eerst gespiegeld; lukt dat niet, dan één aan de vrije kant.')}`);
@@ -1563,10 +1604,10 @@ function buildPanel(){
     <section><h2>Back-up</h2><div class="btns"><button data-act="saveFile">Bewaren ↓</button><label for="fileIn" class="btnl">Inladen ↑</label></div>
     <p class="hint">Om ontwerpen van je laptop naar je iPhone te brengen: bewaar hier een back-up en laad die op het andere toestel in.</p></section></details>`;
   P.innerHTML=h;
-  P.querySelectorAll('details').forEach(el=>el.addEventListener('toggle',()=>{ lib.view[el.id==='techBox'?'tech':'vw']=el.open; save(); }));
+  P.querySelectorAll('#techBox,#viewBox').forEach(el=>el.addEventListener('toggle',()=>{ lib.view[el.id==='techBox'?'tech':'vw']=el.open; save(); }));
   $('#ghostSel').innerHTML=`<option value="">— niets —</option>`+optionsFor(d.type,d.id);
   if (lib.view.ghost && !lib.designs.some(x=>x.id===lib.view.ghost&&x.type===d.type&&x.id!==d.id)) lib.view.ghost='';
-  panelKey=''; applyLock();
+  panelKey=''; applyLock(); applyLevel();
 }
 // korte samenvatting bovenaan: enkel wat je nodig hebt om te voelen of het klopt
 function sumHTML(d,g){
@@ -1768,7 +1809,7 @@ function syncPanel(){
   }
   $('#designSel').innerHTML = optionsFor(lib.tab,null,d.id);
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===lib.tab));
-  enhanceSelects(); if(window.navKick) navKick();
+  enhanceSelects(); applyLevel(); if(window.navKick) navKick();
 }
 // galerij: elk idee getekend op de vorm die nu op het scherm staat
 let ideasKey='';
@@ -2119,6 +2160,8 @@ function runAct(a,t){ const d=D();
   switch(a){
     case 'new': { const n=lib.tab==='body'?defaultBody():defaultHead(); const nm=prompt('Naam van het nieuwe ontwerp:', n.name); if(nm===null) return; n.name=nm||n.name; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); break; }
     case 'dup': { const n=clone(d); n.id=uid(); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : d.name+' (kopie)'; lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
+    case 'lvlHigh': location.href='vormontwerper-high.html'; break;
+    case 'lvlNorm': location.href='vormontwerper.html'; break;
     case 'rename': { if(d.ref){ lockMsg(); return; } const nm=prompt('Nieuwe naam:', d.name); if(nm){ d.name=nm; buildPanel(); update(); } break; }
     case 'del': {
       if (d.ref){ toast('Referentievormen blijven altijd in de bibliotheek'); return; }
@@ -2138,6 +2181,7 @@ function runAct(a,t){ const d=D();
     case 'resetH': { const p=T().pts[sel]; if(p){ pushUndo(); delete p.ang; delete p.k; update(); } break; }
     case 'fair': { if(locked()) return; pushUndo(); const tg=T(); fairObj(tg,1,d.type==='headstock'&&!tg.isPG); if(tg.isPG) d.set.pg.edited=true; update(); toast('Lijn gladgestreken'); break; }
     case 'autoCtrl': { const old=clone(d.set.ctrl.items||[]); pushUndo(); d.set.ctrl.edited=false; update(); glide(old); break; }
+    case 'welcome': showWelcome(); break;
     case 'strapAuto': pushUndo(); delete d.set.strapF; update(); break;
     case 'jointSet': { if(locked()){ lockMsg(); return; } pushUndo(); const f=parseFloat(t.dataset.k), dy=fretY(d.set,f)-topOf(geom(d)); d.pts.forEach(p=>{ p.y=Math.round((p.y+dy)*100)/100; }); if(d.set.strapF) d.set.strapF.y+=dy; d.set.pg.edited=false; update(); toast('Body begint nu bij fret '+fmt(f,1)); break; }
     case 'goalInsp': insp.mode='goal'; openInsp(); break;
@@ -2239,8 +2283,8 @@ function exportSvg(d,pgOnly){
 
 // ================= inspirator =================
 const rnd01=()=>Math.random()*2-1, pick=a=>a[Math.floor(Math.random()*a.length)];
-const GEN_POOL=['i5t','revstar','stingray','l5','n-peer','n-blad','n-vleugel','n-schelp','n-kiezel','n-zandloper','n-golf','n-gotisch','n-romaans','strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
-const GEN_WILD=['iceman','firebird','explorer','moderne','n4'];
+const GEN_POOL=['boden','rick360','dano59','astrojet','lpjsc','b6','supersonic','i5t','revstar','stingray','l5','n-peer','n-blad','n-vleugel','n-schelp','n-kiezel','n-zandloper','n-golf','n-gotisch','n-romaans','strat','tele','lp','lpjdc','sg','es','offset','mustang','super','toronado','mm','js','mosrite','axis','prs','redspecial','albertlee','tiger','asher'];
+const GEN_WILD=['iceman','firebird','explorer','moderne','n4','birdprey'];
 // van een foto overgetekend en te veel een karikatuur van het origineel: apart, en standaard niet mee in het genereren
 const REF_ROUGH=['tiger','wolf','styleo','h-tiger'];
 let VECS=null;
@@ -2432,7 +2476,7 @@ const GOAL_TXT={bal:'Staand: hangt hij aan de riem, dan zakt de kop niet. Het zw
   tree:'Zonder snaarboom: de mechanieken komen zo te staan dat er geen snaarboom nodig is.'};
 function inspSave(){ lib.view.inspSrc=insp.src; lib.view.inspOrg=insp.org; lib.view.inspWild=insp.wild; save(); }
 function drawInsp(){
-  const t=lib.tab, modes=[['free','🎲 Vrij'],['vary','🔁 Variaties'],['mash','🧩 Mashup'],['goal','🎯 Verbeteren']], lv=wildLv(insp.wild), m=insp.mode;
+  const t=lib.tab, modes=[['free','🎲 Vrij'],['vary','🔁 Variaties'],['mash','🧩 Mashup'],['goal','🎯 Verbeteren']].filter(m=>APP_LEVEL!=='light'||m[0]!=='goal'), lv=wildLv(insp.wild), m=insp.mode;
   const srcAny=SRC_CATS.some(([k])=>insp.src[k]);
   const lst=(tit,a)=>a&&a.length?`<div class="ilst"><b>${tit}</b><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'';
   let o=`<div class="mhead"><h2>✨ Inspirator · ${t==='body'?'body':'kop'}</h2><button data-m="close">✕</button></div>
@@ -2453,7 +2497,7 @@ function drawInsp(){
   MB.innerHTML=o;
 }
 function useDesign(d){
-  const n=clone(d); n.id=uid(); delete n.ref;
+  const n=clone(d); n.id=uid(); delete n.ref; if(APP_LEVEL==='light'&&d.ref) n.name='Mijn gitaar naar '+d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,'');
   const base=n.name, cnt=lib.designs.filter(x=>x.name.startsWith(base)).length; if(cnt) n.name=base+' '+(cnt+1);
   if (n.type==='body'){ n.set.ctrl.edited=false; n.set.pg.edited=false; }
   lib.designs.push(n); lib.tab=n.type; lib.active[n.type]=n.id; closeModal(); switchDesign(); toast('Nieuw ontwerp gemaakt: '+n.name);
@@ -2953,6 +2997,40 @@ function printAct(a){
 
 // ================= kiezer (vervangt de systeem-dropdowns, zelfde gedrag op iPad, iPhone en laptop) =================
 const isDesignSel=sel=>sel.id==='designSel'||sel.id==='headSel'||sel.id==='ghostSel'||sel.dataset.m==='src';
+// ---------- niveaus: wat elke versie toont ----------
+// h = alleen in high; n = normaal en high (niet in light); l = alleen in light
+const LV_H=['scaleIn','set.scale','set.pg.margin','set.pg.bottom','set.pg.tilt','set.pg.curve','set.pg.inset','set.pg.screws','set.thick','set.dens','set.neckWood','set.sh.dx','set.sh.dy','set.sh.ang','set.ctrl.loose','set.pocketMan','view.soft','dim:neckF','dim:fbF','view.snap','view.wline'];
+const LV_N=['set.bridge','set.ctrl.sw','set.ctrl.jack','set.strapMode','set.sh.side','set.sh.pos','set.sh.flow','set.sh.size','set.sh.fx','set.sh.fy','set.sh.text','set.pg.knobs','sym'];
+function applyLevel(){ if(APP_LEVEL==='high') return;
+  const tag=(el,lv)=>{ if(el&&el.getAttribute('data-lv')!==lv) el.setAttribute('data-lv',lv); };
+  P.querySelectorAll('[data-bind],[data-dim]').forEach(el=>{ const b=el.dataset.bind||('dim:'+el.dataset.dim), row=el.closest('.row,tr')||el; if(LV_H.includes(b)) tag(row,'h'); else if(LV_N.includes(b)) tag(row,'n'); });
+  P.querySelectorAll('#neckBox .row').forEach(r=>{ if(!r.querySelector('input')) tag(r,'h'); });
+  ['#techBox','[data-act=pgSvg]','[data-act=tgtPG]','#knobBack'].forEach(q=>P.querySelectorAll(q).forEach(e=>tag(e,'h')));
+  // light: geen techniek, geen cijfers
+  [['[data-nav="1"]','n'],['[data-nav="4"]','n']].forEach(([q,lv])=>{ const h=P.querySelector(q); if(h) tag(h.closest('section'),lv); });
+  ['#viewBox','#qBox','#strapState','#ctrlState','#shState','#pgState','#ptBox','.hint.flow'].forEach(q=>P.querySelectorAll(q).forEach(e=>tag(e,'n')));
+  const sum=P.querySelector('#sum'); if(sum) tag(sum.closest('section'),'n');
+  P.querySelectorAll('section>p.hint, aside>p.hint').forEach(e=>{ if(/volgorde|Nulpunt|Oranje velden/.test(e.textContent)) tag(e,'n'); });
+}
+// light: een uitnodigend begin voor klanten in de shop
+function showWelcome(){ const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&!(/^Nieuwe body$/.test(x.name)&&!(hist[x.id]&&hist[x.id].u.length))), refs=lib.designs.filter(x=>x.ref&&x.type==='body'&&!/bass/.test(x.id)&&!REF_ROUGH.includes(x.id.slice(4)));
+  const nat=refs.filter(x=>/^ref-n-/.test(x.id)), cls=refs.filter(x=>!/^ref-n-/.test(x.id));
+  const card=(d,lab)=>`<button class="wcard" data-w="${d.id}">${thumbSVG(d,150,180)}<span>${esc(lab||d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,''))}</span></button>`;
+  let w=document.getElementById('welcome'); if(!w){ w=document.createElement('div'); w.id='welcome'; document.body.appendChild(w); }
+  w.innerHTML=`<div class="wbox"><div class="whead"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg><span>Sixto Custom Guitars</span></div>
+    <h1>Ontwerp jouw gitaar</h1><p class="wsub">Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.</p>
+    <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}</div>
+    ${own.length?`<h2>Mijn ontwerpen</h2><div class="wgrid">${own.slice(-6).reverse().map(d=>card(d,d.name)).join('')}</div>`:''}
+    <h2>Klassiekers</h2><div class="wgrid">${cls.map(d=>card(d)).join('')}</div>
+    <h2>Uit de natuur en de architectuur</h2><div class="wgrid">${nat.map(d=>card(d)).join('')}</div>
+    <p class="wfoot">Elke gitaar van Sixto is een unicum, met de hand gebouwd. Wat je hier tekent, is het begin van het gesprek.</p></div>`;
+  w.style.display='block'; w.scrollTop=0; }
+function hideWelcome(){ const w=document.getElementById('welcome'); if(w) w.style.display='none'; requestAnimationFrame(()=>fit()); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-w]'); if(!t) return; const v=t.dataset.w;
+  if(v==='insp'){ hideWelcome(); lib.tab='body'; const own=lib.designs.find(x=>!x.ref&&x.type==='body'); if(own) lib.active.body=own.id; switchDesign(); insp.mode='free'; openInsp(); return; }
+  if(v==='last'){ hideWelcome(); lib.tab='body'; const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&x.name!=='Nieuwe body').pop()||lib.designs.filter(x=>!x.ref&&x.type==='body').pop(); if(own){ lib.active.body=own.id; switchDesign(); } return; }
+  const d=lib.designs.find(x=>x.id===v); if(!d) return; hideWelcome(); if(d.ref){ useDesign(d); } else { lib.tab='body'; lib.active.body=d.id; switchDesign(); }
+  if(CMP.matches) setSheet(false); });
 function isNumEl(el){ return el.type==='number'||(!!el.hasAttribute&&el.hasAttribute('data-n')); }
 // getallen: gewoon tekstveld met cijferklavier (komma mag), en − / + ernaast zodat je niet hoeft te typen
 const SIGNED=/(^|\.)(x|y|rot|a|ang|dx|dy|fx|fy|tilt|curve|inset|bottom|bot)$/;
@@ -3052,9 +3130,15 @@ const leaving=()=>{ histFlush(); if(saveT) saveNow(); if(histW) histWrite(); };
 window.addEventListener('pagehide',leaving); document.addEventListener('visibilitychange',()=>{ if(document.hidden) leaving(); });
 let lastSz=null; window.addEventListener('resize',()=>{ const r=svg.getBoundingClientRect(); if(lastSz&&(Math.abs(r.width-lastSz.w)>lastSz.w*0.25||Math.abs(r.height-lastSz.h)>lastSz.h*0.25)) fit(); else render(); lastSz={w:r.width,h:r.height}; });
 if (lib.view.soft===30) lib.view.soft=60;
-ENGINE_READY = true; lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false){ placePosts(d); if(d.ref&&headChecks(d).length) fitPosts(d); } });
+ENGINE_READY = true;
+// ruwe benaderingen (van foto): opgekuist zoals de gegenereerde vormen, gladgestreken met de lange lat en opnieuw met ankerpunten gevolgd
+lib.designs.filter(d=>d.ref&&d.type==='body'&&REF_ROUGH.includes(d.id.slice(4))).forEach(d=>{ const g=geom(d); d.pts=fitAnchors(fairBody(g.poly,80),{tol:0.8}).map(p=>({x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2,c:!!p.c})); d.sym=false; delete d.sig; }); lib.designs.forEach(d=>{ if(d.type==='headstock' && d.set.layout!=='custom' && d.set.auto!==false){ placePosts(d); if(d.ref&&headChecks(d).length) fitPosts(d); } });
 switchDesign();
 if (CMP.matches && lib.view.sheet) setSheet(true);
+{ const b=document.querySelector('.lvlb'); if(b) b.textContent=APP_LEVEL==='light'?'':APP_LEVEL==='normaal'?'Normaal':'High';
+  const m=$('#more'); if(m){ if(APP_LEVEL==='light') [...m.options].forEach(o=>{ if(/saveFile|openFile/.test(o.value)) o.remove(); });
+    else m.insertAdjacentHTML('beforeend',APP_LEVEL==='normaal'?'<option value="lvlHigh">Alle details (High) ↗</option>':'<option value="lvlNorm">Eenvoudiger (Normaal) ↗</option>'); } }
+if (APP_LEVEL==='light') showWelcome();
 </script>
 </body>
 </html>
