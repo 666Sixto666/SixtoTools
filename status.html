@@ -125,7 +125,7 @@ async function liveBuilds(token, stand){
     `<td>${r.next ? cell(r.next.text.replace(/\s*\((klantbuild|verkoop|prototype)\)/g, '')) + `<span class="sub">${esc(r.next.phase)}</span>` : 'alles afgevinkt'}</td></tr>`).join('') + '</table></div>';
 }
 
-/* "Vraag Spaan om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt CS elk halfuur
+/* "Vraag Spaan om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt CS om 10, 13, 16, 19 en 22 u
    (07–22 u, als de pc en de Claude-app aanstaan) of er een verzoek ligt, herschrijft dan de status en wist het verzoek. */
 const REQ = 'sixto-private/contents/requests/update.json';
 async function showRequest(token){
@@ -134,7 +134,7 @@ async function showRequest(token){
   if(res.ok){
     const j = await res.json(); let at = '';
     try{ at = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))))).requestedAt; }catch(e){}
-    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. Spaan werkt de status bij binnen het halfuur (als de pc aanstaat).';
+    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. Spaan werkt de status bij in de volgende ronde, om 10, 13, 16, 19 of 22 u (als de pc aanstaat).';
     btn.disabled = true; btn.style.opacity = .5; return j.sha;
   }
   note.textContent = ''; btn.disabled = false; btn.style.opacity = 1; return null;
