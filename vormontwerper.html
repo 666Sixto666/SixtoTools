@@ -213,6 +213,11 @@ header h1{display:flex;align-items:center;gap:6px}.logo{width:20px;height:20px;c
 .wcard{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px 12px;border-radius:16px;border:1px solid #e6dccd;background:rgba(255,255,255,.85);box-shadow:0 2px 10px rgba(80,50,20,.06);font-size:13.5px;color:#3a2e24;transition:transform .15s,box-shadow .15s}
 .wcard:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(80,50,20,.12)}.wcard svg{width:100%;height:auto;max-width:150px}
 #welcome .wfoot{margin-top:30px;color:#8a7a68;font-style:italic;text-align:center}
+.wfoot.wnext{margin-top:8px;font-style:normal}
+.wpub{margin:26px auto 8px;max-width:640px;color:#8a7a68;font-size:12.5px;text-align:center;line-height:1.5}.wpub p{margin:6px 0}.wpub a{color:inherit}
+.wlang{margin-left:auto;display:flex;gap:4px}.wlang button{font:inherit;font-size:11.5px;letter-spacing:.06em;padding:3px 8px;border-radius:999px;border:1px solid #d9cbb8;background:transparent;color:#8a7a68}.wlang button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.pubBtns{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+#pubFab{min-height:40px;padding:0 16px;border-radius:20px;margin-left:8px;box-shadow:0 1px 6px rgba(0,0,0,.12)}
 @media (max-width:520px){#welcome .wgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .stepn{display:inline-block;min-width:20px;height:20px;line-height:20px;border-radius:10px;background:#b5541c;color:#fff;font-size:12px;text-align:center;margin-right:7px;vertical-align:1px}.hint.flow{margin:-4px 0 8px}
 </style>
@@ -276,6 +281,132 @@ header h1{display:flex;align-items:center;gap:6px}.logo{width:20px;height:20px;c
 // ================= vaste gegevens =================
 // drie versies uit één bron: light (klanten in de shop), normaal (Tom, dagelijks), high (alle details). De build zet dit per bestand.
 const APP_LEVEL='normaal';
+// ================= Publieke versie (light): naam, taal, neutrale namen, delen (12/11/2026) =================
+// Alleen in light. Merknamen worden neutrale namen (de vormen blijven, zonder export). Engels via een woordenlijst
+// die de teksten op het scherm vertaalt; de app zelf blijft in het Nederlands geschreven.
+const LIGHT=APP_LEVEL==='light';
+const PUB_NAME='Sixto Forma', PUB_MAIL='sixtocustomguitars@gmail.com', PUB_IG='https://www.instagram.com/sixtocustomguitars/';
+let LANG='nl';
+if (LIGHT){ let s=''; try { s=localStorage.getItem('sixto-forma-lang')||''; } catch(e){} LANG=s||(/^nl/i.test(navigator.language||'')?'nl':'en'); try { document.documentElement.lang=LANG; } catch(e){} }
+const EN=LANG==='en';
+const PUB_SITE=()=>EN?'https://666sixto666.github.io/SixtoTools/site/':'https://666sixto666.github.io/SixtoTools/site/nl/';
+const NEUTRAL={strat:'S-style',tele:'T-style',lp:'Single cut',lpjdc:'Junior double cut',sg:'Double horn',es:'Thinline semi',offset:'Offset',mustang:'Short offset',mm:'Slim cut',prs:'Modern double cut',super:'Super S',js:'Round shred',axis:'Compact cut',albertlee:'Asymmetric',n4:'Sculpted shred',toronado:'Retro offset',mosrite:'Surf reverse',redspecial:'Fireside',explorer:'Angular',v:'Arrow',moderne:'Modernist',turner:'Boutique compact',tiger:'Carved deluxe',wolf:'Carved double cut',asher:'Offset T',styleo:'Vintage archtop',firebird:'Reverse',iceman:'Hook',revstar:'Café racer',l5:'Jazz archtop',i5t:'Single cut T',dano59:'Retro double cut',astrojet:'Space age',birdprey:'Raptor',lpjsc:'Junior single cut',b6:'Sharp shred',supersonic:'Reverse offset',rick360:'Crescent semi',boden:'Headless ergo',jaguar:'Offset deluxe',stingray:'Big horn',pbass:'P-style bass',jbass:'J-style bass',
+  'h-strat':['S-style kop (50s/60s)','S-style head (50s/60s)'],'h-turner':['Boutique kop','Boutique head'],'h-strat70':['S-style kop (70s, groot)','S-style head (70s, large)'],'h-tele':['T-style kop','T-style head'],'h-lp':['Open book kop (3+3)','Open book head (3+3)'],'h-prs':['Moderne kop (3+3)','Modern head (3+3)'],'h-dbz':['Puntige kop (3+3)','Pointed head (3+3)'],'h-mosrite':['Surf kop (3+3)','Surf head (3+3)'],'h-dano':['Retro kop (3+3)','Retro head (3+3)'],'h-moderne':['Modernistische kop (3+3)','Modernist head (3+3)'],'h-explorer':['Hockeystick kop','Hockey stick head'],'h-rhoads':['Puntige kop (6 op rij)','Pointed head (6 in line)'],'h-c5150':['Super S kop','Super S head'],'h-firebird':['Omgekeerde kop','Reverse head'],'h-n4':['Shred kop (omgekeerd)','Shred head (reversed)'],'h-tiger':['Gesneden kop (3+3)','Carved head (3+3)'],'h-martin':[null,'Straight 3+3 (acoustic style, approx.)'],'h-bass':[null,'Bass head (4 in line, approx.)'],
+  'n-peer':[null,'Pear (nature)'],'n-blad':[null,'Leaf (nature)'],'n-vleugel':[null,'Wing (nature)'],'n-schelp':[null,'Shell (nature)'],'n-kiezel':[null,'Pebble (nature)'],'n-zandloper':[null,'Hourglass (nature)'],'n-golf':[null,'Wave (nature)'],'n-gotisch':[null,'Gothic arch (architecture)'],'n-romaans':[null,'Romanesque arch (architecture)'],'n-deco':[null,'Art deco (architecture)'],
+  'h-n-gotisch':[null,'Gothic arch head (architecture, 3+3)'],'h-n-tulp':[null,'Tulip head (nature, 3+3)'],'h-n-deco':[null,'Art deco head (architecture, 3+3)'],'h-n-waaier':[null,'Fan head (nature, 3+3)'],'h-n-ui':[null,'Onion dome head (architecture, 3+3)'],'h-n-blad':[null,'Leaf head (nature, 3+3)'],'h-n-vlam':[null,'Flame head (nature, 3+3)'],'h-n-schelp':[null,'Shell head (nature, 3+3)'],'h-n-zeis':[null,'Scythe head (nature, 3+3)'],'h-n-veer':[null,'Feather head (nature, 6 in line)'],'h-n-golfkam':[null,'Wave crest head (nature, 6 in line)'],'h-n-zwaan':[null,'Swan head (nature, 6 in line)'],'h-n-spits':[null,'Spire head (architecture, 6 in line)']};
+if (LIGHT){ const _REFS=REFS; REFS=function(){ return _REFS().map(d=>{ const m=NEUTRAL[d.id.slice(4)]; if(m){ const v=Array.isArray(m)?m[EN?1:0]:m; if(v) d.name=v; } return d; }); }; }
+// Nederlands in light: alleen de merknamen buiten de vormen eruit
+const T_NL={'Vormontwerper':'Forma','🎨 Render':'🎨 Bekijk en deel','(Strat, Les Paul, SG…),':'(S-style, single cut, double horn…),','(Explorer, Firebird, Iceman…).':'(angular, reverse, hook…).','10° (PRS)':'10°','14° (Gibson nu)':'14°','17° (Gibson vroeger)':'17° (vintage)','Recht (Fender)':'Recht',
+  'Drie single coils, 3 knoppen (Fender-stijl)':'Drie single coils, 3 knoppen','Twee humbuckers, 4 knoppen (Gibson-stijl)':'Twee humbuckers, 4 knoppen','Eén draaibare humbucker, 4 knoppen (Turner)':'Eén draaibare humbucker, 4 knoppen','Twee single coils, Tele-stijl':'Twee single coils, T-stijl','Los blad naast de pickups, zoals een Les Paul':'Los blad naast de pickups','Rond de pickups, zoals een Strat':'Rond de pickups'};
+const T_EN={'Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
+  'Een beeld van de hele gitaar, met de gekoppelde kop':'A picture of the whole guitar, with its head','✋ Bewerken':'✋ Edit','Passend':'Fit','Inzoomen':'Zoom in','Uitzoomen':'Zoom out','Hele vorm tonen':'Show the whole shape','✨ Inspirator':'✨ Inspire me','Inspirator':'Inspire me','Willekeurige vormen en variaties':'Random shapes and variations','Je bewerkt:':'You are editing:','Je bewerkt de pickguard':'You are editing the pickguard','Punten en onderdelen slepen':'Drag points and parts',
+  'Eén stap terug':'One step back','Eén stap terug (Ctrl+Z)':'One step back (Ctrl+Z)','Opnieuw':'Redo','Opnieuw (Ctrl+Y)':'Redo (Ctrl+Y)','Alle stappen':'All steps','Alle stappen zien en terugspringen':'See all steps and jump back','Opnieuw beginnen':'Start over','▴ Instellingen':'▴ Settings',
+  'Sleep de punten · dubbeltik op de lijn = punt erbij · alles op de tekening is versleepbaar':'Drag the points · double-tap the line to add a point · everything on the drawing can be dragged',
+  'Vorm':'Shape','Pickups':'Pickups','Pickguard':'Pickguard','Klankgaten':'Sound holes','Knoppen':'Knobs','Onderbout':'Lower bout','Bovenbout':'Upper bout','Taille':'Waist','Breedte':'Width','Lengte':'Length','Midden':'Middle','Top':'Top',
+  'Onderbout groter':'Bigger lower bout','Onderbout kleiner':'Smaller lower bout','Bovenbout groter':'Bigger upper bout','Bovenbout kleiner':'Smaller upper bout','Taille groter':'Wider waist','Taille kleiner':'Narrower waist','Breedte groter':'Wider','Breedte kleiner':'Narrower','Lengte groter':'Longer','Lengte kleiner':'Shorter','Midden groter':'Bigger middle','Midden kleiner':'Smaller middle','Top groter':'Bigger top','Top kleiner':'Smaller top',
+  'Lijn: strak ↔ rond':'Line: tight ↔ round','Gladstrijken':'Smooth','Haalt bultjes en deukjes uit de lijn':'Takes bumps and dents out of the line','Lijn gladgestreken':'Line smoothed',
+  'Brug en pickups':'Bridge and pickups','Snel kiezen':'Quick pick','— kies een opbouw —':'— choose a layout —','Hals':'Neck','Brug':'Bridge','type':'type','Type':'Type','Single coil':'Single coil','Humbucker':'Humbucker','Mini-humbucker':'Mini humbucker','P90 (soapbar)':'P90 (soapbar)','Bas-soapbar':'Bass soapbar','J-bas single':'J-bass single','Humbucker in ronde opening':'Humbucker in a round opening','Geen':'None','Pickups sleep je op de tekening.':'Drag the pickups on the drawing.',
+  'Drie single coils, 3 knoppen (Fender-stijl)':'Three single coils, 3 knobs','Twee humbuckers, 4 knoppen (Gibson-stijl)':'Two humbuckers, 4 knobs','Eén draaibare humbucker, 4 knoppen (Turner)':'One rotating humbucker, 4 knobs','Twee single coils, Tele-stijl':'Two single coils, T-style','Humbucker + 2 single coils (modern)':'Humbucker + 2 single coils (modern)','Eén humbucker, 1 knop (strak)':'One humbucker, 1 knob (clean)','Twee P90’s, 4 knoppen':'Two P90s, 4 knobs',
+  'Groot':'Large','Diskant':'Treble side','Baskant':'Bass side','Strook':'Strip','Los blad':'Floating','Zonder pickguard':'No pickguard','Klein blad aan de baskant':'Small guard on the bass side','Klein blad aan de diskantkant':'Small guard on the treble side','Los blad naast de pickups, zoals een Les Paul':'Floating guard next to the pickups','Rond de pickups, zoals een Strat':'Around the pickups','Smalle strook rond de pickups, tot tegen de hals':'Narrow strip around the pickups, up to the neck','🎲 Variatie':'🎲 Variation','Opnieuw genereren':'Generate again',
+  'f-gat':'f-hole','s-gat':'s-hole','Oog':'Eye','Druppel':'Drop','Maan':'Moon','Golf':'Wave','Ruit':'Diamond','Ruiten':'Diamonds','Morse':'Morse','Vlam':'Flame','Patroon':'Pattern',
+  'Knoppen, schakelaar en jack':'Knobs, switch and jack','Meer knoppen':'More knobs','Minder knoppen':'Fewer knobs','Bij de hand':'Close at hand','Blok':'Block','Langs de rand':'Along the edge','Plaat':'Plate','Volume apart':'Volume apart','Compact':'Compact','Waaier':'Fan','✨ Nog een idee':'✨ Another idea',
+  'Kop en render':'Head and render','Kop & kleur':'Head & colour','Bewerk deze kop':'Edit this head','Laatst geopende kop':'Last opened head','Mechanieken':'Tuners','Basmechanieken':'Bass tuners','Mini-mechanieken':'Mini tuners','Mechanieken opnieuw plaatsen':'Place tuners again','Kophoek':'Head angle','Recht (Fender)':'Straight','10° (PRS)':'10°','14° (Gibson nu)':'14°','17° (Gibson vroeger)':'17° (vintage)',
+  'Vintage (Kluson-stijl)':'Vintage','Locking (Schaller/Sperzel-stijl)':'Locking','Modern 3+3 (Grover/Gotoh-stijl)':'Modern 3+3','Modern 6-op-rij (Gotoh/Schaller-stijl)':'Modern 6 in line','Verdeeld (3 + 3)':'Split (3 + 3)','Op één rij (bas-kant)':'In line (bass side)','Op één rij, omgekeerd (diskant-kant)':'In line, reversed (treble side)',
+  'Worden automatisch geplaatst en volgen je vorm: rechte snaartrek, gelijke afstand tot de rand.':'Placed automatically and they follow your shape: straight string pull, equal distance to the edge.',
+  'Afwerking':'Finish','Toets':'Fretboard','Hardware':'Hardware','Pickups (alle)':'Pickups (all)','Palissander':'Rosewood','Ebben':'Ebony','Esdoorn':'Maple','Mahonie':'Mahogany','Geroosterde esdoorn':'Roasted maple','Notelaar (walnoot)':'Walnut','Chroom':'Chrome','Zwart':'Black','Goud':'Gold','Wit':'White','Crème':'Cream','Crème wit':'Cream white','Hout naturel':'Natural wood','Sunburst':'Sunburst','Kersenrood':'Cherry red','Lake blauw':'Lake blue','Sherwood groen':'Sherwood green','Mint':'Mint','Goudtop':'Gold top','Aluminium':'Aluminium','Parelmoer':'Pearl','Schildpad':'Tortoise','Metaal (zoals de hardware)':'Metal (like the hardware)','Hout':'Wood','Kleur':'Colour',
+  'Beeld maken…':'Making the picture…','Bewaar als afbeelding':'Save as image','Lukt niet op dit toestel':'Not possible on this device','Alleen de vorm (geen hardware)':'Only the shape (no hardware)',
+  'Ontwerp jouw gitaar':'Design your guitar','Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.':'Pick a starting point. Then sculpt the shape with your finger, choose a head and a colour, and see the whole guitar.','✨ Verras me':'✨ Surprise me','Verder met mijn ontwerp':'Continue my design','Mijn ontwerpen':'My designs','Klassiekers':'Classics','Uit de natuur en de architectuur':'From nature and architecture',
+  'Elke gitaar van Sixto is een unicum, met de hand gebouwd. Wat je hier tekent, is het begin van het gesprek.':'Every Sixto guitar is one of a kind, built by hand. What you draw here is the start of the conversation.',
+  '✨ Inspirator · body':'✨ Inspire me · body','✨ Inspirator · kop':'✨ Inspire me · head','🎲 Vrij':'🎲 Free','🔁 Variaties':'🔁 Variations','🧩 Mashup':'🧩 Mashup','Wildheid':'Wildness','Dicht bij de bron':'Close to the source','Eigen':'Own','Gedurfd':'Bold','Wild':'Wild','Bronnen':'Sources','Natuur':'Nature','Architectuur':'Architecture','Uitgesproken':'Outspoken','Ruwe benaderingen':'Rough sketches','Organische zwaai':'Organic sway','Aan':'On','Uit':'Off','Aan:':'On:',
+  'Nieuwe vormen uit de bronnen die je aanzet: één bestaande vorm bewust bijgestuurd, of twee vormen per helft gemengd.':'New shapes from the sources you switch on: one existing shape deliberately reshaped, or two shapes mixed half and half.',
+  'Duidelijk een eigen vorm, maar nog vertrouwd.':'Clearly its own shape, but still familiar.','Herkenbaar: kleine ingrepen op één bestaande vorm.':'Recognisable: small changes to one existing shape.','Ver van alles wat bestaat. Elke vorm blijft gekeurd: bouwbaar en een schone lijn.':'Far from anything that exists. Every shape is still checked: buildable, with a clean line.',
+  'Hoe ver een variatie van je ontwerp mag gaan. Duidelijk een eigen vorm, maar nog vertrouwd.':'How far a variation may move from your design. Clearly its own shape, but still familiar.',
+  'Soms een zachte zwaai door de hele vorm, zoals gegroeid hout. Hoe wilder, hoe vaker en hoe sterker.':'Sometimes a gentle sway through the whole shape, like grown wood. The wilder, the more often and the stronger.',
+  'Elke reeks toont eerst vormen die je nog niet zag.':'Each round shows shapes you have not seen yet first.','🎲 Nieuwe reeks':'🎲 New round','Gebruik als nieuw ontwerp':'Use as new design','Gebruik als startpunt':'Use as starting point',
+  '(Strat, Les Paul, SG…),':'(S-style, single cut, double horn…),','(peer, blad, schelp, golf…),':'(pear, leaf, shell, wave…),','(gotische en Romaanse boog, art deco…),':'(Gothic and Romanesque arch, art deco…),','(gotische en Romaanse boog, art deco…).':'(Gothic and Romanesque arch, art deco…).','(gotische en Romaanse boog, art deco…). Je eigen ontwerpen doen altijd mee.':'(Gothic and Romanesque arch, art deco…). Your own designs always take part.','(Explorer, Firebird, Iceman…).':'(angular, reverse, hook…).',
+  ': Je eigen ontwerp blijft het vertrekpunt. De tool doet benoemde ingrepen (taille, hoorn, staart, schouder…) en zet erbij wat hij veranderde.':': Your own design stays the starting point. The tool makes named changes (waist, horn, tail, shoulder…) and notes what it changed.',
+  'Tik een vorm om te kiezen, dubbeltik om hem meteen te openen. Pickups, knoppen en mechanieken worden daarna vanzelf ingepast.':'Tap a shape to choose it, double-tap to open it right away. Pickups, knobs and tuners are fitted automatically.',
+  'Tik een vorm om te kiezen, dubbeltik om hem meteen te openen. Pickups, knoppen en mechanieken worden daarna vanzelf ingepast. De stippellijn is je huidige ontwerp.':'Tap a shape to choose it, double-tap to open it right away. Pickups, knobs and tuners are fitted automatically. The dotted line is your current design.',
+  'Twee tot vier vormen, elk voor een hoek van de body of kop, met vloeiende naden. Wildheid speelt hier niet mee, de bronnen wel.':'Two to four shapes, each for one corner of the body or head, with smooth seams. Wildness does not count here, the sources do.',
+  'Even zoeken naar vormen die kloppen en mooi zijn… elk voorstel wordt eerst gekeurd en bijgewerkt.':'Looking for shapes that work and look good… every proposal is checked and refined first.',
+  'Niets gevonden dat de keuring doorstaat. Probeer een nieuwe reeks, een andere wildheid of meer bronnen.':'Nothing passed the check. Try a new round, another wildness or more sources.',
+  'Stabiel':'Stable','Speelbaar':'Playable','Ergonomisch':'Ergonomic','zwaartepunt':'balance point','zadel':'saddle','jack':'jack','nut':'nut','riem':'strap','toets op de body':'fretboard on the body','afstand':'distance','hoek':'angle',
+  'Nieuwe body':'New body','Nieuwe kop':'New head','Maak eerst een body':'Make a body first','Referentievorm is vergrendeld. Klik "Gebruik als startpunt" om ermee te werken.':'This shape is locked. Tap "Use as starting point" to work with it.','Referentievormen blijven altijd in de bibliotheek':'Starting shapes always stay in the library','Het laatste eigen ontwerp van dit type kan niet weg':'Your last own design of this type cannot be deleted','Kopie gemaakt: je kunt nu alles aanpassen':'Copy made: you can now change everything',
+  'Op deze vorm vind ik geen ander idee dat past':'No other idea fits this shape','Past niet met deze body en pickups':'Does not fit this body and pickups','Kies eerst een pickguard':'Choose a pickguard first','Er is nog geen pickguard':'There is no pickguard yet','Voeg eerst een knop toe':'Add a knob first','Mechanieken opnieuw geplaatst: rechte snaartrek, gelijke afstand tot de rand':'Tuners placed again: straight string pull, equal distance to the edge',
+  'De kop is langer geworden zodat alle mechanieken passen. Ongedaan maken kan met ↶.':'The head got longer so all tuners fit. Undo with ↶.','Dit bestand kan ik niet lezen':'I cannot read this file','Punten op de middellijn kun je niet verwijderen':'Points on the centre line cannot be removed','Te weinig punten over':'Too few points left',
+  '⚠ Bewaren lukt niet op dit toestel. Je laatste werk kan verloren gaan.':'⚠ Saving does not work on this device. Your latest work may be lost.','Back-up nu bewaren ↓':'Save a backup now ↓',
+  // nieuw in de publieke versie
+  'Deel je ontwerp':'Share your design','📤 Deel je ontwerp':'📤 Share your design','✉ Stuur naar Sixto':'✉ Send to Sixto','Link gekopieerd':'Link copied','Kopieer deze link':'Copy this link','Ontwerp geopend: ':'Design opened: ','Deze link kan ik niet openen':'I cannot open this link','Dit ontwerp staat al bij je ontwerpen':'This design is already in your designs',
+  'Wil je deze gitaar echt? Sixto bouwt elke gitaar met de hand, als unicum. Stuur je ontwerp en Tom neemt contact met je op.':'Want this guitar for real? Sixto builds every guitar by hand, one of a kind. Send your design and Tom will get back to you.',
+  'Klaar? Tik op 🎨 Bekijk en deel om je gitaar te zien, te delen of naar Sixto te sturen.':'Done? Tap 🎨 View & share to see your guitar, share it or send it to Sixto.',
+  'Je ontwerpen blijven op je toestel. Er gaat niets naar Sixto, tenzij jij het zelf stuurt. Wat je stuurt, mag Sixto bekijken als inspiratie; het wordt nooit zonder je toestemming gepubliceerd.':'Your designs stay on your device. Nothing goes to Sixto unless you send it yourself. What you send, Sixto may look at for inspiration; it is never published without your permission.',
+  'Gratis te gebruiken. Gemaakt door Sixto Custom Guitars (België), met hulp van AI.':'Free to use. Made by Sixto Custom Guitars (Belgium), with the help of AI.','Website':'Website','Instagram':'Instagram','Nederlands':'Nederlands','English':'English'};
+const T_RULES=[
+  [/^(.+) · (.+)$/, m=>tr(m[1])+' · '+tr(m[2])],
+  [/^(.+) × (.+)$/, m=>m[0].split(' × ').map(x=>tr(x)).join(' × ')],
+  [/^(.+), organisch$/, m=>tr(m[1])+', organic'],
+  [/^(.+), bijgestuurd$/, m=>tr(m[1])+', reshaped'],
+  [/^Mijn gitaar naar (.+?)( \d+)?$/, m=>'My '+tr(m[1])+(m[2]||'')],
+  [/^Nieuwe (body|kop)( \d+)$/, m=>'New '+(m[1]==='kop'?'head':'body')+m[2]],
+  [/^Kop naar (.+)$/, m=>'Head like '+tr(m[1])],
+  [/^Nieuw ontwerp gemaakt: (.+)$/, m=>'New design created: '+tr(m[1])],
+  [/^Ontwerp geopend: (.+)$/, m=>'Design opened: '+tr(m[1])],
+  [/^Gedownload: (.+)$/, m=>'Downloaded: '+m[1]],
+  [/^Kopie gemaakt: (.+)$/, m=>'Copy made: '+m[1]],
+  [/^(\d+) knoppen$/, m=>m[1]+' knobs'],
+  [/^Kop: (.+)\. Andere kop\? Kies hem in de instellingen onder Kop\.$/, m=>'Head: '+tr(m[1])+'. Another head? Pick it in the settings under Head.'],
+  [/^Variatie: rand (\d+) mm, (\d+) mm schuin, (\d+) mm hol$/, m=>`Variation: edge ${m[1]} mm, ${m[2]} mm bevel, ${m[3]} mm hollow`],
+  [/^Teruggedraaid: (.+)$/, m=>'Undone: '+m[1]],
+  [/^Opnieuw: (.+)$/, m=>'Redone: '+m[1]]];
+function tr(s){ if(!LIGHT||s==null) return s; const k=String(s).trim(); if(!k) return s; const D=EN?T_EN:T_NL; let v=D[k];
+  if (v==null&&EN){ for (const [re,f] of T_RULES){ const m=k.match(re); if(m){ v=f(m); break; } } }
+  if (v==null||v===k) return s; return String(s).replace(k,v); }
+function trSvgText(svg){ return LIGHT?svg.replace(/>([^<>]+)<\/text>/g,(m,t)=>'>'+tr(t)+'</text>'):svg; }
+if (LIGHT){
+  const SKIP=/^(SCRIPT|STYLE|TEXTAREA)$/;
+  const trNode=n=>{ const v=n.nodeValue, t=tr(v); if(t!==v) n.nodeValue=t; };
+  const trAttrs=el=>{ if(!el.getAttribute) return; for (const a of ['title','aria-label','placeholder']){ const v=el.getAttribute(a); if(v){ const t=tr(v); if(t!==v) el.setAttribute(a,t); } } };
+  const trTree=root=>{ if(root.nodeType===3){ const p=root.parentElement; if(!p||!SKIP.test(p.tagName)) trNode(root); return; } if(root.nodeType!==1||SKIP.test(root.tagName)) return; trAttrs(root);
+    const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT); let n; while((n=w.nextNode())){ if(n.nodeType===3){ const p=n.parentElement; if(p&&SKIP.test(p.tagName)) continue; trNode(n); } else trAttrs(n); } };
+  new MutationObserver(ms=>{ for (const m of ms){ if(m.type==='characterData') trNode(m.target); else if(m.type==='attributes') trAttrs(m.target); else m.addedNodes.forEach(trTree); } })
+    .observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['title','aria-label','placeholder']});
+  document.title=PUB_NAME+(EN?' · design your own guitar':' · ontwerp je eigen gitaar');
+  if (document.body) trTree(document.body);
+}
+// Een ontwerp in een link: body + kop + renderkeuzes, gecomprimeerd in #d=…
+const b64u=u8=>{ let s=''; for (let i=0;i<u8.length;i++) s+=String.fromCharCode(u8[i]); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+const unb64u=s=>{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; const b=atob(s), u=new Uint8Array(b.length); for (let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; };
+function packStrip(d){ const c=clone(d); delete c.ref; if(c.bg&&JSON.stringify(c.bg).length>400) c.bg=null; return c; }
+async function packDesign(b,h){ const s=JSON.stringify({v:1,b:packStrip(b),h:h?packStrip(h):null,r:(lib.view&&lib.view.rnd)||{}}), bytes=new TextEncoder().encode(s);
+  if (window.CompressionStream){ try { const st=new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw')); return 'z'+b64u(new Uint8Array(await new Response(st).arrayBuffer())); } catch(e){} }
+  return 'j'+b64u(bytes); }
+async function unpackDesign(code){ const u=unb64u(code.slice(1)); let bytes=u;
+  if (code[0]==='z'){ const st=new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw')); bytes=new Uint8Array(await new Response(st).arrayBuffer()); }
+  return JSON.parse(new TextDecoder().decode(bytes)); }
+const pubBase=()=>location.origin+location.pathname;
+async function designLink(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b) return null; return {b, url:pubBase()+'#d='+(await packDesign(b,partnerHead(b)))}; }
+async function importFromHash(){ const m=location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/); if(!m) return false;
+  try { const o=await unpackDesign(m[1]); if(!o||!o.b||!Array.isArray(o.b.pts)) throw new Error('leeg');
+    try { history.replaceState(null,'',pubBase()); } catch(e){}
+    const same=lib.designs.find(x=>!x.ref&&x.type==='body'&&JSON.stringify(x.pts)===JSON.stringify(o.b.pts));
+    if (same){ lib.tab='body'; lib.active.body=same.id; if(typeof hideWelcome==='function') hideWelcome(); switchDesign(); toast(tr('Dit ontwerp staat al bij je ontwerpen')); return true; }
+    const b=migrate(o.b); b.id=uid(); delete b.ref;
+    if (o.h&&Array.isArray(o.h.pts)){ const h=migrate(o.h); h.id=uid(); delete h.ref; b.set.head=h.id; lib.designs.push(h); lib.active.headstock=h.id; }
+    lib.designs.push(b); lib.active.body=b.id; lib.tab='body'; if(o.r) lib.view.rnd={...(lib.view.rnd||{}),...o.r};
+    saveNow(); if(typeof hideWelcome==='function') hideWelcome(); switchDesign(); toast(tr('Ontwerp geopend: ')+b.name); return true;
+  } catch(e){ toast(tr('Deze link kan ik niet openen')); return false; } }
+async function shareDesign(){ const L=await designLink(); if(!L) return; const text=(EN?'My guitar design, made with ':'Mijn gitaarontwerp, gemaakt met ')+PUB_NAME;
+  const files=(typeof rndBlob!=='undefined'&&rndBlob)?[new File([rndBlob],fileSafe(L.b.name)+'.png',{type:'image/png'})]:null;
+  if (navigator.share){ const data={title:PUB_NAME,text,url:L.url}; if(files&&navigator.canShare&&navigator.canShare({files})) data.files=files; try { await navigator.share(data); return; } catch(e){ if(e&&e.name==='AbortError') return; } }
+  try { await navigator.clipboard.writeText(L.url); toast(tr('Link gekopieerd')); } catch(e){ prompt(tr('Kopieer deze link'),L.url); } }
+async function sendToSixto(){ const L=await designLink(); if(!L) return;
+  const subj=EN?`My guitar design: ${tr(L.b.name)}`:`Mijn gitaarontwerp: ${L.b.name}`;
+  const body=EN?`Hi Tom,\n\nThis is the guitar I designed with ${PUB_NAME}:\n${L.url}\n\nA bit about me and what I'd like (style, wood, sound, budget…):\n\n\n—\nBy sending this, I agree that Sixto may look at my design for inspiration. It is never published without my permission.`
+    :`Dag Tom,\n\nDit is de gitaar die ik ontwierp met ${PUB_NAME}:\n${L.url}\n\nIets over mezelf en wat ik zou willen (stijl, hout, klank, budget…):\n\n\n—\nMet dit bericht ga ik akkoord dat Sixto mijn ontwerp bekijkt als inspiratie. Het wordt nooit zonder mijn toestemming gepubliceerd.`;
+  location.href='mailto:'+PUB_MAIL+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body); }
+function setLang(l){ try { localStorage.setItem('sixto-forma-lang',l); } catch(e){} location.reload(); }
+if (LIGHT) document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-lang]'); if(t){ e.preventDefault(); setLang(t.dataset.lang); } });
+if (LIGHT){ const pw=document.getElementById('pillW'); if(pw) pw.insertAdjacentHTML('beforeend','<button id="pubFab" class="primary" data-act="render">🎨 Bekijk en deel</button>'); }
 document.body.classList.add('lvl-'+APP_LEVEL);
 const LS_KEY = 'sixto-vormontwerper-v1'+(APP_LEVEL==='light'?'-light':'');
 var ENGINE_READY = false; // pas aan het einde van het script: de plaatsingsfuncties moeten eerst geladen zijn
@@ -2848,11 +2979,12 @@ function openRender(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===
   MB.innerHTML=`<div class="mhead"><h2>🎨 Render · ${esc(b.name)}</h2><button data-m="close">✕</button></div>
   <div class="rnd"><div class="rimg">${r.svg.replace('<svg ','<svg style="width:100%;height:100%" ')}</div>
   <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div><div class="row"><label>Hals</label>${opt('neck',NECKC)}</div><div class="row"><label>Hardware</label>${opt('metal',METAL)}</div><div class="row"><label>Pickups (alle)</label>${opt('pu',PUCOL)}</div>
-  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Andere kop? Kies hem in de instellingen onder Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div></div></div>`;
-  openModal(); rndBlob=null; svgToPng(r.svg,r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
+  <p class="hint">Kop: ${h?esc(h.name):'geen'}. Andere kop? Kies hem in de instellingen onder Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div>${LIGHT?`<div class="btns pubBtns"><button data-r="share">📤 Deel je ontwerp</button><button class="primary" data-r="send">✉ Stuur naar Sixto</button></div><p class="hint">Wil je deze gitaar echt? Sixto bouwt elke gitaar met de hand, als unicum. Stuur je ontwerp en Tom neemt contact met je op.</p>`:''}</div></div>`;
+  openModal(); rndBlob=null; svgToPng(trSvgText(r.svg),r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
 MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; save(); openRender(); });
 MB.addEventListener('click',e=>{ const t=e.target.closest('[data-r=save]'); if(t&&rndBlob){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); shareFile(rndBlob,fileSafe(b?b.name:'gitaar')+'_render.png'); }
-  const p=e.target.closest('[data-p]'); if(p) printAct(p.dataset.p); });
+  const p=e.target.closest('[data-p]'); if(p) printAct(p.dataset.p);
+  if (e.target.closest('[data-r=share]')) shareDesign(); if (e.target.closest('[data-r=send]')) sendToSixto(); });
 const fileSafe=n=>n.replace(/[^\w\- ]+/g,'_').trim().replace(/ +/g,'_');
 function shareFile(blob,name){ const f=new File([blob],name,{type:blob.type||'application/octet-stream'});
   if (matchMedia('(pointer:coarse)').matches && navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f],title:name}).catch(()=>{}); return; }
@@ -3017,13 +3149,17 @@ function showWelcome(){ const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&
   const nat=refs.filter(x=>/^ref-n-/.test(x.id)), cls=refs.filter(x=>!/^ref-n-/.test(x.id));
   const card=(d,lab)=>`<button class="wcard" data-w="${d.id}">${thumbSVG(d,150,180)}<span>${esc(lab||d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,''))}</span></button>`;
   let w=document.getElementById('welcome'); if(!w){ w=document.createElement('div'); w.id='welcome'; document.body.appendChild(w); }
-  w.innerHTML=`<div class="wbox"><div class="whead"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg><span>Sixto Custom Guitars</span></div>
+  w.innerHTML=`<div class="wbox"><div class="whead"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg><span>Sixto Custom Guitars</span><span class="wlang">${['nl','en'].map(l=>`<button data-lang="${l}" class="${LANG===l?'on':''}">${l.toUpperCase()}</button>`).join('')}</span></div>
     <h1>Ontwerp jouw gitaar</h1><p class="wsub">Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.</p>
     <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}</div>
     ${own.length?`<h2>Mijn ontwerpen</h2><div class="wgrid">${own.slice(-6).reverse().map(d=>card(d,d.name)).join('')}</div>`:''}
     <h2>Klassiekers</h2><div class="wgrid">${cls.map(d=>card(d)).join('')}</div>
     <h2>Uit de natuur en de architectuur</h2><div class="wgrid">${nat.map(d=>card(d)).join('')}</div>
-    <p class="wfoot">Elke gitaar van Sixto is een unicum, met de hand gebouwd. Wat je hier tekent, is het begin van het gesprek.</p></div>`;
+    <p class="wfoot">Elke gitaar van Sixto is een unicum, met de hand gebouwd. Wat je hier tekent, is het begin van het gesprek.</p>
+    <p class="wfoot wnext">Klaar? Tik op 🎨 Bekijk en deel om je gitaar te zien, te delen of naar Sixto te sturen.</p>
+    <div class="wpub"><p>Je ontwerpen blijven op je toestel. Er gaat niets naar Sixto, tenzij jij het zelf stuurt. Wat je stuurt, mag Sixto bekijken als inspiratie; het wordt nooit zonder je toestemming gepubliceerd.</p>
+    <p>Gratis te gebruiken. Gemaakt door Sixto Custom Guitars (België), met hulp van AI.</p>
+    <p class="wlinks"><a href="${PUB_SITE()}" target="_blank" rel="noopener">Website</a> · <a href="${PUB_IG}" target="_blank" rel="noopener">Instagram</a> · <a href="mailto:${PUB_MAIL}">${PUB_MAIL}</a></p></div></div>`;
   w.style.display='block'; w.scrollTop=0; }
 function hideWelcome(){ const w=document.getElementById('welcome'); if(w) w.style.display='none'; requestAnimationFrame(()=>fit()); }
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-w]'); if(!t) return; const v=t.dataset.w;
@@ -3139,6 +3275,7 @@ if (CMP.matches && lib.view.sheet) setSheet(true);
   const m=$('#more'); if(m){ if(APP_LEVEL==='light') [...m.options].forEach(o=>{ if(/saveFile|openFile/.test(o.value)) o.remove(); });
     else m.insertAdjacentHTML('beforeend',APP_LEVEL==='normaal'?'<option value="lvlHigh">Alle details (High) ↗</option>':'<option value="lvlNorm">Eenvoudiger (Normaal) ↗</option>'); } }
 if (APP_LEVEL==='light') showWelcome();
+if (LIGHT){ importFromHash(); window.addEventListener('hashchange',importFromHash); }
 </script>
 </body>
 </html>
