@@ -2718,7 +2718,8 @@ function organicFlow(poly,amt,rnd){ const P=resampleClosed(poly,3), ys=P.map(p=>
   return smoothZones(Q,[{bot:y0+L*2}],1e4,4); }
 // bronnen voor genereren: klassiekers, natuur, architectuur, uitgesproken vormen. Je kiest zelf welke meedoen.
 const SRC_CATS=[['klas','Klassiekers'],['nat','Natuur'],['arch','Architectuur'],['wild','Uitgesproken'],['ruw','Ruwe benaderingen']];
-function srcCat(id){ const k=id.replace(/^ref-(h-)?/,''), r=lib.designs.find(d=>d.id===id); const nm=r?r.name:''; if(REF_ROUGH.includes(id.replace(/^ref-/,''))) return 'ruw'; if(/architectuur/.test(nm)) return 'arch'; if(/natuur/.test(nm)) return 'nat'; if(GEN_WILD.includes(k)||/^(iceman|firebird|explorer|moderne|n4|wolf|styleo|rhoads|c5150)$/.test(k)) return 'wild'; return 'klas'; }
+function srcCat(id){ const k=id.replace(/^ref-(h-)?/,''), r=lib.designs.find(d=>d.id===id); const nm=r?r.name:'';   // op id, niet op naam: in het Engels heten ze "(nature)" (fout tot 13/11)
+  if(REF_ROUGH.includes(id.replace(/^ref-/,''))) return 'ruw'; if(/^n-/.test(k)) return /^n-(gotisch|romaans|deco|ui|spits)$/.test(k)?'arch':'nat'; if(/architectu/.test(nm)) return 'arch'; if(/natu/.test(nm)) return 'nat'; if(GEN_WILD.includes(k)||/^(iceman|firebird|explorer|moderne|n4|wolf|styleo|rhoads|c5150)$/.test(k)) return 'wild'; return 'klas'; }
 function srcOn(id){ const S=insp.src||{}; return !!S[srcCat(id)]; }
 function bodyPool(){ return [...new Set(GEN_POOL.concat(GEN_WILD,['n-deco'],lib.designs.filter(d=>d.ref&&d.type==='body'&&/^ref-n-/.test(d.id)).map(d=>d.id.slice(4))))].filter(k=>refVecs()[k]&&srcOn('ref-'+k)); }
 // wildheid: hoe ver een voorstel van elke bestaande vorm mag liggen (gemeten op de omtrek). Elke trap heeft een eigen band.
@@ -2851,7 +2852,7 @@ function mashDesign(m){
 }
 function randomMs(type){
   const cur=D(), same=x=>(x.set.strings>4)===((cur.type===type?cur.set.strings:6)>4);
-  let ids=lib.designs.filter(x=>x.type===type&&same(x)).map(x=>x.id); { const f=ids.filter(id=>!/^ref-/.test(id)||srcOn(id)); if(f.length>=2) ids=f; }
+  let ids=lib.designs.filter(x=>x.type===type&&same(x)).map(x=>x.id); { const f=ids.filter(id=>/^ref-/.test(id)&&srcOn(id)); if(f.length>=2) ids=f; }   // alleen de gekozen bronnen, geen eigen ontwerpen (Tom, 13/11)
   // koppen alleen binnen één familie mengen (3+3 met 3+3, op rij met op rij): anders wordt het een vreemd beest
   if (type==='headstock'){ const fam=x=>headFam(lib.designs.find(q=>q.id===x)), f0=fam(pick(ids)); const same2=ids.filter(x=>fam(x)===f0); if(same2.length>=2) ids=same2; }
   const n=Math.min(ids.length,pick([2,2,3,4])), ch=[...ids].sort(()=>Math.random()-0.5).slice(0,n);
