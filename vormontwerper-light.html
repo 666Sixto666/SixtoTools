@@ -282,6 +282,10 @@ button:active:not(:disabled){transform:scale(.97)}
 .v3h{position:absolute;bottom:6px;margin:0;font-size:12px;color:var(--muted)}
 @media (max-width:760px){#modal .rimg{flex:none!important;height:58vh;min-height:320px}}
 @media (max-width:900px){#tools button{min-width:38px}}
+
+/* rechts- of linkshandig (14/11) */
+.handsec{padding-top:8px;padding-bottom:8px}.hand{display:flex;gap:6px}.hand button{flex:1;min-height:40px;border-radius:20px}.hand button.on{background:var(--sel,#efe4f0);border-color:var(--accent2,#5e3f57);color:var(--accent2,#5e3f57);font-weight:600}
+#welcome .wacts button.on{background:var(--sel,#efe4f0);border-color:var(--accent2,#5e3f57);color:var(--accent2,#5e3f57);font-weight:600}
 </style>
 </head>
 <body>
@@ -368,7 +372,7 @@ if (LIGHT){ const _REFS=REFS; REFS=function(){ return _REFS().map(d=>{ const m=N
 // Nederlands in light: alleen de merknamen buiten de vormen eruit
 const T_NL={'Vormontwerper':'Forma','🎨 Render':'🎨 Bekijk en deel','(Strat, Les Paul, SG…),':'(S-stijl, enkele cutaway, dubbele hoorn…),','(Explorer, Firebird, Iceman…).':'(hoekig, omgekeerd, haak…).','10° (PRS)':'10°','14° (Gibson nu)':'14°','17° (Gibson vroeger)':'17° (vintage)','Recht (Fender)':'Recht',
   'Drie single coils, 3 knoppen (Fender-stijl)':'Drie single coils, 3 knoppen','Twee humbuckers, 4 knoppen (Gibson-stijl)':'Twee humbuckers, 4 knoppen','Eén draaibare humbucker, 4 knoppen (Turner)':'Eén draaibare humbucker, 4 knoppen','Twee single coils, Tele-stijl':'Twee single coils, T-stijl','Los blad naast de pickups, zoals een Les Paul':'Los blad naast de pickups','Rond de pickups, zoals een Strat':'Rond de pickups'};
-const T_EN={'Schakelaar':'Switch','Plaats schakelaar':'Switch position','Vanzelf':'Automatic','Bovenste hoorn, baskant':'Upper horn, bass side','Bovenste hoorn, diskant':'Upper horn, treble side','Naast de pickups':'Next to the pickups','In lijn met de knoppen':'In line with the knobs','3-weg toggle':'3-way toggle','3-weg schuif':'3-way blade','5-weg schuif':'5-way blade','Knoppen op de pickguard':'Knobs on the pickguard','Hoekig (rechte lijnen)':'Angular (straight lines)','Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':'The switch does not fit there on this shape; it now sits at the nearest good spot.','Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
+const T_EN={'Rechtshandig':'Right-handed','Linkshandig':'Left-handed','Ik speel linkshandig':'I play left-handed','✓ Ik speel linkshandig':'✓ I play left-handed','Linkshandig: alles gespiegeld, ook de mallen':'Left-handed: everything mirrored, templates too','Hand':'Hand','Schakelaar':'Switch','Plaats schakelaar':'Switch position','Vanzelf':'Automatic','Bovenste hoorn, baskant':'Upper horn, bass side','Bovenste hoorn, diskant':'Upper horn, treble side','Naast de pickups':'Next to the pickups','In lijn met de knoppen':'In line with the knobs','3-weg toggle':'3-way toggle','3-weg schuif':'3-way blade','5-weg schuif':'5-way blade','Knoppen op de pickguard':'Knobs on the pickguard','Hoekig (rechte lijnen)':'Angular (straight lines)','Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':'The switch does not fit there on this shape; it now sits at the nearest good spot.','Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
   'Een beeld van de hele gitaar, met de gekoppelde kop':'A picture of the whole guitar, with its head','✋ Bewerken':'✋ Edit','Passend':'Fit','Inzoomen':'Zoom in','Uitzoomen':'Zoom out','Hele vorm tonen':'Show the whole shape','✨ Inspirator':'✨ Inspire me','Inspirator':'Inspire me','Willekeurige vormen en variaties':'Random shapes and variations','Je bewerkt:':'You are editing:','Je bewerkt de pickguard':'You are editing the pickguard','Punten en onderdelen slepen':'Drag points and parts',
   'Eén stap terug':'One step back','Eén stap terug (Ctrl+Z)':'One step back (Ctrl+Z)','Opnieuw':'Redo','Opnieuw (Ctrl+Y)':'Redo (Ctrl+Y)','Alle stappen':'All steps','Alle stappen zien en terugspringen':'See all steps and jump back','Opnieuw beginnen':'Start over','▴ Instellingen':'▴ Settings',
   'Sleep de punten · dubbeltik op de lijn = punt erbij · alles op de tekening is versleepbaar':'Drag the points · double-tap the line to add a point · everything on the drawing can be dragged',
@@ -437,6 +441,17 @@ const T_RULES_NL=[
   [/^Head like (.+)$/, m=>'Kop naar '+tr(m[1])],
   [/^Mijn gitaar naar (.+?)( \d+)?$/, m=>{ const v=tr(m[1]); return v===m[1]?m[0]:'Mijn gitaar naar '+v+(m[2]||''); }],
   [/^Kop naar (.+)$/, m=>{ const v=tr(m[1]); return v===m[1]?m[0]:'Kop naar '+v; }]];
+// Forma is voor de gitarist die niets van bouwen kent (Tom 14/11): gewone woorden, vaktermen enkel in Werkbank en Bouwplan
+Object.assign(T_NL,{'Single coil':'Single coil (helder)','Humbucker':'Humbucker (vol, warm)','P90 (soapbar)':'P90 (rauw, warm)','Mini-humbucker':'Mini-humbucker (helder en warm)',
+  'Tremolo (vintage-stijl)':'Tremolo (met hendel)','Hardtail (plaat)':'Vaste brug (plaat)','Tune-o-matic + stopbar':'Vaste brug (Gibson-stijl)','Wraparound':'Vaste brug (één stuk)','Tele-plaat (met brugpickup)':'T-stijl brug (met pickup)',
+  'Diskant':'Klein, onderkant','Baskant':'Klein, bovenkant','Strook':'Smalle strook','Los blad':'Los blad (zwevend)','Klein blad aan de diskantkant':'Klein blad aan de onderkant','Klein blad aan de baskant':'Klein blad aan de bovenkant',
+  'Solid body':'Massief','Chambered (semi-hollow)':'Deels hol (lichter)','3-weg toggle':'Tuimelschakelaar, 3 standen','3-weg schuif':'Schuifschakelaar, 3 standen','5-weg schuif':'Schuifschakelaar, 5 standen',
+  'Opnieuw genereren':'Opnieuw tekenen','Laatst geopende kop':'Standaardkop','Kop en render':'Kop en kleur'});
+Object.assign(T_EN,{'Single coil':'Single coil (bright)','Humbucker':'Humbucker (full, warm)','P90 (soapbar)':'P90 (raw, warm)','Mini-humbucker':'Mini humbucker (bright and warm)',
+  'Tremolo (vintage-stijl)':'Tremolo (with whammy bar)','Hardtail (plaat)':'Fixed bridge (plate)','Tune-o-matic + stopbar':'Fixed bridge (Gibson style)','Wraparound':'Fixed bridge (one piece)','Tele-plaat (met brugpickup)':'T-style bridge (with pickup)',
+  'Diskant':'Small, lower side','Baskant':'Small, upper side','Strook':'Narrow strip','Los blad':'Floating guard','Klein blad aan de diskantkant':'Small guard on the lower side','Klein blad aan de baskant':'Small guard on the upper side',
+  'Solid body':'Solid','Chambered (semi-hollow)':'Partly hollow (lighter)','3-weg toggle':'Toggle, 3 positions','3-weg schuif':'Blade, 3 positions','5-weg schuif':'Blade, 5 positions',
+  'Opnieuw genereren':'Redraw','Laatst geopende kop':'Standard head','balans':'balance','Kop en render':'Head and colour'});
 function tr(s){ if(!LIGHT||s==null) return s; const k=String(s).trim(); if(!k) return s; const D=EN?T_EN:T_NL; let v=D[k];
   if (v==null) v=(EN?NAME_NL2EN:NAME_EN2NL)[k];
   if (v==null){ for (const [re,f] of (EN?T_RULES:T_RULES_NL)){ const m=k.match(re); if(m){ v=f(m); break; } } }
@@ -464,7 +479,7 @@ async function unpackDesign(code){ const u=unb64u(code.slice(1)); let bytes=u;
   if (code[0]==='z'){ const st=new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw')); bytes=new Uint8Array(await new Response(st).arrayBuffer()); }
   return JSON.parse(new TextDecoder().decode(bytes)); }
 const pubBase=()=>location.origin+location.pathname;
-async function designLink(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b) return null; return {b, url:pubBase()+'#d='+(await packDesign(b,partnerHead(b)))}; }
+async function designLink(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b) return null; if(!b.ref){ b.set.lefty=isLeft(b); const hh=partnerHead(b); if(hh&&!hh.ref) hh.set.lefty=b.set.lefty; } return {b, url:pubBase()+'#d='+(await packDesign(b,partnerHead(b)))}; }
 async function importFromHash(){ const m=location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/); if(!m) return false;
   try { const o=await unpackDesign(m[1]); if(!o||!o.b||!Array.isArray(o.b.pts)) throw new Error('leeg');
     try { history.replaceState(null,'',pubBase()); } catch(e){}
@@ -482,7 +497,7 @@ async function shareDesign(){ const L=await designLink(); if(!L) return; const t
 const headLabel=h=>h?(/^Nieuwe kop/.test(h.name)?'Standaardkop':h.name):'geen';
 function designSummary(b){ const o=rndOpt(), s=b.set, h=partnerHead(b), sh=s.sh&&s.sh.type!=='none'&&SH_TYPES[s.sh.type]?SH_TYPES[s.sh.type].n+(s.sh.type==='morse'?' ('+(s.sh.text||'')+')':s.sh.type==='grill'?' ('+(GRILL_SHAPES[s.sh.gs]||'')+')':''):null;
   const pu=['pu3','pu2','pu1'].map(k=>s[k]&&PUS[s[k].t]&&PUS[s[k].t][1]?PUS[s[k].t][0]:null).filter(Boolean);
-  const L=[['Vorm',b.name],['Afwerking',(FINISH[o.fin]||FINISH.hout)[0]],['Hout',(WOODS[s.wood]||['?'])[0]],['Body',s.inside==='semi'?'Chambered (semi-hollow)':'Solid body'],['Klankgaten',sh||'geen'],['Pickups',pu.length?pu.join(' + '):'geen'],['Toets',(BOARD[o.board]||BOARD.pal)[0]],['Hals vast',(JOIN[o.join]||JOIN.lijm)[0]],['Hardware',(METAL[o.metal]||METAL.chroom)[0]],['Kop',headLabel(h)]];
+  const L=[['Vorm',b.name],['Hand',isLeft(b)?'Linkshandig':'Rechtshandig'],['Afwerking',(FINISH[o.fin]||FINISH.hout)[0]],['Hout',(WOODS[s.wood]||['?'])[0]],['Body',s.inside==='semi'?'Chambered (semi-hollow)':'Solid body'],['Klankgaten',sh||'geen'],['Pickups',pu.length?pu.join(' + '):'geen'],['Toets',(BOARD[o.board]||BOARD.pal)[0]],['Hals vast',(JOIN[o.join]||JOIN.lijm)[0]],['Hardware',(METAL[o.metal]||METAL.chroom)[0]],['Kop',headLabel(h)]];
   return L.map(([k,v])=>tr(k)+': '+tr(v)).join('\n'); }
 async function sendToSixto(){ const L=await designLink(); if(!L) return; const sum=designSummary(L.b);
   const subj=EN?`My guitar design: ${tr(L.b.name)}`:`Mijn gitaarontwerp: ${L.b.name}`;
@@ -557,7 +572,9 @@ function placePosts(d){
   const s = d.set, n = s.strings, posts = [];
   if (s.layout === 'custom' && s.pat && s.pat.length === n){ const xn=stringXsNut(s); d.posts=s.pat.map(([x,y],i)=>({x,y,side:x>=xn[i]?'L':'R'})); return; }
   if (s.layout === 'custom'){ s.layout = n>=4 && d.posts && d.posts.length ? headFam(d) : 'split'; s.pat=null; s.auto=true; }
-  if (ENGINE_READY && d.pts && d.pts.length>2 && autoPosts(d)) return;
+  // 14/11: de motor alleen gebruiken als de kop zelf niet vastligt (auto:false) en het resultaat de keuring haalt; anders de vaste regel.
+  // Vroeger hing het van het laadmoment af: bij de Gotische boog en de Uikoepel zette de motor twee gaten bovenaan bijna op elkaar.
+  if (ENGINE_READY && s.auto!==false && d.pts && d.pts.length>2){ const keep=d.posts; if(autoPosts(d) && !headChecks(d).length) return; d.posts=keep; }
   if (s.layout === 'split'){
     const b = Math.ceil(n/2);
     for (let i=0;i<n;i++){
@@ -1406,9 +1423,14 @@ function headChecks(d){
 // ================= weergave =================
 const svg = $('#cv');
 let view = {s:1.2,cx:0,cy:0}, W=800, H=600;
+// Linkshandig (Tom 14/11): het ontwerp blijft intern rechtshandig getekend; wat je ziet en exporteert is het exacte spiegelbeeld.
+// Een referentie volgt de voorkeur van de gebruiker; een eigen ontwerp zijn eigen keuze (of de voorkeur als die nog niet gekozen is).
+function isLeft(d){ if(!d) return false; if(d.ref||!d.set||d.set.lefty==null) return !!(typeof lib!=='undefined'&&lib.view&&lib.view.lefty); return !!d.set.lefty; }
+let LEFT=false;
+const MIRG=(w)=>`<g transform="matrix(-1 0 0 1 ${(+w).toFixed(2)} 0)">`;
 let sel=-1, mode='edit', hover=null, measure=null, calib=null, drag=null, blockMsg='';
-const toS = (x,y) => [W/2+(x-view.cx)*view.s, H/2-(y-view.cy)*view.s];
-const toW = (sx,sy) => ({x:view.cx+(sx-W/2)/view.s, y:view.cy-(sy-H/2)/view.s});
+const toS = (x,y) => [W/2+(LEFT?-1:1)*(x-view.cx)*view.s, H/2-(y-view.cy)*view.s];
+const toW = (sx,sy) => ({x:view.cx+(LEFT?-1:1)*(sx-W/2)/view.s, y:view.cy-(sy-H/2)/view.s});
 function resize(){ const r=svg.getBoundingClientRect(); W=r.width; H=r.height; }
 function fit(){
   resize(); if (W<200||H<200){ requestAnimationFrame(fit); return; }
@@ -1435,6 +1457,7 @@ function hDim(y,x1,x2,txt,col){ const a=toS(x1,y),b=toS(x2,y); return `<line x1=
 
 function render(){
   resize();
+  LEFT=isLeft(D());
   const d=D(), g=geom(d), v=lib.view, s=view.s, tgt=T(), tg=geom(tgt);
   let o = `<defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 z" fill="#2f6f8f"/></marker></defs>`;
   if (v.grid){
@@ -1545,7 +1568,7 @@ function bodyItems(d,g){
     { const S=strapPins(d,g), alt=S.mode==='trad'?S.ideal:S.trad; if(Math.hypot(alt.x-f.F.x,alt.y-f.F.y)>4){ const u=toS(alt.x,alt.y); o+=`<circle cx="${u[0]}" cy="${u[1]}" r="5" fill="none" stroke="#1f1c18" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`; } }
     [f.F,f.R].forEach(q=>{ const u=toS(q.x,q.y); o+=`<circle cx="${u[0]}" cy="${u[1]}" r="6" fill="#fff" stroke="#1f1c18" stroke-width="2"/><circle cx="${u[0]}" cy="${u[1]}" r="2" fill="#1f1c18"/>`; });
     const u=toS(f.F.x,f.F.y); if(!CMP.matches) o+=`<text x="${u[0]-9}" y="${u[1]-9}" font-size="11" text-anchor="end" fill="#1f1c18">riem</text>`;
-    o+=`<circle cx="${a[0]}" cy="${a[1]}" r="9" fill="#fff" stroke="${col}" stroke-width="2"/><path d="M${a[0]} ${a[1]-9}A9 9 0 0 1 ${a[0]+9} ${a[1]}L${a[0]} ${a[1]}Z M${a[0]} ${a[1]+9}A9 9 0 0 1 ${a[0]-9} ${a[1]}L${a[0]} ${a[1]}Z" fill="${col}"/>${CMP.matches?'':`<text x="${a[0]+13}" y="${a[1]+4}" font-size="11" fill="${col}">zwaartepunt</text>`}`; }
+    o+=`<circle cx="${a[0]}" cy="${a[1]}" r="9" fill="#fff" stroke="${col}" stroke-width="2"/><path d="M${a[0]} ${a[1]-9}A9 9 0 0 1 ${a[0]+9} ${a[1]}L${a[0]} ${a[1]}Z M${a[0]} ${a[1]+9}A9 9 0 0 1 ${a[0]-9} ${a[1]}L${a[0]} ${a[1]}Z" fill="${col}"/>${CMP.matches?(LIGHT?`<text x="${a[0]+12}" y="${a[1]+4}" font-size="11" fill="${col}">balans</text>`:''):`<text x="${a[0]+13}" y="${a[1]+4}" font-size="11" fill="${col}">zwaartepunt</text>`}`; }
   const kns=its.filter(x=>x.t==='knob'), idea=ideaOf(c);
   if (idea==='plate' && kns.length && !c.edited){ const sw=its.find(x=>x.t==='sw'), ends=[glidePos(kns[kns.length-1],its.indexOf(kns[kns.length-1])),sw||kns[0]], a=toS(ends[0].x,ends[0].y), b=toS(ends[1].x,ends[1].y);
     o+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#cfc9bf" stroke-opacity=".55" stroke-width="${36*view.s}" stroke-linecap="round"/>`; }
@@ -1797,7 +1820,8 @@ function buildPanel(){
   if (d.type==='body') h+=`<nav id="stepNav">${(APP_LEVEL==='light'?[['V','Vorm'],['2','Pickups'],['3','Pickguard'],['5','Klankgaten'],['6','Knoppen'],['7','Kop & kleur']]:[['V','Vorm'],['1','1 Hals'],['2','2 Pickups'],['3','3 Pickguard'],['4','4 Hout'],['5','5 Klankgaten'],['6','6 Knoppen'],['7','7 Kop']]).map(([k,n])=>`<button type="button" data-nav-go="${k}">${n}</button>`).join('')}</nav>`;
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
   h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section><details id="qBox" class="card" ${(v.qbox!=null?v.qbox:!CMP.matches)?'open':''}><summary>De queeste <span id="qSum" class="qsum"></span></summary><section><div id="playBox"></div></section></details>`;
-  h+=`<section><h2 data-nav="V">Vorm</h2>
+  h+=`<section class="handsec"><div class="fr fr2 hand"><button data-act="hand" data-k="r">Rechtshandig</button><button data-act="hand" data-k="l">Linkshandig</button></div></section>`;
+  h+=`<section><h2 data-nav="V">${LIGHT&&d.type==='body'?'<span class="stepn">1</span>':''}Vorm</h2>
     <div class="feel">${(d.type==='body'?[['lo','Onderbout'],['wa','Taille'],['up','Bovenbout'],['w','Breedte'],['l','Lengte']]:[['mi','Midden'],['to','Top'],['w','Breedte'],['l','Lengte']]).map(([k,n])=>`<div class="fr"><button data-act="feel" data-k="${k}-" aria-label="${n} kleiner">−</button><span>${n}</span><button data-act="feel" data-k="${k}+" aria-label="${n} groter">+</button></div>`).join('')}</div>
     <div class="row"><label>Lijn: strak ↔ rond</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
     <div class="row"><label>Slepen: punt ↔ klei</label><input type="range" min="0" max="120" step="5" data-bind="view.soft" style="width:130px"></div>
@@ -1805,7 +1829,7 @@ function buildPanel(){
     <div class="btns"><button data-act="fair" title="Haalt bultjes en deukjes uit de lijn">Gladstrijken</button></div>
     <div id="ptBox"></div></section>`;
   if (d.type==='body'){
-    const step=(n,tit,why)=>`<h2 data-nav="${n}"><span class="stepn">${n}</span>${tit}</h2><p class="hint flow">${why}</p>`;
+    const step=(n,tit,why)=>`<h2 data-nav="${n}"><span class="stepn">${LIGHT?({2:2,3:3,5:4,6:5,7:6}[n]||n):n}</span>${tit}</h2><p class="hint flow">${why}</p>`;   // Forma: doorlopend genummerd (Vorm is 1)
     h+=`<p class="hint" style="margin:4px 2px 10px">De hardware kies je in deze volgorde. Elke stap houdt rekening met de stappen erboven; verander je iets bovenaan, dan schuift wat eronder automatisch mee.</p>`;
     h+=`<section>${step(1,'Hals en mensuur','Legt vast waar de frets en het einde van de toets liggen. Daar mogen geen pickups komen.')}
       <div class="row"><label>Mensuur</label><input type="number" step="0.5" data-bind="set.scale"><span class="u">mm</span></div>
@@ -2092,6 +2116,7 @@ let ideasKey='';
 function syncIdeas(d){
   if(d.set.sh){ ['wf','md','mw','mg'].forEach(k=>{ if(d.set.sh[k]==null) d.set.sh[k]=1; }); if(!d.set.sh.gs) d.set.sh.gs='cirkel'; }
   document.querySelectorAll('[data-act=shType]').forEach(b=>b.classList.toggle('on',b.dataset.k===((d.set.sh||{}).type||'none'))); { const o=$('#shOpts'); if(o) o.style.display=(d.set.sh||{}).type&&d.set.sh.type!=='none'?'':'none'; const tr=$('#shTxtRow'); if(tr) tr.style.display=(d.set.sh||{}).type==='morse'?'':'none'; const ty=(d.set.sh||{}).type, mo=$('#shMorse'); if(mo) mo.style.display=ty==='morse'||ty==='grill'?'':'none'; const gr=$('#shGrill'); if(gr) gr.style.display=ty==='grill'?'':'none'; const mdr=$('#shMd'); if(mdr) mdr.style.display=ty==='morse'?'':'none'; const fr=(d.set.sh||{}).pos==='free', a1=$('#shFree'), a2=$('#shNudge'); if(a1) a1.style.display=fr?'':'none'; if(a2) a2.style.display=fr?'none':''; const st=$('#shState'); if(st) st.textContent=shState(d); }
+  document.querySelectorAll('[data-act=hand]').forEach(b=>b.classList.toggle('on',(b.dataset.k==='l')===isLeft(d)));
   document.querySelectorAll('[data-act=pgStyle]').forEach(b=>b.classList.toggle('on',b.dataset.k===d.set.pg.style)); document.querySelectorAll('[data-act=inside]').forEach(b=>b.classList.toggle('on',b.dataset.k===(d.set.inside||'solid')));
   const c=d.set.ctrl, box=$('#ideas'); if(!box) return;
   $('#knobCount').textContent=c.n===0?'Geen knoppen':c.n===1?'1 knop':c.n+' knoppen';
@@ -2108,7 +2133,7 @@ function drawIdeas(d){
   const c=d.set.ctrl, box=$('#ideas'), cur=ideaOf(c); if(!box||drag) return;
   const key=[d.id,JSON.stringify(d.pts),d.sym,c.n,c.knobD,c.sw,d.set.pu1.t,d.set.pu1.d,d.set.pu2.t,d.set.pu2.d,d.set.pu3.t,d.set.pu3.d,d.set.bridge,cur,c.edited].join('|');
   if (key===ideasKey && box.firstChild) return; ideasKey=key;
-  const ctx=bodyCtx(d), g=ctx.g, sc=88/(g.maxY-g.minY), X=x=>((x-g.minX)*sc+4).toFixed(1), Y=y=>((g.maxY-y)*sc+4).toFixed(1), w=(g.maxX-g.minX)*sc+8, h=96;
+  const ctx=bodyCtx(d), g=ctx.g, sc=88/(g.maxY-g.minY), X=x=>((isLeft(d)?g.maxX-x:x-g.minX)*sc+4).toFixed(1), Y=y=>((g.maxY-y)*sc+4).toFixed(1), w=(g.maxX-g.minX)*sc+8, h=96;
   const body=g.poly.filter((_,i)=>i%3===0).map(p=>X(p.x)+','+Y(p.y)).join(' ');
   const hw=ctx.pus.map(p=>{ const r=p.route; return `<rect x="${X(r.cx-r.w/2)}" y="${Y(r.cy+r.h/2)}" width="${(r.w*sc).toFixed(1)}" height="${(r.h*sc).toFixed(1)}" fill="#bdb6aa"/>`; }).join('');
   box.innerHTML=Object.entries(KNOB_IDEAS).filter(([,v])=>c.n>=v.min).map(([id,v])=>{ const ks=c.n?knobLayout(d,ctx,id,null):[];
@@ -2314,7 +2339,7 @@ svg.addEventListener('pointermove',e=>{
   if (pinch && pointers.size===2){ const [a,b]=[...pointers.values()]; zoomAt((a.sx+b.sx)/2,(a.sy+b.sy)/2, pinch.s*Math.hypot(a.sx-b.sx,a.sy-b.sy)/pinch.d); return; }
   const {sx,sy}=evW(e), w=toW(sx,sy); hover=w; const d=D();
   if (!drag){ render(); return; }
-  if (drag.kind==='pan'){ view.cx=drag.cx-(sx-drag.sx)/view.s; view.cy=drag.cy+(sy-drag.sy)/view.s; render(); return; }
+  if (drag.kind==='pan'){ view.cx=drag.cx-(LEFT?-1:1)*(sx-drag.sx)/view.s; view.cy=drag.cy+(sy-drag.sy)/view.s; render(); return; }
   if (drag.kind==='measure'){ measure.b={x:snapV(w.x),y:snapV(w.y)}; render(); return; }
   if (drag.kind==='bg'){ d.bg.x+=w.x-drag.last.x; d.bg.y+=w.y-drag.last.y; drag.last=w; update(true); return; }
   if (drag.kind==='pt'){
@@ -2398,7 +2423,7 @@ function addPtAt(sx,sy){
   else { idx=j+1; pt={x:snapV(best.x),y:snapV(best.y),c:false}; }
   tgt.pts.splice(idx,0,pt); sel=idx; if (tgt.isPG) D().set.pg.edited=true; update();
 }
-function zoomAt(sx,sy,ns){ ns=Math.max(0.2,Math.min(40,ns)); const w=toW(sx,sy); view.s=ns; view.cx=w.x-(sx-W/2)/ns; view.cy=w.y+(sy-H/2)/ns; render(); }
+function zoomAt(sx,sy,ns){ ns=Math.max(0.2,Math.min(40,ns)); const w=toW(sx,sy); view.s=ns; view.cx=w.x-(LEFT?-1:1)*(sx-W/2)/ns; view.cy=w.y+(sy-H/2)/ns; render(); }
 svg.addEventListener('wheel',e=>{ e.preventDefault(); const {sx,sy}=evW(e); zoomAt(sx,sy,view.s*Math.pow(1.0015,-e.deltaY)); },{passive:false});
 function delPt(){
   const tgt=T(); if (sel<0 || locked()) return;
@@ -2437,7 +2462,7 @@ $('#more').addEventListener('change',e=>{ const a=e.target.value; e.target.value
 function runAct(a,t){ const d=D();
   switch(a){
     case 'new': { const n=lib.tab==='body'?defaultBody():defaultHead(); const nm=prompt('Naam van het nieuwe ontwerp:', n.name); if(nm===null) return; n.name=nm||n.name; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); break; }
-    case 'dup': { const n=clone(d); n.id=uid(); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : copyName(d.name); lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
+    case 'dup': { const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : copyName(d.name); lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
     case 'lvlHigh': if(APP_LEVEL!=='high'){ leaving(); location.href=lvUrl('high'); } break;
     case 'lvlLight': { (async()=>{ const b=d.type==='body'?d:lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b) return; const url=lvUrl('light')+'#d='+(await packDesign(b,partnerHead(b))); window.open(url,'_blank'); })(); break; }
     case 'openLink': { const v=prompt('Plak de link van een ontwerp (uit Forma of een mail van een klant):',''); if(!v) return; const m=String(v).match(/[#&]d=([A-Za-z0-9_-]+)/); if(!m){ toast('Daar staat geen ontwerp in'); return; } history.replaceState(null,'',pubBase()+'#d='+m[1]); importFromHash(); break; }
@@ -2477,6 +2502,7 @@ function runAct(a,t){ const d=D();
       let ok=false; for(let i=0;i<16&&!ok;i++){ Object.assign(sh,{wf:R(0.75,1.4),ang:Math.round(R(-10,16)),size:Math.round(L0*R(0.85,1.15))}); if(sh.type==='morse') Object.assign(sh,{md:R(0.8,1.45),mw:R(0.8,1.45),mg:R(0.8,1.7)}); if(sh.type==='grill') Object.assign(sh,{mw:R(1,1.6),mg:R(1,1.6),gs:pick(Object.keys(GRILL_SHAPES)),ang:pick([0,0,90,Math.round(R(-12,12))])}); SH_CACHE={}; ok=!holeChecks(d).some(c=>/minstens|past niet|te dicht|pickguard/.test(c)); }
       if(!ok){ Object.assign(sh,JSON.parse(keep)); SH_CACHE={}; toast('Geen andere variant gevonden die goed te bouwen is'); } else toast('Nieuwe variant, binnen wat goed te bouwen is'); panelKey=''; update(); break; }
     case 'shType': { if(locked()){ lockMsg(); return; } const k=t.dataset.k; d.set.sh=Object.assign(d.set.sh||shDef(),{type:k,size:k==='none'?null:SH_TYPES[k].L}); if(LIGHT&&k!=='none'&&(!d.set.inside||d.set.inside==='solid')){ d.set.inside='semi'; toast('Klankgaten vragen een kamer: de body is nu chambered.'); } panelKey=''; update(); break; }
+    case 'hand': { const L=t.dataset.k==='l'; lib.view.lefty=L; if(!d.ref){ d.set.lefty=L; const hh=d.type==='body'?partnerHead(d):lib.designs.find(x=>x.type==='body'&&x.set&&x.set.head===d.id&&!x.ref); if(hh&&!hh.ref) hh.set.lefty=L; } save(); panelKey=''; update(); requestAnimationFrame(fit); toast(L?'Linkshandig: alles gespiegeld, ook de mallen':'Rechtshandig'); break; }
     case 'pgStyle': { if(locked()){ lockMsg(); return; } d.set.pg.style=t.dataset.k; d.set.pg.edited=false; d.set.pg.pts=null; editPG=false; sel=-1; panelKey=''; update(); if(d.set.pg.style!=='none'&&!d.set.pg.pts) toast('Past niet met deze body en pickups'); break; }
     case 'pgVary': { if(locked()){ lockMsg(); return; } if(d.set.pg.style==='none'){ toast('Kies eerst een pickguard'); return; } const w=pgVary(d); editPG=false; sel=-1; panelKey=''; update(); toast(d.set.pg.pts?'Variatie: '+w:'Geen variatie die past'); break; }
     case 'pgRegen': pushUndo(); Object.assign(d.set.pg,{tilt:0,curve:0,inset:0}); d.set.pg.edited=false; editPG=false; sel=-1; buildPanel(); update(); break;
@@ -2528,8 +2554,8 @@ function exportSvg(d,pgOnly){
   let pgG=null; if (d.type==='body' && s.pg.style!=='none' && s.pg.pts) pgG=geom(pgObj(d));
   if (pgOnly && !pgG){ toast('Er is geen pickguard om te exporteren'); return; }
   const B = pgOnly ? pgG : g;
-  const minX=B.minX, maxY=B.maxY, w=B.maxX-B.minX+2*m, h=B.maxY-B.minY+2*m;
-  const X=x=>(x-minX+m).toFixed(3), Y=y=>(maxY-y+m).toFixed(3);
+  const LFT=isLeft(d), minX=LFT?-B.maxX:B.minX, maxY=B.maxY, w=B.maxX-B.minX+2*m, h=B.maxY-B.minY+2*m;   // linkshandig: spiegelbeeld
+  const X=x=>((LFT?-x:x)-minX+m).toFixed(3), Y=y=>(maxY-y+m).toFixed(3);
   const pth=segs=>{ let p=''; segs.forEach((sg,i)=>{ if(!i) p+=`M${X(sg[0].x)},${Y(sg[0].y)} `; p+=`C${X(sg[1].x)},${Y(sg[1].y)} ${X(sg[2].x)},${Y(sg[2].y)} ${X(sg[3].x)},${Y(sg[3].y)} `; }); return p+'Z'; };
   const rectP=R=>`<polygon points="${rectCorners(R).map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#000" stroke-width="0.3"/>`;
   const circ=(x,y,r,col='#000')=>`<circle cx="${X(x)}" cy="${Y(y)}" r="${r.toFixed(3)}" fill="none" stroke="${col}" stroke-width="0.3"/>`;
@@ -2539,7 +2565,7 @@ function exportSvg(d,pgOnly){
   const pgHoles=()=>{ let o=''; const ctx=bodyCtx(d); ctx.pus.forEach(p=>{ if(inside(pgG.poly,{x:p.cover.cx,y:p.cover.cy})) o+=rectP({...p.cover,w:p.cover.w+1,h:p.cover.h+1}); });
     (s.ctrl.items||[]).forEach(it=>{ if(inside(pgG.poly,it)&&!(it.t==='jack'&&s.ctrl.jack==='side')) o+=circ(it.x,it.y,it.t==='jack'?11:4.75); });
     pgScrews(d,pgG).forEach(q=>{ o+=circ(q.x,q.y,1.6,'#0000ff'); }); return o; };
-  if (pgOnly){ out+=`<g id="pickguard"><path d="${pth(pgG.segs)}" fill="none" stroke="#000" stroke-width="0.3"/>${pgHoles()}</g>\n</svg>`; download(`${d.name.replace(/[^\w\- ]+/g,'_')}_pickguard_1op1.svg`,out,'image/svg+xml'); toast('Pickguard op ware grootte gedownload'); return; }
+  if (pgOnly){ out+=`<g id="pickguard"><path d="${pth(pgG.segs)}" fill="none" stroke="#000" stroke-width="0.3"/>${pgHoles()}</g>\n</svg>`; download(`${d.name.replace(/[^\w\- ]+/g,'_')}${LFT?'_linkshandig':''}_pickguard_1op1.svg`,out,'image/svg+xml'); toast('Pickguard op ware grootte gedownload'); return; }
   out+=`<g id="omtrek"><path d="${pth(g.segs)}" fill="none" stroke="#000" stroke-width="0.3"/></g>\n`;
   if (d.type==='headstock'){
     out+=`<g id="boorgaten">`+d.posts.map(q=>circ(q.x,q.y,s.holeD/2)).join('')+`</g>\n`;
@@ -2560,7 +2586,7 @@ function exportSvg(d,pgOnly){
     if (pgG) out+=`<g id="pickguard" stroke-dasharray="3 1.5"><path d="${pth(pgG.segs)}" fill="none" stroke="#999" stroke-width="0.3"/></g>\n`;
   }
   out+='</svg>';
-  download(`${d.name.replace(/[^\w\- ]+/g,'_')}_1op1.svg`, out, 'image/svg+xml');
+  download(`${d.name.replace(/[^\w\- ]+/g,'_')}${LFT?'_linkshandig':''}_1op1.svg`, out, 'image/svg+xml');
   toast('SVG op ware grootte gedownload (elke laag apart)');
 }
 
@@ -2644,18 +2670,18 @@ function fitMap(gs,w,h,pad){
   return (x,y)=>[w/2+(x-cx)*k, h/2-(y-cy)*k];
 }
 function thumbSVG(d,w,h,ghost){
-  const g=geom(d), gg=ghost?geom(ghost):null, m=fitMap(gg?[g,gg]:[g],w,h,10), c=m(0,0)[0];
-  let o=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><line x1="${c}" y1="0" x2="${c}" y2="${h}" stroke="#e3cdb9" stroke-dasharray="4 3"/>`;
+  const g=geom(d), gg=ghost?geom(ghost):null, m=fitMap(gg?[g,gg]:[g],w,h,10), c=m(0,0)[0], LFT=isLeft(d);
+  let o=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${LFT?MIRG(w):''}<line x1="${c}" y1="0" x2="${c}" y2="${h}" stroke="#e3cdb9" stroke-dasharray="4 3"/>`;
   if (d.type==='body'){ const s=d.set, tY=topOf(g), y0=tY-(s.pocket||40), y1=tY+400, q=[[-neckHW(s,y1),y1],[neckHW(s,y1),y1],[neckHW(s,y0),y0],[-neckHW(s,y0),y0]].map(([x,y])=>m(x,y).join(',')).join(' '); o+=`<polygon points="${q}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   o+=`<path d="${pathD(g.segs,m)}" fill="#f3e6d6" stroke="#1f1c18" stroke-width="1.5"/>`;
   if (gg) o+=`<path d="${pathD(gg.segs,m)}" fill="none" stroke="#2f6f8f" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>`;
   if (d.type==='body'){ const s=d.set, tY=topOf(g), y0=tY-2, y1=tY+400, q=[[-neckHW(s,y1),y1],[neckHW(s,y1),y1],[neckHW(s,y0),y0],[-neckHW(s,y0),y0]].map(([x,y])=>m(x,y).join(',')).join(' '); o+=`<polygon points="${q}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   if (d.type==='headstock'){ const k=m(1,0)[0]-m(0,0)[0]; d.posts.forEach(p=>{ const q=m(p.x,p.y); o+=`<circle cx="${q[0]}" cy="${q[1]}" r="${d.set.holeD/2*k}" fill="#fff" stroke="#2f6f8f"/>`; }); }
-  return o+'</svg>';
+  return o+(LFT?'</g>':'')+'</svg>';
 }
 const MB=$('#mbox');
 let insp={mode:'free',wild:0.5,items:[],pick:-1,goals:{bal:1,seat:1,reach:1,high:1,own:1,pull:1,short:1},run:0};
-insp.src=Object.assign(LIGHT?{klas:1,nat:0,arch:0,wild:0,ruw:0}:{klas:1,nat:1,arch:1,wild:0,ruw:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!=null?lib.view.inspOrg!==false:!LIGHT;   // Forma (Tom 14/11): standaard enkel klassiekers, organische zwaai uit if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
+insp.src=Object.assign(LIGHT?{klas:1,nat:0,arch:0,wild:0,ruw:0}:{klas:1,nat:1,arch:1,wild:0,ruw:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!=null?lib.view.inspOrg!==false:!LIGHT; if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;   // Forma (Tom 14/11): standaard enkel klassiekers, organische zwaai uit
 const GOALS={body:[['bal','Staand'],['seat','Zittend'],['reach','Nut dichterbij'],['high','Hoge frets'],['own','Licht eigen'],['light','Lichter']],headstock:[['pull','Rechte trek'],['short','Korte snaar'],['lightH','Lichte kop'],['tree','Zonder snaarboom']]};
 const clamp01=v=>Math.max(0,Math.min(1,v));
 function goalVals(d){ refreshAuto(d);
@@ -2795,7 +2821,8 @@ function drawInsp(){ if(MB.dataset.kind&&MB.dataset.kind!=='insp') return;   // 
 // kopie van een kopie: 'X (kopie 2)' in plaats van 'X (kopie) (kopie)'
 function copyName(nm){ const base=String(nm).replace(/( \(kopie( \d+)?\))+$/,''); let i=1, n=base+' (kopie)'; while(lib.designs.some(x=>x.name===n)){ i++; n=base+` (kopie ${i})`; } return n; }
 function useDesign(d){
-  const n=clone(d); n.id=uid(); delete n.ref; if(APP_LEVEL==='light'&&d.ref) n.name='Mijn gitaar naar '+d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,'');
+  // de hand ligt vast bij het maken: een ontwerp slaat nooit vanzelf om
+  const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; if(APP_LEVEL==='light'&&d.ref) n.name='Mijn gitaar naar '+d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,'');
   const base=n.name, cnt=lib.designs.filter(x=>x.name.startsWith(base)).length; if(cnt) n.name=base+' '+(cnt+1);
   if (n.type==='body'){ n.set.ctrl.edited=false; n.set.pg.edited=false; if(LIGHT&&!RWOOD_PUB[n.set.wood]){ n.set.wood='vuren'; delete n.set.dens; } }   // Forma: vertrekken van hout dat Sixto gebruikt
   lib.designs.push(n); lib.tab=n.type; lib.active[n.type]=n.id; closeModal(); switchDesign(); toast('Nieuw ontwerp gemaakt: '+n.name);
@@ -3116,7 +3143,7 @@ const RWOOD={vuren:['Vuren (spruce)'],grenen:['Grenen (pine)'],essen2:['Es (ash)
 // nerf per hout: vuren en grenen hebben brede, donkere jaarringen (en grenen noesten), es een open nerf, els en esdoorn een rustige
 const GRAIN={vuren:{gap:5,op:[.2,.42],w:[.5,1.8],col:'#6e4a2a'},grenen:{gap:6,op:[.24,.5],w:[.6,2.2],col:'#7a4a22',knots:2},essen:{gap:4,op:[.16,.34],w:[.4,1.4],col:'#6a5034'},essen2:{gap:4,op:[.16,.34],w:[.4,1.4],col:'#6a5034'},els:{gap:5,op:[.06,.14],w:[.4,.9],col:'#7a5434'},mahonie:{gap:3,op:[.08,.18],w:[.3,.8],col:'#3c1a0c'},walnoot:{gap:3,op:[.1,.22],w:[.3,1],col:'#24140a'},esdoorn:{gap:6,op:[.05,.1],w:[.3,.7],col:'#8a6a40'},okoume:{gap:4,op:[.08,.18],w:[.4,1],col:'#5a3420'},linde:{gap:6,op:[.04,.09],w:[.3,.7],col:'#8a6a40'},paulownia:{gap:5,op:[.1,.2],w:[.4,1.2],col:'#7a5a3a'},ander:{gap:5,op:[.08,.18],w:[.4,1],col:'#5a3a20'}};
 function rndOpt(){ const r=lib.view.rnd||(lib.view.rnd={}); const o=Object.assign({fin:'tpaars',board:'pal',neck:'mlam',metal:'chroom',pu:'zwart',join:'lijm'},r); if(LIGHT||!NECKC[o.neck]) o.neck='mlam'; return o; }
-function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(b), hg=h?geom(h):null, sc=s.scale;
+function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=geom(b), ctx=bodyCtx(b), hg=h?geom(h):null, sc=s.scale;
   const minX=Math.min(g.minX,hg?hg.minX:0)-30, maxX=Math.max(g.maxX,hg?hg.maxX:0)+30, minY=g.minY-30, maxY=(hg?sc+hg.maxY:sc+40)+30, W=maxX-minX, H=maxY-minY;
   const X=x=>(x-minX).toFixed(2), Y=y=>(maxY-y).toFixed(2), P=(x,y)=>X(x)+','+Y(y);
   const pth=(segs,dy=0)=>{ let p=''; segs.forEach((q,i)=>{ if(!i) p+=`M${P(q[0].x,q[0].y+dy)}`; p+=`C${P(q[1].x,q[1].y+dy)} ${P(q[2].x,q[2].y+dy)} ${P(q[3].x,q[3].y+dy)}`; }); return p+'Z'; };
@@ -3133,7 +3160,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
  <filter id="sh" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="7"/><feOffset dx="6" dy="9"/><feComponentTransfer><feFuncA type="linear" slope=".35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
  <filter id="bev"><feGaussianBlur stdDeviation="4"/></filter>
  <clipPath id="cb"><path d="${pth(g.segs)}"/></clipPath>${hg?`<clipPath id="ch"><path d="${pth(hg.segs,sc)}"/></clipPath>`:''}
-</defs>${o.bare?'':'<rect width="100%" height="100%" fill="url(#bg)"/>'}`;
+</defs>${o.bare?'':'<rect width="100%" height="100%" fill="url(#bg)"/>'}${LFT?MIRG(W):''}`;
   // nerf: zachte golvende lijnen, enkel als het hout zichtbaar is
   const grain=(x0,x1,y0,y1,col,clip,G)=>{ G=G||GRAIN.ander; let q=''; const n=Math.round((x1-x0)/G.gap), R=(a)=>a[0]+Math.random()*(a[1]-a[0]);
     // één gezamenlijke stroming (het hout golft als geheel), jaarringen op wisselende afstand, af en toe een brede donkere ring
@@ -3184,6 +3211,7 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   const xn=stringXsNut(s), n=s.strings, xh=h?stringXsNut(h.set):xn; xn.forEach((x,i)=>{ const xb=n>1?-s.spBridge/2+i*s.spBridge/(n-1):0; d+=`<line x1="${X(xb)}" y1="${Y(0)}" x2="${X(x)}" y2="${Y(yN)}" stroke="#d9dcde" stroke-width="${(0.5+0.12*(n-1-i)).toFixed(2)}"/>`;
     const p=h&&h.posts[i]; if(p) d+=`<line x1="${X(x)}" y1="${Y(yN)}" x2="${X(p.x+(p.side==='L'?-1:1)*h.set.postD/2)}" y2="${Y(sc+p.y)}" stroke="#d9dcde" stroke-width="${(0.5+0.12*(n-1-i)).toFixed(2)}"/>`; });
   const sp=strapPins(b,g); [sp.F,sp.R].forEach(q=>d+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="4" fill="url(#met)"/>`);
+  if(LFT) d+='</g>';
   if(!o.bare) d+=`<text x="${(W/2).toFixed(1)}" y="${(H-10).toFixed(1)}" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#8a7e6e">${esc(b.name)}${h?' · '+esc(LIGHT?headLabel(h):h.name):''}</text>`; d+='</svg>';
   if(!o.three) return {svg:d,W,H};
   // ---- voor de draaibare weergave: de achterkant en de omtrekken (zelfde coördinaten; de rotatie spiegelt ze vanzelf) ----
@@ -3202,9 +3230,9 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const s=b.set, g=geom(b), ctx=bodyCtx(
   else { const hw=nhw(topY)+1, hy0=topY-Math.min(40,(topY-heelY)); k+=`<path d="M${P(-hw,topY+2)} L${P(-hw,hy0+12)} Q${P(-hw,hy0)} ${P(0,hy0-6)} Q${P(hw,hy0)} ${P(hw,hy0+12)} L${P(hw,topY+2)} Z" fill="${lam?lam[0]:neckC}" stroke="#000" stroke-opacity=".22" stroke-width="1"/>`; }   // gelijmde halsvoet (of een halsplaat met 4 schroeven, Tom 13/11: beide kunnen)
   // cover plate achteraan rond de knoppen, per groep (knoppen die dicht bij elkaar staan). Ook bij semi-hollow: Sixto werkt altijd met een cover plate (Tom, 13/11).
   { coverGroups(b).forEach(({x0,x1,y0,y1,r})=>{ k+=`<rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0).toFixed(1)}" height="${(y1-y0).toFixed(1)}" rx="${r.toFixed(1)}" fill="#1d1b1a" fill-opacity=".88"/>`; [[x0+6,y0+6],[x1-6,y1-6]].forEach(([x,y])=>k+=`<circle cx="${X(x)}" cy="${Y(y)}" r="1.6" fill="url(#metB)"/>`); }); }
-  [sp.F,sp.R].forEach(q=>k+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="4" fill="url(#metB)"/>`); k+='</svg>';
+  [sp.F,sp.R].forEach(q=>k+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="4" fill="url(#metB)"/>`); if(LFT){ const i=k.indexOf('</defs>')+7; k=k.slice(0,i)+MIRG(W)+k.slice(i)+'</g>'; } k+='</svg>';
   const edge=tint?'#8d6a45':solid||(o.fin==='burst'?'#3a1c0c':wood);
-  return {svg:d,W,H,back:k,bodyD,headD,neckP,edge,neckEdge:neckC,thick:s.thick||45}; }
+  return {svg:d,W,H,back:k,bodyD,headD,neckP,edge,neckEdge:neckC,thick:s.thick||45,left:LFT}; }
 function svgToPng(svg,W,H,px,cb){ const k=px/Math.max(W,H), c=document.createElement('canvas'); c.width=Math.round(W*k); c.height=Math.round(H*k); const img=new Image();
   img.onload=()=>{ const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); c.toBlob(bl=>cb(bl),'image/png'); }; img.onerror=()=>cb(null);
   img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
@@ -3217,7 +3245,7 @@ function v3Show(b,h,o){ const box=MB.querySelector('.rimg'); if(!box) return; co
   const bw=box.clientWidth||400, bh=(box.clientHeight||600)-44, sc=Math.min(bw*0.86/W,bh*0.92/H), w=W*sc, hh=H*sc, z=mm=>(mm*sc).toFixed(1)+'px';
   const vb=`viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" preserveAspectRatio="none"`, T=r.thick, NT=20;
   const lay=(svg,zz,back)=>`<div class="v3l${back?' bk':''}" style="transform:translateZ(${zz})${back?' rotateY(180deg)':''}">${svg.replace('<svg ','<svg preserveAspectRatio="none" ')}</div>`;
-  const sil=(path,col,zz,isPoly)=>`<div class="v3l sil" style="transform:translateZ(${zz})"><svg ${vb}>${isPoly?`<polygon points="${path}" fill="${col}"/>`:`<path d="${path}" fill="${col}"/>`}</svg></div>`;
+  const sil=(path,col,zz,isPoly)=>`<div class="v3l sil" style="transform:translateZ(${zz})"><svg ${vb}>${r.left?MIRG(W):''}${isPoly?`<polygon points="${path}" fill="${col}"/>`:`<path d="${path}" fill="${col}"/>`}${r.left?'</g>':''}</svg></div>`;
   let L=''; const n=Math.max(6,Math.round(T/3));
   for(let i=1;i<n;i++){ const zz=T/2-i*T/n; L+=sil(r.bodyD,i%2?r.edge:shade(r.edge,-0.06),z(zz)); }
   for(let i=1;i<=6;i++){ const zz=T/2-i*NT/6; L+=sil(r.neckP,shade(r.neckEdge,-0.08),z(zz),true); if(r.headD) L+=sil(r.headD,shade(r.neckEdge,-0.08),z(zz)); }
@@ -3293,7 +3321,7 @@ function splitParts(outer,holes,bedX,bedY,gap){
   for(const [nx,ny] of tries){ if(Wd/nx>Math.max(bedX,bedY)+1||Ht/ny>Math.max(bedX,bedY)+1) continue;
     const cx=[...Array(nx-1)].map((_,i)=>B.x0+Wd*(i+1)/nx+0.0137), cy=[...Array(ny-1)].map((_,i)=>B.y0+Ht*(i+1)/ny+0.0119);
     // een naad niet door een frezing: schuif hem ernaast
-    const avoid=holes.map(ringBox).filter(b=>b.x1-b.x0>15&&b.y1-b.y0<Math.min(bedX,bedY)*0.6).map(b=>[b.y0-9,b.y1+9]);   // grote holtes (kamers) kan een naad niet ontwijken for(let k=0;k<cy.length;k++) for(let r=0;r<3;r++) avoid.forEach(([a,b])=>{ if(cy[k]>a&&cy[k]<b) cy[k]=(cy[k]-a<b-cy[k]?a:b)+0.0119; });
+    const avoid=holes.map(ringBox).filter(b=>b.x1-b.x0>15&&b.y1-b.y0<Math.min(bedX,bedY)*0.6).map(b=>[b.y0-9,b.y1+9]); for(let k=0;k<cy.length;k++) for(let r=0;r<3;r++) avoid.forEach(([a,b])=>{ if(cy[k]>a&&cy[k]<b) cy[k]=(cy[k]-a<b-cy[k]?a:b)+0.0119; });   // grote holtes (kamers) kan een naad niet ontwijken
     let parts=[outer], ok=true;
     for(const c of cy){ const ln=cutLine(outer,true,c,cx,B.x0-50,B.x1+50), dn=regionOf(ln,true,-1,far,-gap/2), up=regionOf(ln,true,1,far,gap/2).reverse(); const np=[];
       parts.forEach(p=>{ const b=ringBox(p); if(b.y1<c-8||b.y0>c+8){ np.push(p); return; } const A=ghClip(p,dn,'and'), U=ghClip(p,up,'and'); if(A==='hole'||U==='hole'){ ok=false; return; } np.push(...A,...U); }); parts=np; }
@@ -3372,6 +3400,8 @@ function templateShapes(o){ const b=D().type==='body'?D():lib.designs.find(x=>x.
       const ring=R.concat(L).map(p=>({x:p.x,y:p.y-yN})); out.push({key:'hals',name:b.name,outer:ccw(ring),holes:[circRing(0.01,-15,1.5,24),circRing(0.01,yE-yN+15,1.5,24)],note:`Halsomtrek van de nut (boven) tot het einde van de hiel: ${fmt(yN-yE,0)} mm lang, ${fmt(s.nutW,1)} mm aan de nut, ${fmt(2*neckHW(s,yE),1)} mm aan het einde van de hiel (zelfde taper als de hals). Zonder kop: die heeft een eigen mal.`}); }
   }
   if(h&&o.head){ const g=geom(h), holes=o.tuners?h.posts.map(p=>cw(circRing(p.x,p.y,h.set.holeD/2))):[]; out.push({key:'kop',name:h.name,outer:ccw(simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03)),holes,note:'Voorkant van de kop, nut onderaan.'}); }
+  // linkshandig: elke mal is het spiegelbeeld (ook de rug-mallen, die waren al gespiegeld en worden zo weer juist)
+  if(isLeft(b||h)) out.forEach(sh=>{ sh.outer=ccw(mirX(sh.outer)); sh.holes=sh.holes.map(r=>cw(mirX(r))); sh.note=(sh.note||'')+' Linkshandig: gespiegeld.'; });
   return out; }
 let prt=null;
 function buildPrint(){ const o=prOpt(), bx=o.bx-o.margin, by=o.by-o.margin, res=[];
@@ -3426,7 +3456,7 @@ function printAct(a){
       const map=printPreview(P).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace(/style="[^"]*"/,'');
       files.push({name:'overzicht.svg',data:map});
       files.push({name:'LEESMIJ.txt',data:`Sixto Forma - 3D-print mallen\n${new Date().toLocaleString('nl-BE')}\n\n`+P.res.map(r=>r.err?`${r.key}: ${r.err}`:`${MAL_INFO[r.key.replace(/\d+$/,'')]||r.key} (${r.name}): ${r.parts.length} stuk(ken)\n`+(r.note?'  '+r.note+'\n':'')+r.parts.map(p=>`  ${r.key}${p.label?'_'+p.label:''}.stl  ${fmt(p.w,0)} x ${fmt(p.h,0)} mm`).join('\n')).join('\n\n')+`\n\nDikte ${o.t} mm, bed ${o.bx} x ${o.by} mm, marge ${o.margin} mm, speling ${o.gap} mm per kant.\nMaten in mm, ware grootte. Zwaluwstaarten: eerst droog passen, dan lijmen op een vlakke plaat.\nZie overzicht.svg voor hoe de stukken samen gaan.\n`});
-      const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); prtZip={blob:zipBlob(files),name:fileSafe(b?b.name:'mallen')+'_STL.zip'};
+      const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); prtZip={blob:zipBlob(files),name:fileSafe(b?b.name:'mallen')+(isLeft(b)?'_linkshandig':'')+'_STL.zip'};
       const bt=MB.querySelector('[data-p=share]'); if(bt) bt.disabled=false; if(msg) msg.textContent=`${n} STL-bestanden klaar. Tik op "2 · Bewaar als zip": kies Dropbox, dan staat hij op je laptop.`;
     }catch(err){ if(msg) msg.textContent='Er ging iets mis: '+err.message; } }
   if(a==='share'&&prtZip) shareFile(prtZip.blob,prtZip.name); }
@@ -3455,7 +3485,7 @@ function showWelcome(){ const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&
   let w=document.getElementById('welcome'); if(!w){ w=document.createElement('div'); w.id='welcome'; document.body.appendChild(w); }
   w.innerHTML=`<div class="wbox"><div class="whead"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg><span>Sixto Custom Guitars</span><span class="wlang">${['nl','en'].map(l=>`<button data-lang="${l}" class="${LANG===l?'on':''}">${l.toUpperCase()}</button>`).join('')}</span></div>
     <h1>Ontwerp jouw gitaar</h1><p class="wsub">Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.</p>
-    <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}</div>
+    <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}<button data-w="hand" class="${lib.view.lefty?'on':''}" aria-pressed="${!!lib.view.lefty}">${lib.view.lefty?'✓ ':''}Ik speel linkshandig</button></div>
     ${own.length?`<h2>Mijn ontwerpen</h2><div class="wgrid own">${own.slice(-6).reverse().map(d=>card(d,d.name)).join('')}</div>`:''}
     <h2>Klassiekers</h2><div class="wgrid">${cls.map(d=>card(d)).join('')}</div>
     <h2>Uit de natuur en de architectuur</h2><div class="wgrid">${nat.map(d=>card(d)).join('')}</div>
@@ -3471,6 +3501,7 @@ function coach(){ let seen=false; try{ seen=localStorage.getItem('sixto-forma-co
   const c=document.createElement('div'); c.id='coach'; c.innerHTML=`<p><b>${tr('Boetseer je gitaar')}</b></p><p>${tr('Sleep een punt op de rand, of sleep pickups en knoppen. De knoppen − en + onder Instellingen maken de vorm voller of slanker.')}</p><p>${tr('Klaar? Tik op 🎨 Bekijk en deel.')}</p><button class="primary">${tr('Begrepen')}</button>`;
   document.body.appendChild(c); c.querySelector('button').onclick=()=>{ c.remove(); try{ localStorage.setItem('sixto-forma-coach','1'); }catch(e){} }; }
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-w]'); if(!t) return; const v=t.dataset.w;
+  if(v==='hand'){ lib.view.lefty=!lib.view.lefty; save(); showWelcome(); return; }
   if(v==='insp'){ hideWelcome(); lib.tab='body'; const own=lib.designs.find(x=>!x.ref&&x.type==='body'); if(own) lib.active.body=own.id; switchDesign(); insp.mode='free'; openInsp(); return; }
   if(v==='last'){ hideWelcome(); lib.tab='body'; const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&x.name!=='Nieuwe body').pop()||lib.designs.filter(x=>!x.ref&&x.type==='body').pop(); if(own){ lib.active.body=own.id; switchDesign(); } return; }
   const d=lib.designs.find(x=>x.id===v); if(!d) return; hideWelcome(); if(d.ref){ useDesign(d); } else { lib.tab='body'; lib.active.body=d.id; switchDesign(); }
@@ -3564,6 +3595,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePicker(); });
 
 // ================= start =================
 function switchDesign(){
+  { const a=lib.designs.find(x=>x.id===lib.active[lib.tab]); if(a&&!a.ref&&a.set&&a.set.lefty==null) a.set.lefty=!!lib.view.lefty; }
   if (!lib.designs.some(x=>x.type===lib.tab)) lib.designs.push(lib.tab==='body'?defaultBody():defaultHead());
   if (!lib.designs.some(x=>x.id===lib.active[lib.tab])) lib.active[lib.tab]=lib.designs.find(x=>x.type===lib.tab).id;
   if(typeof closePicker==='function') closePicker();
