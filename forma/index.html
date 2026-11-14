@@ -1315,7 +1315,7 @@ function rodRect(d){ return d.set.rod==='head' ? {cx:0,cy:16,w:12,h:32,a:0} : nu
 function postReason(d,g,i,pos){
   const s=d.set;
   if (!inside(g.poly,pos)) return 'ligt buiten de kop';
-  const m=distToPoly(g.poly,pos)-s.holeD/2; if (m<4) return `te dicht bij de rand (${fmt(m)} mm hout, min. 4)`;
+  const m=distToPoly(g.poly,pos)-s.holeD/2; if (m<4.8) return `te dicht bij de rand (${fmt(m)} mm hout, min. 4,8)`;   // 14/11: nooit krapper dan de krapste echte kop op de plannen (Danelectro, 4,85 mm)
   for (let j=0;j<d.posts.length;j++){ if(j===i) continue; const q=d.posts[j], dd=Math.hypot(q.x-pos.x,q.y-pos.y); if(dd<s.minSp) return `te dicht bij post ${j+1} (${fmt(dd)} mm, min. ${fmt(s.minSp,0)})`; }
   const rr=rodRect(d); if (rr && rectDist(pos,rr)<s.holeD/2+3) return 'raakt de spanstaaf-toegang';
   return '';
@@ -1399,6 +1399,7 @@ function headChecks(d){
   d.posts.forEach((p,i)=>{ const h=housing(d,g,p); if(h.covered) out.push(`Mechaniek ${i+1}: knop komt niet buiten de kop (${fmt(Math.abs(h.edge-h.end))} mm te kort)`); });
   for (let i=0;i<d.posts.length;i++) for (let j=i+1;j<d.posts.length;j++){ const a=housing(d,g,d.posts[i]), b=housing(d,g,d.posts[j]); if(a.dir===b.dir && rectGap(a.rect,b.rect)<1) out.push(`Behuizingen ${i+1} en ${j+1} raken elkaar`); }
   const wn=widthAt(g.poly,0.5); if (wn && Math.abs(wn.w-s.nutW)>1.2) out.push(`Breedte bij de nut (${fmt(wn.w)}) past niet bij de hals (${fmt(s.nutW)})`);
+  { const lay=s.layout==='custom'?headFam(d):s.layout, n=d.posts.length, h=Math.ceil(n/2); if(lay==='split'){ d.posts.forEach((p,i)=>{ if((i<h&&p.x>-2)||(i>=h&&p.x<2)) out.push(`Post ${i+1} staat aan de verkeerde kant (${h}+${n-h})`); }); for(let i=0;i<Math.floor(n/2);i++){ const dy=Math.abs(d.posts[i].y-d.posts[n-1-i].y); if(dy>28) out.push(`Post ${i+1} en ${n-i} staan ${fmt(dy,0)} mm uit elkaar in hoogte (max. 28)`); } } }   // 14/11: een 3+3-kop heeft de lage snaren links, de hoge rechts
   return out;
 }
 
@@ -2707,7 +2708,7 @@ function applyMove(d,m,mm){ if(d.type==='headstock'){ d.pts.forEach(p=>{ if(p.y<
   d.pts.forEach((p,i)=>{ if(Math.abs(p.x)<=h&&p.y>top-20) return; const q=Math.hypot(p.x-cx,p.y-m.cy)/m.r; if(q>=1) return; const f=Math.pow(1-q*q,2); let x=p.x+ux*f; if(sym) x=(i===0||i===d.pts.length-1)?0:Math.max(0,x); p.x=Math.round(x*10)/10; p.y=Math.round((p.y+dy*f)*10)/10; }); }
 function moveCandidate(src,w){ const d=clone(src); delete d.sig; const head=d.type==='headstock';
   // koppen: dezelfde bewuste ingrepen als bij genereren (langer, kroon kantelen, schouder, flank, zwaai…), hoeken blijven hoeken
-  if(head){ delete d.ref; if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } const txt=headTransform(d,0.15+0.5*w); if(!headOK(d,lobeInfo(geom(src).poly).lobes+1)) return null; seatPosts(d); d.moves=txt; return d; }
+  if(head){ delete d.ref; if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } const txt=headTransform(d,0.15+0.5*w); if(!headOK(d,lobeInfo(geom(src).poly).lobes+1)) return null; if(!keepPosts(d,src)||pullInfo(d).worst>Math.max(11,pullInfo(src).worst+2)) return null; d.moves=txt; return d; }
   const M=bodyMoves(d), n=1+Math.floor(Math.random()*3), used=new Set(), txt=[];
   for(let k=0;k<n&&M.length;k++){ const m=M[Math.floor(Math.random()*M.length)], id=m.n+m.pos; if(used.has(id)) continue; used.add(id); const sc=0.5+w, mm=Math.round((m.a+Math.random()*(m.b-m.a))*sc); if(Math.abs(mm)<3) continue; applyMove(d,m,mm); txt.push(`${m.n} ${Math.abs(mm)} mm ${mm>0?m.pos:m.neg}`); }
   if(!txt.length) return null; d.moves=txt; if(head){ if(d.set.layout==='custom') d.set.layout=headFam(d); d.set.pat=null; d.set.auto=true; placePosts(d); } return d; }
@@ -2728,7 +2729,7 @@ function searchGoal(){
   const allBest=keys.length&&keys.every(k=>base.v[k]>=0.98);
   const g0=geom(src), L0=g0.maxY-g0.minY, W0=g0.maxX-g0.minX;   // groter maken is geen verbetering op zich
   const F0=shapeFair(g0), LB0=lobeInfo(g0.poly).lobes, maxDist=0.02+0.04*w; delete src.sig;
-  const add=d=>{ if(!d) return; const g1=geom(d); if(g1.maxY-g1.minY>L0*1.06||g1.maxX-g1.minX>W0*1.06) return; const fq=shapeFair(g1); if(fq.flips>F0.flips||fq.E>F0.E*1.2||lobeInfo(g1.poly).lobes>LB0||!simplePoly(g1.poly)) return; delete d.sig; if(sigDist(d,src)>maxDist) return; const r=goalVals(d); if(r.ch) return; const gain=keys.reduce((a,k)=>a+r.v[k]-base.v[k],0), worse=keys.some(k=>r.v[k]<base.v[k]-0.05)||Object.keys(r.v).some(k=>r.v[k]<base.v[k]-0.25);
+  const add=d=>{ if(!d||!proposalOK(d)) return; const g1=geom(d); if(g1.maxY-g1.minY>L0*1.06||g1.maxX-g1.minX>W0*1.06) return; const fq=shapeFair(g1); if(fq.flips>F0.flips||fq.E>F0.E*1.2||lobeInfo(g1.poly).lobes>LB0||!simplePoly(g1.poly)) return; delete d.sig; if(sigDist(d,src)>maxDist) return; const r=goalVals(d); if(r.ch) return; const gain=keys.reduce((a,k)=>a+r.v[k]-base.v[k],0), worse=keys.some(k=>r.v[k]<base.v[k]-0.05)||Object.keys(r.v).some(k=>r.v[k]<base.v[k]-0.25);
     const fn=keys.filter(k=>k!=='own'); if(fn.length&&fn.reduce((a,k)=>a+r.v[k]-base.v[k],0)<0.03) return; // anders zijn alleen is geen verbetering
     if(gain<0.04||worse) return; d.gain=gain; d.why=gainText(base,r,G); d.gains=gainList(base,r,G); if(fn.length&&!gainText(base,r,{...G,own:0})) return; if(d.why) pool.push(d); };
   if(t==='body') try{ jointCandidates(src).forEach(d=>{ d.name=src.name.replace(/( verbeterd)+$/,'').slice(0,28)+' verbeterd'; d.joint=1; add(d); }); }catch(e){}
@@ -2862,10 +2863,10 @@ function neckSnap(poly){ const H=halves(poly), fx=h=>{ const P=h.map(p=>({x:p.x,
 function neckOK(poly){ const H=halves(poly); for(const side of ['treble','bass']){ const h=H[side]; let s=0; while(s<h.length-1&&h[s].x<=POCKET_HW+1) s++; const y0=h[s].y; let mi=s;
     let b0=null,b1=null; for(let i=s;i<h.length*0.6;i++){ if(h[i].x>POCKET_HW+70) break; const gp=h[i].x-POCKET_HW; if(h[i].y-y0>=8&&gp>6&&gp<14){ b0=b0==null?h[i].y:Math.min(b0,h[i].y); b1=b1==null?h[i].y:Math.max(b1,h[i].y); } if(h[i].y>h[mi].y) mi=i; }
     if(b0!=null&&b1-b0>=15) return false;   // een spleet: de rand blijft over 15 mm hoogte op 6-14 mm van de hals
-    const rise=h[mi].y-y0, gx=h[mi].x-POCKET_HW; if(rise<4||gx>=45) continue;
+    const rise=h[mi].y-y0, gx=h[mi].x-POCKET_HW; if(rise<4||rise>=25||gx>=45) continue;   // oortje: 4-25 mm hoog; echte hoorns naast de hals (Iceman, L-5, I5T) rijzen 32-47 mm
     let after=h[mi].y, L=0, higher=false; for(let i=mi+1;i<h.length*0.7;i++){ L+=Math.hypot(h[i].x-h[i-1].x,h[i].y-h[i-1].y); if(L>90) break; after=Math.min(after,h[i].y); if(h[i].y>h[mi].y+1) higher=true; }
     if(higher||h[mi].y-after<4) continue;
-    let touch=true; for(let i=s;i<=mi;i++) if(h[i].y>y0+2&&h[i].x-POCKET_HW>1) touch=false; if(touch) continue;
+    let touch=true; for(let i=s;i<=mi;i++) if(h[i].y>y0+2&&h[i].x-POCKET_HW>2) touch=false; if(touch) continue;
     return false; } return true; }
 function finishBody(poly,maxL){ const p0=neckSnap(polishBody(poly)); if(!bodyOK(p0,maxL)||!neckOK(p0)) return null; let p=fairBody(p0,60); p=neckSnap(p); if(!bodyOK(p,maxL)||!neckOK(p)) p=p0; return lineJitter(p)<=JIT_MAX?p:null; }
 // helften met en zonder hoorn niet door elkaar mengen: dat geeft halve hoorns en golvende flanken
@@ -2912,7 +2913,7 @@ function genBody(w,amp){ const V=refVecs(); let pool=bodyPool(), org0=insp.org==
   if(single){ for(let i=0;i<10;i++){ const k=pick(pool), src=lib.designs.find(d=>d.id==='ref-'+k); if(!src) continue; const L0=refLobes(k)+(amp>1.5?1:0), K=[k];
       let m=clone(src); const rounds=1+Math.floor(amp*1.2+Math.random()*amp); for(let r=0;r<rounds;r++){ const q=moveCandidate(m,Math.min(1.6,0.25+amp*0.6)); if(q) m=q; }
       let poly=geom(m).poly; const org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2,0.3+0.6*amp),Math.random);
-      const ok=finishBody(poly,L0); if(ok&&calmAs(ok,K,amp>1.5)&&hornsOK(ok,K)) return bodyFromPoly(ok,src.set,refName(k)+(org?', organisch':', bijgestuurd')); } }
+      const ok=finishBody(poly,L0); if(ok&&calmAs(ok,K,amp>1.5)&&hornsOK(ok,K)) { const r=bodyFromPoly(ok,src.set,refName(k)+(org?', organisch':', bijgestuurd')); if(proposalOK(r)) return r; } } }
   pool=pool.filter(k=>!NO_MIX.includes(k));   // schelp en art deco: wel bijsturen, niet half-half mengen (geschulpte rand en facetten geven bulten)
   if(pool.length<2) return null;
   const fam=k=>{ const c=srcCat('ref-'+k); return c==='nat'||c==='arch'?'org':c; };
@@ -2920,11 +2921,13 @@ function genBody(w,amp){ const V=refVecs(); let pool=bodyPool(), org0=insp.org==
     const g=blendBody(V,use,Math.random,{amt:Math.min(2.6,0.3+amp*1.0),pT,pB}); let poly=g.poly, org=org0&&Math.random()<0.2+0.25*amp; if(org) poly=organicFlow(poly,Math.min(2.2,0.5+amp*0.7),Math.random);
     const PK=[...new Set(g.parents.t.concat(g.parents.b))], ok=finishBody(poly,Math.max(...PK.map(refLobes))+(amp>1.5?1:0)); if(!ok||!calmAs(ok,PK,amp>1.5)||!hornsOK(ok,PK)) continue;
     const main=lib.designs.find(d=>d.id==='ref-'+g.parents.t[0])||defaultBody(), nm=[...new Set(g.parents.t.concat(g.parents.b))].slice(0,3).map(refName).join(' × ');
-    return bodyFromPoly(ok,main.set,nm+(org?', organisch':'')); }
+    { const r=bodyFromPoly(ok,main.set,nm+(org?', organisch':'')); if(proposalOK(r)) return r; } }
   return null; }
 // acht voorstellen binnen de band van de gekozen wildheid; binnen de band wint de rustigste lijn. Liever minder dan buiten de band.
+// 14/11 (Tom: "niets technisch fout voorstellen"): elk voorstel van de Inspirator moet de volledige keuring halen, anders wordt het niet getoond
+function proposalOK(d){ try{ if(d.type==='headstock') return !headChecks(d).length; refreshAuto(d); if(bodyChecks(d).length) return false; const s0=D(); if(!neckOK(geom(d).poly)&&(s0.type!=='body'||neckOK(geom(s0).poly))) return false; return true; }catch(e){ return false; } }   // halsaansluiting: een bron die zelf zo is (Moderne) mag zijn variaties houden
 function fillWild(make,n,lv,opt){ opt=opt||{}; const t0=Date.now(), got=[], near=[], stale=[], nov=opt.nov||novelty, sc=opt.scale||1, lo=lv.lo*sc, hi=lv.hi>=1?1:lv.hi*sc;
-  for(let i=0;i<140&&Date.now()-t0<(opt.ms||2800)&&got.length<n*2;i++){ const amp=lv.amp*(0.75+Math.random()*0.5); let d=null; try{ d=make(amp); }catch(e){} if(!d) continue; delete d.sig;
+  for(let i=0;i<140&&Date.now()-t0<(opt.ms||2800)&&got.length<n*2;i++){ const amp=lv.amp*(0.75+Math.random()*0.5); let d=null; try{ d=make(amp); }catch(e){} if(!d||!proposalOK(d)) continue; delete d.sig;
     if(got.concat(near,stale).some(o=>sigDist(o,d)<0.01)) continue; if(isSeen(d)){ stale.push(d); continue; } const v=nov(d); d._nov=v; (opt.band===false||(v>=lo&&v<=hi)?got:near).push(d); }
   if(got.length+near.length<n) near.push(...stale.slice(0,n-got.length-near.length));
   got.forEach(d=>d._b=beauty(d)); got.sort((a,b)=>a._b-b._b); let keep=got.slice(0,n);
@@ -2938,7 +2941,7 @@ function headSkeleton(fam,w){ const refs=HEAD_FAM[fam].map(k=>lib.designs.find(d
   const org=Object.entries(HEAD_ORG[fam]||{}), useOrg=org.length&&Math.random()<0.25+0.25*w; let d, nm;
   if(useOrg){ const [n,pts]=pick(org), base=fam==='split'?(lib.designs.find(x=>x.id==='ref-h-lp')||refs[0]):(lib.designs.find(x=>x.id==='ref-h-strat')||refs[0]); d=clone(base); const k=d.set.nutW/43; d.pts=pts.map(([x,y,c])=>({x:x*k,y,c:!!c})); d.sym=false; d.tension=1; nm='Organisch: '+n; }
   else { const r=pick(refs); d=clone(r); if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } nm='Kop naar '+r.name.replace(/ kop.*$/,'').replace(/-type$/,''); }
-  delete d.ref; d.name=nm; if(d.set.layout==='custom') d.set.layout=headFam(d); return d; }
+  delete d.ref; d.name=nm; return d; }   // patroon van een echt plan blijft 'custom': keepPosts houdt het of laat het voorstel vallen
 // bewuste ingrepen op de ankerpunten: de hoeken blijven hoeken, de nut blijft staan
 function headTransform(d,amt){ const R=(a,b)=>a+(b-a)*Math.random(), P=d.pts, len=Math.max(...P.map(p=>p.y)), ss=(v,a,b)=>{ const t=Math.max(0,Math.min(1,(v-a)/(b-a))); return t*t*(3-2*t); }, wy=p=>ss(p.y,8,45), txt=[];
   const ops=[
@@ -2954,11 +2957,16 @@ function headTransform(d,amt){ const R=(a,b)=>a+(b-a)*Math.random(), P=d.pts, le
   return txt; }
 function headOK(d,maxL){ const g=geom(d); if(!simplePoly(g.poly)) return false; if(lobeInfo(g.poly).lobes>maxL) return false; if(g.minY<-0.5) return false; return true; }
 function seatPosts(d){ if(d.set.layout==='custom') d.set.layout=headFam(d); d.set.pat=null; d.set.auto=true; placePosts(d); if(headChecks(d).length) fitPosts(d); }
+// 14/11 (Tom): mechaniekgaten van een echt plan blijven staan zolang ze in de nieuwe vorm passen; anders opnieuw zetten. Elke kop die de app voorstelt, moet de keuring halen.
+function keepPosts(d,src){ const P=src.posts.map(p=>({...p})), lay=src.set.layout, pat=src.set.pat?clone(src.set.pat):null, auto=src.set.auto;
+  d.posts=P; d.set.layout=lay; d.set.pat=pat; d.set.auto=auto; if(!headChecks(d).length) return true;
+  return false;   // nooit een zelfverzonnen patroon (Tom 14/11: V-kop en Turner-kop gaven bovenaan samengepropte gaten); past het patroon van de bron niet, dan valt het voorstel weg
+}
 function genHead(w){ for(let i=0;i<14;i++){ const r=Math.random(), fam=r<0.5?'split':r<0.88?'inline':'rev', d=headSkeleton(fam,w); if(!d) continue; const L0=lobeInfo(geom(d).poly).lobes;
-    headTransform(d,0.4+w*1.0); if(!headOK(d,L0+1)) continue; seatPosts(d); if(headChecks(d).length||pullInfo(d).worst>11) continue; return d; }
+    const src0=clone(d); headTransform(d,0.4+w*1.0); if(!headOK(d,L0+1)) continue; if(!keepPosts(d,src0)||pullInfo(d).worst>11) continue; return d; }
   return null; }
 function varyHead(src,w){ for(let i=0;i<10;i++){ const d=clone(src); delete d.ref; if(d.sym){ d.pts=anchorsOf(d).map(p=>({x:p.x,y:p.y,c:!!p.c})); d.sym=false; } const L0=lobeInfo(geom(src).poly).lobes;
-    d.moves=headTransform(d,0.2+w*0.7); if(!headOK(d,Math.max(L0,L0+1))) continue; seatPosts(d); if(headChecks(d).length||pullInfo(d).worst>Math.max(11,pullInfo(src).worst+2)) continue; d.name='Variatie op '+src.name; return d; }
+    d.moves=headTransform(d,0.2+w*0.7); if(!headOK(d,Math.max(L0,L0+1))) continue; if(!keepPosts(d,src)||pullInfo(d).worst>Math.max(11,pullInfo(src).worst+2)) continue; d.name='Variatie op '+src.name; return d; }
   return null; }
 // acht voorstellen die de keuring doorstaan; liever minder dan lelijke
 function beauty(d){ const g=geom(d), L=lobeInfo(g.poly), f=shapeFair(g); return L.lobes+0.7*L.small+0.25*f.flips+0.3*f.E; }   // lager is rustiger
