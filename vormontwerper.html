@@ -356,7 +356,7 @@ if (LIGHT){ let s=''; try { s=localStorage.getItem('sixto-forma-lang')||''; } ca
 const EN=LANG==='en';
 const PUB_SITE=()=>EN?'https://666sixto666.github.io/SixtoTools/site/':'https://666sixto666.github.io/SixtoTools/site/nl/';
 const NEUTRAL={coronet:['Scheve dubbele cutaway','Offset double cut'],duojet:['Ronde single cut','Round single cut'],billybo:['Raketvorm','Rocket shape'],mockingbird:['Lange gebogen hoorn','Long curved horn'],rick4003:['Golvende hoorns','Wave horns'],strat:['S-stijl','S-style'],tele:['T-stijl','T-style'],lp:['Enkele cutaway','Single cut'],lpjdc:['Junior dubbele cutaway','Junior double cut'],sg:['Dubbele hoorn','Double horn'],es:['Dunne semi','Thinline semi'],offset:'Offset',mustang:['Korte offset','Short offset'],mm:['Slanke cutaway','Slim cut'],prs:['Moderne dubbele cutaway','Modern double cut'],super:'Super S',js:['Ronde shred','Round shred'],axis:['Compacte cutaway','Compact cut'],albertlee:['Asymmetrisch','Asymmetric'],n4:['Gebeeldhouwde shred','Sculpted shred'],toronado:'Retro offset',mosrite:['Omgekeerde surf','Surf reverse'],redspecial:['Open haard','Fireside'],explorer:['Hoekig','Angular'],v:['Pijl','Arrow'],moderne:'Modernist',turner:['Compacte boutique','Boutique compact'],asher:'Offset T',firebird:['Omgekeerd','Reverse'],iceman:['Haak','Hook'],revstar:'Café racer',l5:'Jazz archtop',i5t:['Enkele cutaway T','Single cut T'],dano59:['Retro dubbele cutaway','Retro double cut'],astrojet:['Ruimtevaart','Space age'],birdprey:['Roofvogel','Raptor'],lpjsc:['Junior enkele cutaway','Junior single cut'],b6:['Scherpe shred','Sharp shred'],supersonic:['Omgekeerde offset','Reverse offset'],rick360:['Halvemaan semi','Crescent semi'],boden:'Headless ergo',jaguar:'Offset deluxe',stingray:['Grote hoorn','Big horn'],pbass:['P-stijl bas','P-style bass'],jbass:['J-stijl bas','J-style bass'],
-  'h-strat':['S-stijl kop (50s/60s)','S-style head (50s/60s)'],'h-turner':['Boutique kop','Boutique head'],'h-strat70':['S-stijl kop (70s, groot)','S-style head (70s, large)'],'h-tele':['T-stijl kop','T-style head'],'h-lp':['Open book kop (3+3)','Open book head (3+3)'],'h-prs':['Moderne kop (3+3)','Modern head (3+3)'],'h-dbz':['Puntige kop (3+3)','Pointed head (3+3)'],'h-mosrite':['Surf kop (3+3)','Surf head (3+3)'],'h-dano':['Retro kop (3+3)','Retro head (3+3)'],'h-moderne':['Modernistische kop (3+3)','Modernist head (3+3)'],'h-explorer':['Hockeystick kop','Hockey stick head'],'h-rhoads':['Puntige kop (6 op rij)','Pointed head (6 in line)'],'h-c5150':['Super S kop','Super S head'],'h-firebird':['Omgekeerde kop','Reverse head'],'h-n4':['Shred kop (omgekeerd)','Shred head (reversed)'],'h-tiger':['Gesneden kop (3+3)','Carved head (3+3)'],'h-martin':[null,'Straight 3+3 (acoustic style, approx.)'],'h-bass':[null,'Bass head (4 in line, approx.)'],
+  'h-strat':['S-stijl kop (50s/60s)','S-style head (50s/60s)'],'h-turner':['Boutique kop','Boutique head'],'h-strat70':['S-stijl kop (70s, groot)','S-style head (70s, large)'],'h-tele':['T-stijl kop','T-style head'],'h-lp':['Open book kop (3+3)','Open book head (3+3)'],'h-prs':['Moderne kop (3+3)','Modern head (3+3)'],'h-dbz':['Puntige kop (3+3)','Pointed head (3+3)'],'h-mosrite':['Surf kop (3+3)','Surf head (3+3)'],'h-dano':['Retro kop (3+3)','Retro head (3+3)'],'h-moderne':['Modernistische kop (3+3)','Modernist head (3+3)'],'h-explorer':['Hockeystick kop','Hockey stick head'],'h-rhoads':['Puntige kop (6 op rij)','Pointed head (6 in line)'],'h-c5150':['Super S kop','Super S head'],'h-firebird':['Omgekeerde kop','Reverse head'],'h-n4':['Shred kop (omgekeerd)','Shred head (reversed)'],'h-v58':['V-kop, rond (3+3)','V head, round (3+3)'],'h-v83':['V-kop, puntig (3+3)','V head, pointed (3+3)'],'h-tiger':['Gesneden kop (3+3)','Carved head (3+3)'],'h-martin':[null,'Straight 3+3 (acoustic style, approx.)'],'h-bass':[null,'Bass head (4 in line, approx.)'],
   'n-peer':[null,'Pear (nature)'],'n-blad':[null,'Leaf (nature)'],'n-vleugel':[null,'Wing (nature)'],'n-schelp':[null,'Shell (nature)'],'n-kiezel':[null,'Pebble (nature)'],'n-zandloper':[null,'Hourglass (nature)'],'n-golf':[null,'Wave (nature)'],'n-gotisch':[null,'Gothic arch (architecture)'],'n-romaans':[null,'Romanesque arch (architecture)'],'n-deco':[null,'Art deco (architecture)'],
   'h-n-gotisch':[null,'Gothic arch head (architecture, 3+3)'],'h-n-tulp':[null,'Tulip head (nature, 3+3)'],'h-n-deco':[null,'Art deco head (architecture, 3+3)'],'h-n-waaier':[null,'Fan head (nature, 3+3)'],'h-n-ui':[null,'Onion dome head (architecture, 3+3)'],'h-n-blad':[null,'Leaf head (nature, 3+3)'],'h-n-vlam':[null,'Flame head (nature, 3+3)'],'h-n-schelp':[null,'Shell head (nature, 3+3)'],'h-n-zeis':[null,'Scythe head (nature, 3+3)'],'h-n-veer':[null,'Feather head (nature, 6 in line)'],'h-n-golfkam':[null,'Wave crest head (nature, 6 in line)'],'h-n-zwaan':[null,'Swan head (nature, 6 in line)'],'h-n-spits':[null,'Spire head (architecture, 6 in line)']};
 // namen in beide richtingen: een ontwerp dat in de ene taal gemaakt is, toont in de andere taal ook de juiste naam
@@ -368,7 +368,7 @@ if (LIGHT){ const _REFS=REFS; REFS=function(){ return _REFS().map(d=>{ const m=N
 // Nederlands in light: alleen de merknamen buiten de vormen eruit
 const T_NL={'Vormontwerper':'Forma','🎨 Render':'🎨 Bekijk en deel','(Strat, Les Paul, SG…),':'(S-stijl, enkele cutaway, dubbele hoorn…),','(Explorer, Firebird, Iceman…).':'(hoekig, omgekeerd, haak…).','10° (PRS)':'10°','14° (Gibson nu)':'14°','17° (Gibson vroeger)':'17° (vintage)','Recht (Fender)':'Recht',
   'Drie single coils, 3 knoppen (Fender-stijl)':'Drie single coils, 3 knoppen','Twee humbuckers, 4 knoppen (Gibson-stijl)':'Twee humbuckers, 4 knoppen','Eén draaibare humbucker, 4 knoppen (Turner)':'Eén draaibare humbucker, 4 knoppen','Twee single coils, Tele-stijl':'Twee single coils, T-stijl','Los blad naast de pickups, zoals een Les Paul':'Los blad naast de pickups','Rond de pickups, zoals een Strat':'Rond de pickups'};
-const T_EN={'Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
+const T_EN={'Schakelaar':'Switch','Plaats schakelaar':'Switch position','Vanzelf':'Automatic','Bovenste hoorn, baskant':'Upper horn, bass side','Bovenste hoorn, diskant':'Upper horn, treble side','Naast de pickups':'Next to the pickups','In lijn met de knoppen':'In line with the knobs','3-weg toggle':'3-way toggle','3-weg schuif':'3-way blade','5-weg schuif':'5-way blade','Knoppen op de pickguard':'Knobs on the pickguard','Hoekig (rechte lijnen)':'Angular (straight lines)','Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':'The switch does not fit there on this shape; it now sits at the nearest good spot.','Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
   'Een beeld van de hele gitaar, met de gekoppelde kop':'A picture of the whole guitar, with its head','✋ Bewerken':'✋ Edit','Passend':'Fit','Inzoomen':'Zoom in','Uitzoomen':'Zoom out','Hele vorm tonen':'Show the whole shape','✨ Inspirator':'✨ Inspire me','Inspirator':'Inspire me','Willekeurige vormen en variaties':'Random shapes and variations','Je bewerkt:':'You are editing:','Je bewerkt de pickguard':'You are editing the pickguard','Punten en onderdelen slepen':'Drag points and parts',
   'Eén stap terug':'One step back','Eén stap terug (Ctrl+Z)':'One step back (Ctrl+Z)','Opnieuw':'Redo','Opnieuw (Ctrl+Y)':'Redo (Ctrl+Y)','Alle stappen':'All steps','Alle stappen zien en terugspringen':'See all steps and jump back','Opnieuw beginnen':'Start over','▴ Instellingen':'▴ Settings',
   'Sleep de punten · dubbeltik op de lijn = punt erbij · alles op de tekening is versleepbaar':'Drag the points · double-tap the line to add a point · everything on the drawing can be dragged',
@@ -530,7 +530,7 @@ const uid = () => Math.random().toString(36).slice(2,9);
 const fmt = (v,d=1) => (v==null||!isFinite(v)) ? '—' : v.toFixed(d).replace('.',',');
 const clone = o => JSON.parse(JSON.stringify(o));
 const esc = t => String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ctrlDef = (n,layout,sw,jack)=>({n,layout,sw,jack,knobD:25,items:[],edited:false});
+const ctrlDef = (n,layout,sw,jack)=>({n,layout,sw,jack,swPos:'auto',knobD:25,items:[],edited:false});
 const pgDef = (style,bottom=10,knobs=false)=>({style,margin:6,bottom,knobs,pts:null,edited:false,color:'wit',screws:true,tilt:0,curve:0,inset:0});
 
 // ================= standaardontwerpen =================
@@ -617,6 +617,9 @@ const BODY_PTS2={ // 10/11/2026: Firebird uit een 1:1-plan (Electric Herald), de
   stingray:[[-0.9,203.3],[6.9,203.3],[14.2,202.0],[19.4,197.7],[22.0,191.4],[24.3,185.4],[28.2,180.0],[33.6,175.3],[39.6,171.6],[45.9,169.3],[52.8,168.2],[60.1,168.4],[67.0,170.1],[73.0,173.6],[78.2,178.5],[82.3,184.3],[85.3,190.4],[88.3,196.4],[92.4,202.2],[97.8,206.5],[104.0,207.4],[110.2,204.6],[115.6,199.6],[119.7,193.8],[122.7,187.6],[124.7,180.9],[125.5,173.8],[125.8,166.2],[125.5,158.7],[124.9,151.6],[123.8,144.7],[122.1,137.8],[119.7,130.9],[117.1,124.0],[114.6,117.1],[112.0,110.2],[109.4,103.4],[107.0,96.5],[104.9,89.8],[102.7,83.3],[100.6,76.7],[98.8,69.6],[98.2,62.0],[98.6,54.5],[100.1,47.6],[102.5,41.3],[105.3,35.3],[108.5,29.3],[112.0,23.3],[115.4,17.2],[119.1,11.2],[123.0,5.2],[126.6,-0.9],[129.8,-6.9],[132.9,-12.9],[136.1,-18.9],[139.5,-25.0],[142.8,-31.0],[145.6,-37.0],[148.1,-43.3],[150.5,-50.0],[152.5,-56.8],[154.0,-63.7],[155.3,-70.6],[156.3,-77.7],[156.5,-85.1],[155.9,-92.2],[155.0,-99.1],[154.0,-105.9],[152.5,-112.8],[150.9,-119.5],[149.4,-125.8],[146.6,-131.6],[141.9,-137.0],[136.1,-141.9],[130.3,-146.6],[124.7,-151.2],[118.9,-155.3],[112.8,-158.9],[106.8,-162.1],[100.8,-164.9],[94.7,-167.3],[88.7,-169.7],[82.5,-172.3],[76.0,-174.8],[69.6,-177.2],[62.9,-178.9],[56.0,-180.0],[48.9,-180.7],[41.6,-181.1],[34.2,-181.5],[26.7,-181.7],[18.9,-181.7],[11.2,-181.7],[3.7,-181.5],[-3.4,-181.3],[-10.3,-181.5],[-17.0,-181.1],[-23.3,-179.2],[-29.3,-176.6],[-35.3,-174.2],[-41.3,-171.6],[-47.6,-168.6],[-54.3,-166.2],[-60.9,-164.3],[-67.4,-162.1],[-73.9,-160.0],[-80.1,-157.6],[-86.1,-155.0],[-92.2,-152.5],[-98.2,-149.9],[-104.2,-147.1],[-110.2,-143.8],[-116.3,-140.2],[-122.3,-136.1],[-128.3,-131.8],[-134.4,-127.3],[-140.4,-122.3],[-146.0,-116.9],[-150.9,-111.1],[-155.7,-105.1],[-160.2,-99.1],[-164.3,-93.0],[-168.0,-87.0],[-171.2,-81.0],[-174.0,-74.9],[-176.6,-68.7],[-178.9,-62.0],[-180.9,-55.1],[-182.4,-48.4],[-183.5,-42.0],[-184.5,-35.3],[-185.6,-28.2],[-186.0,-21.5],[-185.6,-15.7],[-184.5,-9.5],[-183.0,-2.8],[-180.9,3.4],[-178.1,9.5],[-174.6,15.5],[-171.0,21.5],[-167.7,27.6],[-164.5,33.6],[-160.9,39.6],[-157.0,45.7],[-153.5,51.7],[-150.5,57.7],[-146.9,63.5],[-142.5,69.1],[-139.1,74.9],[-136.5,81.0],[-133.3,87.0],[-129.6,93.2],[-126.2,99.7],[-123.4,106.2],[-122.1,112.8],[-121.7,119.9],[-121.4,127.5],[-121.9,135.0],[-123.2,142.1],[-124.9,149.0],[-126.6,155.9],[-128.3,162.8],[-130.1,169.7],[-131.8,176.6],[-133.5,183.5],[-135.2,190.4],[-137.0,197.2],[-138.5,204.1],[-139.8,211.0],[-140.6,218.1],[-140.6,225.7],[-140.2,233.2],[-139.3,240.3],[-137.4,246.8],[-136.1,252.6],[-135.9,258.4],[-133.9,264.4],[-130.9,270.5],[-127.7,276.5],[-123.0,282.1],[-117.1,286.6],[-111.3,290.9],[-104.4,291.1],[-97.1,283.6],[-93.2,274.8],[-92.2,267.9],[-91.5,261.0],[-91.1,254.1],[-90.4,247.2],[-89.1,240.5],[-86.8,234.3],[-82.9,228.5],[-77.5,223.7],[-71.3,220.7],[-64.4,219.4],[-57.1,220.1],[-50.2,222.7],[-44.1,227.0],[-38.8,231.9],[-33.8,233.6],[-30.4,229.5],[-29.3,222.2],[-29.3,214.5],[-28.0,207.8],[-23.5,204.1],[-16.4,203.3],[-8.6,203.3]],
 };
 const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; posts in snaarvolgorde (laag E eerst)
+  // 14/11/2026: Flying V '58 en '83 (Electric Herald), nut uit de nutlijn op het plan, mechaniekgaten uit de cirkels/kruisjes
+  v58:{nut:43.0,pts:[[-1.5,184],[4.5,183.5],[10.5,179],[13,174],[50.5,38,1],[39.5,32.5],[35.5,29],[29.5,23],[24,12.5],[21.5,0,1],[-21.5,0,1],[-24,12],[-30,23],[-35,29],[-39.5,32],[-50.5,37.5,1],[-49,45.5],[-13,175],[-10,180],[-6,182.5]],posts:[[-32.2,57.0],[-23.6,87.8],[-15.1,118.7],[15.1,118.7],[23.6,87.8],[32.1,57.1]]},
+  v83:{nut:43.0,pts:[[-2,200],[5.5,199.5],[11.5,195],[14.5,189.5],[48,49.5],[48.5,46.5,1],[33.5,32],[25.5,21],[22,11],[21.5,0,1],[-21.5,0,1],[-22.5,12.5],[-26,22],[-33,31.5],[-48.5,47,1],[-14.5,190],[-11.5,195.5],[-6.5,199]],posts:[[-33.0,60.2],[-24.4,95.9],[-16.1,131.6],[16.1,131.6],[24.5,95.9],[33.0,60.2]]},
   turner:{nut:43,pts:[[4,167],[24,155],[32,131],[36,100],[40,62],[43,30],[32,26],[24,16],[21.5,0.5,1],[-21.5,0,1],[-26,17],[-36,29],[-43,37],[-31,86],[-23,120],[-15,155]],posts:[[-25,57],[-19,87],[-12,118],[15,118],[20,87],[25,57]]}, // foto, ± 5 mm
   tele:{nut:42.2,pts:[[0,147],[5.5,166],[11.5,178],[21,181],[30,179.5],[37,174],[42,163.5],[41,150],[30,131],[33,118],[36.5,110],[39,90.5],[36.5,76],[30,59.5],[22,32],[21,0.5,1],[-21,0,1],[-25.5,8.5],[-36,17],[-37.5,21],[-23,71.5]],posts:[[-20.3,39.4],[-13.1,62.8],[-5.9,86.1],[1.2,109.4],[8.3,132.8],[15.4,156.1]]},
   strat:{nut:42.1,pts:[[0,144.5],[7.5,169],[20.5,181],[30.5,183.5],[42,180.5],[54.5,166.5],[55,150],[49,140],[37.5,132.5],[34.5,129,1],[34,126],[35.5,113],[45,72],[47,48,1],[36,38.5],[23,18.5],[21,0.5,1],[-21,0,1],[-21,0.5,1],[-23,14],[-33,20.5],[-35.5,24,1],[-35.5,28.5],[-18.5,84.5]],posts:[[-20.4,39.4],[-13.2,62.8],[-6,86.1],[1.1,109.4],[8.2,132.8],[15.3,156.1]]},
@@ -672,7 +675,7 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('mosrite','Mosrite-type',B.mosrite,false,{...FEN,pu1:PU('SC',40,-6),pu2:NOPU,pu3:PU('SC',150),ctrl:ctrlDef(2,'row','toggle3','top'),pg:pgDef('full',22)}),
   mkBody('redspecial','Red Special-type',B.redspecial,false,{...FEN,scale:610,frets:24,pocket:20,pu1:PU('SC',40),pu2:PU('SC',90),pu3:PU('SC',138),ctrl:ctrlDef(2,'row','none','side'),pg:pgDef('full',20)}),
   mkBody('explorer','Explorer-type',B.explorer,false,{...GIB,thick:35,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
-  mkBody('v','Flying V-type',B.v,false,{...GIB,thick:35,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'tri','toggle3','side'),pg:pgDef('none')}),
+  mkBody('v','Flying V-type',B.v,false,{...GIB,head:'ref-h-v58',thick:35,pocket:20,pu3:PU('HB',135),ctrl:ctrlDef(3,'tri','toggle3','side'),pg:pgDef('none')}),
   mkBody('moderne','Moderne-type',B.moderne,false,{...GIB,thick:35,pocket:30,ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('none')}),
   mkBody('turner','Model 1-type (Rick Turner)',B.turner,false,{...GIB,scale:629,frets:24,thick:55,heelW:53,spBridge:52.5,pocket:50,bridge:'tom',pu1:NOPU,pu2:NOPU,pu3:PU('HBR',103,-6),ctrl:ctrlDef(4,'fan','none','side'),pg:pgDef('none')}),
   mkBody('asher','T-Deluxe-type (Bill Asher, offset T)',B.asher,false,{...FEN,bridge:'tele',pu1:PU('SC',35,-8),pu2:NOPU,pu3:PU('SC',160),ctrl:ctrlDef(2,'plate','blade3','side'),pg:pgDef('none')}),
@@ -714,14 +717,16 @@ function REFS(){ const B=BODY_PTS; return [
   mkHeadR('firebird','Firebird-type kop (omgekeerd)','inline'),
   mkHeadR('n4','N4-type kop (Washburn, omgekeerd)','inline'),
   mkHeadR('tiger','Tiger-type kop (Doug Irwin, 3+3)','grover'),
+  mkHeadR('v58','Flying V-type kop (\'58, 3+3)','kluson'),
+  mkHeadR('v83','Flying V-type kop (\'83, puntig, 3+3)','grover'),
   mkHead('h-martin','Recht 3+3 (akoestisch-type, benadering)',[[0,190],[34,190],[38,182],[35,40],[24,6],[21.5,0,1],[0,0,1]],true,{tuner:'grover',nutW:43,layout:'split',first:45,spacing:45,xoff:22}),
   mkHead('h-bass','Bas-kop (4 op rij, benadering)',[[-20.5,0,1],[20.5,0,1],[28,25],[52,60],[48,100],[40,140],[48,190],[50,220],[35,240],[0,238],[-30,230],[-45,210],[-47,140],[-45,60],[-35,25]],false,{tuner:'bass',strings:4,nutW:41,spNut:30,layout:'inline',first:60,spacing:42,xoff:-14,slant:2}),
   mkBody('n-blad','Blad (natuur)',natB([[30,250,1],[52,240,0],[76,222,0],[96,200,0],[110,176,0],[116,148,0],[122,112,0],[140,66,0],[154,18,0],[154,-36,0],[138,-86,0],[108,-130,0],[68,-168,0],[30,-196,0]],[[30,250,1],[60,248,0],[92,236,0],[112,210,0],[118,172,0],[112,132,0],[120,92,0],[142,48,0],[160,2,0],[163,-48,0],[150,-96,0],[124,-138,0],[84,-172,0],[44,-196,0]],[[-6,-214,1]][0]),false,{...GIB,pg:pgDef('none')}),
-  mkBody('n-vleugel','Vleugel (natuur)',natB([[30,250,1],[44,240,0],[64,230,0],[86,218,0],[106,200,0],[120,176,0],[128,148,0],[136,114,0],[148,70,0],[160,20,0],[164,-36,0],[154,-90,0],[130,-134,0],[90,-162,0],[44,-175,0]],[[30,250,1],[33,264,0],[40,284,0],[52,306,0],[68,326,0],[88,342,0],[108,350,0],[124,346,0],[130,328,0],[128,300,0],[122,268,0],[120,234,0],[123,200,0],[131,164,0],[141,120,0],[153,72,0],[162,18,0],[165,-36,0],[156,-88,0],[132,-132,0],[92,-162,0],[46,-176,0]],[0,-178,0]),false,{...FEN}),
-  mkBody('n-schelp','Schelp (natuur)',natB([[30,250,1],[48,254,0],[62,254,0],[70,246,0],[74,232,0],[86,206,0],[102,172,0],[118,136,0],[134,98,0],[150,56,0],[162,16,0],[165,-27,0],[165,-39,0],[163,-51,0],[159,-63,0],[155,-74,0],[149,-85,0],[141,-95,0],[130,-102,0],[126,-113,0],[121,-124,0],[112,-133,0],[103,-141,0],[93,-148,0],[82,-154,0],[71,-159,0],[59,-161,0],[47,-162,0],[36,-170,0],[24,-174,0],[12,-176,0]],null,[0,-176,0]),false,{...GIB,pg:pgDef('none')}),
+  mkBody('n-vleugel','Vleugel (natuur)',natB([[30,250,1],[44,240,0],[64,230,0],[86,218,0],[106,200,0],[120,176,0],[128,148,0],[136,114,0],[148,70,0],[160,20,0],[164,-36,0],[154,-90,0],[130,-134,0],[90,-162,0],[44,-175,0]],[[30,250,1],[28.5,262,0],[28.5,278,0],[33,296,0],[46,315,0],[66,331,0],[88,343,0],[108,350,0],[124,346,0],[130,328,0],[128,300,0],[122,268,0],[120,234,0],[123,200,0],[131,164,0],[141,120,0],[153,72,0],[162,18,0],[165,-36,0],[156,-88,0],[132,-132,0],[92,-162,0],[46,-176,0]],[0,-178,0]),false,{...FEN}),
+  mkBody('n-schelp','Schelp (natuur)',natB([[30,250,1],[48,249,0],[62,246,0],[70,240,0],[74,230,0],[86,206,0],[102,172,0],[118,136,0],[134,98,0],[150,56,0],[162,16,0],[165,-27,0],[165,-39,0],[163,-51,0],[159,-63,0],[155,-74,0],[149,-85,0],[141,-95,0],[130,-102,0],[126,-113,0],[121,-124,0],[112,-133,0],[103,-141,0],[93,-148,0],[82,-154,0],[71,-159,0],[59,-161,0],[47,-162,0],[36,-170,0],[24,-174,0],[12,-176,0]],null,[0,-176,0]),false,{...GIB,pg:pgDef('none')}),
   mkBody('n-kiezel','Kiezel (natuur)',natB([[30,250,1],[52,248,0],[76,238,0],[96,220,0],[108,194,0],[114,160,0],[120,120,0],[132,75,0],[146,25,0],[152,-30,0],[144,-82,0],[118,-128,0],[76,-158,0]],[[30,250,1],[56,248,0],[84,240,0],[108,222,0],[124,194,0],[134,158,0],[144,115,0],[156,65,0],[164,15,0],[164,-40,0],[152,-90,0],[126,-132,0],[84,-160,0]],[[6,-170,0]][0]),false,{...GIB,pg:pgDef('none')}),
   mkBody('n-zandloper','Zandloper (natuur)',natB([[30,250,1],[64,247,0],[104,232,0],[134,200,0],[146,160,0],[136,118,0],[106,86,0],[96,60,0],[112,28,0],[146,-6,0],[160,-48,0],[152,-96,0],[124,-138,0],[80,-165,0],[38,-174,0]],null,[[0,-177,0]][0]),false,{...GIB,pg:pgDef('none')}),
-  mkBody('n-golf','Golf (natuur)',natB([[30,250,1],[46,242,0],[68,234,0],[90,222,0],[108,204,0],[121,180,0],[128,152,0],[135,118,0],[147,74,0],[159,24,0],[164,-34,0],[154,-90,0],[130,-134,0],[90,-162,0],[44,-175,0]],[[30,250,1],[36,266,0],[46,284,0],[58,300,0],[64,314,0],[62,328,1],[76,340,0],[98,344,0],[118,334,0],[132,312,0],[138,282,0],[138,250,0],[134,216,0],[132,184,0],[137,148,0],[148,104,0],[159,56,0],[166,4,0],[165,-48,0],[153,-97,0],[127,-138,0],[88,-164,0],[44,-176,0]],[0,-178,0]),false,{...FEN}),
+  mkBody('n-golf','Golf (natuur)',natB([[30,250,1],[46,242,0],[68,234,0],[90,222,0],[108,204,0],[121,180,0],[128,152,0],[135,118,0],[147,74,0],[159,24,0],[164,-34,0],[154,-90,0],[130,-134,0],[90,-162,0],[44,-175,0]],[[30,250,1],[28.5,262,0],[28.5,280,0],[34,298,0],[46,314,0],[58,326,1],[76,340,0],[98,344,0],[118,334,0],[132,312,0],[138,282,0],[138,250,0],[134,216,0],[132,184,0],[137,148,0],[148,104,0],[159,56,0],[166,4,0],[165,-48,0],[153,-97,0],[127,-138,0],[88,-164,0],[44,-176,0]],[0,-178,0]),false,{...FEN}),
   mkBody('n-gotisch','Gotische boog (architectuur)',natB([[30,250,1],[33,236,0],[40,222,0],[50,212,0],[62,210,0],[76,218,0],[88,236,0],[96,260,0],[99,286,0],[96,308,0],[90,324,1],[106,322,0],[124,308,0],[136,284,0],[142,254,0],[142,222,0],[136,190,0],[128,158,0],[126,126,0],[134,92,0],[150,52,0],[162,8,0],[164,-42,0],[154,-92,0],[130,-134,0],[90,-162,0],[44,-175,0]],null,[0,-177,0]),false,{...GIB}),
   mkBody('n-romaans','Romaanse boog (architectuur)',natB([[30,250,1],[32,239,0],[36,230,0],[44,222,0],[53,218,0],[64,216,0],[75,218,0],[84,222,0],[92,230,0],[96,239,0],[98,250,0],[98,268,0],[99,286,0],[102,297,0],[110,304,0],[120,307,0],[131,304,0],[138,297,0],[141,286,0],[141,268,0],[143,240,0],[140,206,0],[132,172,0],[127,140,0],[128,116,0],[134,92,0],[150,52,0],[162,8,0],[164,-42,0],[154,-92,0],[130,-134,0],[90,-162,0],[44,-175,0]],null,[0,-177,0]),false,{...GIB}),
   mkBody('n-deco','Art deco (architectuur)',natB([[30,250,1],[70,250,1],[104,222,1],[110,178,1],[100,140,1],[112,110,1],[150,60,1],[162,10,1],[162,-60,1],[140,-118,1],[96,-156,1],[40,-170,1]],null,[[0,-170,1]][0]),false,{...FEN,pg:pgDef('none')}),
@@ -742,7 +747,7 @@ function REFS(){ const B=BODY_PTS; return [
 
 // ================= opslag =================
 function migrate(d){
-  if (d.type==='body'){ const b=defaultBody().set; for (const k in b) if (d.set[k]===undefined) d.set[k]=clone(b[k]); ['pu1','pu2','pu3'].forEach(k=>{ if(d.set[k].a==null) d.set[k].a=0; }); if(d.set.inside==='light') d.set.inside='semi'; }   // lichtkamers bestaan niet meer (Tom 14/11: solid of semi-hollow)
+  if (d.type==='body'){ const b=defaultBody().set; for (const k in b) if (d.set[k]===undefined) d.set[k]=clone(b[k]); ['pu1','pu2','pu3'].forEach(k=>{ if(d.set[k].a==null) d.set[k].a=0; }); if(d.set.inside==='light') d.set.inside='semi'; if(d.set.ctrl&&!d.set.ctrl.swPos) d.set.ctrl.swPos='auto'; }   // lichtkamers bestaan niet meer (Tom 14/11: solid of semi-hollow)
   else { const h=defaultHead().set; for (const k in h) if (d.set[k]===undefined) d.set[k]=h[k]; }
   return d;
 }
@@ -888,6 +893,8 @@ const yToFret = (s,y) => y>0 ? 12*Math.log2(s.scale/y) : null;
 // de toets loopt tot een gekozen fret (standaard de laatste), plus een stukje voorbij die fret
 const FB_OVER=5, fbFret=s=>Math.max(1,Math.round(s.fbFret!=null?s.fbFret:s.frets)), fbEndY=s=>fretY(s,fbFret(s))-FB_OVER;
 function neckHW(s,y){ const yN=s.scale, yH=fretY(s,s.frets); return (s.nutW/2) + (s.heelW/2 - s.nutW/2)*(yN-y)/(yN-yH); }
+// Halsvak (Tom 14/11): de hals loopt in de body door met dezelfde taper tot waar hij stopt; geen rechthoek op de breedte bij de laatste fret.
+function pocketRing(s,ctx,ext){ const a=ctx.pocketEnd, b=ctx.topY+(ext||0), w=y=>neckHW(s,y); return [{x:-w(b),y:b},{x:w(b),y:b},{x:w(a),y:a},{x:-w(a),y:a}]; }
 function stringXsNut(s){ const n=s.strings; return [...Array(n)].map((_,i)=> n>1 ? -s.spNut/2 + i*s.spNut/(n-1) : 0); }
 function offsetPoly(poly,m){
   let A=0; poly.forEach((p,i)=>{ const q=poly[(i+1)%poly.length]; A+=p.x*q.y-q.x*p.y; });
@@ -1040,7 +1047,7 @@ function spiral(p0,ok,maxR=130,step=5){ if(ok(p0)) return p0; for(let r=step;r<=
 function bodyCtx(d){
   const g=geom(d), s=d.set, topY=topOf(g), pocketEnd=topY-s.pocket, fbEnd=fbEndY(s), neckStop=Math.min(pocketEnd,fbEnd);
   // alles wat hals of toets is: daar mag geen pickup of pickguard komen
-  const neckRect={cx:0,cy:(neckStop+topY+300)/2,w:s.heelW,h:topY+300-neckStop,a:0};
+  const neckRect={cx:0,cy:(neckStop+topY+300)/2,w:Math.max(s.heelW,2*neckHW(s,neckStop)),h:topY+300-neckStop,a:0};
   const pus=['pu1','pu2','pu3'].map(k=>{ const p=s[k], t=PUS[p.t]; if(!t||!t[3]) return null;
     return {k, route:{cx:0,cy:p.d,w:t[3],h:t[4],a:p.a||0}, cover:{cx:0,cy:p.d,w:t[1],h:t[2],a:p.a||0}}; }).filter(Boolean);
   const br=(BRIDGES[s.bridge]||BRIDGES.none).p;
@@ -1073,7 +1080,7 @@ function puReason(ctx,k,R){
   if (!rectInBody(R,ctx.g.poly,3)) return 'valt (bijna) buiten de body';
   for (const o of ctx.pus) if (o.k!==k && rectGap(R,o.route)<3) return `te dicht bij de ${PUNAME[o.k]}pickup (min. 3 mm hout)`;
   if (!(k==='pu1'&&ctx.holdsPu1)) for (const b of ctx.br) if (rectGap(R,b)<2) return 'raakt de brug';
-  { const pocketR={cx:0,cy:(ctx.pocketEnd+ctx.topY+300)/2,w:ctx.s.heelW,h:ctx.topY+300-ctx.pocketEnd,a:0}, fbR={cx:0,cy:(ctx.fbEnd+ctx.topY+300)/2,w:ctx.s.heelW,h:ctx.topY+300-ctx.fbEnd,a:0}, t=PUS[ctx.s[k].t]||[0,R.w,R.h], C={cx:R.cx,cy:R.cy,a:R.a,w:t[1]||R.w,h:t[2]||R.h};
+  { const pocketR={cx:0,cy:(ctx.pocketEnd+ctx.topY+300)/2,w:Math.max(ctx.s.heelW,2*neckHW(ctx.s,ctx.pocketEnd)),h:ctx.topY+300-ctx.pocketEnd,a:0}, fbR={cx:0,cy:(ctx.fbEnd+ctx.topY+300)/2,w:ctx.s.heelW,h:ctx.topY+300-ctx.fbEnd,a:0}, t=PUS[ctx.s[k].t]||[0,R.w,R.h], C={cx:R.cx,cy:R.cy,a:R.a,w:t[1]||R.w,h:t[2]||R.h};
     if (rectGap(R,pocketR)<1) return 'loopt in de halsvoet';
     if (rectGap(C,fbR)<0.5&&rectDist({x:C.cx,y:C.cy},fbR)<C.h) return 'zit onder de toets'; }
   const its=ctx.s.ctrl.items||[];
@@ -1156,14 +1163,21 @@ function autoControls(d,ctx){
     const A=spiral(pref,ok,140,5)||pref; items.push(...mk(A));
   } }
   if (c.sw!=='none'){
-    let pref;
+    let pref, fixed=null; const sp_=c.swPos||'auto', hwN=d.set.heelW/2;
+    // gekozen plaats (Tom 14/11): bovenste hoorn baskant of diskant, naast de pickups, of in lijn met de knoppen
+    if (sp_==='bas'||sp_==='dis'){ for(let y=ctx.topY-30; y>ctx.topY-120 && !fixed; y-=5){ const hx=hits(g.poly,y); if(hx.length<2) continue; const e=sp_==='bas'?hx[0]:hx[hx.length-1], room=sp_==='bas'?-e-hwN:e-hwN; if(room<36) continue; const q={x:sp_==='bas'?(e-hwN)/2:(e+hwN)/2,y}; const tmp=[...items,{t:'sw',...q}]; if(!itemReason(ctx,tmp,tmp.length-1,q)) fixed=q; } }
+    else if (sp_==='pu'){ const p1=d.set.pu1, p2=d.set.pu2, pw=Math.max(0,...ctx.pus.map(p=>p.cover.w/2)); fixed={x:pw+16,y:(PUS[p2.t][1]?(p1.d+p2.d)/2:p1.d+30)}; }
+    else if (sp_==='knop' && kn && kn.length){ const a=kn[kn.length-1], b=kn[kn.length-2]||{x:a.x,y:a.y+sp}, l=Math.hypot(a.x-b.x,a.y-b.y)||1; fixed={x:a.x+(a.x-b.x)/l*sp*1.05,y:a.y+(a.y-b.y)/l*sp*1.05}; }
+    if (fixed){ const tmp=[...items,{t:'sw',...fixed}]; const q=spiral(fixed,q=>!itemReason(ctx,tmp,tmp.length-1,q),45,3); if(q){ items.push({t:'sw',x:q.x,y:q.y}); c.swMiss=false; } else fixed=null; }
+    if (sp_!=='auto' && !fixed) c.swMiss=true; else if(sp_==='auto') c.swMiss=false;
+    if (!fixed){
     if (ideaOf(c)==='plate' && kn && kn.length){ const a=kn[1]?Math.atan2(kn[0].x-kn[1].x,kn[0].y-kn[1].y):0; pref={x:kn[0].x+38*Math.sin(a),y:kn[0].y+38*Math.cos(a)}; }
     else if (c.sw==='toggle3'){ const y=ctx.topY-35, hx=hits(g.poly,y); pref = hx.length && hx[0] < -d.set.heelW/2-30 ? {x:(hx[0]-d.set.heelW/2)/2,y} : null; }
     else { const p1=d.set.pu1, p2=d.set.pu2, pw=Math.max(0,...ctx.pus.map(p=>p.cover.w/2)); pref={x:pw+16,y:(PUS[p2.t][1]?(p1.d+p2.d)/2:p1.d+30)}; }
     if (!pref){ const last=items[items.length-1]; pref=last?{x:last.x+sp*0.4,y:last.y-sp*0.9}:{x:xr*0.6,y:yRef}; }
     const it={t:'sw',x:pref.x,y:pref.y}; items.push(it);
     const p=spiral(pref,q=>!itemReason(ctx,items,items.length-1,q),120,5)||pref; it.x=p.x; it.y=p.y;
-  }
+  } }
   const yJ=g.minY+(ctx.topY-g.minY)*0.2, hj=hits(g.poly,yJ), xJ=hj.length?hj[hj.length-1]:100;
   const jack={t:'jack',x:xJ,y:yJ}; items.push(jack);
   const ji=items.length-1;
@@ -1175,7 +1189,9 @@ function autoControls(d,ctx){
   c.items=items;
 }
 // de pickguard blijft altijd binnen de body: wat de vloeiende lijn tussen de ankerpunten buiten de rand duwt, wordt teruggelegd op de rand (min. de marge)
-function autoPG(d,ctx){ autoPG0(d,ctx); const pg=d.set.pg; if(pg.pts&&pg.pts.length>=3) pgContain(d,ctx); }
+function autoPG(d,ctx){ autoPG0(d,ctx); const pg=d.set.pg; if(pg.pts&&pg.pts.length>=3){ if(pg.facet) pgFacet(pg); pgContain(d,ctx); if(pg.facet) pg.pts.forEach(p=>p.c=true); } }
+// hoekig (Tom 14/11): minder punten, rechte lijnen ertussen. Een rechte lijn ligt binnen een bolle rand; pgContain legt wat erbuiten valt terug.
+function pgFacet(pg){ const P=pg.pts; if(P.length<=6){ P.forEach(p=>p.c=true); return; } const keep=P.filter((p,i)=>p.c||i%3===0); pg.pts=keep.map(p=>({...p,c:true})); }
 function pgContain(d,ctx){ const pg=d.set.pg, g=ctx.g, m=Math.max(1,(pg.margin||0)-1.5);
   for(let r=0;r<3;r++){ const allow=offsetPoly(g.poly,m+r*1.5), poly=geom({pts:pg.pts,sym:false,tension:d.tension}).poly;
     let bad=0; const Q=poly.map(p=>{ if(inside(allow,p)) return {x:p.x,y:p.y}; bad++; const q=nearestOnPoly(allow,p); return {x:q.x,y:q.y}; });
@@ -1232,7 +1248,8 @@ function autoPG0(d,ctx){
 // tenzij je hem zelf kiest. De halspickup begrenst hoe diep hij kan: dan meldt de queeste dat het krap is.
 function pocketRoom(d,ctx){ const tops=ctx.pus.map(p=>p.route.cy+Math.max(p.route.h,p.route.w*Math.abs(Math.sin((p.route.a||0)*Math.PI/180)))/2); return tops.length?ctx.topY-Math.max(...tops)-3:Infinity; }
 function autoPocket(d){ const s=d.set; if(d.ref||s.pocketMan) return false; const J=jointNeed(s), ctx=bodyCtx(d), room=pocketRoom(d,ctx);
-  const v=Math.max(10,Math.min(Math.ceil(J.g),Math.floor(room*2)/2)); if(Math.abs(v-s.pocket)<0.25) return false; s.pocket=v; return true; }
+  // Tom 14/11: de hals loopt doorgaans dieper in de body, tot vlak voor de halspickup (hoogstens 100 mm)
+  const v=Math.max(10,Math.min(Math.floor(room*2)/2,Math.max(Math.ceil(J.g),100))); if(Math.abs(v-s.pocket)<0.25) return false; s.pocket=v; return true; }
 function refreshAuto(d,light){
   if (d.type==='headstock'){ if(d.set.pitch==null) d.set.pitch=pitchOf(d); if(!light && !d.ref && d.set.layout!=='custom' && d.set.auto!==false) placePosts(d); return; }
   if (d.type!=='body') return;
@@ -1285,7 +1302,7 @@ function bodyChecks(d){
   const ctx=bodyCtx(d), out=[], c=d.set.ctrl, its=c.items||[];
   ctx.pus.forEach(p=>{ const r=puReason(ctx,p.k); if(r) out.push(`${PUNAME[p.k][0].toUpperCase()+PUNAME[p.k].slice(1)}pickup ${r}`); });
   its.forEach((it,i)=>{ const r=itemReason(ctx,its,i,it); if(r){ const n=itemName(its,i); out.push(`${n[0].toUpperCase()+n.slice(1)} ${r}`); } });
-  { const h=d.set.heelW/2-1; for(let y=ctx.pocketEnd+2;y<ctx.topY-3;y+=6){ const xs=hits(ctx.g.poly,y); if(xs.length<2||xs[0]>-h||xs[xs.length-1]<h){ out.push('De vorm snijdt in de halsvoet: de hals heeft daar geen hout rondom'); break; } } }
+  { for(let y=ctx.pocketEnd+2;y<ctx.topY-3;y+=6){ const h=neckHW(d.set,y)-1, xs=hits(ctx.g.poly,y); if(xs.length<2||xs[0]>-h||xs[xs.length-1]<h){ out.push('De vorm snijdt in de halsvoet: de hals heeft daar geen hout rondom'); break; } } }
   if (d.set.pg.style!=='none' && !d.set.pg.pts) out.push('Pickguard past niet met deze instellingen (te weinig ruimte)');
   { const s=d.set, fb=fbFret(s); if (fb<s.frets) out.push(`Fret ${fb+1}${s.frets>fb+1?' tot '+s.frets:''} ${s.frets>fb+1?'liggen':'ligt'} voorbij de toets: laat de toets verder lopen of neem minder frets`); }
   if (ctx.br.some(b=>b.r!=null?!(inside(ctx.g.poly,{x:b.x,y:b.y})&&distToPoly(ctx.g.poly,{x:b.x,y:b.y})>=b.r+4):!rectInBody(b,ctx.g.poly,4))) out.push('De brug valt (bijna) buiten de body (min. 4 mm hout rondom)');
@@ -1482,7 +1499,7 @@ function bodyOverlay(d,g){
   const s=d.set, v=lib.view, ctx=bodyCtx(d); let o='';
   if (v.routes && d.type==='body') chamberPolys(d).forEach(c=>{ o+=`<polygon points="${c.map(p=>toS(p.x,p.y).join(',')).join(' ')}" fill="#2f6f8f" fill-opacity=".07" stroke="#2f6f8f" stroke-dasharray="5 4" stroke-width="1"/>`; });
   if (v.routes){
-    o+=rectSVG({cx:0,cy:(ctx.pocketEnd+ctx.topY)/2,w:s.heelW,h:Math.max(0,ctx.topY-ctx.pocketEnd),a:0},ROUTE);
+    if(ctx.topY>ctx.pocketEnd) o+=`<polygon points="${pocketRing(s,ctx).map(p=>toS(p.x,p.y).join(',')).join(' ')}" ${ROUTE}/>`;
     ctx.pus.forEach(p=>o+=rectSVG(p.route,ROUTE));
     const cc=cavityChain(ctx), w=view.s;
     const thick=(pts,wd,col,fill)=>polySVG(pts,`stroke="${col}" stroke-width="${wd*w}" stroke-linecap="round" stroke-linejoin="round"`)+polySVG(pts,`stroke="${fill}" stroke-width="${Math.max(0,(wd-1.4)*w)}" stroke-linecap="round" stroke-linejoin="round"`);
@@ -1744,7 +1761,7 @@ function holeChecks(d){ const H=holePolys(d), out=[]; if(!H.length) return out; 
 function shPic(k){ if(k==='none') return '<svg viewBox="0 0 40 50"><path d="M8 8L32 42M32 8L8 42" stroke="#c9bfb2" stroke-width="2"/></svg>'; const R=shRings(k,40,'SCG'); return `<svg viewBox="-20 -25 40 50"><path d="${R.map(r=>'M'+r.map(p=>p.x.toFixed(1)+','+(-p.y).toFixed(1)).join('L')+'Z').join('')}" fill="#2a2420" transform="rotate(-6)"/></svg>`; }
 function pgHTML(){ return `<section><h2>Pickguard</h2>
       <div class="ideas bouw">${Object.entries(PG_STYLES).map(([k,v])=>`<button class="idea" data-act="pgStyle" data-k="${k}" title="${v[1]}">${pgPic(k)}${v[0]}</button>`).join('')}</div>
-      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
+      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${chk('set.pg.facet','Hoekig (rechte lijnen)','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
       <div class="btns"><button data-act="pgVary">🎲 Variatie</button><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
       <p class="hint" id="pgState"></p></div></section>`; }
 function holesHTML(){ return `<section><h2>Klankgaten</h2><div class="ideas bouw sh">${['none',...Object.keys(SH_TYPES)].map(k=>`<button class="idea" data-act="shType" data-k="${k}">${shPic(k)}${k==='none'?'Geen':SH_TYPES[k].n}</button>`).join('')}</div>
@@ -1810,6 +1827,7 @@ function buildPanel(){
       <div class="btns"><button data-act="knobSurprise">✨ Nog een idee</button><button data-act="autoCtrl" id="knobBack">Terug naar het idee</button></div>
       <p class="hint" id="ctrlState"></p>
       ${sel_('set.ctrl.sw','Schakelaar',{none:'Geen',toggle3:'3-weg toggle',blade3:'3-weg schuif',blade5:'5-weg schuif'},'data-after="ctrl"')}
+      ${d.set.ctrl.sw!=='none'?sel_('set.ctrl.swPos','Plaats schakelaar',{auto:'Vanzelf',bas:'Bovenste hoorn, baskant',dis:'Bovenste hoorn, diskant',pu:'Naast de pickups',knop:'In lijn met de knoppen'},'data-after="ctrl"')+'<p class="hint" id="swState" style="color:#b5541c"></p>':''}
       ${sel_('set.ctrl.jack','Jack',{side:'In de zijkant',top:'Op de top (cup of plaat)'},'data-after="ctrl"')}
       ${chk('set.ctrl.loose','Elke knop apart slepen')}
       ${sel_('set.strapMode','Bovenste riemknop',{ideal:'Ideaal',trad:'Traditioneel'})}<p class="hint" id="strapState"></p></section>`;
@@ -2018,7 +2036,7 @@ const getP=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
 function setP(o,p,v){ const ks=p.split('.'), l=ks.pop(); const t=ks.reduce((a,k)=>a[k],o); t[l]=v; }
 function syncPanel(){
   const d=D(), g=geom(d), tgt=T();
-  const key=[d.id,sel,d.sym,!!tgt.isPG,d.type==='headstock'?d.posts.length+d.set.layout:'',!!d.bg,d.type==='body'?d.set.wood+d.set.pg.style:''].join('|');
+  const key=[d.id,sel,d.sym,!!tgt.isPG,d.type==='headstock'?d.posts.length+d.set.layout:'',!!d.bg,d.type==='body'?d.set.wood+d.set.pg.style+(d.set.ctrl.sw!=='none'):''].join('|');
   if (key!==panelKey){
     panelKey=key;
     const pb=$('#ptBox');
@@ -2080,6 +2098,7 @@ function syncIdeas(d){
   const reach=kn.length?Math.min(...kn.map(k=>Math.hypot(k.x-xb,k.y))):0, word=reach<75?'dicht bij de hand':reach<110?'goed bereikbaar':'ver van de hand';
   $('#ctrlState').innerHTML=!kn.length?'':c.edited?`Zelf geschikt, volume ${word}. Sleep een knop en het groepje schuift mee. Sleep de omcirkelde en het groepje draait en spreidt.`:`<b>${I.n}</b> (${I.from}). ${I.why} Volume ${word}.`;
   $('#knobBack').style.display=c.edited?'':'none';
+  { const e=$('#swState'); if(e) e.textContent=c.sw!=='none'&&c.swMiss&&(c.swPos||'auto')!=='auto'&&!c.edited?'Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':''; }
   if (drag) return;
   clearTimeout(ideasT); ideasT=setTimeout(()=>{ if(D()===d) drawIdeas(d); },box.firstChild?160:0);
 }
@@ -2527,7 +2546,7 @@ function exportSvg(d,pgOnly){
     out+=`<g id="nut"><line x1="${X(-s.nutW/2)}" y1="${Y(0)}" x2="${X(s.nutW/2)}" y2="${Y(0)}" stroke="#0000ff" stroke-width="0.2"/></g>\n`;
   } else {
     const ctx=bodyCtx(d), cc=cavityChain(ctx);
-    out+=`<g id="halspocket">${rectP({cx:0,cy:(ctx.pocketEnd+ctx.topY)/2,w:s.heelW,h:ctx.topY-ctx.pocketEnd,a:0})}</g>\n`;
+    out+=`<g id="halspocket"><polygon points="${pocketRing(s,ctx).map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#000" stroke-width="0.3"/></g>\n`;
     { const H=holePolys(d); if(H.length) out+=`<g id="klankgaten">${H.map(h=>h.rings.map(r=>`<polygon points="${r.map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#000" stroke-width="0.3"/>`).join('')).join('')}</g>\n`; }
     if (ctx.fbEnd<ctx.topY){ const a=ctx.fbEnd, b=ctx.topY; out+=`<g id="toets-op-body"><polygon points="${[[-neckHW(s,b),b],[neckHW(s,b),b],[neckHW(s,a),a],[-neckHW(s,a),a]].map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="#7a5a3a" stroke-width="0.3" stroke-dasharray="2 1"/></g>\n`; }
     { const ch=chamberPolys(d); if(ch.length) out+=`<g id="kamers">${ch.map(c=>`<polygon points="${c.map(p=>X(p.x)+','+Y(p.y)).join(' ')}" fill="none" stroke="#0066cc" stroke-width="0.2"/>`).join('')}</g>\n`; }
@@ -2566,7 +2585,7 @@ function fitPickups(d){
 }
 // nieuwe body: mengsel van echte vormen (per helft andere ouders), met zachte vervorming
 // ---- koppen: mengsels van echte koppen (zelfde familie: 3+3, op rij, omgekeerd) ----
-const HEAD_FAM={split:['lp','moderne','prs','mosrite','dano','dbz','tiger','n-gotisch','n-tulp','n-deco','n-waaier','n-ui','n-blad','n-vlam','n-schelp','n-zeis'],inline:['tele','strat','strat70','explorer','rhoads','c5150','n-veer','n-golfkam','n-zwaan','n-spits'],rev:['firebird','n4']};
+const HEAD_FAM={split:['v58','v83','lp','moderne','prs','mosrite','dano','dbz','tiger','n-gotisch','n-tulp','n-deco','n-waaier','n-ui','n-blad','n-vlam','n-schelp','n-zeis'],inline:['tele','strat','strat70','explorer','rhoads','c5150','n-veer','n-golfkam','n-zwaan','n-spits'],rev:['firebird','n4']};
 let HVECS=null;
 // denkt mee: past het gekozen patroon niet in deze kop, dan rekt de kop tot het wel past (of blijft hij zoals hij was)
 function growHead(d){
@@ -2626,16 +2645,16 @@ function fitMap(gs,w,h,pad){
 function thumbSVG(d,w,h,ghost){
   const g=geom(d), gg=ghost?geom(ghost):null, m=fitMap(gg?[g,gg]:[g],w,h,10), c=m(0,0)[0];
   let o=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><line x1="${c}" y1="0" x2="${c}" y2="${h}" stroke="#e3cdb9" stroke-dasharray="4 3"/>`;
-  if (d.type==='body'){ const s=d.set, tY=topOf(g), a=m(-s.heelW/2,tY+400), b=m(s.heelW/2,tY-(s.pocket||40)); o+=`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
+  if (d.type==='body'){ const s=d.set, tY=topOf(g), y0=tY-(s.pocket||40), y1=tY+400, q=[[-neckHW(s,y1),y1],[neckHW(s,y1),y1],[neckHW(s,y0),y0],[-neckHW(s,y0),y0]].map(([x,y])=>m(x,y).join(',')).join(' '); o+=`<polygon points="${q}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   o+=`<path d="${pathD(g.segs,m)}" fill="#f3e6d6" stroke="#1f1c18" stroke-width="1.5"/>`;
   if (gg) o+=`<path d="${pathD(gg.segs,m)}" fill="none" stroke="#2f6f8f" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>`;
-  if (d.type==='body'){ const s=d.set, tY=topOf(g), a=m(-s.heelW/2,tY+400), b=m(s.heelW/2,tY-2); o+=`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
+  if (d.type==='body'){ const s=d.set, tY=topOf(g), y0=tY-2, y1=tY+400, q=[[-neckHW(s,y1),y1],[neckHW(s,y1),y1],[neckHW(s,y0),y0],[-neckHW(s,y0),y0]].map(([x,y])=>m(x,y).join(',')).join(' '); o+=`<polygon points="${q}" fill="#e6d3bc" stroke="#9b8b78" stroke-width="1"/>`; }
   if (d.type==='headstock'){ const k=m(1,0)[0]-m(0,0)[0]; d.posts.forEach(p=>{ const q=m(p.x,p.y); o+=`<circle cx="${q[0]}" cy="${q[1]}" r="${d.set.holeD/2*k}" fill="#fff" stroke="#2f6f8f"/>`; }); }
   return o+'</svg>';
 }
 const MB=$('#mbox');
 let insp={mode:'free',wild:0.5,items:[],pick:-1,goals:{bal:1,seat:1,reach:1,high:1,own:1,pull:1,short:1},run:0};
-insp.src=Object.assign({klas:1,nat:1,arch:1,wild:0,ruw:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!==false; if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
+insp.src=Object.assign(LIGHT?{klas:1,nat:0,arch:0,wild:0,ruw:0}:{klas:1,nat:1,arch:1,wild:0,ruw:0},lib.view.inspSrc||{}); insp.org=lib.view.inspOrg!=null?lib.view.inspOrg!==false:!LIGHT;   // Forma (Tom 14/11): standaard enkel klassiekers, organische zwaai uit if(lib.view.inspWild!=null) insp.wild=lib.view.inspWild;
 const GOALS={body:[['bal','Staand'],['seat','Zittend'],['reach','Nut dichterbij'],['high','Hoge frets'],['own','Licht eigen'],['light','Lichter']],headstock:[['pull','Rechte trek'],['short','Korte snaar'],['lightH','Lichte kop'],['tree','Zonder snaarboom']]};
 const clamp01=v=>Math.max(0,Math.min(1,v));
 function goalVals(d){ refreshAuto(d);
@@ -2834,7 +2853,21 @@ function hornWidths(poly){ const neck=Math.max(...poly.filter(p=>Math.abs(p.x)<P
   return out; }
 const HORNW={}; function refHornMin(k){ if(HORNW[k]==null){ const r=lib.designs.find(d=>d.id==='ref-'+k); const w=r?hornWidths(geom(r).poly):[]; HORNW[k]=w.length?Math.min(...w):99; } return HORNW[k]; }
 function hornsOK(poly,keys){ const need=Math.min(26,Math.min(...keys.map(refHornMin))-3), w=hornWidths(poly); return w.every(x=>x>=need); }
-function finishBody(poly,maxL){ const p0=polishBody(poly); if(!bodyOK(p0,maxL)) return null; let p=fairBody(p0,60); if(!bodyOK(p,maxL)) p=p0; return lineJitter(p)<=JIT_MAX?p:null; }
+// Halsaansluiting (Tom 14/11): links en rechts moet duidelijk zijn waar de hiel de body raakt en waar niet.
+// Loopt de rand tot op 10 mm van de hals omhoog, dan legt neckSnap hem tegen de hals (raakt). Echte gitaren die de hals volgen (Iceman, L-5, StingRay) blijven er ook binnen 5 mm.
+// neckOK weigert een oortje: een lage bult vlak naast de hals die meteen weer zakt.
+function neckSnap(poly){ const H=halves(poly), fx=h=>{ const P=h.map(p=>({x:p.x,y:p.y})); let s=0; while(s<P.length-1&&P[s].x<=POCKET_HW+1) s++; const y0=P[s].y;
+    for(let i=s;i<P.length*0.6;i++){ if(P[i].x>POCKET_HW+70) break; if(P[i].y>y0+2&&P[i].x<POCKET_HW+10) P[i].x=POCKET_HW; } return P; };
+  const t=fx(H.treble), b=fx(H.bass).map(p=>({x:-p.x,y:p.y})).reverse(); return t.concat(b.slice(1,-1)); }
+function neckOK(poly){ const H=halves(poly); for(const side of ['treble','bass']){ const h=H[side]; let s=0; while(s<h.length-1&&h[s].x<=POCKET_HW+1) s++; const y0=h[s].y; let mi=s;
+    let b0=null,b1=null; for(let i=s;i<h.length*0.6;i++){ if(h[i].x>POCKET_HW+70) break; const gp=h[i].x-POCKET_HW; if(h[i].y-y0>=8&&gp>6&&gp<14){ b0=b0==null?h[i].y:Math.min(b0,h[i].y); b1=b1==null?h[i].y:Math.max(b1,h[i].y); } if(h[i].y>h[mi].y) mi=i; }
+    if(b0!=null&&b1-b0>=15) return false;   // een spleet: de rand blijft over 15 mm hoogte op 6-14 mm van de hals
+    const rise=h[mi].y-y0, gx=h[mi].x-POCKET_HW; if(rise<4||gx>=45) continue;
+    let after=h[mi].y, L=0, higher=false; for(let i=mi+1;i<h.length*0.7;i++){ L+=Math.hypot(h[i].x-h[i-1].x,h[i].y-h[i-1].y); if(L>90) break; after=Math.min(after,h[i].y); if(h[i].y>h[mi].y+1) higher=true; }
+    if(higher||h[mi].y-after<4) continue;
+    let touch=true; for(let i=s;i<=mi;i++) if(h[i].y>y0+2&&h[i].x-POCKET_HW>1) touch=false; if(touch) continue;
+    return false; } return true; }
+function finishBody(poly,maxL){ const p0=neckSnap(polishBody(poly)); if(!bodyOK(p0,maxL)||!neckOK(p0)) return null; let p=fairBody(p0,60); p=neckSnap(p); if(!bodyOK(p,maxL)||!neckOK(p)) p=p0; return lineJitter(p)<=JIT_MAX?p:null; }
 // helften met en zonder hoorn niet door elkaar mengen: dat geeft halve hoorns en golvende flanken
 const hornOf=h=>h[28].y-h[0].y;
 function pickHalf(V,keys,side,rnd){ const k0=keys[Math.floor(rnd()*keys.length)], cls=hornOf(V[k0][side])>12, same=keys.filter(k=>k!==k0&&(hornOf(V[k][side])>12)===cls), out=[[k0,1]], n=rnd()<0.6?1:2;
@@ -2974,7 +3007,7 @@ function mashDesign(m){
   const r=computeMash(m), d = m.type==='body' ? defaultBody() : defaultHead(true);
   d.set=clone(r.S.ul.d.set); d.sym=false;
   d.pts=r.pts.map(p=>({x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2,c:!!p.c}));
-  if (d.type==='body'){ const P=smoothZones(geom({pts:d.pts,sym:false,tension:1}).poly,[{y:m.yL,s:-1},{y:m.yR,s:1},{bot:botOf(geom({pts:d.pts,sym:false,tension:1}))}],m.soft*3+12), Q=polishBody(P); d.ok=bodyOK(Q,10); d.pts=fitAnchors(Q,{tol:0.8}); fitPickups(d); }
+  if (d.type==='body'){ const P=smoothZones(geom({pts:d.pts,sym:false,tension:1}).poly,[{y:m.yL,s:-1},{y:m.yR,s:1},{bot:botOf(geom({pts:d.pts,sym:false,tension:1}))}],m.soft*3+12), Q=neckSnap(polishBody(P)); d.ok=bodyOK(Q,10)&&neckOK(Q); d.pts=fitAnchors(Q,{tol:0.8}); fitPickups(d); }
   if (d.type==='body'){ d.set.ctrl.edited=false; d.set.pg.edited=false; d.set.pg.pts=null; }
   else { d.set.nutW=Math.round((r.S.ll.d.set.nutW+r.S.lr.d.set.nutW)*5)/10; const P=smoothZones(geom({pts:d.pts,sym:false,tension:1}).poly,[{y:m.yL,s:-1},{y:m.yR,s:1}],m.soft*3+10); d.pts=headFromPoly(P,d.set,'',null,null).pts;
     // mechanieken: patroon van linksboven, anders dat van een andere bronvorm die beter past
@@ -3311,24 +3344,24 @@ function frameShape(key,name,holes,note,back){ const P=[].concat(...holes); let 
 const MAL_INFO={body:'Body-omtrek',kop:'Kop',pickups:'Pickupfrezingen',halsvak:'Halsvak',holte:'Elektronicavak (rug)',sponning:'Sponning cover plate (rug)',coverplate:'Cover plate',pickguard:'Pickguard',kamers:'Kamers',hals:'Halsomtrek'};
 // wat er op de mal komt, in mm, y naar boven (y = 0 is de zadellijn van de brug, bij de kop de nut)
 function templateShapes(o){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'), h=b?partnerHead(b):(D().type==='headstock'?D():null), out=[];
-  if(b){ const g=geom(b), s=b.set, ctx=bodyCtx(b), poly=simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03), pocket=rectRing({cx:0,cy:(ctx.pocketEnd+ctx.topY)/2,w:s.heelW,h:ctx.topY-ctx.pocketEnd,a:0}), CG=coverGroups(b);
+  if(b){ const g=geom(b), s=b.set, ctx=bodyCtx(b), poly=simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03), pocket=cw(pocketRing(s,ctx)), CG=coverGroups(b);
     const pusTxt=ctx.pus.map(p=>`${PUNAME[p.k]}pickup ${fmt(p.route.w,0)} x ${fmt(p.route.h,0)} mm, midden op ${fmt(p.route.cy,0)} mm voor de zadellijn`).join('; ');
     if(o.body){ const holes=[];
       if(o.center){ const tY=ctx.topY, bY=botOf(g); [bY+25,(tY+bY)/2,tY-25].forEach(y=>{ if(!ctx.pus.some(p=>Math.abs(y-p.route.cy)<p.route.h/2+6)) holes.push(circRing(0.01,y,1.5,24)); }); }
       if(o.pus) ctx.pus.forEach(p=>holes.push(rectRing(p.route)));
       if(o.sh) holePolys(b).forEach(hh=>hh.rings.forEach(r0=>holes.push(cw(simplifyRing(r0,0.03)))));
-      let outer=poly; if(o.pocket){ const cut=ghClip(ccw(poly),cw(rectRing({cx:0,cy:(ctx.pocketEnd+ctx.topY+40)/2,w:s.heelW,h:ctx.topY+40-ctx.pocketEnd,a:0})),'diff'); if(Array.isArray(cut)&&cut.length) outer=cut.reduce((a,r)=>Math.abs(ringArea(r))>Math.abs(ringArea(a))?r:a); }
+      let outer=poly; if(o.pocket){ const cut=ghClip(ccw(poly),cw(pocketRing(s,ctx,40)),'diff'); if(Array.isArray(cut)&&cut.length) outer=cut.reduce((a,r)=>Math.abs(ringArea(r))>Math.abs(ringArea(a))?r:a); }
       out.push({key:'body',name:b.name,outer:ccw(outer),holes,note:'Voorkant naar boven. Merkgaatjes liggen op de middenlijn.'+(o.pocket?' Het halsvak is open naar de rand.':'')}); }
     if(o.fPus&&ctx.pus.length) out.push(frameShape('pickups',b.name,ctx.pus.map(p=>rectRing(p.route)),'Voorkant. '+pusTxt+'. Leg de merkgaatjes op de middenlijn.'));
-    if(o.fPocket) out.push(frameShape('halsvak',b.name,[pocket],`Voorkant. Halsvak ${fmt(s.heelW,0)} x ${fmt(ctx.topY-ctx.pocketEnd,0)} mm, van de rand tot ${fmt(ctx.pocketEnd,0)} mm voor de zadellijn.`));
+    if(o.fPocket) out.push(frameShape('halsvak',b.name,[pocket],`Voorkant. Halsvak volgt de taper van de hals: ${fmt(2*neckHW(s,ctx.topY),1)} mm breed aan de rand, ${fmt(2*neckHW(s,ctx.pocketEnd),1)} mm waar de hals stopt, ${fmt(ctx.topY-ctx.pocketEnd,0)} mm diep in de body (tot ${fmt(ctx.pocketEnd,0)} mm voor de zadellijn).`));
     if(o.fCav) CG.forEach((c,i)=>out.push(frameShape('holte'+(CG.length>1?i+1:''),b.name,[rrRing(c.x0+5,c.y0+5,c.x1-5,c.y1-5,Math.max(0,c.r-5))],'Rugkant: al gespiegeld, leg de mal zo op de rug van de body. Elektronicavak; merkgaatjes op de middenlijn.',true)));
     if(o.fReb) CG.forEach((c,i)=>out.push(frameShape('sponning'+(CG.length>1?i+1:''),b.name,[rrRing(c.x0,c.y0,c.x1,c.y1,c.r)],'Rugkant: al gespiegeld. Sponning voor de cover plate (zo diep als je plaat dik is), daarna het vak met de holte-mal.',true)));
     if(o.plate) CG.forEach((c,i)=>{ const pl=rrRing(c.x0+0.3,c.y0+0.3,c.x1-0.3,c.y1-0.3,Math.max(0,c.r-0.3)); out.push({key:'coverplate'+(CG.length>1?i+1:''),name:b.name,outer:ccw(mirX(pl)),holes:[[c.x0+6,c.y0+6],[c.x1-6,c.y1-6]].map(([x,y])=>cw(mirX(circRing(x,y,1.6,24)))),note:'Rugkant: zo bekeken van achteren. Om de plaat uit te zagen; 0,3 mm kleiner rondom dan de sponning.'}); });
     if(o.pg&&s.pg.style!=='none'&&s.pg.pts){ const pgG=geom(pgObj(b)), hs=pgScrews(b,pgG).map(q=>circRing(q.x,q.y,1.6,24)); (s.ctrl.items||[]).forEach(it=>{ if(inside(pgG.poly,it)&&!(it.t==='jack'&&s.ctrl.jack==='side')) hs.push(circRing(it.x,it.y,it.t==='jack'?11:4.75,32)); }); ctx.pus.forEach(p=>{ if(inside(pgG.poly,{x:0,y:p.route.cy})) hs.push(rectRing(p.cover)); });
       out.push({key:'pickguard',name:b.name,outer:ccw(simplifyRing(pgG.poly.map(p=>({x:p.x,y:p.y})),0.03)),holes:hs.map(cw),note:'Voorkant. Om de pickguard uit te zagen en de schroefgaten te zetten.'}); }
     if(o.cham&&s.inside&&s.inside!=='solid'){ const ch=chamberPolys(b); if(ch.length) out.push({key:'kamers',name:b.name,outer:ccw(poly),holes:ch.map(c=>cw(simplifyRing(c,0.03))).concat([circRing(0.01,ctx.topY-25,1.5,24),circRing(0.01,botOf(g)+25,1.5,24)]),note:`Voorkant (kamers vóór de top erop gaat). Rand 20 mm, middenblok 80 mm.`}); }
-    if(o.neck){ const yN=s.scale, yE=ctx.pocketEnd, yL=fretY(s,s.frets), W=y=>y<yL?s.heelW/2:neckHW(s,y), N=24, L=[], R=[]; for(let k=0;k<=N;k++){ const y=yE+(yN-yE)*k/N; R.push({x:W(y),y}); L.unshift({x:-W(y),y}); }
-      const ring=R.concat(L).map(p=>({x:p.x,y:p.y-yN})); out.push({key:'hals',name:b.name,outer:ccw(ring),holes:[circRing(0.01,-15,1.5,24),circRing(0.01,yE-yN+15,1.5,24)],note:`Halsomtrek van de nut (boven) tot het einde van de hiel: ${fmt(yN-yE,0)} mm lang, ${fmt(s.nutW,1)} mm aan de nut, ${fmt(s.heelW,0)} mm aan de hiel. Zonder kop: die heeft een eigen mal.`}); }
+    if(o.neck){ const yN=s.scale, yE=ctx.pocketEnd, yL=fretY(s,s.frets), W=y=>neckHW(s,y), N=24, L=[], R=[]; for(let k=0;k<=N;k++){ const y=yE+(yN-yE)*k/N; R.push({x:W(y),y}); L.unshift({x:-W(y),y}); }
+      const ring=R.concat(L).map(p=>({x:p.x,y:p.y-yN})); out.push({key:'hals',name:b.name,outer:ccw(ring),holes:[circRing(0.01,-15,1.5,24),circRing(0.01,yE-yN+15,1.5,24)],note:`Halsomtrek van de nut (boven) tot het einde van de hiel: ${fmt(yN-yE,0)} mm lang, ${fmt(s.nutW,1)} mm aan de nut, ${fmt(2*neckHW(s,yE),1)} mm aan het einde van de hiel (zelfde taper als de hals). Zonder kop: die heeft een eigen mal.`}); }
   }
   if(h&&o.head){ const g=geom(h), holes=o.tuners?h.posts.map(p=>cw(circRing(p.x,p.y,h.set.holeD/2))):[]; out.push({key:'kop',name:h.name,outer:ccw(simplifyRing(g.poly.map(p=>({x:p.x,y:p.y})),0.03)),holes,note:'Voorkant van de kop, nut onderaan.'}); }
   return out; }
@@ -3395,7 +3428,7 @@ const isDesignSel=sel=>sel.id==='designSel'||sel.id==='headSel'||sel.id==='ghost
 // ---------- niveaus: wat elke versie toont ----------
 // h = alleen in high; n = normaal en high (niet in light); l = alleen in light
 const LV_H=['scaleIn','set.scale','set.pg.margin','set.pg.bottom','set.pg.tilt','set.pg.curve','set.pg.inset','set.pg.screws','set.thick','set.dens','set.neckWood','set.sh.dx','set.sh.dy','set.sh.ang','set.ctrl.loose','set.pocketMan','view.soft','dim:neckF','dim:fbF','view.snap','view.wline'];
-const LV_N=['set.bridge','set.ctrl.sw','set.ctrl.jack','set.strapMode','set.sh.side','set.sh.pos','set.sh.flow','set.sh.size','set.sh.fx','set.sh.fy','set.sh.text','set.pg.knobs','sym'];
+const LV_N=['set.bridge','set.ctrl.jack','set.strapMode','set.sh.side','set.sh.pos','set.sh.flow','set.sh.size','set.sh.fx','set.sh.fy','set.sh.text','sym'];
 function applyLevel(){ if(APP_LEVEL==='high') return;
   const tag=(el,lv)=>{ if(el&&el.getAttribute('data-lv')!==lv) el.setAttribute('data-lv',lv); };
   P.querySelectorAll('[data-bind],[data-dim]').forEach(el=>{ const b=el.dataset.bind||('dim:'+el.dataset.dim), row=el.closest('.row,tr')||el; if(LV_H.includes(b)) tag(row,'h'); else if(LV_N.includes(b)) tag(row,'n'); });
