@@ -284,7 +284,7 @@ button:active:not(:disabled){transform:scale(.97)}
 @media (max-width:900px){#tools button{min-width:38px}}
 
 /* rechts- of linkshandig (14/11) */
-.handsec{padding-top:8px;padding-bottom:8px}.hand{display:flex;gap:6px}.hand button{flex:1;min-height:40px;border-radius:20px}.hand button.on{background:var(--sel,#efe4f0);border-color:var(--accent2,#5e3f57);color:var(--accent2,#5e3f57);font-weight:600}
+.handsec{padding-top:8px;padding-bottom:8px}.hand{display:flex;gap:6px}.hand.inst{margin-top:6px}.hand button{flex:1;min-height:40px;border-radius:20px}.hand button.on{background:var(--sel,#efe4f0);border-color:var(--accent2,#5e3f57);color:var(--accent2,#5e3f57);font-weight:600}
 #welcome .wacts button.on{background:var(--sel,#efe4f0);border-color:var(--accent2,#5e3f57);color:var(--accent2,#5e3f57);font-weight:600}
 </style>
 </head>
@@ -360,7 +360,7 @@ if (LIGHT){ let s=''; try { s=localStorage.getItem('sixto-forma-lang')||''; } ca
 const EN=LANG==='en';
 const PUB_SITE=()=>EN?'https://666sixto666.github.io/SixtoTools/site/':'https://666sixto666.github.io/SixtoTools/site/nl/';
 const NEUTRAL={coronet:['Scheve dubbele cutaway','Offset double cut'],duojet:['Ronde single cut','Round single cut'],billybo:['Raketvorm','Rocket shape'],mockingbird:['Lange gebogen hoorn','Long curved horn'],rick4003:['Golvende hoorns','Wave horns'],strat:['S-stijl','S-style'],tele:['T-stijl','T-style'],lp:['Enkele cutaway','Single cut'],lpjdc:['Junior dubbele cutaway','Junior double cut'],sg:['Dubbele hoorn','Double horn'],es:['Dunne semi','Thinline semi'],offset:'Offset',mustang:['Korte offset','Short offset'],mm:['Slanke cutaway','Slim cut'],prs:['Moderne dubbele cutaway','Modern double cut'],super:'Super S',js:['Ronde shred','Round shred'],axis:['Compacte cutaway','Compact cut'],albertlee:['Asymmetrisch','Asymmetric'],n4:['Gebeeldhouwde shred','Sculpted shred'],toronado:'Retro offset',mosrite:['Omgekeerde surf','Surf reverse'],redspecial:['Open haard','Fireside'],explorer:['Hoekig','Angular'],v:['Pijl','Arrow'],moderne:'Modernist',turner:['Compacte boutique','Boutique compact'],asher:'Offset T',firebird:['Omgekeerd','Reverse'],iceman:['Haak','Hook'],revstar:'Café racer',l5:'Jazz archtop',i5t:['Enkele cutaway T','Single cut T'],dano59:['Retro dubbele cutaway','Retro double cut'],astrojet:['Ruimtevaart','Space age'],birdprey:['Roofvogel','Raptor'],lpjsc:['Junior enkele cutaway','Junior single cut'],b6:['Scherpe shred','Sharp shred'],supersonic:['Omgekeerde offset','Reverse offset'],rick360:['Halvemaan semi','Crescent semi'],boden:'Headless ergo',jaguar:'Offset deluxe',stingray:['Grote hoorn','Big horn'],pbass:['P-stijl bas','P-style bass'],jbass:['J-stijl bas','J-style bass'],
-  'h-strat':['S-stijl kop (50s/60s)','S-style head (50s/60s)'],'h-turner':['Boutique kop','Boutique head'],'h-strat70':['S-stijl kop (70s, groot)','S-style head (70s, large)'],'h-tele':['T-stijl kop','T-style head'],'h-lp':['Open book kop (3+3)','Open book head (3+3)'],'h-prs':['Moderne kop (3+3)','Modern head (3+3)'],'h-dbz':['Puntige kop (3+3)','Pointed head (3+3)'],'h-mosrite':['Surf kop (3+3)','Surf head (3+3)'],'h-dano':['Retro kop (3+3)','Retro head (3+3)'],'h-moderne':['Modernistische kop (3+3)','Modernist head (3+3)'],'h-explorer':['Hockeystick kop','Hockey stick head'],'h-rhoads':['Puntige kop (6 op rij)','Pointed head (6 in line)'],'h-c5150':['Super S kop','Super S head'],'h-firebird':['Omgekeerde kop','Reverse head'],'h-n4':['Shred kop (omgekeerd)','Shred head (reversed)'],'h-v58':['V-kop, rond (3+3)','V head, round (3+3)'],'h-v83':['V-kop, puntig (3+3)','V head, pointed (3+3)'],'h-tiger':['Gesneden kop (3+3)','Carved head (3+3)'],'h-martin':[null,'Straight 3+3 (acoustic style, approx.)'],'h-bass':[null,'Bass head (4 in line, approx.)'],
+  'h-strat':['S-stijl kop (50s/60s)','S-style head (50s/60s)'],'h-turner':['Boutique kop','Boutique head'],'h-strat70':['S-stijl kop (70s, groot)','S-style head (70s, large)'],'h-tele':['T-stijl kop','T-style head'],'h-lp':['Open book kop (3+3)','Open book head (3+3)'],'h-prs':['Moderne kop (3+3)','Modern head (3+3)'],'h-dbz':['Puntige kop (3+3)','Pointed head (3+3)'],'h-mosrite':['Surf kop (3+3)','Surf head (3+3)'],'h-dano':['Retro kop (3+3)','Retro head (3+3)'],'h-moderne':['Modernistische kop (3+3)','Modernist head (3+3)'],'h-explorer':['Hockeystick kop','Hockey stick head'],'h-rhoads':['Puntige kop (6 op rij)','Pointed head (6 in line)'],'h-c5150':['Super S kop','Super S head'],'h-firebird':['Omgekeerde kop','Reverse head'],'h-n4':['Shred kop (omgekeerd)','Shred head (reversed)'],'h-v58':['V-kop, rond (3+3)','V head, round (3+3)'],'h-v83':['V-kop, puntig (3+3)','V head, pointed (3+3)'],'h-tiger':['Gesneden kop (3+3)','Carved head (3+3)'],'h-martin':[null,'Straight 3+3 (acoustic style, approx.)'],'h-bass':[null,'Bass head (4 in line, approx.)'],'h-rick4003':['Golvende baskop (2+2)','Wave bass head (2+2)'],
   'n-peer':[null,'Pear (nature)'],'n-blad':[null,'Leaf (nature)'],'n-vleugel':[null,'Wing (nature)'],'n-schelp':[null,'Shell (nature)'],'n-kiezel':[null,'Pebble (nature)'],'n-zandloper':[null,'Hourglass (nature)'],'n-golf':[null,'Wave (nature)'],'n-gotisch':[null,'Gothic arch (architecture)'],'n-romaans':[null,'Romanesque arch (architecture)'],'n-deco':[null,'Art deco (architecture)'],
   'h-n-gotisch':[null,'Gothic arch head (architecture, 3+3)'],'h-n-tulp':[null,'Tulip head (nature, 3+3)'],'h-n-deco':[null,'Art deco head (architecture, 3+3)'],'h-n-waaier':[null,'Fan head (nature, 3+3)'],'h-n-ui':[null,'Onion dome head (architecture, 3+3)'],'h-n-blad':[null,'Leaf head (nature, 3+3)'],'h-n-vlam':[null,'Flame head (nature, 3+3)'],'h-n-schelp':[null,'Shell head (nature, 3+3)'],'h-n-zeis':[null,'Scythe head (nature, 3+3)'],'h-n-veer':[null,'Feather head (nature, 6 in line)'],'h-n-golfkam':[null,'Wave crest head (nature, 6 in line)'],'h-n-zwaan':[null,'Swan head (nature, 6 in line)'],'h-n-spits':[null,'Spire head (architecture, 6 in line)']};
 // namen in beide richtingen: een ontwerp dat in de ene taal gemaakt is, toont in de andere taal ook de juiste naam
@@ -372,7 +372,7 @@ if (LIGHT){ const _REFS=REFS; REFS=function(){ return _REFS().map(d=>{ const m=N
 // Nederlands in light: alleen de merknamen buiten de vormen eruit
 const T_NL={'Vormontwerper':'Forma','🎨 Render':'🎨 Bekijk en deel','(Strat, Les Paul, SG…),':'(S-stijl, enkele cutaway, dubbele hoorn…),','(Explorer, Firebird, Iceman…).':'(hoekig, omgekeerd, haak…).','10° (PRS)':'10°','14° (Gibson nu)':'14°','17° (Gibson vroeger)':'17° (vintage)','Recht (Fender)':'Recht',
   'Drie single coils, 3 knoppen (Fender-stijl)':'Drie single coils, 3 knoppen','Twee humbuckers, 4 knoppen (Gibson-stijl)':'Twee humbuckers, 4 knoppen','Eén draaibare humbucker, 4 knoppen (Turner)':'Eén draaibare humbucker, 4 knoppen','Twee single coils, Tele-stijl':'Twee single coils, T-stijl','Los blad naast de pickups, zoals een Les Paul':'Los blad naast de pickups','Rond de pickups, zoals een Strat':'Rond de pickups'};
-const T_EN={'Rechtshandig':'Right-handed','Linkshandig':'Left-handed','Ik speel linkshandig':'I play left-handed','✓ Ik speel linkshandig':'✓ I play left-handed','Linkshandig: alles gespiegeld, ook de mallen':'Left-handed: everything mirrored, templates too','Hand':'Hand','Schakelaar':'Switch','Plaats schakelaar':'Switch position','Vanzelf':'Automatic','Bovenste hoorn, baskant':'Upper horn, bass side','Bovenste hoorn, diskant':'Upper horn, treble side','Naast de pickups':'Next to the pickups','In lijn met de knoppen':'In line with the knobs','3-weg toggle':'3-way toggle','3-weg schuif':'3-way blade','5-weg schuif':'5-way blade','Knoppen op de pickguard':'Knobs on the pickguard','Hoekig (rechte lijnen)':'Angular (straight lines)','Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':'The switch does not fit there on this shape; it now sits at the nearest good spot.','Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
+const T_EN={'Op basmaat':'Bass size','↩ Vorige maat terug':'↩ Previous size','Gitaar':'Guitar','Bas (4 snaren)':'Bass (4 strings)','Ik ontwerp een bas':'I am designing a bass','✓ Ik ontwerp een bas':'✓ I am designing a bass','Ontwerp jouw bas':'Design your bass','Halspickup':'Neck pickup','Middenpickup':'Middle pickup','Brugpickup':'Bridge pickup','Zoals alle':'Same as all','Zebra (crème en zwart)':'Zebra (cream and black)','Tot tegen de toets (zoals een SG, gelijmde hals)':'Up to the fretboard (like an SG, set neck)','Mica turkoois':'Mica turquoise','Mica petrol':'Mica petrol','Mica smaragd':'Mica emerald','Mica oceaan':'Mica ocean','Mica nachtblauw':'Mica midnight blue','Mica violet':'Mica violet','Mica roze':'Mica pink','Mica kers':'Mica cherry','Mica koper':'Mica copper','Mica goud':'Mica gold','Mica brons':'Mica bronze','Mica olijf':'Mica olive','Mica zilvergrijs':'Mica silver grey','Mica kameleon (groen-paars)':'Mica chameleon (green-purple)','Mica vuur (rood-goud)':'Mica fire (red-gold)','Twee humbuckers met Bigsby':'Two humbuckers with Bigsby','Twee humbuckers met tremolo (modern)':'Two humbuckers with tremolo (modern)','P-bas: één gesplitste pickup, 2 knoppen':'P bass: one split pickup, 2 knobs','J-bas: twee single coils, 3 knoppen':'J bass: two single coils, 3 knobs','PJ: gesplitst + single aan de brug, 3 knoppen':'PJ: split + bridge single, 3 knobs','Eén bas-soapbar, 2 knoppen (strak)':'One bass soapbar, 2 knobs (clean)','Alleen de vorm (bas, geen hardware)':'Shape only (bass, no hardware)','Linkshandig':'Left-handed','Ik speel linkshandig':'I play left-handed','✓ Ik speel linkshandig':'✓ I play left-handed','Linkshandig: alles gespiegeld, ook de mallen':'Left-handed: everything mirrored, templates too','Hand':'Hand','Schakelaar':'Switch','Plaats schakelaar':'Switch position','Vanzelf':'Automatic','Bovenste hoorn, baskant':'Upper horn, bass side','Bovenste hoorn, diskant':'Upper horn, treble side','Naast de pickups':'Next to the pickups','In lijn met de knoppen':'In line with the knobs','3-weg toggle':'3-way toggle','3-weg schuif':'3-way blade','5-weg schuif':'5-way blade','Knoppen op de pickguard':'Knobs on the pickguard','Hoekig (rechte lijnen)':'Angular (straight lines)','Daar past de schakelaar niet bij deze vorm; hij staat nu op de dichtstbijzijnde goede plek.':'The switch does not fit there on this shape; it now sits at the nearest good spot.','Vormontwerper':'Forma','🎨 Render':'🎨 View & share','🎨 Bekijk en deel':'🎨 View & share','Body':'Body','Kop':'Head','🏠 Begin':'🏠 Start','Begin':'Start','Dupliceer':'Duplicate','Meer…':'More…','Meer':'More','Menu':'Menu','Hernoemen':'Rename','Verwijderen':'Delete','Back-up bewaren ↓':'Save backup ↓','Back-up inladen ↑':'Load backup ↑','Kies ontwerp':'Choose design',
   'Een beeld van de hele gitaar, met de gekoppelde kop':'A picture of the whole guitar, with its head','✋ Bewerken':'✋ Edit','Passend':'Fit','Inzoomen':'Zoom in','Uitzoomen':'Zoom out','Hele vorm tonen':'Show the whole shape','✨ Inspirator':'✨ Inspire me','Inspirator':'Inspire me','Willekeurige vormen en variaties':'Random shapes and variations','Je bewerkt:':'You are editing:','Je bewerkt de pickguard':'You are editing the pickguard','Punten en onderdelen slepen':'Drag points and parts',
   'Eén stap terug':'One step back','Eén stap terug (Ctrl+Z)':'One step back (Ctrl+Z)','Opnieuw':'Redo','Opnieuw (Ctrl+Y)':'Redo (Ctrl+Y)','Alle stappen':'All steps','Alle stappen zien en terugspringen':'See all steps and jump back','Opnieuw beginnen':'Start over','▴ Instellingen':'▴ Settings',
   'Sleep de punten · dubbeltik op de lijn = punt erbij · alles op de tekening is versleepbaar':'Drag the points · double-tap the line to add a point · everything on the drawing can be dragged',
@@ -443,12 +443,12 @@ const T_RULES_NL=[
   [/^Kop naar (.+)$/, m=>{ const v=tr(m[1]); return v===m[1]?m[0]:'Kop naar '+v; }]];
 // Forma is voor de gitarist die niets van bouwen kent (Tom 14/11): gewone woorden, vaktermen enkel in Werkbank en Bouwplan
 Object.assign(T_NL,{'Single coil':'Single coil (helder)','Humbucker':'Humbucker (vol, warm)','P90 (soapbar)':'P90 (rauw, warm)','Mini-humbucker':'Mini-humbucker (helder en warm)',
-  'Tremolo (vintage-stijl)':'Tremolo (met hendel)','Hardtail (plaat)':'Vaste brug (plaat)','Tune-o-matic + stopbar':'Vaste brug (Gibson-stijl)','Wraparound':'Vaste brug (één stuk)','Tele-plaat (met brugpickup)':'T-stijl brug (met pickup)',
+  'Tremolo (vintage-stijl)':'Tremolo (met hendel)','Hardtail (plaat)':'Vaste brug (plaat)','Tune-o-matic + stopbar':'Vaste brug (Gibson-stijl)','Wraparound':'Vaste brug (één stuk)','Tele-plaat (met brugpickup)':'T-stijl brug (met pickup)','Tremolo 2-punts (modern)':'Tremolo (met hendel, modern)','Bigsby + brug':'Bigsby (vibrato met hendel)','Basbrug':'Basbrug','P-bas (gesplitst)':'P-bas (gesplitst, rond en vol)','J-bas single':'J-bas single (strak, helder)','Bas-soapbar':'Bas-soapbar (krachtig)',
   'Diskant':'Klein, onderkant','Baskant':'Klein, bovenkant','Strook':'Smalle strook','Los blad':'Los blad (zwevend)','Klein blad aan de diskantkant':'Klein blad aan de onderkant','Klein blad aan de baskant':'Klein blad aan de bovenkant',
   'Solid body':'Massief','Chambered (semi-hollow)':'Deels hol (lichter)','3-weg toggle':'Tuimelschakelaar, 3 standen','3-weg schuif':'Schuifschakelaar, 3 standen','5-weg schuif':'Schuifschakelaar, 5 standen',
   'Opnieuw genereren':'Opnieuw tekenen','Laatst geopende kop':'Standaardkop','Kop en render':'Kop en kleur'});
 Object.assign(T_EN,{'Single coil':'Single coil (bright)','Humbucker':'Humbucker (full, warm)','P90 (soapbar)':'P90 (raw, warm)','Mini-humbucker':'Mini humbucker (bright and warm)',
-  'Tremolo (vintage-stijl)':'Tremolo (with whammy bar)','Hardtail (plaat)':'Fixed bridge (plate)','Tune-o-matic + stopbar':'Fixed bridge (Gibson style)','Wraparound':'Fixed bridge (one piece)','Tele-plaat (met brugpickup)':'T-style bridge (with pickup)',
+  'Tremolo (vintage-stijl)':'Tremolo (with whammy bar)','Hardtail (plaat)':'Fixed bridge (plate)','Tune-o-matic + stopbar':'Fixed bridge (Gibson style)','Wraparound':'Fixed bridge (one piece)','Tele-plaat (met brugpickup)':'T-style bridge (with pickup)','Tremolo 2-punts (modern)':'Tremolo (with whammy bar, modern)','Bigsby + brug':'Bigsby (vibrato with arm)','Basbrug':'Bass bridge','P-bas (gesplitst)':'P bass (split, round and full)','J-bas single':'J bass single (tight, bright)','Bas-soapbar':'Bass soapbar (punchy)',
   'Diskant':'Small, lower side','Baskant':'Small, upper side','Strook':'Narrow strip','Los blad':'Floating guard','Klein blad aan de diskantkant':'Small guard on the lower side','Klein blad aan de baskant':'Small guard on the upper side',
   'Solid body':'Solid','Chambered (semi-hollow)':'Partly hollow (lighter)','3-weg toggle':'Toggle, 3 positions','3-weg schuif':'Blade, 3 positions','5-weg schuif':'Blade, 5 positions',
   'Opnieuw genereren':'Redraw','Laatst geopende kop':'Standard head','balans':'balance','Kop en render':'Head and colour'});
@@ -519,7 +519,12 @@ const WOODS = {
 };
 // naam, kap b×h, frezing b×h (mm)
 const PUS = { none:['Geen',0,0,0,0], HB:['Humbucker',70,38,72,40], HBR:['Humbucker in ronde opening',70,38,72,40], SC:['Single coil',83,18,89,21], P90:['P90 (soapbar)',86,35,89,40],
-  MINI:['Mini-humbucker',67,33,69,35], JB:['J-bas single',95,19,98,21], BASS:['Bas-soapbar',97,38,100,40] };
+  MINI:['Mini-humbucker',67,33,69,35], JB:['J-bas single',95,19,98,21], BASS:['Bas-soapbar',97,38,100,40], P:['P-bas (gesplitst)',112,56,116,60] };
+// 15/11: P-bas = twee helften van 65,5 × 28 mm (kap), 19 mm overlap in de breedte, de E/A-helft het dichtst bij de hals. Checks gebruiken de omhullende.
+const P_HALF={w:65.5,h:28,dx:23.25,dy:14};
+function puParts(R,t){ if(t!=='P') return [R]; const a=(R.a||0)*Math.PI/180, c=Math.cos(a), sn=Math.sin(a), sx=R.w/112, sy=R.h/56;
+  return [[-1,1],[1,-1]].map(([ix,iy])=>{ const ox=ix*P_HALF.dx*sx, oy=iy*P_HALF.dy*sy; return {cx:R.cx+ox*c-oy*sn, cy:R.cy+ox*sn+oy*c, w:P_HALF.w*sx, h:P_HALF.h*sy, a:R.a||0}; }); }
+const BASS_PU=['none','P','JB','BASS'];
 const PUNAME = {pu1:'brug',pu2:'midden',pu3:'hals'};
 const R_ = (cx,cy,w,h)=>({cx,cy,w,h,a:0}), C_ = (x,y,r)=>({x,y,r});
 const BRIDGES = {
@@ -527,6 +532,8 @@ const BRIDGES = {
   wrap:{n:'Wraparound', p:[R_(0,-8,92,16),C_(-41,-8,5.5),C_(41,-8,5.5)]},
   hard:{n:'Hardtail (plaat)', p:[R_(0,-18,86,62)]},
   trem:{n:'Tremolo (vintage-stijl)', p:[R_(0,-8,89,50)]},
+  trem2:{n:'Tremolo 2-punts (modern)', p:[R_(0,-12,88,42),C_(-28,8,5),C_(28,8,5)]},   // 15/11: Gotoh 510-stijl, pennen 56 mm uit elkaar (Gotoh); plaat benaderd
+  bigsby:{n:'Bigsby + brug', p:[R_(0,0,80,12),C_(-37,-3,5.5),C_(37,-3,5.5),R_(0,-79,92,108)]},   // 15/11: tune-o-matic op het zadel + Bigsby B5-voet 108 × 92 mm (StewMac); afstand brug-voet 25 mm benaderd
   tele:{n:'Tele-plaat (met brugpickup)', p:[R_(0,15,86,110)], holdsPu1:true},
   bass:{n:'Basbrug', p:[R_(0,-20,72,85)]},
   none:{n:'Geen / later', p:[]}
@@ -593,13 +600,68 @@ function mkBody(id,name,pts,sym,ov){ const d=defaultBody(); d.id='ref-'+id; d.na
 function mkHead(id,name,pts,sym,ov){ const d=defaultHead(); d.id='ref-'+id; d.name=name; d.ref=true; d.sym=!!sym; d.pts=pts.map(([x,y,c])=>({x,y,c:!!c})); if(ov&&ov.tuner){ d.set.tuner=ov.tuner; applyTuner(d); } Object.assign(d.set,ov||{}); placePosts(d); return d; }
 // echte kop uit HEAD_PTS, met het originele mechaniekpatroon (en benaderende parameters voor de andere patronen)
 function mkHeadR(key,name,tuner,ex){ const h=HEAD_PTS[key], P=h.posts.map(([x,y])=>({x,y})), n=P.length, sp=(P[n-1].y-P[0].y)/(n-1);
-  const split=P.slice(0,3).every(p=>p.x<0)&&P.slice(3).every(p=>p.x>0);
+  const hh=Math.ceil(n/2), split=P.slice(0,hh).every(p=>p.x<0)&&P.slice(hh).every(p=>p.x>0);
   const ov= split ? {first:Math.round(Math.min(...P.map(p=>p.y))*2)/2,spacing:Math.round(Math.abs(P[1].y-P[0].y)*2)/2,xoff:Math.round(P.reduce((s,p)=>s+Math.abs(p.x),0)/n*2)/2}
                   : {first:Math.round(P[0].y*2)/2,spacing:Math.round(sp*2)/2,xoff:Math.round(P[0].x*2)/2,slant:Math.round((P[n-1].x-P[0].x)/(n-1)*2)/2};
   return mkHead('h-'+key,name,h.pts,false,{tuner,nutW:h.nut,spNut:Math.round((h.nut-7.5)*2)/2,...ov,layout:'custom',pat:h.posts.map(p=>p.slice()),...(ex||{})}); }
-const GIB={wood:'mahonie',scale:628,nutW:43,heelW:56,spBridge:52,bridge:'tom',pu1:{t:'HB',d:40,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'HB',d:145,a:0},ctrl:ctrlDef(4,'square','toggle3','side'),pg:pgDef('small')};
-const FEN={scale:648,pocket:76,nutW:42,heelW:56,spBridge:54,frets:21,bridge:'trem',pu1:{t:'SC',d:42,a:-10},pu2:{t:'SC',d:95,a:0},pu3:{t:'SC',d:160,a:0},ctrl:ctrlDef(3,'diag','blade5','top'),pg:pgDef('full',22,true)};
-const BASS={scale:864,frets:20,strings:4,nutW:41,heelW:62,spNut:30,spBridge:57,bridge:'bass',pocket:76};
+const GIB={join:'lijm',wood:'mahonie',scale:628,nutW:43,heelW:56,spBridge:52,bridge:'tom',pu1:{t:'HB',d:40,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'HB',d:145,a:0},ctrl:ctrlDef(4,'square','toggle3','side'),pg:pgDef('small')};
+const FEN={join:'plaat',scale:648,pocket:76,nutW:42,heelW:56,spBridge:54,frets:21,bridge:'trem',pu1:{t:'SC',d:42,a:-10},pu2:{t:'SC',d:95,a:0},pu3:{t:'SC',d:160,a:0},ctrl:ctrlDef(3,'diag','blade5','top'),pg:pgDef('full',22,true)};
+const BASS={scale:864,frets:20,strings:4,nutW:41,heelW:62,spNut:30,spBridge:57,bridge:'bass',pocket:76,join:'plaat'};
+// ---------- gitaar of bas (Tom 15/11): een schakelaar zoals linkshandig. Elke body en elke kop kan beide worden. ----------
+const INST_KEYS=['scale','frets','fbFret','strings','nutW','heelW','spNut','spBridge','bridge','pu1','pu2','pu3','ctrl','pocket'];
+const isBass=d=>!!(d&&d.set&&(d.set.strings||6)<=5&&(d.type==='headstock'||(d.set.scale||0)>=740));
+const instPref=()=>typeof lib!=='undefined'&&lib.view&&lib.view.inst==='b'?'b':'g';
+function instSet(k){ return k==='b'
+  ? {scale:863.6,frets:20,fbFret:null,strings:4,nutW:41,heelW:62,spNut:31,spBridge:57,bridge:'bass',pu1:{t:'none',d:45,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'P',d:152,a:0},ctrl:ctrlDef(2,'row','none','side'),pocket:76}
+  : {scale:648,frets:22,fbFret:null,strings:6,nutW:43,heelW:56,spNut:35,spBridge:52,bridge:'tom',pu1:{t:'HB',d:40,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'HB',d:140,a:0},ctrl:ctrlDef(3,'square','toggle3','side'),pocket:50}; }
+function scalePts(d,k){ d.pts.forEach(p=>{ p.x=Math.round(p.x*k*10)/10; p.y=Math.round(p.y*k*10)/10; }); }
+function applyInst(d,k){ if(!d||!d.set) return d; if(d.type==='headstock') return applyInstHead(d,k); const s=d.set, want=k==='b'; if(isBass(d)===want) return d;
+  const keep={}; INST_KEYS.forEach(q=>{ if(s[q]!==undefined) keep[q]=clone(s[q]); });
+  keep._pts=clone(d.pts); const back=want?s._bas:s._gtr, nw=back?clone(back):instSet(k); if(want) s._gtr=keep; else s._bas=keep;
+  const oldPts=nw._pts, wasW=d._wPts&&d._wPts===JSON.stringify(d.pts); delete nw._pts;
+  if(nw.ctrl&&s.ctrl){ nw.ctrl.knobD=s.ctrl.knobD||25; nw.ctrl.edited=false; nw.ctrl.items=[]; }
+  Object.assign(s,nw); if(s.fbFret==null) delete s.fbFret;
+  if(wasW&&oldPts){ d.pts=oldPts; delete d._kB; }   // vorm niet aangeraakt sinds de omzetting: de oorspronkelijke terug
+  else if(want&&d.bassK){ scalePts(d,d.bassK); d._kB=d.bassK; } else if(!want&&d._kB){ scalePts(d,1/d._kB); delete d._kB; }
+  delete d._wPts; if(want&&ENGINE_READY){ widenForNeck(d); d._wPts=JSON.stringify(d.pts); }
+  s.pg.edited=false; s.pg.pts=null; if(typeof fitPickups==='function'&&ENGINE_READY){ fitPickups(d); refreshAuto(d); } return d; }
+function applyInstHead(d,k){ const s=d.set, want=k==='b'; if(isBass(d)===want) return d;
+  const HK=['strings','nutW','spNut','tuner','holeD','postD','housW','housL','minSp','layout','pat','auto','first','spacing','xoff','slant','edge'];
+  const keep={posts:clone(d.posts||[])}; HK.forEach(q=>{ if(s[q]!==undefined) keep[q]=clone(s[q]); });
+  const back=want?s._bas:s._gtr; if(want) s._gtr=keep; else s._bas=keep;
+  if(back){ const b=clone(back); d.posts=b.posts; delete b.posts; Object.assign(s,b); return d; }
+  const fam=typeof headFam==='function'&&d.posts&&d.posts.length?headFam(d):(s.layout==='custom'?'split':s.layout);
+  const nut=Math.max(38,Math.min(46,s.nutW||42));   // de nut van de kop blijft: een basnut is 38 à 45 mm (J-bas 38, P-bas 44,5)
+  if(want) Object.assign(s,{strings:4,nutW:nut,spNut:Math.round((nut-10)*2)/2,tuner:'bass'}); else Object.assign(s,{strings:6,nutW:nut,spNut:Math.round((nut-7.5)*2)/2,tuner:fam==='split'?'grover':'inline'});
+  applyTuner(d); delete s.edge; s.layout=fam==='custom'?'split':fam; s.pat=null; s.auto=true;
+  if(ENGINE_READY){ placePosts(d); if(headChecks(d).length&&typeof fitPosts==='function') fitPosts(d); if(want&&headChecks(d).length) growHead(d); } else placePosts(d); return d; }
+// basmechanieken zijn groter (gat 19 mm, steek ± 45): past het niet, dan wordt de kop langer en breder, de nut blijft. Het eerste dat de keuring haalt, telt.
+function growHead(d){ const P0=clone(d.pts), sm=y=>{ const t=Math.max(0,Math.min(1,y/35)); return t*t*(3-2*t); };
+  for(const ky of [1.1,1.2,1.3,1.42,1.55]) for(const kx of [1,1.08,1.16,1.25]){ d.pts=P0.map(p=>({...p,x:Math.round(p.x*(1+(kx-1)*sm(p.y))*10)/10,y:Math.round(p.y*ky*10)/10}));
+    d.set.layout=d.set.layout==='custom'?'split':d.set.layout; d.set.pat=null; d.set.auto=true; placePosts(d); if(headChecks(d).length&&typeof fitPosts==='function') fitPosts(d); if(!headChecks(d).length){ d.grown=[kx,ky]; return true; } }
+  d.pts=P0; placePosts(d); return false; }
+// een basnek is breder aan de hiel (62 mm tegen 56): de opening voor de hals schuift mee open, met minstens 4 mm hout rondom
+function widenForNeck(d){ const s=d.set, ss=(a,b,v)=>{ const t=Math.max(0,Math.min(1,(v-a)/(b-a))); return t*t*(3-2*t); };
+  // 15/11: niet punt per punt (dat gaf hapjes naast de hals), maar de hele zone naast de hals vloeiend opzij schuiven; verder weg blijft de vorm zoals hij was
+  for(let r=0;r<5;r++){ const g=geom(d), tY=topOf(g), y0=tY-(s.pocket||76)-12, need=p=>neckHW(s,Math.min(p.y,tY+80))+(p.y>tY?2:4+r);
+    let moved=false;
+    for(const side of [-1,1]){ let dx=0; d.pts.forEach(p=>{ if(Math.sign(p.x)!==side||Math.abs(p.x)<1||p.y<y0||p.y>tY+80) return; dx=Math.max(dx,need(p)-Math.abs(p.x)); }); if(dx<=0.05) continue; moved=true;
+      d.pts.forEach(p=>{ if(Math.sign(p.x)!==side||Math.abs(p.x)<1) return; const n=need(p), w=(1-ss(n+2,n+45,Math.abs(p.x)))*ss(y0-35,y0,p.y); p.x=Math.round((p.x+side*dx*w)*10)/10; }); }
+    const ctx=bodyCtx(d); let bad=false; for(let y=ctx.pocketEnd+2;y<ctx.topY-3;y+=6){ const h=neckHW(s,y)-1, xs=hits(ctx.g.poly,y); if(xs.length<2||xs[0]>-h||xs[xs.length-1]<h){ bad=true; break; } } if(!bad||!moved) return; } }
+// een kop of body van het andere instrument: een omgezette kopie (de bron blijft zoals hij is)
+const INST_CACHE={};
+function asInst(d,k){ if(!d||isBass(d)===(k==='b')) return d; const key=d.id+'|'+k+'|'+JSON.stringify(d.pts)+JSON.stringify(d.set.layout); if(INST_CACHE[d.id]&&INST_CACHE[d.id].key===key) return INST_CACHE[d.id].v;
+  const c=applyInst(clone(d),k); INST_CACHE[d.id]={key,v:c}; return c; }
+// 15/11 (Tom): optionele knop "Op basmaat". Een gitaarbody met een bashals is klein en kopzwaar. De body wordt 8 % groter (richtwaarde, niet gemeten:
+// een P-bas oogt ± 10 % groter dan een Strat) en schuift daarna naar de halsaansluiting met de beste balans. Haalt het de keuring niet, dan blijft alles zoals het was.
+const BASS_K=1.08, bassSized=d=>!!(d._bm&&d._bm.after===JSON.stringify(d.pts));
+function bassSize(d){ if(bassSized(d)){ d.pts=d._bm.before; delete d._bm; d.set.pg.edited=false; d.set.pg.pts=null; d.set.ctrl.edited=false; fitPickups(d); refreshAuto(d); return 'Vorige maat terug'; }
+  const before=clone(d.pts), set0=clone(d.set); scalePts(d,BASS_K); widenForNeck(d);
+  const J=jointOpts(d); if(J.ideal){ const dy=fretY(d.set,J.ideal.f)-topOf(geom(d)); d.pts.forEach(p=>{ p.y=Math.round((p.y+dy)*10)/10; }); }
+  d.set.pg.edited=false; d.set.pg.pts=null; d.set.ctrl.edited=false; fitPickups(d); refreshAuto(d);
+  if(bodyChecks(d).length||!neckOK(geom(d).poly)){ d.pts=before; d.set=set0; refreshAuto(d); return 'Op basmaat lukt niet met deze vorm (de keuring houdt hem tegen); alles blijft zoals het was'; }
+  d._bm={before,after:JSON.stringify(d.pts)}; return 'Op basmaat: body 8 % groter'+(J.ideal?', begint nu bij fret '+fmt(J.ideal.f,1)+' (beste balans)':''); }
+function instFix(d){ if(!d||!d.set) return d; return applyInst(d,instPref()); }
 const BODY_PTS={ // echte omtrekken, overgetekend uit gratis 1:1-plannen (Electric Herald e.a.)
   turner:[[0,249],[27,249,1],[40.5,232.0],[64.5,207.5],[99.0,197.5],[121.0,173.0],[114.0,139.0],[103.0,105.5],[112.5,72.0],[133.5,42.0],[148.0,9.5],[152.0,-27.0],[145.0,-62.5],[129.0,-94.0],[104.0,-119.5],[72.0,-135.0],[26.5,-141.5],[-40.0,-138.0],[-73.5,-127.0],[-103.0,-106.0],[-125.0,-77.0],[-137.5,-43.5],[-139.5,-6.5],[-130.5,28.0],[-110.5,58.5],[-92.5,89.5],[-97.0,124.0],[-110.0,156.5],[-107.5,191.5],[-85.0,218.0],[-54.5,233.0],[-27,249,1]], // foto rickturnerguitars.com, geschaald op mensuur 629
   strat:[[-0.5,258.5],[20.5,258.5],[24.5,257],[27.5,257,1],[28.5,203.5,1],[46,195],[71,196],[87,208.5],[96,229],[99.5,245.5],[108.5,253.5],[117,254],[127,248],[134.5,233.5],[138,211],[131.5,174.5],[113.5,126.5],[112,107.5],[115,91],[136,45],[152,1],[158.5,-40],[151.5,-83],[124,-117.5],[83.5,-136.5],[40.5,-141],[-46.5,-141],[-94,-134],[-130,-115.5],[-157.5,-79],[-163.5,-38],[-154.5,12.5],[-142.5,48],[-115,129.5],[-136,215],[-141,268.5],[-133.5,300.5],[-122.5,314.5],[-114.5,318.5],[-103,317],[-95.5,306],[-95,294],[-90.5,270.5],[-75,247.5],[-54,239],[-35.5,243.5],[-27.5,257,1],[-23,258.5]],
@@ -641,6 +703,7 @@ const HEAD_PTS={ // echte kopomtrekken, overgetekend uit gratis 1:1-plannen; pos
   tele:{nut:42.2,pts:[[0,147],[5.5,166],[11.5,178],[21,181],[30,179.5],[37,174],[42,163.5],[41,150],[30,131],[33,118],[36.5,110],[39,90.5],[36.5,76],[30,59.5],[22,32],[21,0.5,1],[-21,0,1],[-25.5,8.5],[-36,17],[-37.5,21],[-23,71.5]],posts:[[-20.3,39.4],[-13.1,62.8],[-5.9,86.1],[1.2,109.4],[8.3,132.8],[15.4,156.1]]},
   strat:{nut:42.1,pts:[[0,144.5],[7.5,169],[20.5,181],[30.5,183.5],[42,180.5],[54.5,166.5],[55,150],[49,140],[37.5,132.5],[34.5,129,1],[34,126],[35.5,113],[45,72],[47,48,1],[36,38.5],[23,18.5],[21,0.5,1],[-21,0,1],[-21,0.5,1],[-23,14],[-33,20.5],[-35.5,24,1],[-35.5,28.5],[-18.5,84.5]],posts:[[-20.4,39.4],[-13.2,62.8],[-6,86.1],[1.1,109.4],[8.2,132.8],[15.3,156.1]]},
   strat70:{nut:42.1,pts:[[0,152],[11.5,181.5],[25,190.5],[36.5,192],[54,184],[62.5,170],[63,156.5],[60,147],[48.5,135],[43,132.5],[38,127],[37,118.5],[46.5,99.5],[57.5,64],[57.5,41.5,1],[56.5,40.5],[42,37.5],[30,29],[22,14.5],[21,0,1],[-21,0,1],[-23.5,13],[-32.5,21],[-36.5,30.5],[-23.5,75]],posts:[[-20.4,39.4],[-13.2,62.8],[-6,86.1],[1.1,109.4],[8.2,132.8],[15.3,156.1]]},
+  rick4003:{nut:41.3,pts:[[-20.65,0,1],[20.65,0,1],[23.2,2.8],[25.8,5.7],[29.1,8.5],[34.6,11.3],[46.8,14.2],[46.8,17.0],[46.8,19.8],[47.1,22.7],[47.1,25.5],[47.1,28.3],[46.8,31.2],[46.6,34.0],[45.9,36.8],[45.2,39.6],[44.6,42.5],[43.9,45.3],[43.2,48.1],[42.5,51.0],[41.8,53.8],[41.1,56.6],[40.4,59.5],[39.8,62.3],[39.1,65.1],[38.6,68.0],[38.1,70.8],[38.1,73.6],[37.9,76.5],[37.9,79.3],[38.1,82.1],[38.4,85.0],[38.8,87.8],[39.3,90.6],[39.8,93.5],[40.3,96.3],[40.7,99.1],[41.2,102.0],[41.7,104.8],[42.2,107.6],[42.7,110.4],[43.1,113.3],[44.0,116.1],[44.7,118.9],[45.7,121.8],[46.6,124.6],[47.1,127.4],[46.6,130.3],[44.5,133.1],[-7.9,135.9],[-7.2,138.8],[-6.7,141.6],[-6.7,144.4],[-7.4,147.3],[-8.8,150.1],[-11.2,152.9],[-15.0,155.8],[-21.6,158.6],[-26.9,159.3],[-37.4,156.7],[-40.9,153.9],[-42.8,151.0],[-44.0,148.2],[-45.0,145.4],[-45.7,142.5],[-46.1,139.7],[-46.8,136.9],[-47.3,134.0],[-47.6,131.2],[-47.8,128.4],[-47.6,125.6],[-47.3,122.7],[-47.1,119.9],[-46.8,117.1],[-46.6,114.2],[-46.4,111.4],[-46.1,108.6],[-45.9,105.7],[-45.7,102.9],[-45.4,100.1],[-45.2,97.2],[-45.0,94.4],[-44.7,91.6],[-44.7,88.7],[-44.5,85.9],[-44.7,83.1],[-45.0,80.2],[-45.4,77.4],[-46.1,74.6],[-46.8,71.7],[-47.6,68.9],[-48.3,66.1],[-49.0,63.2],[-49.7,60.4],[-50.4,57.6],[-51.1,54.8],[-51.8,51.9],[-52.5,49.1],[-53.7,46.3],[-54.4,43.4],[-54.9,40.6],[-54.9,37.8],[-54.2,34.9],[-49.7,32.1],[-45.0,29.3],[-40.5,26.4],[-36.9,23.6],[-33.4,20.8],[-29.6,17.9],[-27.0,15.1],[-24.4,12.3],[-22.3,9.4],[-20.9,6.6],[-20.4,3.8],[-20.4,0.9]],posts:[[-32,63.2],[-28.7,103.8],[23.7,99.1],[26.2,48.1]]},   // 15/11: uit het 3D-model (Thingiverse 87824, Rick750headstock), geschaald op nut 41,3 mm (1 5/8"); mechaniekgaten 17 mm binnen de rand op de lijn van de assen (benadering)
   lp:{nut:42.5,pts:[[0.5,170],[3,172],[9,172],[22,165],[38.5,164,1],[34,119],[32.5,80],[33.5,49],[35,37],[31,30.5],[24.5,18.5],[21.5,0,1],[-21,0,1],[-25.5,20.5],[-35,37.5],[-34.5,41.5],[-33,80.5],[-35,127],[-39,163],[-38.5,164,1],[-22,165],[-9,172.5],[-0.5,170,1]],posts:[[-20.2,58.6],[-21,93.3],[-22.4,127.7],[22,127.7],[20.8,93.3],[19.8,58.6]]},
   explorer:{nut:43,pts:[[0.5,105.5],[48.5,168],[79.5,179],[91.5,174.5],[94,164.5],[82,145.5],[64,118],[43.5,76.5],[28.5,35.5],[21.5,0.5,1],[-21.5,0,1],[-24.5,10],[-29.5,19.5],[-39,29],[-48,34.5],[-48.5,35.5,1]],posts:[[-23,48.1],[-9.8,66.8],[3.5,85.6],[16.8,104.3],[30,123.1],[43.4,141.8]]},
   firebird:{nut:43.6,pts:[[-0.5,202],[3.5,197.5],[8,184.5],[39.5,40,1],[26,20],[22,7.5],[22,0,1],[-22,0,1],[-22.5,9],[-26,20.5],[-39.5,40,1],[-33,63],[-28,89.5],[-25.5,115],[-23,139],[-23.5,162.5],[-30.5,168.5],[-35,174.5],[-37,183],[-32.5,195.5],[-27,200.5],[-16,205.5],[-10,205.5]],posts:[[-1.2,171.2],[3.9,147.5],[9,123.5],[14.2,99.6],[19.4,75.6],[24.6,51.6]]},
@@ -712,17 +775,18 @@ function REFS(){ const B=BODY_PTS; return [
   mkBody('duojet','Duo Jet-type (Gretsch)',BODY_PTS4.duojet,false,{...GIB,scale:625,frets:22,pocket:60,pu1:PU('HB',55),pu2:NOPU,pu3:PU('HB',146),ctrl:ctrlDef(3,'row','toggle3','side'),pg:pgDef('small')}),
   mkBody('billybo','Jupiter Thunderbird-type (Gretsch Billy-Bo)',BODY_PTS4.billybo,false,{...GIB,scale:625,frets:22,heelW:49,pocket:60,pu1:PU('HB',55),pu2:NOPU,pu3:PU('HB',142),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('none')}),
   mkBody('mockingbird','Mockingbird-type (B.C. Rich, bolt-on)',BODY_PTS4.mockingbird,false,{...GIB,scale:628.6,frets:24,pocket:66,pu1:PU('HB',38),pu2:NOPU,pu3:PU('HB',118),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('none')}),
-  mkBody('rick4003','4003-type als gitaar (Rickenbacker-basvorm)',BODY_PTS4.rick4003,false,{...GIB,scale:628,frets:24,pocket:45,pu1:PU('SC',42),pu2:NOPU,pu3:PU('SC',128),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('small')}),
+  Object.assign(mkBody('rick4003','4003-type als gitaar (Rickenbacker-basvorm)',BODY_PTS4.rick4003,false,{...GIB,scale:628,frets:24,pocket:45,pu1:PU('SC',42),pu2:NOPU,pu3:PU('SC',128),ctrl:ctrlDef(4,'row','toggle3','side'),pg:pgDef('small')}),{bassK:1/0.94}),   // als bas: terug op ware grootte
   mkBody('boden','Strandberg Boden-type (headless, ergonomisch)',BODY_PTS3.boden,false,{...FEN,scale:648,frets:24,pocket:25,bridge:'wrap',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',122),ctrl:ctrlDef(2,'row','blade5','side'),pg:pgDef('none')}),
   mkBody('jaguar','Jaguar-type (zelfde body als de Jazzmaster)',B.jm,false,{...FEN,scale:610,frets:22,pu1:PU('SC',40,-6),pu2:NOPU,pu3:PU('SC',145),ctrl:ctrlDef(4,'row','blade3','top'),pg:pgDef('full',22,true)}),
   mkBody('stingray','StingRay-type gitaar (Music Man)',BODY_PTS2.stingray,false,{...FEN,scale:648,frets:22,pocket:40,pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',140),pg:pgDef('full',22,true)}),
-  mkBody('pbass','P-bass-type',B.strat.map(([x,y,c])=>[x*1.02,y*1.2+50,c]),false,{...BASS,pu1:{t:'none',d:50,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'BASS',d:150,a:0},ctrl:ctrlDef(2,'row','none','top'),pg:pgDef('full',27)}),
+  mkBody('pbass','P-bass-type',B.strat.map(([x,y,c])=>[x*1.02,y*1.2+50,c]),false,{...BASS,pu1:{t:'none',d:50,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'P',d:152,a:0},ctrl:ctrlDef(2,'row','none','top'),pg:pgDef('full',27)}),
   mkBody('jbass','J-bass-type',B.jm.map(([x,y,c])=>[x*0.95,y*1.12+70,c]),false,{...BASS,pu1:{t:'JB',d:45,a:0},pu2:{t:'none',d:95,a:0},pu3:{t:'JB',d:130,a:0},ctrl:ctrlDef(3,'row','none','top'),pg:pgDef('full',27)}),
   mkHeadR('strat','Strat-type kop (50s/60s)','kluson'),
   mkHeadR('turner','Model 1-type kop (Rick Turner)','mini',{pitch:14}),
   mkHeadR('strat70','Strat-type kop (70s, groot)','kluson'),
   mkHeadR('tele','Tele-type kop','kluson'),
   mkHeadR('lp','Les Paul-type kop (open book, 3+3)','grover'),
+mkHeadR('rick4003','4003-type baskop (Rickenbacker, 2+2)','bass',{strings:4}),
   mkHeadR('prs','PRS-type kop (3+3)','grover',{minSp:19,housW:13,housL:27}),
   mkHeadR('dbz','DBZ-type kop (3+3, puntig)','grover',{minSp:26}),
   mkHeadR('mosrite','Mosrite-type kop (3+3)','grover'),
@@ -1098,7 +1162,7 @@ function puReason(ctx,k,R){
   for (const o of ctx.pus) if (o.k!==k && rectGap(R,o.route)<3) return `te dicht bij de ${PUNAME[o.k]}pickup (min. 3 mm hout)`;
   if (!(k==='pu1'&&ctx.holdsPu1)) for (const b of ctx.br) if (rectGap(R,b)<2) return 'raakt de brug';
   { const pocketR={cx:0,cy:(ctx.pocketEnd+ctx.topY+300)/2,w:Math.max(ctx.s.heelW,2*neckHW(ctx.s,ctx.pocketEnd)),h:ctx.topY+300-ctx.pocketEnd,a:0}, fbR={cx:0,cy:(ctx.fbEnd+ctx.topY+300)/2,w:ctx.s.heelW,h:ctx.topY+300-ctx.fbEnd,a:0}, t=PUS[ctx.s[k].t]||[0,R.w,R.h], C={cx:R.cx,cy:R.cy,a:R.a,w:t[1]||R.w,h:t[2]||R.h};
-    if (rectGap(R,pocketR)<1) return 'loopt in de halsvoet';
+    if (rectGap(R,pocketR)<1 && joinOf(ctx.s)!=='lijm') return 'loopt in de halsvoet';   // 15/11 (Tom): bij een gelijmde hals mag de pickup over de tenon (zoals een Les Paul), niet onder de toets
     if (rectGap(C,fbR)<0.5&&rectDist({x:C.cx,y:C.cy},fbR)<C.h) return 'zit onder de toets'; }
   const its=ctx.s.ctrl.items||[];
   for (let i=0;i<its.length;i++){ const it=its[i]; if(it.t==='jack'&&ctx.s.ctrl.jack==='side') continue; if (rectDist(it,R)<itemR(it,ctx.s.ctrl)+3) return `te dicht bij ${itemName(its,i)}`; }
@@ -1213,6 +1277,8 @@ function pgContain(d,ctx){ const pg=d.set.pg, g=ctx.g, m=Math.max(1,(pg.margin||
   for(let r=0;r<3;r++){ const allow=offsetPoly(g.poly,m+r*1.5), poly=geom({pts:pg.pts,sym:false,tension:d.tension}).poly;
     let bad=0; const Q=poly.map(p=>{ if(inside(allow,p)) return {x:p.x,y:p.y}; bad++; const q=nearestOnPoly(allow,p); return {x:q.x,y:q.y}; });
     if(!bad) return; pg.pts=fitAnchors(Q,{tol:0.5}).map(p=>({x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2,c:!!p.c})); } }
+// 15/11 (Tom): bij een gelijmde hals kan de pickguard de zone tussen de toets en de halspickup bedekken (het stukje bij een SG); bij een geschroefde hals ligt daar de halsvoet
+function pgNeckY(d,ctx){ const pg=d.set.pg; return pg.toFb&&joinOf(d.set)==='lijm'?Math.max(ctx.neckStop,ctx.fbEnd):ctx.neckStop; }
 function autoPG0(d,ctx){
   const pg=d.set.pg, s=d.set; if (pg.style==='none'){ return; }
   const g=ctx.g, hw=s.heelW/2, off=offsetPoly(g.poly,pg.margin);
@@ -1228,7 +1294,7 @@ function autoPG0(d,ctx){
   const brTop=Math.max(-1e9,...ctx.br.map(b=>b.r!=null?b.y+b.r:b.cy+b.h/2));
   if (pg.style==='band'){   // strook rond de pickups, tot tegen de hals
     if(!pusF.length){ pg.pts=null; return; }
-    const lo=Math.max(brTop+5,Math.min(...pusF.map(p=>p.cover.cy-p.cover.h/2))-10), hi=ctx.neckStop; if(hi-lo<30){ pg.pts=null; return; }
+    const lo=Math.max(brTop+5,Math.min(...pusF.map(p=>p.cover.cy-p.cover.h/2))-10), hi=pgNeckY(d,ctx); if(hi-lo<30){ pg.pts=null; return; }
     let w=Math.max(...pusF.map(p=>p.cover.w/2))+12+inset; for(let y=lo;y<=hi;y+=4){ const r=X(y); if(!r){ pg.pts=null; return; } w=Math.min(w,-r[0]-1,r[1]-1); }
     if(w<pw+4){ pg.pts=null; return; } const k=Math.min(12,w*0.3);
     [[w-k,lo],[w,lo+k],[w,hi,1],[-w,hi,1],[-w,lo+k],[-w+k,lo]].forEach(q=>add(q[0],q[1],q[2])); pg.pts=P; return; }
@@ -1247,7 +1313,7 @@ function autoPG0(d,ctx){
     add(xi,yHi,1); ysDown(yHi,yLow,N).forEach((y,i)=>add(X(y)[1],y,i===0||i===N)); add(xi,yLow,1);
     pg.pts=P; return;
   }
-  const notch=ctx.neckStop<yHi, nE=ctx.neckStop, nw=y=>Math.max(hw,neckHW(s,y));
+  const nE=pgNeckY(d,ctx), notch=nE<yHi, nw=y=>Math.max(hw,neckHW(s,y));
   if (notch){ add(-nw(nE)-1,nE,1); add(nw(nE)+1,nE,1); add(nw(yHi)+1,yHi,1); }
   const kn=(s.ctrl.items||[]).filter(t=>(t.t==='knob'||t.t==='sw'||(t.t==='jack'&&s.ctrl.jack==='top')) && t.y-itemR(t,s.ctrl)<yLow);
   const xBr=Math.max(0,...ctx.br.map(b=>b.r!=null?b.x+b.r:b.cx+b.w/2))+5;
@@ -1264,7 +1330,8 @@ function autoPG0(d,ctx){
 // halsdiepte: volgt altijd de laatste versie. Wat het hout (body en hals) en de halsbreedte vragen, wordt toegepast,
 // tenzij je hem zelf kiest. De halspickup begrenst hoe diep hij kan: dan meldt de queeste dat het krap is.
 function pocketRoom(d,ctx){ const tops=ctx.pus.map(p=>p.route.cy+Math.max(p.route.h,p.route.w*Math.abs(Math.sin((p.route.a||0)*Math.PI/180)))/2); return tops.length?ctx.topY-Math.max(...tops)-3:Infinity; }
-function autoPocket(d){ const s=d.set; if(d.ref||s.pocketMan) return false; const J=jointNeed(s), ctx=bodyCtx(d), room=pocketRoom(d,ctx);
+const joinOf=s=>s.join||(typeof lib!=='undefined'&&lib.view&&lib.view.rnd&&lib.view.rnd.join)||'lijm';
+function autoPocket(d){ const s=d.set; if(d.ref||s.pocketMan) return false; const J=jointNeed(s), ctx=bodyCtx(d), room=joinOf(s)==='lijm'?Infinity:pocketRoom(d,ctx);   // gelijmd: de tenon mag onder de halspickup doorlopen
   // Tom 14/11: de hals loopt doorgaans dieper in de body, tot vlak voor de halspickup (hoogstens 100 mm)
   const v=Math.max(10,Math.min(Math.floor(room*2)/2,Math.max(Math.ceil(J.g),100))); if(Math.abs(v-s.pocket)<0.25) return false; s.pocket=v; return true; }
 function refreshAuto(d,light){
@@ -1567,13 +1634,13 @@ function bodyOverlay(d,g){
     o+=`<path d="${pathD(pgg.segs)}" fill="${(PG_COL[s.pg.color]||PG_COL.wit)[1]}" fill-opacity=".93" stroke="#8c8c84" stroke-width="1.4"/>`;
     pgScrews(d,pgg).forEach(q=>{ o+=circSVG(q.x,q.y,1.6,'fill="#d8d4cc" stroke="#6b6257" stroke-width=".8"'); });
     const inPG=p=>inside(pgg.poly,p);
-    ctx.pus.forEach(p=>{ if(inPG({x:p.cover.cx,y:p.cover.cy})) o+=rectSVG({...p.cover,w:p.cover.w+1,h:p.cover.h+1},'fill="#e8e2d8" stroke="#8c8c84" stroke-width="1"'); });
+    ctx.pus.forEach(p=>{ if(inPG({x:p.cover.cx,y:p.cover.cy})) puParts(p.cover,s[p.k].t).forEach(q=>{ o+=rectSVG({...q,w:q.w+1,h:q.h+1},'fill="#e8e2d8" stroke="#8c8c84" stroke-width="1"'); }); });
     (s.ctrl.items||[]).forEach(it=>{ if(inPG(it) && !(it.t==='jack'&&s.ctrl.jack==='side')) o+=circSVG(it.x,it.y,it.t==='jack'?11:4.75,'fill="#e8e2d8" stroke="#8c8c84"'); });
   }
   if (v.hw){
     ctx.br.forEach(b=>{ o+= b.r!=null ? circSVG(b.x,b.y,b.r,'fill="#a7aeb2" stroke="#5f676c"') : rectSVG(b,'fill="#a7aeb2" fill-opacity=".75" stroke="#5f676c" stroke-width="1"'); });
     ctx.pus.forEach(p=>{ if(s[p.k].t==='HBR') o+=circSVG(0,p.route.cy,RH_R,'fill="#1f1c18" fill-opacity=".78"'); });
-    ctx.pus.forEach(p=>{ const bad=puReason(ctx,p.k); o+=rectSVG(p.cover,`fill="#2b2b2b" fill-opacity=".55" stroke="${bad?'#c0392b':'#2b2b2b'}" stroke-width="${bad?2.5:1}"`); });
+    ctx.pus.forEach(p=>{ const bad=puReason(ctx,p.k); puParts(p.cover,s[p.k].t).forEach(q=>{ o+=rectSVG(q,`fill="#2b2b2b" fill-opacity=".55" stroke="${bad?'#c0392b':'#2b2b2b'}" stroke-width="${bad?2.5:1}"`); }); });
   }
   if (v.neck){
     const yEnd = ctx.pocketEnd, yTop = Math.max(s.scale, g.maxY+40);
@@ -1675,7 +1742,14 @@ const PRESETS={
   p90:['Twee P90’s, 4 knoppen',{bridge:'tom',pu1:PU('P90',42),pu2:NOPU,pu3:PU('P90',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
   hss:['Humbucker + 2 single coils (modern)',{bridge:'trem',pu1:PU('HB',40),pu2:PU('SC',95),pu3:PU('SC',145),ctrl:ctrlDef(2,'diag','blade5','side')}],
   hb1:['Eén humbucker, 1 knop (strak)',{bridge:'hard',pu1:PU('HB',40),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(1,'row','none','side')}],
-  none:['Alleen de vorm (geen hardware)',{bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side')}]
+  bigsby:['Twee humbuckers met Bigsby',{bridge:'bigsby',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',145),ctrl:ctrlDef(4,'square','toggle3','side')}],
+  trem2:['Twee humbuckers met tremolo (modern)',{bridge:'trem2',pu1:PU('HB',40),pu2:NOPU,pu3:PU('HB',140),ctrl:ctrlDef(2,'row','toggle3','side')}],
+  none:['Alleen de vorm (geen hardware)',{bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side')}],
+  pbas:['P-bas: één gesplitste pickup, 2 knoppen',{bridge:'bass',pu1:NOPU,pu2:NOPU,pu3:PU('P',152),ctrl:ctrlDef(2,'row','none','side')},1],
+  jbas:['J-bas: twee single coils, 3 knoppen',{bridge:'bass',pu1:PU('JB',45),pu2:NOPU,pu3:PU('JB',130),ctrl:ctrlDef(3,'row','none','side')},1],
+  pjbas:['PJ: gesplitst + single aan de brug, 3 knoppen',{bridge:'bass',pu1:PU('JB',45),pu2:NOPU,pu3:PU('P',152),ctrl:ctrlDef(3,'row','none','side')},1],
+  sbas:['Eén bas-soapbar, 2 knoppen (strak)',{bridge:'bass',pu1:PU('BASS',75),pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(2,'row','none','side')},1],
+  nbas:['Alleen de vorm (bas, geen hardware)',{bridge:'none',pu1:NOPU,pu2:NOPU,pu3:NOPU,ctrl:ctrlDef(0,'row','none','side')},1]
 };
 const REF_FOTO=['i5t','asher','turner','h-tiger','h-turner','iceman','revstar','l5','stingray'];
 const REF_WHY={turner:'Rick Turner tekende de Model 1 klein en rond, met één humbucker in een ronde opening. De hals gaat vroeg in de body (rond fret 16), zodat je hoog bij de frets kunt. '};
@@ -1815,7 +1889,7 @@ function holeChecks(d){ const H=holePolys(d), out=[]; if(!H.length) return out; 
 function shPic(k){ if(k==='none') return '<svg viewBox="0 0 40 50"><path d="M8 8L32 42M32 8L8 42" stroke="#c9bfb2" stroke-width="2"/></svg>'; const R=shRings(k,40,'SCG'); return `<svg viewBox="-20 -25 40 50"><path d="${R.map(r=>'M'+r.map(p=>p.x.toFixed(1)+','+(-p.y).toFixed(1)).join('L')+'Z').join('')}" fill="#2a2420" transform="rotate(-6)"/></svg>`; }
 function pgHTML(){ return `<section><h2>Pickguard</h2>
       <div class="ideas bouw">${Object.entries(PG_STYLES).map(([k,v])=>`<button class="idea" data-act="pgStyle" data-k="${k}" title="${v[1]}">${pgPic(k)}${v[0]}</button>`).join('')}</div>
-      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${chk('set.pg.facet','Hoekig (rechte lijnen)','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
+      <div id="pgOpts">${num('set.pg.margin','Afstand tot de rand','mm',0.5,'data-after="pg"')}${num('set.pg.bottom','Onderkant (boven het zadel)','mm',1,'data-after="pg"')}${chk('set.pg.knobs','Knoppen op de pickguard','data-after="pg"')}${chk('set.pg.toFb','Tot tegen de toets (zoals een SG, gelijmde hals)','data-after="pg"')}${chk('set.pg.facet','Hoekig (rechte lijnen)','data-after="pg"')}${num('set.pg.tilt','Onderkant schuin (+ baskant hoger)','mm',1,'data-after="pg"')}${num('set.pg.curve','Onderkant hol (+) of bol (−)','mm',1,'data-after="pg"')}${num('set.pg.inset','Breder (+) of smaller','mm',1,'data-after="pg"')}${sel_('set.pg.color','Kleur',Object.fromEntries(Object.entries(PG_COL).map(([k,v])=>[k,v[0]])))}${chk('set.pg.screws','Schroefgaten')}
       <div class="btns"><button data-act="pgVary">🎲 Variatie</button><button data-act="tgtPG">Vorm aanpassen</button><button data-act="pgRegen">Opnieuw genereren</button><button data-act="pgSvg">Pickguard SVG</button></div>
       <p class="hint" id="pgState"></p></div></section>`; }
 function holesHTML(){ return `<section><h2>Klankgaten</h2><div class="ideas bouw sh">${['none',...Object.keys(SH_TYPES)].map(k=>`<button class="idea" data-act="shType" data-k="${k}">${shPic(k)}${k==='none'?'Geen':SH_TYPES[k].n}</button>`).join('')}</div>
@@ -1850,7 +1924,7 @@ function buildPanel(){
   if (d.type==='body') h+=`<nav id="stepNav">${(APP_LEVEL==='light'?[['V','Vorm'],['2','Pickups'],['3','Pickguard'],['5','Klankgaten'],['6','Knoppen'],['7','Kop & kleur']]:[['V','Vorm'],['1','1 Hals'],['2','2 Pickups'],['3','3 Pickguard'],['4','4 Hout'],['5','5 Klankgaten'],['6','6 Knoppen'],['7','7 Kop']]).map(([k,n])=>`<button type="button" data-nav-go="${k}">${n}</button>`).join('')}</nav>`;
   if (d.ref) h+=`<section style="background:#fff7ef"><b>🔒 Referentievorm</b><p class="hint">${refNote(d)}Om mee te vergelijken of als startpunt, niet om te kopiëren voor verkoop.</p><div class="btns"><button class="primary" data-act="dup">Gebruik als startpunt</button></div></section>`;
   h+=`<section><div id="sum" class="sum"></div><div class="checks" id="checks"></div></section><details id="qBox" class="card" ${(v.qbox!=null?v.qbox:!CMP.matches)?'open':''}><summary>De queeste <span id="qSum" class="qsum"></span></summary><section><div id="playBox"></div></section></details>`;
-  h+=`<section class="handsec"><div class="fr fr2 hand"><button data-act="hand" data-k="r">Rechtshandig</button><button data-act="hand" data-k="l">Linkshandig</button></div></section>`;
+  h+=`<section class="handsec"><div class="fr fr2 hand"><button data-act="hand" data-k="r">Rechtshandig</button><button data-act="hand" data-k="l">Linkshandig</button></div><div class="fr fr2 hand inst"><button data-act="inst" data-k="g">Gitaar</button><button data-act="inst" data-k="b">Bas (4 snaren)</button></div>${d.type==='body'&&!d.ref&&isBass(d)?`<div class="btns" style="margin-top:6px"><button data-act="bassSize" title="Optioneel: de body wordt groter en schuift naar de beste balans">${bassSized(d)?'↩ Vorige maat terug':'Op basmaat'}</button></div>`:''}</section>`;
   h+=`<section><h2 data-nav="V">${LIGHT&&d.type==='body'?'<span class="stepn">1</span>':''}Vorm</h2>
     <div class="feel">${(d.type==='body'?[['lo','Onderbout'],['wa','Taille'],['up','Bovenbout'],['w','Breedte'],['l','Lengte']]:[['mi','Midden'],['to','Top'],['w','Breedte'],['l','Lengte']]).map(([k,n])=>`<div class="fr"><button data-act="feel" data-k="${k}-" aria-label="${n} kleiner">−</button><span>${n}</span><button data-act="feel" data-k="${k}+" aria-label="${n} groter">+</button></div>`).join('')}</div>
     <div class="row"><label>Lijn: strak ↔ rond</label><input type="range" min="0.3" max="1.6" step="0.05" data-bind="tension" style="width:130px"></div>
@@ -1868,10 +1942,10 @@ function buildPanel(){
       ${num('set.frets','Aantal frets','',1)}
       <div id="neckBox"></div></section>`;
     h+=`<section>${step(2,'Brug en pickups','De brug ligt op het zadel (nulpunt). De pickups komen tussen de brug en het einde van de toets.')}
-      <div class="row"><label>Snel kiezen</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
-      ${sel_('set.bridge','Brug',BRIDGES)}
+      <div class="row"><label>Snel kiezen</label><select id="hwPreset" style="max-width:210px"><option value="">— kies een opbouw —</option>${Object.entries(PRESETS).filter(([k,v])=>!!v[2]===isBass(d)).map(([k,[n]])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
+      ${sel_('set.bridge','Brug',Object.fromEntries(Object.entries(BRIDGES).filter(([k])=>isBass(d)?k==='bass'||k==='none':k!=='bass')))}
       <table class="tbl putbl"><tr><th></th><th>type</th><th>afstand</th><th>hoek</th></tr>
-      ${['pu3:Hals','pu2:Midden','pu1:Brug'].map(x=>{ const [k,n]=x.split(':'); return `<tr><td>${n}</td><td><select data-bind="set.${k}.t">${Object.entries(PUS).map(([a,b])=>`<option value="${a}">${b[0]}</option>`).join('')}</select></td><td><input type="number" step="0.5" data-bind="set.${k}.d"></td><td><input type="number" step="1" data-bind="set.${k}.a" style="width:50px"></td></tr>`; }).join('')}</table>
+      ${['pu3:Hals','pu2:Midden','pu1:Brug'].map(x=>{ const [k,n]=x.split(':'); return `<tr><td>${n}</td><td><select data-bind="set.${k}.t">${Object.entries(PUS).filter(([a])=>isBass(d)===BASS_PU.includes(a)||a==='none').map(([a,b])=>`<option value="${a}">${b[0]}</option>`).join('')}</select></td><td><input type="number" step="0.5" data-bind="set.${k}.d"></td><td><input type="number" step="1" data-bind="set.${k}.a" style="width:50px"></td></tr>`; }).join('')}</table>
       <p class="hint">${APP_LEVEL==='high'?'Afstand = midden pickup tot zadel (mm). ':''}Pickups sleep je op de tekening.</p></section>`;
     h+=pgHTML().replace('<section><h2>Pickguard</h2>',`<section>${step(3,'Pickguard','Volgt de pickups en de brug. Kies je knoppen op de pickguard, dan groeit hij mee tot onder de knoppen.')}`);
     h+=bouwHTML().replace('<section><h2>Hout en kamers</h2><p class="hint">Voor het gewicht en de balans. De kamers worden getekend en gaan mee in het freesplan.</p>',`<section>${step(4,'Hout en kamers','Voor gewicht en balans. De kamers bepalen waar klankgaten echt iets doen.')}`);
@@ -1887,7 +1961,7 @@ function buildPanel(){
       ${chk('set.ctrl.loose','Elke knop apart slepen')}
       ${sel_('set.strapMode','Bovenste riemknop',{ideal:'Ideaal',trad:'Traditioneel'})}<p class="hint" id="strapState"></p></section>`;
     h+=`<section>${step(7,'Kop en render','Welke kop bij deze body hoort, en hoe de hele gitaar eruitziet.')}
-      <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock').sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="row"><label>Kop</label><select id="headSel" data-bind="set.head" style="max-width:210px"><option value="">Laatst geopende kop</option>${lib.designs.filter(x=>x.type==='headstock'&&(!x.ref||headFits(x,d))).sort((a,b)=>(!!a.ref)-(!!b.ref)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
       <div class="btns"><button data-act="editHead">Bewerk deze kop</button><button data-act="render">🎨 Render</button></div></section>`;
     h+=`<details id="techBox" ${v.tech?'open':''}><summary>Technische details</summary>
       <section><h2>Maten</h2><div class="info" id="info"></div><p class="hint">Oranje velden kun je aanpassen: de vorm schaalt of schuift mee.</p></section>
@@ -1949,9 +2023,13 @@ function sumHTML(d,g){
 }
 // ================= hoe speelt hij: ruwe natuurkunde, zie Vormontwerper_Kennisboek.md =================
 const TUN_G={grover:58,kluson:32,inline:45,locking:50,mini:30,bass:130};   // gram per mechaniek (richtwaarden)
-const HW_G={tom:190,wrap:120,trem:380,tele:170,hard:170,none:0};
+const HW_G={tom:190,wrap:120,trem:380,trem2:400,bigsby:450,tele:170,hard:170,bass:230,none:0};   // trem2, bigsby, bass: richtwaarden (15/11)
 const pitchOf=d=>d.set.pitch!=null?+d.set.pitch:/h-prs/.test(d.id)?10:/h-firebird/.test(d.id)?14:(d.set.layout==='split'||d.set.layout==='custom'&&headFam(d)==='split')?14:0;
-function partnerHead(b){ if(!b){ const c=typeof lib!=='undefined'&&lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); b=c||null; }
+function partnerHead(b){ const h=partnerHead0(b); if(!b&&typeof lib!=='undefined') b=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b||!h) return h;
+  const k=isBass(b)?'b':'g', c=asInst(h,k); if(c===h||!headChecks(c).length) return c;   // omgezet maar niet bouwbaar: de dichtstbijzijnde kop die wel past
+  const alt=lib.designs.find(x=>x.id===(k==='b'?'ref-h-rick4003':'ref-h-lp')); return alt?asInst(alt,k):c; }
+const headFits=(h,b)=>!b||!headChecks(asInst(h,isBass(b)?'b':'g')).length;
+function partnerHead0(b){ if(!b){ const c=typeof lib!=='undefined'&&lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); b=c||null; }
   if(b&&b.set&&b.set.head){ const h=lib.designs.find(x=>x.id===b.set.head&&x.type==='headstock'); if(h) return h; }
   return lib.designs.find(x=>x.id===lib.active.headstock&&x.type==='headstock')||lib.designs.find(x=>x.type==='headstock'); }
 function headMass(h){ const g=geom(h), wood=g.area*(pitchOf(h)?15:14)/1000*0.62/1000*1000, n=h.posts.length, tg=(TUN_G[h.set.tuner]||45)*n;
@@ -2147,6 +2225,7 @@ function syncIdeas(d){
   if(d.set.sh){ ['wf','md','mw','mg'].forEach(k=>{ if(d.set.sh[k]==null) d.set.sh[k]=1; }); if(!d.set.sh.gs) d.set.sh.gs='cirkel'; }
   document.querySelectorAll('[data-act=shType]').forEach(b=>b.classList.toggle('on',b.dataset.k===((d.set.sh||{}).type||'none'))); { const o=$('#shOpts'); if(o) o.style.display=(d.set.sh||{}).type&&d.set.sh.type!=='none'?'':'none'; const tr=$('#shTxtRow'); if(tr) tr.style.display=(d.set.sh||{}).type==='morse'?'':'none'; const ty=(d.set.sh||{}).type, mo=$('#shMorse'); if(mo) mo.style.display=ty==='morse'||ty==='grill'?'':'none'; const gr=$('#shGrill'); if(gr) gr.style.display=ty==='grill'?'':'none'; const mdr=$('#shMd'); if(mdr) mdr.style.display=ty==='morse'?'':'none'; const fr=(d.set.sh||{}).pos==='free', a1=$('#shFree'), a2=$('#shNudge'); if(a1) a1.style.display=fr?'':'none'; if(a2) a2.style.display=fr?'none':''; const st=$('#shState'); if(st) st.textContent=shState(d); }
   document.querySelectorAll('[data-act=hand]').forEach(b=>b.classList.toggle('on',(b.dataset.k==='l')===isLeft(d)));
+  document.querySelectorAll('[data-act=inst]').forEach(b=>b.classList.toggle('on',(b.dataset.k==='b')===isBass(d)));
   document.querySelectorAll('[data-act=pgStyle]').forEach(b=>b.classList.toggle('on',b.dataset.k===d.set.pg.style)); document.querySelectorAll('[data-act=inside]').forEach(b=>b.classList.toggle('on',b.dataset.k===(d.set.inside||'solid')));
   const c=d.set.ctrl, box=$('#ideas'); if(!box) return;
   $('#knobCount').textContent=c.n===0?'Geen knoppen':c.n===1?'1 knop':c.n+' knoppen';
@@ -2492,7 +2571,7 @@ $('#more').addEventListener('change',e=>{ const a=e.target.value; e.target.value
 function runAct(a,t){ const d=D();
   switch(a){
     case 'new': { const n=lib.tab==='body'?defaultBody():defaultHead(); const nm=prompt('Naam van het nieuwe ontwerp:', n.name); if(nm===null) return; n.name=nm||n.name; lib.designs.push(n); lib.active[lib.tab]=n.id; switchDesign(); break; }
-    case 'dup': { const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; n.name=d.ref ? 'Mijn '+d.name : copyName(d.name); lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
+    case 'dup': { const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; if(d.ref) instFix(n); n.name=d.ref ? 'Mijn '+d.name : copyName(d.name); lib.designs.push(n); if(d.type==='headstock'){ const bb=lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'&&!x.ref); if(bb&&bb.set.head===d.id) bb.set.head=n.id; } lib.active[lib.tab]=n.id; switchDesign(); toast('Kopie gemaakt: je kunt nu alles aanpassen'); break; }
     case 'lvlHigh': if(APP_LEVEL!=='high'){ leaving(); location.href=lvUrl('high'); } break;
     case 'lvlLight': { (async()=>{ const b=d.type==='body'?d:lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b) return; const url=lvUrl('light')+'#d='+(await packDesign(b,partnerHead(b))); window.open(url,'_blank'); })(); break; }
     case 'openLink': { const v=prompt('Plak de link van een ontwerp (uit Forma of een mail van een klant):',''); if(!v) return; const m=String(v).match(/[#&]d=([A-Za-z0-9_-]+)/); if(!m){ toast('Daar staat geen ontwerp in'); return; } history.replaceState(null,'',pubBase()+'#d='+m[1]); importFromHash(); break; }
@@ -2532,6 +2611,10 @@ function runAct(a,t){ const d=D();
       let ok=false; for(let i=0;i<16&&!ok;i++){ Object.assign(sh,{wf:R(0.75,1.4),ang:Math.round(R(-10,16)),size:Math.round(L0*R(0.85,1.15))}); if(sh.type==='morse') Object.assign(sh,{md:R(0.8,1.45),mw:R(0.8,1.45),mg:R(0.8,1.7)}); if(sh.type==='grill') Object.assign(sh,{mw:R(1,1.6),mg:R(1,1.6),gs:pick(Object.keys(GRILL_SHAPES)),ang:pick([0,0,90,Math.round(R(-12,12))])}); SH_CACHE={}; ok=!holeChecks(d).some(c=>/minstens|past niet|te dicht|pickguard/.test(c)); }
       if(!ok){ Object.assign(sh,JSON.parse(keep)); SH_CACHE={}; toast('Geen andere variant gevonden die goed te bouwen is'); } else toast('Nieuwe variant, binnen wat goed te bouwen is'); panelKey=''; update(); break; }
     case 'shType': { if(locked()){ lockMsg(); return; } const k=t.dataset.k; d.set.sh=Object.assign(d.set.sh||shDef(),{type:k,size:k==='none'?null:SH_TYPES[k].L}); if(LIGHT&&k!=='none'&&(!d.set.inside||d.set.inside==='solid')){ d.set.inside='semi'; toast('Klankgaten vragen een kamer: de body is nu chambered.'); } panelKey=''; update(); break; }
+    case 'bassSize': { if(locked()){ lockMsg(); return; } pushUndo(); const r=bassSize(d); save(); panelKey=''; buildPanel(); update(); requestAnimationFrame(fit); toast(r); break; }
+    case 'inst': { const k=t.dataset.k; lib.view.inst=k; if(d.ref){ save(); panelKey=''; buildPanel(); update(); toast(k==='b'?'Bas: kies “Gebruik als startpunt”, dan wordt deze vorm een bas':'Gitaar'); break; }
+      if(isBass(d)!==(k==='b')){ pushUndo(); applyInst(d,k); const ph=d.type==='body'?partnerHead(d):null; if(ph&&!ph.ref) applyInst(ph,k); }
+      save(); panelKey=''; buildPanel(); update(); requestAnimationFrame(fit); toast(k==='b'?'Bas: 34″ mensuur, 4 snaren, basbrug, -pickups en -mechanieken':'Gitaar: 6 snaren'); break; }
     case 'hand': { const L=t.dataset.k==='l'; lib.view.lefty=L; if(!d.ref){ d.set.lefty=L; const hh=d.type==='body'?partnerHead(d):lib.designs.find(x=>x.type==='body'&&x.set&&x.set.head===d.id&&!x.ref); if(hh&&!hh.ref) hh.set.lefty=L; } save(); panelKey=''; update(); requestAnimationFrame(fit); toast(L?'Linkshandig: alles gespiegeld, ook de mallen':'Rechtshandig'); break; }
     case 'pgStyle': { if(locked()){ lockMsg(); return; } d.set.pg.style=t.dataset.k; d.set.pg.edited=false; d.set.pg.pts=null; editPG=false; sel=-1; panelKey=''; update(); if(d.set.pg.style!=='none'&&!d.set.pg.pts) toast('Past niet met deze body en pickups'); break; }
     case 'pgVary': { if(locked()){ lockMsg(); return; } if(d.set.pg.style==='none'){ toast('Kies eerst een pickguard'); return; } const w=pgVary(d); editPG=false; sel=-1; panelKey=''; update(); toast(d.set.pg.pts?'Variatie: '+w:'Geen variatie die past'); break; }
@@ -2642,7 +2725,7 @@ function fitPickups(d){
 }
 // nieuwe body: mengsel van echte vormen (per helft andere ouders), met zachte vervorming
 // ---- koppen: mengsels van echte koppen (zelfde familie: 3+3, op rij, omgekeerd) ----
-const HEAD_FAM={split:['v58','v83','lp','moderne','prs','mosrite','dano','dbz','tiger','n-gotisch','n-tulp','n-deco','n-waaier','n-ui','n-blad','n-vlam','n-schelp','n-zeis'],inline:['tele','strat','strat70','explorer','rhoads','c5150','n-veer','n-golfkam','n-zwaan','n-spits'],rev:['firebird','n4']};
+const HEAD_FAM={split:['rick4003','v58','v83','lp','moderne','prs','mosrite','dano','dbz','tiger','n-gotisch','n-tulp','n-deco','n-waaier','n-ui','n-blad','n-vlam','n-schelp','n-zeis'],inline:['tele','strat','strat70','explorer','rhoads','c5150','n-veer','n-golfkam','n-zwaan','n-spits'],rev:['firebird','n4']};
 let HVECS=null;
 // denkt mee: past het gekozen patroon niet in deze kop, dan rekt de kop tot het wel past (of blijft hij zoals hij was)
 function growHead(d){
@@ -2808,7 +2891,7 @@ function rollInsp(){
   setTimeout(()=>{ if(run!==insp.run) return; const lv=wildLv(w), src=D(); REFSIG=null;
     const mk = insp.mode==='vary' ? (amp=>vary(src,Math.min(1.4,amp/1.7))) : insp.mode==='mash' ? (()=>mashOK(mashDesign(randomMs(t)))) : t==='body' ? (amp=>genBody(w,amp)) : (amp=>genHead(Math.min(1.4,amp/1.7)));
     const nov = insp.mode==='vary' ? (d=>sigDist(d,src)) : novelty;
-    insp.items=fillWild(mk,8,lv,{nov,band:insp.mode!=='mash',scale:insp.mode==='vary'?1.3:t==='body'?1:0.8}); delete src.sig; markSeen(insp.items); insp.loading=false; drawInsp(); },40);
+    const mk0=mk; insp.items=fillWild(amp=>instFix(mk0(amp)),8,lv,{nov,band:insp.mode!=='mash',scale:insp.mode==='vary'?1.3:t==='body'?1:0.8}); delete src.sig; markSeen(insp.items); insp.loading=false; drawInsp(); },40);
 }
 function openInsp(){ openModal(); MB.dataset.kind='insp'; rollInsp(); }
 const MODE_TXT={free:'Nieuwe vormen uit de bronnen die je aanzet: één bestaande vorm bewust bijgestuurd, of twee vormen per helft gemengd.',
@@ -2852,7 +2935,7 @@ function drawInsp(){ if(MB.dataset.kind&&MB.dataset.kind!=='insp') return;   // 
 function copyName(nm){ const base=String(nm).replace(/( \(kopie( \d+)?\))+$/,''); let i=1, n=base+' (kopie)'; while(lib.designs.some(x=>x.name===n)){ i++; n=base+` (kopie ${i})`; } return n; }
 function useDesign(d){
   // de hand ligt vast bij het maken: een ontwerp slaat nooit vanzelf om
-  const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; if(APP_LEVEL==='light'&&d.ref) n.name='Mijn gitaar naar '+d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,'');
+  const n=clone(d); n.id=uid(); n.set.lefty=isLeft(d); delete n.ref; instFix(n); if(APP_LEVEL==='light'&&d.ref) n.name=(isBass(n)?'Mijn bas naar ':'Mijn gitaar naar ')+d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,'');
   const base=n.name, cnt=lib.designs.filter(x=>x.name.startsWith(base)).length; if(cnt) n.name=base+' '+(cnt+1);
   if (n.type==='body'){ n.set.ctrl.edited=false; n.set.pg.edited=false; if(LIGHT&&!RWOOD_PUB[n.set.wood]){ n.set.wood='vuren'; delete n.set.dens; } }   // Forma: vertrekken van hout dat Sixto gebruikt
   lib.designs.push(n); lib.tab=n.type; lib.active[n.type]=n.id; closeModal(); switchDesign(); toast('Nieuw ontwerp gemaakt: '+n.name);
@@ -3082,7 +3165,7 @@ function mashDesign(m){
   d.name=nm.join(' × '); return d;
 }
 function randomMs(type){
-  const cur=D(), same=x=>(x.set.strings>4)===((cur.type===type?cur.set.strings:6)>4);
+  const same=x=>true;   // 15/11 (Tom): bodies en koppen gaan over de grens van gitaar en bas
   let ids=lib.designs.filter(x=>x.type===type&&same(x)).map(x=>x.id); { const f=ids.filter(id=>/^ref-/.test(id)&&srcOn(id)); if(f.length>=2) ids=f; }   // alleen de gekozen bronnen, geen eigen ontwerpen (Tom, 13/11)
   // koppen alleen binnen één familie mengen (3+3 met 3+3, op rij met op rij): anders wordt het een vreemd beest
   if (type==='headstock'){ const fam=x=>headFam(lib.designs.find(q=>q.id===x)), f0=fam(pick(ids)); const same2=ids.filter(x=>fam(x)===f0); if(same2.length>=2) ids=same2; }
@@ -3162,17 +3245,30 @@ $('#modal').addEventListener('change',e=>{ if(e.target.dataset.m==='wild') rollI
 // ================= render: de hele gitaar als beeld =================
 const WOOD_COL={vuren:'#e3c9a0',grenen:'#dcb27a',els:'#d6ab7f',essen:'#d9bd8f',essen2:'#d2b385',mahonie:'#8e4c2b',okoume:'#b47e58',linde:'#e4cca2',walnoot:'#674530',esdoorn:'#e6cb98',paulownia:'#dbc199',ander:'#c49c6c'};
 // Sixto-afwerkingen eerst: een levendige, doorschijnende tint op vuren of grenen, de nerf blijft zichtbaar, de afgeronde rand blijft hout (Tignum, Rupes, Loculus)
-const FINISH={tgroen:['Groen getint, zoals Sixto Tignum','#1f9a5f','t'],tpaars:['Paars getint, zoals Sixto Rupes','#6a3896','t'],tpruim:['Pruim getint, zoals Sixto Loculus','#a1458a','t'],tblauw:['Blauw getint','#2468bd','t'],trood:['Rood getint','#b52f2a','t'],tamber:['Amber getint','#d7861a','t'],hout:['Hout naturel'],noten:['Notelaar (walnoot)'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
+const FINISH={tgroen:['Groen getint, zoals Sixto Tignum','#1f9a5f','t'],tpaars:['Paars getint, zoals Sixto Rupes','#6a3896','t'],tpruim:['Pruim getint, zoals Sixto Loculus','#a1458a','t'],tblauw:['Blauw getint','#2468bd','t'],trood:['Rood getint','#b52f2a','t'],tamber:['Amber getint','#d7861a','t'],
+  mturk:['Mica turkoois','#159a9c','t','#a8fff0'],mpetrol:['Mica petrol','#0e6577','t','#86dcff'],msmaragd:['Mica smaragd','#138549','t','#dcf57c'],moceaan:['Mica oceaan','#1d4fb3','t','#a4e6ff'],mnacht:['Mica nachtblauw','#1f2550','t','#9db2ff'],
+  mviolet:['Mica violet','#5a2a9e','t','#f2adff'],mroze:['Mica roze','#c2477f','t','#ffd3e8'],mkers:['Mica kers','#9c1b33','t','#ff9c7c'],mkoper:['Mica koper','#b4552a','t','#ffd28c'],mgoud:['Mica goud','#c49416','t','#fff2a4'],
+  mbrons:['Mica brons','#86581f','t','#f4c47c'],molijf:['Mica olijf','#6c781c','t','#ebe37c'],mzilver:['Mica zilvergrijs','#7f8a93','t','#ffffff'],mkam:['Mica kameleon (groen-paars)','#246f6a','t','#e46cff'],mvuur:['Mica vuur (rood-goud)','#b8321c','t','#ffd76a'],hout:['Hout naturel'],noten:['Notelaar (walnoot)'],burst:['Sunburst'],zwart:['Zwart','#1d1b1a'],wit:['Crème wit','#efe9da'],rood:['Kersenrood','#8f1d1d'],blauw:['Lake blauw','#3f6f8f'],groen:['Sherwood groen','#3d5a45'],goud:['Goudtop','#c8a24a']};
 const BOARD={pal:['Palissander','#4a2c1e'],ebben:['Ebben','#1c1714'],esdoorn:['Esdoorn','#e2c48e']};
 const NECKC={mlam:['Multi-lam (vuren, grenen, es)','#e0c08e',['#e6cc9f','#d4a86c','#e8d3ab','#c9965a','#e6cc9f']],esdoorn:['Esdoorn','#e2c48e'],mahonie:['Mahonie','#8e4c2b'],roast:['Geroosterde esdoorn','#b9814a']};
-const PUCOL={zwart:['Zwart','#1a1a1a'],creme:['Crème','#efe6cf'],wit:['Wit','#f6f5f0'],metaal:['Metaal (zoals de hardware)']};
+const PUCOL={zwart:['Zwart','#1a1a1a'],creme:['Crème','#efe6cf'],wit:['Wit','#f6f5f0'],metaal:['Metaal (zoals de hardware)'],zebra:['Zebra (crème en zwart)']};
+// 15/11 (Tom): kleur per pickup. Zebra = één spoel crème, één zwart: bestaat enkel bij humbuckers zonder kap.
+const ZEBRA_OK=t=>t==='HB'||t==='HBR'||t==='MINI';
+function puCol(o,k,t){ let c=o['pu_'+k]||o.pu||'zwart'; if(c==='zebra'&&!ZEBRA_OK(t)) c=o.pu&&o.pu!=='zebra'?o.pu:'zwart'; return c; }
 const METAL={chroom:['Chroom',['#f4f6f7','#9aa2a8','#5d656b']],zwart:['Zwart',['#6a6a6a','#2a2a2a','#111']],goud:['Goud',['#fff1b8','#c9a24a','#7a5a1c']]};
 const JOIN={lijm:['Gelijmd'],plaat:['Geschroefd (halsplaat)']};
 const RWOOD_PUB={vuren:['Vuren (spruce)'],grenen:['Grenen (pine)'],essen2:['Es (ash)'],els:['Els (alder)']};   // Forma: het hout dat Sixto echt gebruikt
 const RWOOD={vuren:['Vuren (spruce)'],grenen:['Grenen (pine)'],essen2:['Es (ash)'],essen:['Moeras-es (swamp ash)'],els:['Els (alder)'],mahonie:['Mahonie'],walnoot:['Walnoot'],esdoorn:['Esdoorn (maple)']};
 // nerf per hout: vuren en grenen hebben brede, donkere jaarringen (en grenen noesten), es een open nerf, els en esdoorn een rustige
 const GRAIN={vuren:{gap:5,op:[.2,.42],w:[.5,1.8],col:'#6e4a2a'},grenen:{gap:6,op:[.24,.5],w:[.6,2.2],col:'#7a4a22',knots:2},essen:{gap:4,op:[.16,.34],w:[.4,1.4],col:'#6a5034'},essen2:{gap:4,op:[.16,.34],w:[.4,1.4],col:'#6a5034'},els:{gap:5,op:[.06,.14],w:[.4,.9],col:'#7a5434'},mahonie:{gap:3,op:[.08,.18],w:[.3,.8],col:'#3c1a0c'},walnoot:{gap:3,op:[.1,.22],w:[.3,1],col:'#24140a'},esdoorn:{gap:6,op:[.05,.1],w:[.3,.7],col:'#8a6a40'},okoume:{gap:4,op:[.08,.18],w:[.4,1],col:'#5a3420'},linde:{gap:6,op:[.04,.09],w:[.3,.7],col:'#8a6a40'},paulownia:{gap:5,op:[.1,.2],w:[.4,1.2],col:'#7a5a3a'},ander:{gap:5,op:[.08,.18],w:[.4,1],col:'#5a3a20'}};
-function rndOpt(){ const r=lib.view.rnd||(lib.view.rnd={}); const o=Object.assign({fin:'tpaars',board:'pal',neck:'mlam',metal:'chroom',pu:'zwart',join:'lijm'},r); if(LIGHT||!NECKC[o.neck]) o.neck='mlam'; return o; }
+// Bigsby B5 van boven (15/11): voet breed vooraan, smaller achteraan, met een venster; de rol vooraan en de hendel aan de diskantkant naar voren. Enkel beeld; de keuring gebruikt de rechthoek van de voet.
+function bigsbySVG(q,X0,Y0){ const X=v=>+X0(v), Y=v=>+Y0(v); const y0=q.cy+q.h/2, y1=q.cy-q.h/2, wf=q.w/2, wr=q.w*0.33, P=(x,y)=>X(x).toFixed(1)+' '+Y(y).toFixed(1);
+  let o=`<path d="M${P(-wf,y0-6)} Q${P(-wf,y0)} ${P(-wf+6,y0)} L${P(wf-6,y0)} Q${P(wf,y0)} ${P(wf,y0-6)} L${P(wr,y1+8)} Q${P(wr,y1)} ${P(wr-8,y1)} L${P(-wr+8,y1)} Q${P(-wr,y1)} ${P(-wr,y1+8)} Z" fill="url(#met)" stroke="#000" stroke-opacity=".35" stroke-width=".7"/>`;
+  o+=`<path d="M${P(-wf+14,y0-24)} L${P(wf-14,y0-24)} L${P(wr-8,y1+22)} L${P(-wr+8,y1+22)} Z" fill="#000" fill-opacity=".22"/>`;
+  o+=`<rect x="${X(-wf+3).toFixed(1)}" y="${Y(y0-5).toFixed(1)}" width="${(X(wf-3)-X(-wf+3)).toFixed(1)}" height="${(Y(y0-13)-Y(y0-5)).toFixed(1)}" rx="3" fill="url(#met)" stroke="#000" stroke-opacity=".4" stroke-width=".6"/>`;
+  o+=`<path d="M${P(wf-4,y0-16)} Q${P(wf+22,y0+20)} ${P(wf+30,y0+92)}" fill="none" stroke="#8d969c" stroke-width="4" stroke-linecap="round"/><circle cx="${X(wf+30).toFixed(1)}" cy="${Y(y0+92).toFixed(1)}" r="5" fill="#f2efe8" stroke="#555" stroke-width=".6"/>`;
+  return o; }
+function rndOpt(b){ const r=lib.view.rnd||(lib.view.rnd={}); const o=Object.assign({fin:'tpaars',board:'pal',neck:'mlam',metal:'chroom',pu:'zwart',join:'lijm'},r); if(b&&b.set&&b.set.join) o.join=b.set.join; if(LIGHT||!NECKC[o.neck]) o.neck='mlam'; return o; }
 function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=geom(b), ctx=bodyCtx(b), hg=h?geom(h):null, sc=s.scale;
   const minX=Math.min(g.minX,hg?hg.minX:0)-30, maxX=Math.max(g.maxX,hg?hg.maxX:0)+30, minY=g.minY-30, maxY=(hg?sc+hg.maxY:sc+40)+30, W=maxX-minX, H=maxY-minY;
   const X=x=>(x-minX).toFixed(2), Y=y=>(maxY-y).toFixed(2), P=(x,y)=>X(x)+','+Y(y);
@@ -3199,12 +3295,14 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=
       let pp=`M${P(x+sway(x,y0),y0)}`; for(let y=y0+10;y<=y1+10;y+=10) pp+=` L${P(x+sway(x,y)+lx*Math.sin(y*0.05+x),y)}`; q+=`<path d="${pp}" fill="none" stroke="${col||G.col}" stroke-width="${w.toFixed(2)}" stroke-opacity="${op.toFixed(2)}" stroke-linecap="round"/>`; }
     for(let k=0;k<(G.knots||0);k++){ const cx=x0+(0.2+Math.random()*0.6)*(x1-x0), cy=y0+(0.25+Math.random()*0.5)*(y1-y0), r=4+Math.random()*5; q+=`<ellipse cx="${X(cx)}" cy="${Y(cy)}" rx="${r.toFixed(1)}" ry="${(r*1.5).toFixed(1)}" fill="${G.col}" fill-opacity=".55"/><ellipse cx="${X(cx)}" cy="${Y(cy)}" rx="${(r*2.2).toFixed(1)}" ry="${(r*3.4).toFixed(1)}" fill="none" stroke="${G.col}" stroke-opacity=".25" stroke-width="1"/>`; }
     return `<g clip-path="url(#${clip})">${q}</g>`; };
-  const topY=ctx.topY, heelY=ctx.pocketEnd, nhw=y=>neckHW(s,y), fbEnd=ctx.fbEnd;
+  // gelijmd: de tenon ligt onder de top; zichtbaar is de hiel hoogstens tot vlak voor de halspickup (zoals een SG). De frezing en de mallen volgen wel de echte tenon.
+  const topY=ctx.topY, heelY=o.join==='lijm'?Math.max(ctx.pocketEnd,ctx.topY-pocketRoom(b,ctx)):ctx.pocketEnd, nhw=y=>neckHW(s,y), fbEnd=ctx.fbEnd;
   // hals onder de body tekenen is niet nodig; eerst body met schaduw
   d+=`<g filter="url(#sh)"><path d="${pth(g.segs)}" fill="url(#fin)"/></g>`;
   if(tint){ // tint over het hout, met de nerf erdoor en een rand van ± 7 mm in naturel hout (de afgeronde rand)
     d+=grain(g.minX,g.maxX,g.minY,g.maxY,null,'cb',GR);
     d+=`<g clip-path="url(#cb)"><path d="${pth(g.segs)}" fill="${tint}" fill-opacity=".72"/><path d="${pth(g.segs)}" fill="none" stroke="${wood}" stroke-width="14"/><path d="${pth(g.segs)}" fill="none" stroke="${tint}" stroke-opacity=".25" stroke-width="22" filter="url(#bev)"/></g>`;
+    if(fin[3]) d+=`<defs><linearGradient id="mica" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${fin[3]}" stop-opacity=".08"/><stop offset=".3" stop-color="${fin[3]}" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity=".3"/><stop offset=".6" stop-color="${fin[3]}" stop-opacity=".45"/><stop offset="1" stop-color="${tint}" stop-opacity="0"/></linearGradient><pattern id="micaD" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.6" r=".5" fill="${fin[3]}"/><circle cx="3.8" cy="4" r=".35" fill="#fff"/><circle cx="4.2" cy="1" r=".25" fill="${fin[3]}"/></pattern></defs><g clip-path="url(#cb)"><path d="${pth(g.segs)}" fill="url(#mica)"/><path d="${pth(g.segs)}" fill="url(#micaD)" opacity=".55"/></g>`;
     d+=grain(g.minX,g.maxX,g.minY,g.maxY,'#140c08','cb',{...GR,op:[GR.op[0]*0.6,GR.op[1]*0.6],knots:0}); }
   else if(!solid||o.fin==='goud') d+=grain(g.minX,g.maxX,g.minY,g.maxY,o.fin==='burst'||o.fin==='noten'?'#2a1408':null,'cb',GR);
   if(s.inside==='semi'&&false) d+='';
@@ -3230,9 +3328,12 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=
     +grain(hg.minX,hg.maxX,sc,sc+hg.maxY,o.fin==='noten'?'#2a1408':'#5a3a20','ch')+`<g clip-path="url(#ch)"><path d="${pth(hg.segs,sc)}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bev)"/></g><path d="${pth(hg.segs,sc)}" fill="url(#gloss)"/>`;
     h.posts.forEach(p=>{ const hs=housing(h,hg,p); d+=`<rect x="${X(hs.end+hs.dir*7-7)}" y="${Y(sc+p.y+h.set.housW/2+2)}" width="14" height="${(h.set.housW+4).toFixed(1)}" rx="4" fill="url(#met)" opacity=".95"/>`; d+=`<circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.holeD/2+2).toFixed(1)}" fill="url(#met)"/><circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="${(h.set.postD/2).toFixed(1)}" fill="${M[2]}"/>`; }); }
   // hardware
-  ctx.br.forEach(q=>{ d+= q.r!=null?`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="${q.r}" fill="url(#met)"/>`:rc(q,'fill="url(#met)" stroke="#000" stroke-opacity=".3" stroke-width=".6"'); });
+  ctx.br.forEach((q,i)=>{ if(s.bridge==='bigsby'&&i===3){ d+=bigsbySVG(q,X,Y); return; } d+= q.r!=null?`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="${q.r}" fill="url(#met)"/>`:rc(q,'fill="url(#met)" stroke="#000" stroke-opacity=".3" stroke-width=".6"'); });
   ctx.pus.forEach(p=>{ const t=s[p.k].t; if(t==='HBR') d+=`<circle cx="${X(0)}" cy="${Y(p.route.cy)}" r="${RH_R}" fill="#111" opacity=".85"/>`;
-    d+=rc(p.cover,`fill="${o.pu==='metaal'?'url(#met)':(PUCOL[o.pu]||PUCOL.zwart)[1]}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`);
+    const col=puCol(o,p.k,t), fillOf=c=>c==='metaal'?'url(#met)':(PUCOL[c]||PUCOL.zwart)[1];
+    puParts(p.cover,t).forEach(q=>{ if(col==='zebra'){ const a=(q.a||0)*Math.PI/180, hh=q.h/4; [[1,'creme'],[-1,'zwart']].forEach(([sg,c])=>{ d+=rc({cx:q.cx-sg*hh*Math.sin(a),cy:q.cy+sg*hh*Math.cos(a),w:q.w,h:q.h/2,a:q.a||0},`fill="${fillOf(c)}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`); }); }
+      else d+=rc(q,`fill="${fillOf(col)}" stroke="#000" stroke-opacity=".5" stroke-width=".8"`); });
+    if(t==='P'){ puParts(p.cover,t).forEach((q,j)=>{ const a=(q.a||0)*Math.PI/180; [-1,1].forEach(si=>[-1,1].forEach(pi=>{ const x=si*q.w*0.24+pi*4; d+=`<circle cx="${X(q.cx+x*Math.cos(a))}" cy="${Y(q.cy+x*Math.sin(a))}" r="1.8" fill="url(#met)"/>`; })); }); return; }
     const n=s.strings, sp=Math.min(p.cover.w-14,s.spBridge); for(let i=0;i<n;i++){ const x=-sp/2+i*sp/(n-1||1), a=(p.cover.a||0)*Math.PI/180, yy=p.cover.cy+x*Math.sin(a); d+=`<circle cx="${X(x*Math.cos(a))}" cy="${Y(yy)}" r="1.6" fill="url(#met)"/>`; } });
   (s.ctrl.items||[]).forEach(it=>{ if(it.t==='knob') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="${(s.ctrl.knobD/2-2).toFixed(1)}" fill="${o.metal==='goud'?'url(#met)':'#1d1b1a'}" stroke="#000" stroke-opacity=".5"/><circle cx="${X(it.x-2)}" cy="${Y(it.y+2)}" r="${(s.ctrl.knobD/4).toFixed(1)}" fill="#fff" opacity=".12"/>`;
     else if(it.t==='sw') d+=`<circle cx="${X(it.x)}" cy="${Y(it.y)}" r="6" fill="url(#met)"/><circle cx="${X(it.x)}" cy="${Y(it.y)}" r="3" fill="#f1ece0"/>`;
@@ -3294,13 +3395,13 @@ function v3Show(b,h,o){ const box=MB.querySelector('.rimg'); if(!box) return; co
 function v3View(k){ V3.auto=false; const P={voor:[0,0],schuin:[-10,-35],zij:[0,-75],achter:[0,180]}[k]||[0,0]; V3.rx=P[0]; V3.ry=P[1]; const g3=MB.querySelector('.v3'); if(g3){ g3.style.transition='transform .5s ease'; V3.ap&&V3.ap(); setTimeout(()=>{ if(g3) g3.style.transition=''; },520); } }
 function shade(hex,f){ const m=/^#?([0-9a-f]{6})$/i.exec(hex||''); if(!m) return hex; const v=parseInt(m[1],16); let r=v>>16,g=(v>>8)&255,b=v&255; const t=f<0?0:255,p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
 function openRender(){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(!b){ toast('Maak eerst een body'); return; }
-  const h=partnerHead(b), o=rndOpt(), r=guitarSVG(b,h,o), opt=(k,obj)=>`<select data-r="${k}">${Object.entries(obj).map(([a,v])=>`<option value="${a}" ${o[k]===a?'selected':''}>${v[0]}</option>`).join('')}</select>`;
+  const h=partnerHead(b), o=rndOpt(b), r=guitarSVG(b,h,o), opt=(k,obj)=>`<select data-r="${k}">${Object.entries(obj).map(([a,v])=>`<option value="${a}" ${o[k]===a?'selected':''}>${v[0]}</option>`).join('')}</select>`;
   MB.innerHTML=`<div class="mhead"><h2>${LIGHT?'🎨 Bekijk en deel':'🎨 Render'} · ${esc(b.name)}</h2><button data-m="close">✕</button></div>
   <div class="rnd"><div class="rimg"><div class="v3bar"><button data-r="v3" class="${lib.view.v3?'on':''}">🔄 ${lib.view.v3?'Plat':'Rond draaien'}</button>${lib.view.v3?`<button data-r="v3v" data-k="voor">Voor</button><button data-r="v3v" data-k="schuin">Schuin</button><button data-r="v3v" data-k="zij">Zijkant</button><button data-r="v3v" data-k="achter">Achter</button>`:''}</div>${r.svg.replace('<svg ','<svg style="width:100%;height:100%" ')}</div>
-  <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Hout van de body</label><select data-r="wood">${Object.entries(LIGHT?RWOOD_PUB:RWOOD).map(([a,v])=>`<option value="${a}" ${b.set.wood===a?'selected':''}>${v[0]}</option>`).join('')}${(LIGHT?RWOOD_PUB:RWOOD)[b.set.wood]?'':`<option value="${b.set.wood}" selected>${(WOODS[b.set.wood]||['Ander'])[0]}</option>`}</select></div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div>${LIGHT?'':`<div class="row"><label>Hals</label>${opt('neck',NECKC)}</div>`}<div class="row"><label>Hardware</label>${opt('metal',METAL)}</div><div class="row"><label>Hals vast</label>${opt('join',JOIN)}</div><div class="row"><label>Pickups (alle)</label>${opt('pu',PUCOL)}</div>
+  <div class="ropt"><div class="row"><label>Afwerking</label>${opt('fin',FINISH)}</div><div class="row"><label>Hout van de body</label><select data-r="wood">${Object.entries(LIGHT?RWOOD_PUB:RWOOD).map(([a,v])=>`<option value="${a}" ${b.set.wood===a?'selected':''}>${v[0]}</option>`).join('')}${(LIGHT?RWOOD_PUB:RWOOD)[b.set.wood]?'':`<option value="${b.set.wood}" selected>${(WOODS[b.set.wood]||['Ander'])[0]}</option>`}</select></div><div class="row"><label>Toets</label>${opt('board',BOARD)}</div>${LIGHT?'':`<div class="row"><label>Hals</label>${opt('neck',NECKC)}</div>`}<div class="row"><label>Hardware</label>${opt('metal',METAL)}</div><div class="row"><label>Hals vast</label>${opt('join',JOIN)}</div><div class="row"><label>Pickups (alle)</label>${opt('pu',PUCOL)}</div>${['pu3','pu2','pu1'].filter(k=>b.set[k]&&PUS[b.set[k].t]&&PUS[b.set[k].t][1]).map(k=>{ const t=b.set[k].t, L={pu3:'Halspickup',pu2:'Middenpickup',pu1:'Brugpickup'}[k]; return `<div class="row"><label>${L}</label><select data-r="pu_${k}"><option value="">Zoals alle</option>${Object.entries(PUCOL).filter(([a])=>a!=='zebra'||ZEBRA_OK(t)).map(([a,v])=>`<option value="${a}" ${o['pu_'+k]===a?'selected':''}>${v[0]}</option>`).join('')}</select></div>`; }).join('')}
   <p class="hint">Kop: ${esc(LIGHT?headLabel(h):h?h.name:'geen')}. Andere kop? Kies hem in de instellingen onder Kop.</p><div class="btns"><button class="primary" data-r="save" disabled>Beeld maken…</button></div>${LIGHT?`<div class="btns pubBtns"><button data-r="share">📤 Deel je ontwerp</button><button class="primary" data-r="send">✉ Stuur naar Sixto</button></div><p class="hint">Wil je deze gitaar echt? Sixto bouwt elke gitaar met de hand, als unicum. Stuur je ontwerp en Tom neemt contact met je op.</p>`:''}</div></div>`;
   openModal(); MB.dataset.kind='render'; if(lib.view.v3) v3Show(b,h,o); rndBlob=null; svgToPng(trSvgText(r.svg),r.W,r.H,2400,bl=>{ rndBlob=bl; const bt=MB.querySelector('[data-r=save]'); if(bt){ bt.disabled=!bl; bt.textContent=bl?'Bewaar als afbeelding':'Lukt niet op dit toestel'; } }); }
-MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; if(k==='wood'){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(b&&!b.ref){ b.set.wood=e.target.value; delete b.set.dens; refreshAuto(b); } save(); openRender(); return; } (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; save(); openRender(); });
+MB.addEventListener('change',e=>{ const k=e.target.dataset.r; if(!k) return; if(k==='wood'){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(b&&!b.ref){ b.set.wood=e.target.value; delete b.set.dens; refreshAuto(b); } save(); openRender(); return; } (lib.view.rnd||(lib.view.rnd={}))[k]=e.target.value; if(k==='join'){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body&&x.type==='body'); if(b&&!b.ref){ b.set.join=e.target.value; b.set.pg.edited=b.set.pg.edited&&true; refreshAuto(b); } } save(); openRender(); });
 MB.addEventListener('click',e=>{ const v=e.target.closest('[data-r=v3]'); if(v){ lib.view.v3=!lib.view.v3; save(); openRender(); return; } const vv=e.target.closest('[data-r=v3v]'); if(vv){ v3View(vv.dataset.k); return; }
   const t=e.target.closest('[data-r=save]'); if(t&&rndBlob){ const b=D().type==='body'?D():lib.designs.find(x=>x.id===lib.active.body); shareFile(rndBlob,fileSafe(b?b.name:'gitaar')+'_render.png'); }
   const p=e.target.closest('[data-p]'); if(p) printAct(p.dataset.p);
@@ -3501,7 +3602,7 @@ const isDesignSel=sel=>sel.id==='designSel'||sel.id==='headSel'||sel.id==='ghost
 // ---------- niveaus: wat elke versie toont ----------
 // h = alleen in high; n = normaal en high (niet in light); l = alleen in light
 const LV_H=['scaleIn','set.scale','set.pg.margin','set.pg.bottom','set.pg.tilt','set.pg.curve','set.pg.inset','set.pg.screws','set.thick','set.dens','set.neckWood','set.sh.dx','set.sh.dy','set.sh.ang','set.ctrl.loose','set.pocketMan','view.soft','dim:neckF','dim:fbF','view.snap','view.wline'];
-const LV_N=['set.bridge','set.ctrl.jack','set.strapMode','set.sh.side','set.sh.pos','set.sh.flow','set.sh.size','set.sh.fx','set.sh.fy','set.sh.text','sym'];
+const LV_N=['set.ctrl.jack','set.strapMode','set.sh.side','set.sh.pos','set.sh.flow','set.sh.size','set.sh.fx','set.sh.fy','set.sh.text','sym'];
 function applyLevel(){ if(APP_LEVEL==='high') return;
   const tag=(el,lv)=>{ if(el&&el.getAttribute('data-lv')!==lv) el.setAttribute('data-lv',lv); };
   P.querySelectorAll('[data-bind],[data-dim]').forEach(el=>{ const b=el.dataset.bind||('dim:'+el.dataset.dim), row=el.closest('.row,tr')||el; if(LV_H.includes(b)) tag(row,'h'); else if(LV_N.includes(b)) tag(row,'n'); });
@@ -3514,13 +3615,18 @@ function applyLevel(){ if(APP_LEVEL==='high') return;
   P.querySelectorAll('section>p.hint, aside>p.hint').forEach(e=>{ if(/volgorde|Nulpunt|Oranje velden/.test(e.textContent)) tag(e,'n'); });
 }
 // light: een uitnodigend begin voor klanten in de shop
-function showWelcome(){ const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&!(/^Nieuwe body$/.test(x.name)&&!(hist[x.id]&&hist[x.id].u.length))), refs=lib.designs.filter(x=>x.ref&&x.type==='body'&&!/bass/.test(x.id)&&!REF_ROUGH.includes(x.id.slice(4)));
+// 15/11: als bas toont het beginscherm enkel de vormen die als bas de keuring halen (bredere hals, basbrug)
+// snelle versie (de volledige keuring van alle vormen als bas zit in de testbank): halsvoet, halsaansluiting en basbrug binnen de body
+const BASS_OK={}; function bassOK(r){ if(BASS_OK[r.id]==null){ try{ const d=clone(r); delete d.ref; Object.assign(d.set,instSet('b')); if(d.bassK) scalePts(d,d.bassK); widenForNeck(d); const ctx=bodyCtx(d);
+    let ok=neckOK(geom(d).poly)&&ctx.br.every(b=>b.r!=null?inside(ctx.g.poly,{x:b.x,y:b.y})&&distToPoly(ctx.g.poly,{x:b.x,y:b.y})>=b.r+4:rectInBody(b,ctx.g.poly,4));
+    for(let y=ctx.pocketEnd+2;ok&&y<ctx.topY-3;y+=6){ const h=neckHW(d.set,y)-1, xs=hits(ctx.g.poly,y); if(xs.length<2||xs[0]>-h||xs[xs.length-1]<h) ok=false; } BASS_OK[r.id]=ok; }catch(e){ BASS_OK[r.id]=false; } } return BASS_OK[r.id]; }
+function showWelcome(){ const BAS=instPref()==='b', own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&!(/^Nieuwe body$/.test(x.name)&&!(hist[x.id]&&hist[x.id].u.length))), refs=lib.designs.filter(x=>x.ref&&x.type==='body'&&!/bass/.test(x.id)&&!REF_ROUGH.includes(x.id.slice(4))&&(!BAS||bassOK(x)));
   const nat=refs.filter(x=>/^ref-n-/.test(x.id)), cls=refs.filter(x=>!/^ref-n-/.test(x.id));
   const card=(d,lab)=>`<button class="wcard" data-w="${d.id}">${thumbSVG(d,150,180)}<span>${esc(lab||d.name.replace(/-type.*$/,'').replace(/ \(.*\)$/,''))}</span></button>`;
   let w=document.getElementById('welcome'); if(!w){ w=document.createElement('div'); w.id='welcome'; document.body.appendChild(w); }
   w.innerHTML=`<div class="wbox"><div class="whead"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v7c3 0 5 2 4.4 4.3-.3 1.2.6 1.9 1.3 3 1.4 2.4-.6 5.7-4.7 5.7H9c-4.1 0-6.1-3.3-4.7-5.7.7-1.1 1.6-1.8 1.3-3C5 11 7 9 10 9z" fill="currentColor"/></svg><span>Sixto Custom Guitars</span><span class="wlang">${['nl','en'].map(l=>`<button data-lang="${l}" class="${LANG===l?'on':''}">${l.toUpperCase()}</button>`).join('')}</span></div>
-    <h1>Ontwerp jouw gitaar</h1><p class="wsub">Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.</p>
-    <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}<button data-w="hand" class="${lib.view.lefty?'on':''}" aria-pressed="${!!lib.view.lefty}">${lib.view.lefty?'✓ ':''}Ik speel linkshandig</button></div>
+    <h1>${BAS?'Ontwerp jouw bas':'Ontwerp jouw gitaar'}</h1><p class="wsub">Kies een vertrekpunt. Daarna boetseer je de vorm met je vinger, kies je een kop en een kleur, en bekijk je de hele gitaar.</p>
+    <div class="wacts"><button class="primary" data-w="insp">✨ Verras me</button>${own.length?`<button data-w="last">Verder met mijn ontwerp</button>`:''}<button data-w="hand" class="${lib.view.lefty?'on':''}" aria-pressed="${!!lib.view.lefty}">${lib.view.lefty?'✓ ':''}Ik speel linkshandig</button><button data-w="inst" class="${BAS?'on':''}" aria-pressed="${BAS}">${BAS?'✓ ':''}Ik ontwerp een bas</button></div>
     ${own.length?`<h2>Mijn ontwerpen</h2><div class="wgrid own">${own.slice(-6).reverse().map(d=>card(d,d.name)).join('')}</div>`:''}
     <h2>Klassiekers</h2><div class="wgrid">${cls.map(d=>card(d)).join('')}</div>
     <h2>Uit de natuur en de architectuur</h2><div class="wgrid">${nat.map(d=>card(d)).join('')}</div>
@@ -3537,6 +3643,7 @@ function coach(){ let seen=false; try{ seen=localStorage.getItem('sixto-forma-co
   document.body.appendChild(c); c.querySelector('button').onclick=()=>{ c.remove(); try{ localStorage.setItem('sixto-forma-coach','1'); }catch(e){} }; }
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-w]'); if(!t) return; const v=t.dataset.w;
   if(v==='hand'){ lib.view.lefty=!lib.view.lefty; save(); showWelcome(); return; }
+  if(v==='inst'){ lib.view.inst=instPref()==='b'?'g':'b'; save(); showWelcome(); return; }
   if(v==='insp'){ hideWelcome(); lib.tab='body'; const own=lib.designs.find(x=>!x.ref&&x.type==='body'); if(own) lib.active.body=own.id; switchDesign(); insp.mode='free'; openInsp(); return; }
   if(v==='last'){ hideWelcome(); lib.tab='body'; const own=lib.designs.filter(x=>!x.ref&&x.type==='body'&&x.name!=='Nieuwe body').pop()||lib.designs.filter(x=>!x.ref&&x.type==='body').pop(); if(own){ lib.active.body=own.id; switchDesign(); } return; }
   const d=lib.designs.find(x=>x.id===v); if(!d) return; hideWelcome(); if(d.ref){ useDesign(d); } else { lib.tab='body'; lib.active.body=d.id; switchDesign(); }
