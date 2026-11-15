@@ -1297,8 +1297,38 @@ function pgVary(d){ const pg=d.set.pg, R=(a,b)=>Math.round(a+Math.random()*(b-a)
     pg.edited=false; pg.pts=null; refreshAuto(d); if(pg.pts&&JSON.stringify(pg)!==old) break; }
   return [`rand ${pg.margin} mm`,pg.tilt?`${Math.abs(pg.tilt)} mm schuin`:'',pg.curve?`${Math.abs(pg.curve)} mm ${pg.curve>0?'hol':'bol'}`:'',pg.inset?`${Math.abs(pg.inset)} mm ${pg.inset>0?(pg.style==='band'?'breder':'smaller'):'smaller'}`:''].filter(Boolean).join(', '); }
 // cover plate per knoppengroep (knoppen en schakelaar binnen 60 mm van elkaar). Plaat = 20 mm rond de gaten, holte = 5 mm kleiner (sponning).
+// cover plate achteraan (Tom 15/11: "te groot voor de body of niet aangepast"): een afgeronde rechthoek per knoppengroep, gedraaid mee met de lijn van de knoppen.
+// Eerst krimpt hij tot hij min. 4 mm binnen de bodyrand blijft (zoals de brug: 4 mm hout rondom), maar nooit dichter dan 17 mm bij een knop (potmeter Ø 24 in het vak) of 12 mm bij de schakelaar.
+// Lukt dat niet, dan volgt hij daar de bodyrand op 4 mm, zoals de covers van een SG of Explorer.
+const COVER={pad:20,knob:17,sw:12,rim:4};
 function coverGroups(d){ const kn=(d.set.ctrl.items||[]).filter(q=>q.t==='knob'||q.t==='sw'), G=[]; kn.forEach(q=>{ const g0=G.find(g=>g.some(p=>Math.hypot(p.x-q.x,p.y-q.y)<60)); g0?g0.push(q):G.push([q]); });
-  return G.map(g=>{ const xs=g.map(q=>q.x), ys=g.map(q=>q.y), x0=Math.min(...xs)-20, x1=Math.max(...xs)+20, y0=Math.min(...ys)-20, y1=Math.max(...ys)+20; return {x0,x1,y0,y1,r:Math.min(18,(x1-x0)/2,(y1-y0)/2)}; }); }
+  if(!G.length) return []; const poly=geom(d).poly, N=poly.length;
+  const inside=(x,y)=>{ let c=false; for(let i=0,j=N-1;i<N;j=i++){ const a=poly[i],b=poly[j]; if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x) c=!c; } return c; };
+  const edge=(x,y)=>{ let m=1e9; for(let i=0;i<N;i++){ const a=poly[i],b=poly[(i+1)%N], dx=b.x-a.x, dy=b.y-a.y, L=dx*dx+dy*dy||1, t=Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/L)); m=Math.min(m,Math.hypot(a.x+t*dx-x,a.y+t*dy-y)); } return m; };
+  const nrm=poly.map((p,i)=>{ const q=poly[(i+1)%N], o=poly[(i-1+N)%N], tx=q.x-o.x, ty=q.y-o.y, L=Math.hypot(tx,ty)||1; return {x:-ty/L,y:tx/L}; });
+  const sgn=nrm.reduce((a,n,i)=>a+(inside(poly[i].x+n.x*0.5,poly[i].y+n.y*0.5)?1:-1),0)>0?1:-1;
+  const inset=k=>ccw(poly.map((p,i)=>({x:p.x+sgn*nrm[i].x*k,y:p.y+sgn*nrm[i].y*k})));
+  const okP=(p,k)=>inside(p.x,p.y)&&edge(p.x,p.y)>=k-0.05;
+  return G.map(g=>{ const cx=g.reduce((a,q)=>a+q.x,0)/g.length, cy=g.reduce((a,q)=>a+q.y,0)/g.length;
+    let a=0; if(g.length>1){ let sxx=0,syy=0,sxy=0; g.forEach(q=>{ const dx=q.x-cx, dy=q.y-cy; sxx+=dx*dx; syy+=dy*dy; sxy+=dx*dy; }); a=0.5*Math.atan2(2*sxy,sxx-syy); }
+    while(a>Math.PI/2) a-=Math.PI; while(a<-Math.PI/2) a+=Math.PI; if(Math.abs(a)<8*Math.PI/180) a=0; else if(Math.abs(Math.abs(a)-Math.PI/2)<8*Math.PI/180) a=Math.PI/2;
+    const ca=Math.cos(a), sa=Math.sin(a), toW=(u,v)=>({x:cx+u*ca-v*sa,y:cy+u*sa+v*ca}), loc=g.map(q=>({u:(q.x-cx)*ca+(q.y-cy)*sa,v:-(q.x-cx)*sa+(q.y-cy)*ca,m:q.t==='knob'?COVER.knob:COVER.sw}));
+    const P={u0:Math.min(...loc.map(p=>p.u-COVER.pad)),u1:Math.max(...loc.map(p=>p.u+COVER.pad)),v0:Math.min(...loc.map(p=>p.v-COVER.pad)),v1:Math.max(...loc.map(p=>p.v+COVER.pad))};
+    const lim={u0:Math.min(...loc.map(p=>p.u-p.m)),u1:Math.max(...loc.map(p=>p.u+p.m)),v0:Math.min(...loc.map(p=>p.v-p.m)),v1:Math.max(...loc.map(p=>p.v+p.m))};
+    const rad=()=>Math.min(18,(P.u1-P.u0)/2,(P.v1-P.v0)/2), ringL=(o=0)=>rrRing(P.u0+o,P.v0+o,P.u1-o,P.v1-o,Math.max(0,rad()-o)).map(p=>toW(p.x,p.y));
+    for(let it=0;it<80;it++){ const bad=ringL().map((w,i)=>({w,l:rrRing(P.u0,P.v0,P.u1,P.v1,rad())[i]})).filter(q=>!okP(q.w,COVER.rim)); if(!bad.length) break; let moved=false;
+      bad.forEach(({l})=>{ const ds={u0:l.x-P.u0,u1:P.u1-l.x,v0:l.y-P.v0,v1:P.v1-l.y}; Object.keys(ds).sort((x,y)=>ds[x]-ds[y]).slice(0,2).forEach(k=>{ if(ds[k]>8) return; const sg=k.endsWith('0')?1:-1, nv=P[k]+sg*0.5; if(sg>0?nv<=lim[k]:nv>=lim[k]){ P[k]=nv; moved=true; } }); });
+      if(!moved) break; }
+    const fits=ringL().every(w=>okP(w,COVER.rim)), memo={};
+    const ring=(o=0)=>{ if(memo[o]) return memo[o]; let R=ringL(o); if(!fits){ const cut=ghClip(ccw(R),inset(COVER.rim+o),'and'); if(Array.isArray(cut)&&cut.length) R=cut.reduce((x,y)=>Math.abs(ringArea(y))>Math.abs(ringArea(x))?y:x); } return memo[o]=R; };
+    // schroeven: twee tegenoverliggende hoeken, 6 mm binnen de plaat; past een hoek niet (afgesneden plaat), dan de andere diagonaal of dichter naar het midden
+    const R0=ring(), inR=(x,y)=>{ let c=false; for(let i=0,j=R0.length-1;i<R0.length;j=i++){ const p=R0[i],q=R0[j]; if((p.y>y)!==(q.y>y)&&x<(q.x-p.x)*(y-p.y)/(q.y-p.y)+p.x) c=!c; } return c; };
+    const dR=(x,y)=>{ let m=1e9; R0.forEach((p,i)=>{ const q=R0[(i+1)%R0.length], dx=q.x-p.x, dy=q.y-p.y, L=dx*dx+dy*dy||1, t=Math.max(0,Math.min(1,((x-p.x)*dx+(y-p.y)*dy)/L)); m=Math.min(m,Math.hypot(p.x+t*dx-x,p.y+t*dy-y)); }); return m; };
+    const free=w=>inR(w.x,w.y)&&dR(w.x,w.y)>=5.5&&g.every(q=>Math.hypot(q.x-w.x,q.y-w.y)>=(q.t==='knob'?13:9));
+    let screws=null; for(const k of [6,9,12,16]){ const C=[[P.u0+k,P.v0+k],[P.u1-k,P.v1-k],[P.u0+k,P.v1-k],[P.u1-k,P.v0+k]].map(([u,v])=>toW(u,v)); if(free(C[0])&&free(C[1])){ screws=[C[0],C[1]]; break; } if(free(C[2])&&free(C[3])){ screws=[C[2],C[3]]; break; } }
+    if(!screws){ const C=[[P.u0+6,P.v0+6],[P.u1-6,P.v1-6],[P.u0+6,P.v1-6],[P.u1-6,P.v0+6],[P.u0+6,0],[P.u1-6,0],[0,P.v0+6],[0,P.v1-6]].map(([u,v])=>toW(u,v)).filter(free); screws=C.slice(0,2); }
+    const xs=R0.map(p=>p.x), ys=R0.map(p=>p.y);
+    return {ring,screws,fits,a,r:rad(),x0:Math.min(...xs),x1:Math.max(...xs),y0:Math.min(...ys),y1:Math.max(...ys)}; }); }
 function pgObj(d){ return d.set.pg.pts ? {pts:d.set.pg.pts,sym:false,tension:d.tension} : null; }
 function cavityChain(ctx){
   const c=ctx.s.ctrl, its=c.items||[], knobs=its.filter(t=>t.t==='knob');
@@ -3218,10 +3248,13 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=
   const vb=`viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}"`, bodyD=pth(g.segs), headD=hg?pth(hg.segs,sc):'', neckP=poly(neckPts);
   let k=`<svg xmlns="http://www.w3.org/2000/svg" ${vb}><defs><clipPath id="cbB"><path d="${bodyD}"/></clipPath>${hg?`<clipPath id="chB"><path d="${headD}"/></clipPath>`:''}<linearGradient id="metB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[1]}"/><stop offset="1" stop-color="${M[2]}"/></linearGradient>
 <radialGradient id="glB" cx=".6" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient><filter id="bevB"><feGaussianBlur stdDeviation="4"/></filter></defs>`;
-  k+=`<polygon points="${neckP}" fill="${neckC}"/>`; if(lam){ const nw=nhw(heelY)*2/lam.length; k+=`<g clip-path="url(#cnB)">`+`</g>`; k=k.replace('</defs>',`<clipPath id="cnB"><polygon points="${neckP}"/></clipPath></defs>`); k+=`<g clip-path="url(#cnB)">${lam.map((c,i)=>`<rect x="${X(-nhw(heelY)+i*nw)}" y="${Y(yN)}" width="${nw.toFixed(1)}" height="${(yN-heelY).toFixed(1)}" fill="${c}"/>`).join('')}</g>`; }
-  k+=`<polygon points="${neckP}" fill="url(#nk)" opacity=".9"/>`;
-  if(hg){ k+=`<path d="${headD}" fill="${solid&&o.fin!=='goud'?solid:neckC}"/>`+(lam&&!solid?`<g clip-path="url(#chB)">${lam.map((c,i)=>{ const w=(hg.maxX-hg.minX)/lam.length; return `<rect x="${X(hg.minX+i*w)}" y="${Y(sc+hg.maxY)}" width="${w.toFixed(1)}" height="${hg.maxY.toFixed(1)}" fill="${c}"/>`; }).join('')}</g>`:'')+`<g clip-path="url(#chB)"><path d="${headD}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bevB)"/></g>`;
-    h.posts.forEach(p=>{ k+=`<rect x="${X(p.x-9)}" y="${Y(sc+p.y+8)}" width="18" height="16" rx="3" fill="url(#metB)"/><circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="3" fill="${M[2]}"/>`; }); }
+  // hals en kop krijgen een eigen achterkant op hun eigen diepte (Tom 15/11: "je kan er tussendoor kijken"); vroeger hingen ze op de rug van de body
+  const nkDefs=`<defs><clipPath id="cnB"><polygon points="${neckP}"/></clipPath>${hg?`<clipPath id="chB"><path d="${headD}"/></clipPath>`:''}<linearGradient id="metN" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[1]}"/><stop offset="1" stop-color="${M[2]}"/></linearGradient><filter id="bevN"><feGaussianBlur stdDeviation="4"/></filter><linearGradient id="nkN" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs>`;
+  let nk=`<polygon points="${neckP}" fill="${neckC}"/>`; if(lam){ const nw=nhw(heelY)*2/lam.length; nk+=`<g clip-path="url(#cnB)">${lam.map((c,i)=>`<rect x="${X(-nhw(heelY)+i*nw)}" y="${Y(yN)}" width="${nw.toFixed(1)}" height="${(yN-heelY).toFixed(1)}" fill="${c}"/>`).join('')}</g>`; }
+  nk+=`<polygon points="${neckP}" fill="url(#nkN)" opacity=".9"/>`;
+  let hk=''; if(hg){ hk+=`<path d="${headD}" fill="${solid&&o.fin!=='goud'?solid:neckC}"/>`+(lam&&!solid?`<g clip-path="url(#chB)">${lam.map((c,i)=>{ const w=(hg.maxX-hg.minX)/lam.length; return `<rect x="${X(hg.minX+i*w)}" y="${Y(sc+hg.maxY)}" width="${w.toFixed(1)}" height="${hg.maxY.toFixed(1)}" fill="${c}"/>`; }).join('')}</g>`:'')+`<g clip-path="url(#chB)"><path d="${headD}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="10" filter="url(#bevN)"/></g>`;
+    h.posts.forEach(p=>{ hk+=`<rect x="${X(p.x-9)}" y="${Y(sc+p.y+8)}" width="18" height="16" rx="3" fill="url(#metN)"/><circle cx="${X(p.x)}" cy="${Y(sc+p.y)}" r="3" fill="${M[2]}"/>`; }); }
+  const wrapB=x=>`<svg xmlns="http://www.w3.org/2000/svg" ${vb}>${nkDefs}${LFT?MIRG(W):''}${x}${LFT?'</g>':''}</svg>`;
   k+=`<path d="${bodyD}" fill="${solid||(o.fin==='burst'?'#5a2a10':wood)}"/>`;
   if(tint){ k+=grain(g.minX,g.maxX,g.minY,g.maxY,null,'cbB',GR)+`<g clip-path="url(#cbB)"><path d="${bodyD}" fill="${tint}" fill-opacity=".72"/><path d="${bodyD}" fill="none" stroke="${wood}" stroke-width="14"/></g>`; }
   else if(!solid) k+=grain(g.minX,g.maxX,g.minY,g.maxY,null,'cbB',GR);
@@ -3229,10 +3262,10 @@ function guitarSVG(b,h,o){ o=o||rndOpt(); const LFT=isLeft(b); const s=b.set, g=
   if(o.join==='plaat'){ const yP=(topY+heelY)/2, pw=Math.max(44,s.heelW+10), ph=Math.max(44,Math.min(70,(topY-heelY)*0.85)); k+=`<rect x="${X(-pw/2)}" y="${Y(yP+ph/2)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" rx="6" fill="url(#metB)"/>`; [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,c])=>{ k+=`<circle cx="${X(a*(pw/2-7))}" cy="${Y(yP+c*(ph/2-7))}" r="3.2" fill="${M[2]}"/>`; }); }
   else { const hw=nhw(topY)+1, hy0=topY-Math.min(40,(topY-heelY)); k+=`<path d="M${P(-hw,topY+2)} L${P(-hw,hy0+12)} Q${P(-hw,hy0)} ${P(0,hy0-6)} Q${P(hw,hy0)} ${P(hw,hy0+12)} L${P(hw,topY+2)} Z" fill="${lam?lam[0]:neckC}" stroke="#000" stroke-opacity=".22" stroke-width="1"/>`; }   // gelijmde halsvoet (of een halsplaat met 4 schroeven, Tom 13/11: beide kunnen)
   // cover plate achteraan rond de knoppen, per groep (knoppen die dicht bij elkaar staan). Ook bij semi-hollow: Sixto werkt altijd met een cover plate (Tom, 13/11).
-  { coverGroups(b).forEach(({x0,x1,y0,y1,r})=>{ k+=`<rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0).toFixed(1)}" height="${(y1-y0).toFixed(1)}" rx="${r.toFixed(1)}" fill="#1d1b1a" fill-opacity=".88"/>`; [[x0+6,y0+6],[x1-6,y1-6]].forEach(([x,y])=>k+=`<circle cx="${X(x)}" cy="${Y(y)}" r="1.6" fill="url(#metB)"/>`); }); }
+  { coverGroups(b).forEach(c=>{ k+=`<polygon points="${poly(c.ring())}" fill="#1d1b1a" fill-opacity=".88"/>`; c.screws.forEach(q=>k+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="1.6" fill="url(#metB)"/>`); }); }
   [sp.F,sp.R].forEach(q=>k+=`<circle cx="${X(q.x)}" cy="${Y(q.y)}" r="4" fill="url(#metB)"/>`); if(LFT){ const i=k.indexOf('</defs>')+7; k=k.slice(0,i)+MIRG(W)+k.slice(i)+'</g>'; } k+='</svg>';
   const edge=tint?'#8d6a45':solid||(o.fin==='burst'?'#3a1c0c':wood);
-  return {svg:d,W,H,back:k,bodyD,headD,neckP,edge,neckEdge:neckC,thick:s.thick||45,left:LFT}; }
+  return {svg:d,W,H,back:k,neckBack:wrapB(nk),headBack:hg?wrapB(hk):'',bodyD,headD,neckP,edge,neckEdge:neckC,thick:s.thick||45,left:LFT}; }
 function svgToPng(svg,W,H,px,cb){ const k=px/Math.max(W,H), c=document.createElement('canvas'); c.width=Math.round(W*k); c.height=Math.round(H*k); const img=new Image();
   img.onload=()=>{ const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); c.toBlob(bl=>cb(bl),'image/png'); }; img.onerror=()=>cb(null);
   img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
@@ -3243,13 +3276,15 @@ function v3Show(b,h,o){ const box=MB.querySelector('.rimg'); if(!box) return; co
   const keep=box.querySelector('.v3bar'); box.innerHTML=''; if(keep) box.appendChild(keep);
   const wrap=document.createElement('div'); wrap.className='v3w'; box.appendChild(wrap);
   const bw=box.clientWidth||400, bh=(box.clientHeight||600)-44, sc=Math.min(bw*0.86/W,bh*0.92/H), w=W*sc, hh=H*sc, z=mm=>(mm*sc).toFixed(1)+'px';
-  const vb=`viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" preserveAspectRatio="none"`, T=r.thick, NT=20;
+  const vb=`viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" preserveAspectRatio="none"`, T=r.thick, NT=22;
   const lay=(svg,zz,back)=>`<div class="v3l${back?' bk':''}" style="transform:translateZ(${zz})${back?' rotateY(180deg)':''}">${svg.replace('<svg ','<svg preserveAspectRatio="none" ')}</div>`;
   const sil=(path,col,zz,isPoly)=>`<div class="v3l sil" style="transform:translateZ(${zz})"><svg ${vb}>${r.left?MIRG(W):''}${isPoly?`<polygon points="${path}" fill="${col}"/>`:`<path d="${path}" fill="${col}"/>`}${r.left?'</g>':''}</svg></div>`;
-  let L=''; const n=Math.max(6,Math.round(T/3));
-  for(let i=1;i<n;i++){ const zz=T/2-i*T/n; L+=sil(r.bodyD,i%2?r.edge:shade(r.edge,-0.06),z(zz)); }
-  for(let i=1;i<=6;i++){ const zz=T/2-i*NT/6; L+=sil(r.neckP,shade(r.neckEdge,-0.08),z(zz),true); if(r.headD) L+=sil(r.headD,shade(r.neckEdge,-0.08),z(zz)); }
-  L+=lay(r.back,z(-T/2),true)+lay(r.svg,z(T/2+0.6),false);
+  // plakjes zo dicht dat er op het scherm geen spleet tussen zit (± 1 px); hals 22 mm dik achter de toets, kop 15 mm (Tom 15/11)
+  let L=''; const step=Math.max(0.6,1/sc), HT=15, slices=(depth,fn)=>{ const m=Math.max(4,Math.ceil(depth/step)); for(let i=1;i<m;i++) fn(T/2-i*depth/m); };
+  slices(T,zz=>{ L+=sil(r.bodyD,r.edge,z(zz)); });
+  slices(NT,zz=>{ L+=sil(r.neckP,shade(r.neckEdge,-0.08),z(zz),true); });
+  if(r.headD) slices(HT,zz=>{ L+=sil(r.headD,shade(r.neckEdge,-0.08),z(zz)); });
+  L+=lay(r.back,z(-T/2),true)+lay(r.neckBack,z(T/2-NT),true)+(r.headBack?lay(r.headBack,z(T/2-HT),true):'')+lay(r.svg,z(T/2+0.6),false);
   wrap.innerHTML=`<div class="v3" style="width:${w.toFixed(0)}px;height:${hh.toFixed(0)}px">${L}</div><p class="v3h">${tr('Sleep om rond te draaien')}</p>`;
   const g3=wrap.querySelector('.v3'); const ap=()=>{ g3.style.transform=`rotateX(${V3.rx}deg) rotateY(${V3.ry}deg)`; }; ap();
   let dn=null; wrap.onpointerdown=e=>{ V3.auto=false; dn={x:e.clientX,y:e.clientY,rx:V3.rx,ry:V3.ry}; wrap.setPointerCapture(e.pointerId); };
@@ -3390,9 +3425,9 @@ function templateShapes(o){ const b=D().type==='body'?D():lib.designs.find(x=>x.
       out.push({key:'body',name:b.name,outer:ccw(outer),holes,note:'Voorkant naar boven. Merkgaatjes liggen op de middenlijn.'+(o.pocket?' Het halsvak is open naar de rand.':'')}); }
     if(o.fPus&&ctx.pus.length) out.push(frameShape('pickups',b.name,ctx.pus.map(p=>rectRing(p.route)),'Voorkant. '+pusTxt+'. Leg de merkgaatjes op de middenlijn.'));
     if(o.fPocket) out.push(frameShape('halsvak',b.name,[pocket],`Voorkant. Halsvak volgt de taper van de hals: ${fmt(2*neckHW(s,ctx.topY),1)} mm breed aan de rand, ${fmt(2*neckHW(s,ctx.pocketEnd),1)} mm waar de hals stopt, ${fmt(ctx.topY-ctx.pocketEnd,0)} mm diep in de body (tot ${fmt(ctx.pocketEnd,0)} mm voor de zadellijn).`));
-    if(o.fCav) CG.forEach((c,i)=>out.push(frameShape('holte'+(CG.length>1?i+1:''),b.name,[rrRing(c.x0+5,c.y0+5,c.x1-5,c.y1-5,Math.max(0,c.r-5))],'Rugkant: al gespiegeld, leg de mal zo op de rug van de body. Elektronicavak; merkgaatjes op de middenlijn.',true)));
-    if(o.fReb) CG.forEach((c,i)=>out.push(frameShape('sponning'+(CG.length>1?i+1:''),b.name,[rrRing(c.x0,c.y0,c.x1,c.y1,c.r)],'Rugkant: al gespiegeld. Sponning voor de cover plate (zo diep als je plaat dik is), daarna het vak met de holte-mal.',true)));
-    if(o.plate) CG.forEach((c,i)=>{ const pl=rrRing(c.x0+0.3,c.y0+0.3,c.x1-0.3,c.y1-0.3,Math.max(0,c.r-0.3)); out.push({key:'coverplate'+(CG.length>1?i+1:''),name:b.name,outer:ccw(mirX(pl)),holes:[[c.x0+6,c.y0+6],[c.x1-6,c.y1-6]].map(([x,y])=>cw(mirX(circRing(x,y,1.6,24)))),note:'Rugkant: zo bekeken van achteren. Om de plaat uit te zagen; 0,3 mm kleiner rondom dan de sponning.'}); });
+    if(o.fCav) CG.forEach((c,i)=>out.push(frameShape('holte'+(CG.length>1?i+1:''),b.name,[c.ring(5)],'Rugkant: al gespiegeld, leg de mal zo op de rug van de body. Elektronicavak; merkgaatjes op de middenlijn.',true)));
+    if(o.fReb) CG.forEach((c,i)=>out.push(frameShape('sponning'+(CG.length>1?i+1:''),b.name,[c.ring()],'Rugkant: al gespiegeld. Sponning voor de cover plate (zo diep als je plaat dik is), daarna het vak met de holte-mal.',true)));
+    if(o.plate) CG.forEach((c,i)=>{ const pl=c.ring(0.3); out.push({key:'coverplate'+(CG.length>1?i+1:''),name:b.name,outer:ccw(mirX(pl)),holes:c.screws.map(q=>cw(mirX(circRing(q.x,q.y,1.6,24)))),note:'Rugkant: zo bekeken van achteren. Om de plaat uit te zagen; 0,3 mm kleiner rondom dan de sponning.'}); });
     if(o.pg&&s.pg.style!=='none'&&s.pg.pts){ const pgG=geom(pgObj(b)), hs=pgScrews(b,pgG).map(q=>circRing(q.x,q.y,1.6,24)); (s.ctrl.items||[]).forEach(it=>{ if(inside(pgG.poly,it)&&!(it.t==='jack'&&s.ctrl.jack==='side')) hs.push(circRing(it.x,it.y,it.t==='jack'?11:4.75,32)); }); ctx.pus.forEach(p=>{ if(inside(pgG.poly,{x:0,y:p.route.cy})) hs.push(rectRing(p.cover)); });
       out.push({key:'pickguard',name:b.name,outer:ccw(simplifyRing(pgG.poly.map(p=>({x:p.x,y:p.y})),0.03)),holes:hs.map(cw),note:'Voorkant. Om de pickguard uit te zagen en de schroefgaten te zetten.'}); }
     if(o.cham&&s.inside&&s.inside!=='solid'){ const ch=chamberPolys(b); if(ch.length) out.push({key:'kamers',name:b.name,outer:ccw(poly),holes:ch.map(c=>cw(simplifyRing(c,0.03))).concat([circRing(0.01,ctx.topY-25,1.5,24),circRing(0.01,botOf(g)+25,1.5,24)]),note:`Voorkant (kamers vóór de top erop gaat). Rand 20 mm, middenblok 80 mm.`}); }
