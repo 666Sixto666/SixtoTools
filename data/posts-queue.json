@@ -1,6 +1,26 @@
 {
   "posts": [
     {
+      "id": "loculus-carrousel",
+      "title": "Loculus: garden-house shelves to purple top (carrousel)",
+      "note": "Gepland ma 16/11. Instagram: carrousel van 3 foto's. Geen video, dus geen Short.",
+      "readyAt": "2026-11-16T08:05:45+00:00",
+      "videoUrl": null,
+      "igCaption": "The shelves of the garden house that became my workshop are now the top of Sixto Loculus: pine, stained purple, with two f-holes. A semi-hollow, and my first real semi-hollow.\n\nLoculus is Latin for a small compartment.\n\nWould you have kept the f-holes?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #ReclaimedWood #SemiHollow",
+      "igCaptionLong": "The shelves of the garden house that became my workshop are now the top of Sixto Loculus: pine, stained purple, with two f-holes. A semi-hollow, and my first real semi-hollow.\n\nLoculus is Latin for a small compartment.\n\nWould you have kept the f-holes?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #ReclaimedWood #SemiHollow",
+      "ytTitle": "",
+      "ytDescription": "",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      },
+      "carousel": [
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-loculus-carrousel/loculus_01.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-loculus-carrousel/loculus_02.jpg",
+        "https://github.com/666Sixto666/SixtoTools/releases/download/post-loculus-carrousel/loculus_03.jpg"
+      ]
+    },
+    {
       "id": "horreum-takes-shape",
       "title": "Horreum takes shape",
       "note": "Gepland vr 13/11. v2 (11/11): slotshot is nu de hals met toets op de body (beeld 9/11).",
