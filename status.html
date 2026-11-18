@@ -112,7 +112,7 @@ async function liveBuilds(token, stand){
   const res = await api('SixtoTools/contents/data/builds-sync.json?ref=main', token, {headers:{Accept:'application/vnd.github.raw'}});
   if(!res.ok) return null;
   const d = await res.json();
-  const rows = (d.builds || []).filter(b => b.status !== 'completed' && b.status !== 'archived').map(b => {
+  const rows = (d.builds || []).filter(b => b.status === 'in_progress').map(b => {
     const steps = (b.checklist || []).flatMap(ph => (ph.steps || []).map(st => Object.assign({phase: ph.phase}, st)));
     const done = steps.filter(st => st.checked).length;
     const next = steps.find(st => !st.checked);
