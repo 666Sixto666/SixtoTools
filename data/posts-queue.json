@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "radius-cauls",
+      "title": "Printed radius cauls (Tignum)",
+      "note": "",
+      "readyAt": "2026-11-19T08:37:23+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-radius-cauls/sixto_reel_radius-cauls.mp4",
+      "igCaption": "Printed radius cauls.\n\nSanding blocks for the fretboard radius, made on my 3D printer. The 7.25 inch ones are for sanding between the frets on Tignum.\n\nDo you print your own tools?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #3DPrinting #GuitarBuilding",
+      "igCaptionLong": "",
+      "ytTitle": "3D-printed radius cauls for sanding frets | Sixto Custom Guitars",
+      "ytDescription": "Do you print your own tools? Sanding cauls for the fretboard radius, made on my 3D printer. The 7.25 inch ones are for sanding between the frets on Tignum.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #3dprinting #guitarbuild #fretboard",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "neck-broke",
       "title": "This neck broke (prototype)",
       "note": "",
