@@ -48,6 +48,22 @@
   td .sub{display:block;font-size:12px;color:var(--dim);margin-top:2px;}
   .btn{display:inline-block;margin-top:10px;font:600 13px var(--sans);border-radius:10px;padding:10px 14px;border:1px solid var(--line);background:transparent;color:var(--gold);cursor:pointer;}
   a.home{color:var(--brass);text-decoration:none;display:block;}
+  #doc ol{margin:4px 0;padding-left:0;list-style:none;counter-reset:n;}
+  #doc ol li{counter-increment:n;}
+  #doc ol li::before{content:counter(n) ".";color:var(--brass);font-weight:600;margin-right:6px;}
+  #doc li.tk{list-style:none;margin-left:-18px;display:flex;gap:9px;align-items:flex-start;}
+  #doc ol li.tk::before{display:none;}
+  #doc li.tk .t{flex:1;}
+  .tick{flex-shrink:0;width:22px;height:22px;margin-top:1px;border:1.5px solid var(--brass);border-radius:6px;background:transparent;color:var(--bg);
+    font:700 14px var(--sans);cursor:pointer;padding:0;line-height:19px;}
+  li.done .tick{background:var(--brass);}
+  li.done .t{text-decoration:line-through;color:var(--dim);}
+  li.done .t strong{color:var(--dim);}
+  .new{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--brass);color:var(--bg);border-radius:5px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:1px;}
+  #doc h2.nu{color:#f0a060;}
+  #doc .sec.nu{border-color:rgba(240,160,96,.7);box-shadow:0 0 0 4px rgba(240,160,96,.09),0 10px 26px rgba(0,0,0,.28);}
+  #reqtxt{flex:1 1 220px;min-width:0;font:14px var(--sans);color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;}
+  #reqtxt::placeholder{color:var(--dim);}
 </style>
 </head>
 <body>
@@ -56,11 +72,11 @@
   <div><a class="eyebrow home" href="./">‹ Werkplaats</a><h1>Status</h1></div>
 </header>
 <div class="meta" id="meta"></div>
-<div class="reqbar"><button class="btn" id="reqbtn" onclick="requestUpdate()" style="margin-top:0;">🔄 Vraag Spaan om een nieuwe update</button><span class="note" id="reqnote"></span></div>
+<div class="reqbar"><input id="reqtxt" maxlength="500" placeholder="Nieuws voor Spaan? (mag leeg)" enterkeyhint="send" onkeydown="if(event.key==='Enter')requestUpdate()"><button class="btn" id="reqbtn" onclick="requestUpdate()" style="margin-top:0;">🔄 Vraag Spaan om een update</button><span class="note" id="reqnote" style="flex-basis:100%"></span></div>
 <div id="doc"><div class="msg">Laden…</div></div>
 
 <script>
-/* Sixto Custom Guitars · Status (27/10/2026)
+/* Sixto Custom Guitars · Status (27/10/2026; vinkjes, notitie, Nu en zelf verversen sinds 19/11/2026)
    Toont 00_SHOP_STATUS.md, door Claude bijgehouden. De inhoud staat in een PRIVÉ-repo (sixto-private/status.md):
    klantnamen, prijzen en privézaken horen niet in de publieke SixtoTools-repo. Deze pagina bevat zelf geen gegevens
    en haalt de status op met het token uit Builds (zelfde site, zelfde opslag). */
@@ -75,12 +91,13 @@ const inline = s => esc(s)
 /* Kleine markdown-weergave: koppen, lijsten, tabellen, vet, code, links. Elke ## opent een kaart. */
 function render(md){
   const out = []; let list = false, table = null, inSec = false, first = true;
-  const closeList = () => { if(list){ out.push('</ul>'); list = false; } };
+  const closeList = () => { if(list){ out.push(`</${list}>`); list = false; } };
   const closeTable = () => { if(table){ out.push('<div class="tbl"><table>' + table.join('') + '</table></div>'); table = null; } };
   const closeSec = () => { closeList(); closeTable(); if(inSec){ out.push('</div>'); inSec = false; } };
   for(const raw of md.split('\n')){
     const line = raw.trimEnd();
-    if(/^## /.test(line)){ closeSec(); out.push(`<h2>${inline(line.slice(3))}</h2><div class="sec${first ? ' first' : ''}">`); inSec = true; first = false; continue; }
+    if(/^## /.test(line)){ closeSec(); const nu = /^Nu\b/.test(line.slice(3)) ? ' nu' : '';
+      out.push(`<h2 class="${nu}">${inline(line.slice(3))}</h2><div class="sec${first && !nu ? ' first' : ''}${nu}">`); inSec = true; if(!nu) first = false; continue; }
     if(/^# /.test(line)){ closeSec(); out.push(`<h1>${inline(line.slice(2))}</h1>`); continue; }
     if(/^### /.test(line)){ closeList(); closeTable(); out.push(`<h3>${inline(line.slice(4))}</h3>`); continue; }
     if(/^\|/.test(line)){
@@ -92,10 +109,12 @@ function render(md){
       continue;
     }
     closeTable();
-    const li = line.match(/^\s*[-*] (.*)/);
-    if(li){ if(!list){ out.push('<ul>'); list = true; } out.push(`<li>${inline(li[1])}</li>`); continue; }
+    const li = line.match(/^\s*[-*] (.*)/), ol = line.match(/^\s*\d+\. (.*)/);
+    if(li || ol){ const kind = ol ? 'ol' : 'ul', txt = (ol || li)[1].trim();
+      if(list !== kind){ closeList(); out.push(`<${kind}>`); list = kind; }
+      out.push(`<li data-k="${esc(txt)}"><span class="t">${inline(txt)}</span></li>`); continue; }
     closeList();
-    if(line.trim()) out.push(`<p>${inline(line)}</p>`);
+    if(line.trim()) out.push(`<p${/Laatst bijgewerkt/.test(line) ? '' : ` data-k="${esc(line.trim())}"`}>${inline(line)}</p>`);
   }
   closeSec();
   return out.join('');
@@ -126,42 +145,105 @@ async function liveBuilds(token, stand){
     `<td>${r.next ? cell(r.next.text.replace(/\s*\((klantbuild|verkoop|prototype)\)/g, '')) + `<span class="sub">${esc(r.next.phase)}</span>` : 'alles afgevinkt'}</td></tr>`).join('') + '</table></div>';
 }
 
-/* "Vraag Spaan om een nieuwe update": zet een verzoek in de privé-repo. Op de pc kijkt de statuswachter (systemd-timer)
-   elke minuut of er een verzoek ligt en start dan Spaan, die de status herschrijft en het verzoek wist (Decision 032). */
-const REQ = 'sixto-private/contents/requests/update.json';
+/* "Vraag Spaan om een update" (met een korte notitie): zet een verzoek in de privé-repo. Op de pc kijkt de statuswachter
+   (systemd-timer) elke minuut of er een verzoek ligt en start dan Spaan, die de notitie verwerkt, de status herschrijft
+   en het verzoek wist (Decision 032, 047). */
+const REQ = 'sixto-private/contents/requests/update.json', DONE = 'sixto-private/contents/requests/done.json';
+const b64 = s => btoa(unescape(encodeURIComponent(s))), unb64 = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ''))));
 async function showRequest(token){
   const res = await api(REQ + '?ref=main', token);
-  const note = document.getElementById('reqnote'), btn = document.getElementById('reqbtn');
+  const note = document.getElementById('reqnote'), btn = document.getElementById('reqbtn'), txt = document.getElementById('reqtxt');
   if(res.ok){
-    const j = await res.json(); let at = '';
-    try{ at = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))))).requestedAt; }catch(e){}
-    note.textContent = 'Gevraagd' + (at ? ' op ' + hhmm(at) : '') + '. Spaan start binnen een minuut; de nieuwe status staat er na ± 5 minuten (als de pc aanstaat).';
-    btn.disabled = true; btn.style.opacity = .5; return j.sha;
+    const j = await res.json(); let r = {};
+    try{ r = JSON.parse(unb64(j.content)); }catch(e){}
+    note.textContent = 'Gevraagd' + (r.requestedAt ? ' op ' + hhmm(r.requestedAt) : '') + (r.note ? ` ("${r.note}")` : '') +
+      '. Spaan start binnen een minuut; de nieuwe status staat er na ± 5 minuten (als de pc aanstaat).';
+    btn.disabled = true; btn.style.opacity = .5; txt.style.display = 'none'; return j.sha;
   }
-  note.textContent = ''; btn.disabled = false; btn.style.opacity = 1; return null;
+  note.textContent = ''; btn.disabled = false; btn.style.opacity = 1; txt.style.display = ''; return null;
 }
 async function requestUpdate(){
   const token = getToken(); if(!token) return;
-  const btn = document.getElementById('reqbtn'); btn.disabled = true;
-  const body = JSON.stringify({requestedAt: new Date().toISOString(), from: 'status'});
+  const btn = document.getElementById('reqbtn'); if(btn.disabled) return; btn.disabled = true;
+  const note = document.getElementById('reqtxt').value.trim();
+  const body = JSON.stringify(Object.assign({requestedAt: new Date().toISOString(), from: 'status'}, note ? {note} : {}));
   const sha = await showRequest(token);
-  const res = await api(REQ, token, {method:'PUT', body: JSON.stringify(Object.assign({message:'Tom vraagt een nieuwe statusupdate', content: btoa(body)}, sha ? {sha} : {}))});
+  const res = await api(REQ, token, {method:'PUT', body: JSON.stringify(Object.assign({message:'Tom vraagt een nieuwe statusupdate', content: b64(body)}, sha ? {sha} : {}))});
   if(!res.ok){ document.getElementById('reqnote').textContent = 'Verzoek mislukt (' + res.status + '). Heeft het token schrijfrechten op sixto-private?'; btn.disabled = false; return; }
+  document.getElementById('reqtxt').value = '';
   await showRequest(token);
 }
 
+/* Afvinken in Status zelf: punten in "Nu", "Voorstel voor …" en "Wacht op Tom". Een vinkje staat meteen doorgestreept
+   (requests/done.json, alle toestellen); Spaan haalt het punt weg bij de volgende update en wist dan het vinkje. */
+const TICKABLE = /^(Nu|Voorstel voor|Wacht op Tom)/;
+let doneItems = [], doneSha = null;
+async function loadDone(token){
+  const res = await api(DONE + '?ref=main', token);
+  if(!res.ok){ doneItems = []; doneSha = null; return; }
+  const j = await res.json(); doneSha = j.sha;
+  try{ doneItems = JSON.parse(unb64(j.content)).done || []; }catch(e){ doneItems = []; }
+}
+function paintTicks(){
+  const keys = new Set(doneItems.map(d => d.text));
+  document.querySelectorAll('#doc li.tk').forEach(li => li.classList.toggle('done', keys.has(li.dataset.k)));
+}
+async function toggleTick(li){
+  const token = getToken(), k = li.dataset.k; if(!token) return;
+  li.classList.toggle('done');                          // meteen tonen, daarna bewaren
+  for(let i = 0; i < 2; i++){
+    await loadDone(token);
+    const on = li.classList.contains('done');
+    doneItems = doneItems.filter(d => d.text !== k);
+    if(on) doneItems.push({text: k, at: new Date().toISOString()});
+    const res = await api(DONE, token, {method:'PUT', body: JSON.stringify(Object.assign({message: on ? 'Tom vinkt af' : 'Tom zet vinkje terug',
+      content: b64(JSON.stringify({done: doneItems}, null, 1))}, doneSha ? {sha: doneSha} : {}))});
+    if(res.ok){ const j = await res.json(); doneSha = j.content && j.content.sha; paintTicks(); return; }
+    if(res.status !== 409 && res.status !== 422) break;
+  }
+  li.classList.toggle('done'); alert('Vinkje niet bewaard. Offline, of geen schrijfrechten op sixto-private?');
+}
+function addTicks(){
+  document.querySelectorAll('#doc h2').forEach(h => {
+    if(!TICKABLE.test(h.textContent.trim()) || !h.nextElementSibling) return;
+    h.nextElementSibling.querySelectorAll('li[data-k]').forEach(li => {
+      li.classList.add('tk');
+      const b = document.createElement('button'); b.className = 'tick'; b.textContent = '✓'; b.title = 'Afvinken';
+      b.onclick = () => toggleTick(li); li.prepend(b);
+    });
+  });
+}
+
+/* "nieuw": wat er in de vorige versie van het rapport nog niet stond. Blijft staan tot Spaan een volgende versie schrijft. */
+const SEEN_KEY = 'sixto_status_seen';
+function markNew(version){
+  const els = [...document.querySelectorAll('#doc [data-k]')], now = els.map(e => e.dataset.k);
+  let seen = null; try{ seen = JSON.parse(localStorage.getItem(SEEN_KEY)); }catch(e){}
+  let prev = null;
+  if(seen && seen.v === version) prev = seen.prev;
+  else if(seen){ prev = seen.lines; try{ localStorage.setItem(SEEN_KEY, JSON.stringify({v: version, lines: now, prev})); }catch(e){} }
+  else { try{ localStorage.setItem(SEEN_KEY, JSON.stringify({v: version, lines: now, prev: now})); }catch(e){} }
+  if(!prev) return;
+  const old = new Set(prev);
+  els.forEach(e => { if(!old.has(e.dataset.k)){ const t = e.querySelector('.t') || e; t.insertAdjacentHTML('beforeend', '<span class="new">nieuw</span>'); } });
+}
+
+let version = null;
 async function load(){
   const doc = document.getElementById('doc');
   const token = getToken();
-  if(!token){ doc.innerHTML = '<div class="msg">Geen token op dit toestel. Zet het eerst in <a href="builds.html">Builds</a> › Instellingen › GitHub sync.</div>'; document.getElementById('reqbtn').style.display = 'none'; return; }
-  document.getElementById('reqbtn').style.display = '';
+  if(!token){ doc.innerHTML = '<div class="msg">Geen token op dit toestel. Zet het eerst in <a href="builds.html">Builds</a> › Instellingen › GitHub sync.</div>'; document.querySelector('.reqbar').style.display = 'none'; return; }
+  document.querySelector('.reqbar').style.display = '';
   try{
     const res = await api(`${REPO}/contents/${PATH}?ref=main`, token);
     if(res.status === 404 || res.status === 403){ doc.innerHTML = '<div class="msg">De status is nog niet beschikbaar: de privé-repo <code>sixto-private</code> bestaat nog niet, of het token heeft er geen toegang toe.</div>'; return; }
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const j = await res.json();
-    const md = decodeURIComponent(escape(atob(j.content.replace(/\n/g, ''))));
+    const md = unb64(j.content);
+    await loadDone(token).catch(() => {});
     doc.innerHTML = render(md);
+    version = j.sha;
+    addTicks(); paintTicks(); markNew(version);
     // Builds-kaart vervangen door de live versie
     const stand = {};
     md.split('\n').filter(l => /^\|/.test(l)).forEach(l => { const c = l.replace(/^\||\|$/g, '').split('|').map(x => x.trim()); if(c.length >= 3 && /^Sixto /.test(c[0])) stand[c[0]] = c[c.length - 1]; });
@@ -175,6 +257,20 @@ async function load(){
     doc.innerHTML = `<div class="msg">Kon de status niet laden (${esc(e.message)}). Offline? <button class="btn" onclick="load()">Opnieuw</button></div>`;
   }
 }
+
+/* Zelf verversen: elke minuut (en bij terugkeren naar de app) kijken of Spaan een nieuwe versie schreef. */
+let busy = false;
+async function refresh(){
+  const token = getToken(); if(!token || busy || document.visibilityState !== 'visible') return;
+  busy = true;
+  try{
+    const res = await api(`${REPO}/contents/${PATH}?ref=main`, token);
+    if(res.ok && (await res.json()).sha !== version){ const y = scrollY; await load(); scrollTo(0, y); }
+    else { await loadDone(token); paintTicks(); await showRequest(token); }
+  }catch(e){} finally{ busy = false; }
+}
+setInterval(refresh, 60000);
+document.addEventListener('visibilitychange', refresh);
 load();
 </script>
 </body>
