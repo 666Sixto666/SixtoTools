@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "router-table",
+      "title": "I built a router table",
+      "note": "",
+      "readyAt": "2026-11-19T08:37:30+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-router-table/sixto_reel_router-table.mp4",
+      "igCaption": "I built a router table.\n\nFor the neck: a bit that rounds the edges, in a table of my own. Next, the neck profile.\n\nWhat's the best tool you made yourself?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #RouterTable #GuitarBuilding",
+      "igCaptionLong": "",
+      "ytTitle": "I built a router table for guitar necks | Sixto Custom Guitars",
+      "ytDescription": "What's the best tool you made yourself? A router table for the neck work, with a bit that rounds the edges. Next up: the neck profile.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #routertable #guitarbuild #guitarneck",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "radius-cauls",
       "title": "Printed radius cauls (Tignum)",
       "note": "",
