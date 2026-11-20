@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "forma-lefty",
+      "title": "Forma: left-handed? (weekend)",
+      "note": "v3 20/11: app in beeld; za 21/11 of zo 22/11",
+      "readyAt": "2026-11-20T21:37:24+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-forma-lefty/sixto_reel_forma-lefty.mp4",
+      "igCaption": "Left-handed? Most guitars are drawn the other way around, and lefties often wait for a mirror version, or never get one.\n\nIn Sixto Forma it's one tap: every shape flips, body, head and controls. Then you shape it with your finger and pick the finish. Bass too.\n\nFree, in your browser, on your phone too. Like what you made? Send it to me and we talk about building it.\n\n#SixtoCustomGuitars #LeftHandedGuitar #CustomGuitar #GuitarDesign #Luthier",
+      "igCaptionLong": "",
+      "ytTitle": "Design your own left-handed guitar, free | Sixto Forma",
+      "ytDescription": "Left-handed? In Sixto Forma it's one tap: every shape flips, body, head and controls. Shape it with your finger, pick the finish. Bass too. Free, in your browser.\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#lefthandedguitar #customguitar #guitardesign #luthier #handmadeguitar",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "forma-sparkle",
       "title": "Forma: out of ideas? (weekend)",
       "note": "za 21/11 of zo 22/11",
@@ -88,21 +103,6 @@
       "posted": {
         "instagram": "2026-11-19T09:10:33.082Z",
         "youtube": "2026-11-19T09:10:36.668Z"
-      }
-    },
-    {
-      "id": "forma-lefty",
-      "title": "Forma: left-handed? (extra)",
-      "note": "do 26/11, tussen de postdagen. Zonder geluid: muziek in de app. v2 (19/11): andere vormen en koppen.",
-      "readyAt": "2026-11-19T08:44:30+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-forma-lefty/sixto_reel_forma-lefty.mp4",
-      "igCaption": "Left-handed? Most guitars are drawn the other way around. Lefties often wait for a mirror version, or never get one.\n\nIn Sixto Forma you tap Left-handed and every shape flips: body, head, controls. Bass too.\n\nAnd when I build it, I build it the way you play.\n\nLefties: which guitar did you always want, but never found the other way around?\n\nDesign yours, free, link in bio.\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarDesign #LeftHandedGuitar",
-      "igCaptionLong": "",
-      "ytTitle": "Left-handed? Every shape flips | Sixto Forma",
-      "ytDescription": "Most guitars are drawn the other way around. In Sixto Forma you tap Left-handed and every shape flips: body, head, controls. Bass too. Sixto builds it by hand, the way you play.\n\nLefties: which guitar did you always want, but never found the other way around?\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#lefthandedguitar #guitardesign #customguitar #luthier #guitar",
-      "posted": {
-        "instagram": null,
-        "youtube": null
       }
     },
     {
