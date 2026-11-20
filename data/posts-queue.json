@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "neck-broke",
+      "title": "This neck broke (prototype)",
+      "note": "",
+      "readyAt": "2026-11-20T21:21:38+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-neck-broke/sixto_reel_neck-broke.mp4",
+      "igCaption": "This neck broke.\n\nIt's a prototype. On every prototype I try something that's new to me. Here it was a thinner neck profile. Too thin, it turned out.\n\nThat's what prototypes are for. A customer build only gets what has already proven itself.\n\nHave you ever broken a guitar neck?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarNeck #Prototype",
+      "igCaptionLong": "",
+      "ytTitle": "This neck broke: a guitar prototype | Sixto Custom Guitars",
+      "ytDescription": "Have you ever broken a guitar neck? This one broke. It's a prototype, and on every prototype I try something new. Here it was a thinner neck profile: too thin. That's what prototypes are for. A customer build only gets what has already proven itself.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #guitarneck #prototype",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "router-table",
       "title": "I built a router table",
       "note": "v2 20/11: startpunt, daarna met de hand",
@@ -70,21 +85,6 @@
       "igCaptionLong": "",
       "ytTitle": "Left-handed? Every shape flips | Sixto Forma",
       "ytDescription": "Most guitars are drawn the other way around. In Sixto Forma you tap Left-handed and every shape flips: body, head, controls. Bass too. Sixto builds it by hand, the way you play.\n\nLefties: which guitar did you always want, but never found the other way around?\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#lefthandedguitar #guitardesign #customguitar #luthier #guitar",
-      "posted": {
-        "instagram": null,
-        "youtube": null
-      }
-    },
-    {
-      "id": "neck-broke",
-      "title": "This neck broke (prototype)",
-      "note": "",
-      "readyAt": "2026-11-19T08:37:17+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-neck-broke/sixto_reel_neck-broke.mp4",
-      "igCaption": "This neck broke.\n\nIt's a prototype. On every prototype I try something that's new to me. Here it was a thinner neck profile. Too thin, it turned out.\n\nThat's what prototypes are for. A customer build only gets what has already proven itself.\n\nFriday: what I built so every neck starts the same.\n\nHave you ever broken a guitar neck?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarNeck #Prototype",
-      "igCaptionLong": "",
-      "ytTitle": "This neck broke: a guitar prototype | Sixto Custom Guitars",
-      "ytDescription": "Have you ever broken a guitar neck? This one broke. It's a prototype, and on every prototype I try something new. Here it was a thinner neck profile: too thin. That's what prototypes are for. A customer build only gets what has already proven itself.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #guitarneck #prototype",
       "posted": {
         "instagram": null,
         "youtube": null
