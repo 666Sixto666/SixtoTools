@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "router-table",
+      "title": "I built a router table",
+      "note": "v2 20/11: startpunt, daarna met de hand",
+      "readyAt": "2026-11-20T21:21:33+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-router-table/sixto_reel_router-table.mp4",
+      "igCaption": "I built a router table.\n\nI love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWhat's the best tool you made yourself?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #RouterTable #GuitarNeck",
+      "igCaptionLong": "",
+      "ytTitle": "I built a router table for guitar necks | Sixto Custom Guitars",
+      "ytDescription": "What's the best tool you made yourself? I love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #routertable #guitarbuild #guitarneck",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "tignum-overhaul",
       "title": "Tignum: neck overhaul (prototype)",
       "note": "vervangt tignum-headstock + radius-cauls (20/11)",
@@ -55,21 +70,6 @@
       "igCaptionLong": "",
       "ytTitle": "Left-handed? Every shape flips | Sixto Forma",
       "ytDescription": "Most guitars are drawn the other way around. In Sixto Forma you tap Left-handed and every shape flips: body, head, controls. Bass too. Sixto builds it by hand, the way you play.\n\nLefties: which guitar did you always want, but never found the other way around?\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#lefthandedguitar #guitardesign #customguitar #luthier #guitar",
-      "posted": {
-        "instagram": null,
-        "youtube": null
-      }
-    },
-    {
-      "id": "router-table",
-      "title": "I built a router table",
-      "note": "",
-      "readyAt": "2026-11-19T08:37:30+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-router-table/sixto_reel_router-table.mp4",
-      "igCaption": "I built a router table.\n\nFor the neck: a bit that rounds the edges, in a table of my own. Next, the neck profile.\n\nWhat's the best tool you made yourself?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #RouterTable #GuitarBuilding",
-      "igCaptionLong": "",
-      "ytTitle": "I built a router table for guitar necks | Sixto Custom Guitars",
-      "ytDescription": "What's the best tool you made yourself? A router table for the neck work, with a bit that rounds the edges. Next up: the neck profile.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #routertable #guitarbuild #guitarneck",
       "posted": {
         "instagram": null,
         "youtube": null
