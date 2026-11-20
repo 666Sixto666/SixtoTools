@@ -1,6 +1,21 @@
 {
   "posts": [
     {
+      "id": "tignum-overhaul",
+      "title": "Tignum: neck overhaul (prototype)",
+      "note": "vervangt tignum-headstock + radius-cauls (20/11)",
+      "readyAt": "2026-11-20T20:54:54+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-tignum-overhaul/sixto_reel_tignum-overhaul.mp4",
+      "igCaption": "Tignum is a prototype, and its neck is getting an overhaul.\n\nThe wood I used for the fretboard turned out not to be dense enough for a fretboard. I only found out once the frets were in. Epoxy coating didn't do much. Superglue, coated and wicked into the wood, did a lot more.\n\nAll that coating left a mess between the frets, so I designed and printed mini sanding cauls to clean it up.\n\nThen the fun part: a believable relic. Rolled fretboard edges for that played-in feel, the headstock matched to the body with a heavy relic I practised first, and a white stinger on the back.\n\nNot done yet. Prototypes are where I try things, so a customer build only gets what has proven itself.\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #Prototype #GuitarNeck",
+      "igCaptionLong": "",
+      "ytTitle": "Saving a soft fretboard: Tignum neck overhaul | Sixto Custom Guitars",
+      "ytDescription": "Tignum is a prototype, and its neck is getting an overhaul. The fretboard wood wasn't dense enough. Epoxy didn't do much, superglue wicked into the wood did. Printed mini sanding cauls to clean up between the frets, then a believable relic: rolled edges, the headstock matched to the body, a white stinger on the back.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #guitarneck #prototype",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      }
+    },
+    {
       "id": "forma-tuners",
       "title": "Forma: why do the tuners sit there? (extra)",
       "note": "za 28/11, tussen de postdagen. Zonder geluid: muziek in de app. v2 (19/11): vier echte koppen in kleur (zwaan vervangen door spits: snaren kruisten).",
