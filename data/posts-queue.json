@@ -1,6 +1,40 @@
 {
   "posts": [
     {
+      "id": "horreum-frets",
+      "title": "Horreum: frets in, back on the body",
+      "note": "vr 27/11",
+      "readyAt": "2026-11-23T08:48:40+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-horreum-frets/sixto_reel_horreum-frets.mp4",
+      "igCaption": "Frets in on the Horreum.\n\nAll the frets go in first, then the ends get trimmed. Back on the body to see where we are. Next up: carving the neck.\n\nWhich part of a build would you want to see up close?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #Frets #GuitarBuild",
+      "igCaptionLong": "",
+      "ytTitle": "Frets in, back on the body | Sixto Custom Guitars",
+      "ytDescription": "Frets in on the Horreum. All the frets go in first, then the ends get trimmed. Back on the body to see where we are. Next up: carving the neck.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #frets #ebony",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      },
+      "info": "",
+      "date": "2026-11-27"
+    },
+    {
+      "id": "forma-feel",
+      "title": "Forma: how heavy will it be? (extra)",
+      "note": "di 1/12 · extra Forma-post van die week",
+      "readyAt": "2026-11-23T08:39:13+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-forma-feel/sixto_reel_forma-feel.mp4",
+      "igCaption": "How heavy will it be? Will the neck dip?\n\nSixto Forma tells you before a single piece of wood is cut. Draw your guitar and it works out the weight, how it hangs on a strap, how it sits on your leg and how far up the neck your hand gets.\n\nToo heavy? Tap Chambered: hollow wings inside, the top stays closed. This one got about 0.3 kg lighter, same shape, same look.\n\nFree, in your browser, on your phone too. Link in bio. Like what you made? Send it to me and we talk about building it, by hand, one of a kind.\n\n#SixtoCustomGuitars #CustomGuitar #GuitarDesign #Luthier #HandmadeGuitar",
+      "igCaptionLong": "",
+      "ytTitle": "How heavy will your guitar be? Will the neck dip? Sixto Forma tells you first",
+      "ytDescription": "Draw your own guitar in Sixto Forma and see how it will feel before the wood is cut: weight, balance on a strap, seated, high frets. Too heavy? Tap Chambered and it gets lighter, same shape. Free, in your browser.\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#customguitar #guitardesign #luthier #handmadeguitar #guitar",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      },
+      "info": "extra Forma-post van die week",
+      "date": "2026-12-01"
+    },
+    {
       "id": "horreum-barn",
       "title": "Horreum: this guitar was a barn (carrousel + Short)",
       "note": "do 3/12 · Instagram: carrousel (7 foto's) · YouTube: de video",
@@ -22,12 +56,14 @@
         "https://github.com/666Sixto666/SixtoTools/releases/download/post-horreum-barn/horreum_05.jpg",
         "https://github.com/666Sixto666/SixtoTools/releases/download/post-horreum-barn/horreum_06.jpg",
         "https://github.com/666Sixto666/SixtoTools/releases/download/post-horreum-barn/horreum_07.jpg"
-      ]
+      ],
+      "info": "Instagram: carrousel (7 foto's) · YouTube: de video",
+      "date": "2026-12-03"
     },
     {
       "id": "forma-send",
       "title": "Forma: want it for real? (extra)",
-      "note": "Verschoven naar do 10/12 (Forma 1 keer per week)",
+      "note": "do 10/12",
       "readyAt": "2026-11-23T09:05:20+00:00",
       "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-forma-send/sixto_reel_forma-send.mp4",
       "igCaption": "Designed a guitar in Sixto Forma? Want it for real?\n\nTap \"Send to Sixto\". The message is ready, you add what you like. I look at your design myself and get back to you. Together we go over shape, wood, neck and sound. Sending commits you to nothing.\n\nFree, in your browser. Link in bio.\n\n#SixtoForma #SixtoCustomGuitars #HandmadeGuitar #CustomGuitar #GuitarDesign",
@@ -37,7 +73,43 @@
       "posted": {
         "instagram": null,
         "youtube": null
-      }
+      },
+      "info": "",
+      "date": "2026-12-10"
+    },
+    {
+      "id": "neck-broke",
+      "title": "This neck broke (prototype)",
+      "note": "Geen datum · filler, nog een foto van de breuk nodig",
+      "readyAt": "2026-11-20T21:21:38+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-neck-broke/sixto_reel_neck-broke.mp4",
+      "igCaption": "This neck broke.\n\nIt's a prototype. On every prototype I try something that's new to me. Here it was a thinner neck profile. Too thin, it turned out.\n\nThat's what prototypes are for. A customer build only gets what has already proven itself.\n\nHave you ever broken a guitar neck?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarNeck #Prototype",
+      "igCaptionLong": "",
+      "ytTitle": "This neck broke: a guitar prototype | Sixto Custom Guitars",
+      "ytDescription": "Have you ever broken a guitar neck? This one broke. It's a prototype, and on every prototype I try something new. Here it was a thinner neck profile: too thin. That's what prototypes are for. A customer build only gets what has already proven itself.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #guitarneck #prototype",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      },
+      "info": "filler, nog een foto van de breuk nodig",
+      "date": null
+    },
+    {
+      "id": "router-table",
+      "title": "I built a router table",
+      "note": "Geen datum · wacht op de freesclip",
+      "readyAt": "2026-11-20T21:21:33+00:00",
+      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-router-table/sixto_reel_router-table.mp4",
+      "igCaption": "I built a router table.\n\nI love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWhat's the best tool you made yourself?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #RouterTable #GuitarNeck",
+      "igCaptionLong": "",
+      "ytTitle": "I built a router table for guitar necks | Sixto Custom Guitars",
+      "ytDescription": "What's the best tool you made yourself? I love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #routertable #guitarbuild #guitarneck",
+      "posted": {
+        "instagram": null,
+        "youtube": null
+      },
+      "info": "wacht op de freesclip",
+      "date": null
     },
     {
       "id": "forma-wood",
@@ -55,21 +127,6 @@
       }
     },
     {
-      "id": "horreum-frets",
-      "title": "Horreum: frets in, back on the body",
-      "note": "vr 27/11; routertafel schuift op tot er een freesclip is",
-      "readyAt": "2026-11-23T08:48:40+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-horreum-frets/sixto_reel_horreum-frets.mp4",
-      "igCaption": "Frets in on the Horreum.\n\nAll the frets go in first, then the ends get trimmed. Back on the body to see where we are. Next up: carving the neck.\n\nWhich part of a build would you want to see up close?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #Frets #GuitarBuild",
-      "igCaptionLong": "",
-      "ytTitle": "Frets in, back on the body | Sixto Custom Guitars",
-      "ytDescription": "Frets in on the Horreum. All the frets go in first, then the ends get trimmed. Back on the body to see where we are. Next up: carving the neck.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #frets #ebony",
-      "posted": {
-        "instagram": null,
-        "youtube": null
-      }
-    },
-    {
       "id": "horreum-dots",
       "title": "Horreum: dots in the ebony",
       "note": "vandaag ma 23/11, i.p.v. de gebroken hals",
@@ -82,21 +139,6 @@
       "posted": {
         "instagram": "2026-11-23T09:20:50.072Z",
         "youtube": "2026-11-23T09:20:53.328Z"
-      }
-    },
-    {
-      "id": "forma-feel",
-      "title": "Forma: how heavy will it be? (extra)",
-      "note": "v2 23/11: opnieuw opgenomen in de nieuwste Forma (23/11 9u33)",
-      "readyAt": "2026-11-23T08:39:13+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-forma-feel/sixto_reel_forma-feel.mp4",
-      "igCaption": "How heavy will it be? Will the neck dip?\n\nSixto Forma tells you before a single piece of wood is cut. Draw your guitar and it works out the weight, how it hangs on a strap, how it sits on your leg and how far up the neck your hand gets.\n\nToo heavy? Tap Chambered: hollow wings inside, the top stays closed. This one got about 0.3 kg lighter, same shape, same look.\n\nFree, in your browser, on your phone too. Link in bio. Like what you made? Send it to me and we talk about building it, by hand, one of a kind.\n\n#SixtoCustomGuitars #CustomGuitar #GuitarDesign #Luthier #HandmadeGuitar",
-      "igCaptionLong": "",
-      "ytTitle": "How heavy will your guitar be? Will the neck dip? Sixto Forma tells you first",
-      "ytDescription": "Draw your own guitar in Sixto Forma and see how it will feel before the wood is cut: weight, balance on a strap, seated, high frets. Too heavy? Tap Chambered and it gets lighter, same shape. Free, in your browser.\n\nSixto Forma: https://sixtocustomguitars.github.io/forma/?ref=youtube\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#customguitar #guitardesign #luthier #handmadeguitar #guitar",
-      "posted": {
-        "instagram": null,
-        "youtube": null
       }
     },
     {
@@ -127,36 +169,6 @@
       "posted": {
         "instagram": "2026-11-22T14:28:02.376Z",
         "youtube": "2026-11-22T14:28:05.540Z"
-      }
-    },
-    {
-      "id": "neck-broke",
-      "title": "This neck broke (prototype)",
-      "note": "",
-      "readyAt": "2026-11-20T21:21:38+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-neck-broke/sixto_reel_neck-broke.mp4",
-      "igCaption": "This neck broke.\n\nIt's a prototype. On every prototype I try something that's new to me. Here it was a thinner neck profile. Too thin, it turned out.\n\nThat's what prototypes are for. A customer build only gets what has already proven itself.\n\nHave you ever broken a guitar neck?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #GuitarNeck #Prototype",
-      "igCaptionLong": "",
-      "ytTitle": "This neck broke: a guitar prototype | Sixto Custom Guitars",
-      "ytDescription": "Have you ever broken a guitar neck? This one broke. It's a prototype, and on every prototype I try something new. Here it was a thinner neck profile: too thin. That's what prototypes are for. A customer build only gets what has already proven itself.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #guitarbuild #guitarneck #prototype",
-      "posted": {
-        "instagram": null,
-        "youtube": null
-      }
-    },
-    {
-      "id": "router-table",
-      "title": "I built a router table",
-      "note": "v2 20/11: startpunt, daarna met de hand",
-      "readyAt": "2026-11-20T21:21:33+00:00",
-      "videoUrl": "https://github.com/666Sixto666/SixtoTools/releases/download/post-router-table/sixto_reel_router-table.mp4",
-      "igCaption": "I built a router table.\n\nI love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWhat's the best tool you made yourself?\n\n#SixtoCustomGuitars #HandmadeGuitar #Luthier #RouterTable #GuitarNeck",
-      "igCaptionLong": "",
-      "ytTitle": "I built a router table for guitar necks | Sixto Custom Guitars",
-      "ytDescription": "What's the best tool you made yourself? I love shaping a neck by hand, with a spokeshave and a Shinto rasp. But a fixed starting point makes the process more uniform, and a bit quicker. So now a bit carves the back of the neck first, and I take it from there.\n\nWebsite: https://sixtocustomguitars.github.io/\nInstagram: https://www.instagram.com/sixtocustomguitars/\n\n#handmadeguitar #luthier #routertable #guitarbuild #guitarneck",
-      "posted": {
-        "instagram": null,
-        "youtube": null
       }
     },
     {
