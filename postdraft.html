@@ -79,6 +79,8 @@
   </div>
 </header>
 
+<div class="card" id="today" style="display:none;margin-bottom:14px"></div>
+
 <div id="ready"></div>
 
 <h2>Deze week</h2>
@@ -101,7 +103,7 @@
 const OWNER = '666sixto666', REPO = 'SixtoTools', QPATH = 'data/posts-queue.json';
 const TOKEN_KEY = 'sixto_tools_gh_token';
 const OLD_LOG_KEY = 'sixto-postdraft-log-v1';   // log van de vroegere tekstgenerator, enkel nog om te exporteren
-const WEEK_TARGET = 3;                           // ritme: 3 per week sinds 29/10/2026 (00_WERKWIJZE_CONTENT)
+const WEEK_TARGET = 4;                           // ritme: 4 per week sinds 23/11/2026 (content/_ANALYSE.md)
 let queue = null;
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -137,6 +139,7 @@ function render(){
   const posts = (queue && queue.posts) || [];
   const open = posts.filter(p => !fullyPosted(p));
   const done = posts.filter(fullyPosted);
+  renderToday(posts);
 
   document.getElementById('ready').innerHTML = open.length
     ? `<h2>Klaar om te posten</h2>` + open.map(renderReady).join('')
@@ -155,6 +158,21 @@ function render(){
   document.getElementById('wk-text').textContent = n >= WEEK_TARGET ? 'Ritme gehaald deze week.' : `Nog ${WEEK_TARGET - n} te gaan om het ritme van ${WEEK_TARGET} per week te halen.`;
 
   renderOldLog();
+}
+/* Bovenaan: wat moet er vandaag? Komt uit het veld "date" per post (planning.py). */
+function renderToday(posts){
+  const day = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  const label = iso => new Date(iso + 'T12:00').toLocaleDateString('nl-BE', {weekday:'long', day:'numeric', month:'long'});
+  const today = day(new Date()), any = p => stamps(p).length > 0;
+  const open = posts.filter(p => p.date && !any(p)).sort((a,b) => a.date.localeCompare(b.date));
+  const now = open.filter(p => p.date === today), late = open.filter(p => p.date < today), next = open.find(p => p.date > today);
+  const posted = posts.some(p => stamps(p).some(s => day(new Date(s)) === today));
+  const head = now.length ? 'Vandaag posten: ' + now.map(p => p.title).join(' + ') : posted ? 'Vandaag is er al gepost' : 'Vandaag niets te posten';
+  const lines = late.map(p => `Nog niet gepost van ${label(p.date)}: ${p.title}`);
+  if(next) lines.push(`Volgende: ${label(next.date)}, ${next.title}`);
+  const el = document.getElementById('today');
+  el.style.display = '';
+  el.innerHTML = `<h3 style="margin:0">${esc(head)}</h3>` + lines.map(l => `<div class="muted" style="margin-top:6px">${esc(l)}</div>`).join('');
 }
 const stamps = p => Object.values(p.posted || {}).filter(Boolean).sort();
 const firstPosted = p => stamps(p)[0] || '';
